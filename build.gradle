@@ -1,9 +1,16 @@
-defaultTasks 'renderPlantUml'
+plugins {
+    id "io.freefair.plantuml" version "9.2.0"
+}
 
-task renderPlantUml(type: RenderPlantUmlTask) {
-      inputDir = file("${projectDir}/diagrams/")
-      outputDir = file("${projectDir}/diagrams/")
+repositories {
+    mavenCentral()
+}
 
-      inputFiles = fileTree(dir: "${projectDir}/diagrams/", include: '**/*.puml')
-      outputFiles = fileTree(dir: "${projectDir}/diagrams/", include: '**/*.png')
+apply plugin:'base'
+
+plantUml {
+    source("diagrams")
+    includePattern = "**/*.puml"
+    fileFormat = "PNG"
+    outputDirectory = layout.projectDirectory.dir("diagramsOut")
 }
