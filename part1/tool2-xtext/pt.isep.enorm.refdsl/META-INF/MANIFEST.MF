@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: REF DSL
+Bundle-SymbolicName: pt.isep.enorm.refdsl;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Require-Bundle: pt.isep.enorm.ref,
+ org.eclipse.xtext,
+ org.eclipse.equinox.common;bundle-version="3.16.0",
+ org.eclipse.xtext.util,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ org.eclipse.emf.mwe2.launch,
+ org.eclipse.emf.mwe2.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: pt.isep.enorm.refdsl,
+ pt.isep.enorm.refdsl.validation

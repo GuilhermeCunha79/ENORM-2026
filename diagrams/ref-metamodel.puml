@@ -1,0 +1,94 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+title REF DSL – Core Metamodel (P1)
+
+class RefModel {
+  name: String
+}
+
+class UserType {
+  name: String
+}
+
+class ResourceType {
+  name: String
+}
+
+class Attribute {
+  name: String
+  type: PrimitiveType
+}
+
+enum PrimitiveType {
+  TEXT
+  NUMBER
+  BOOLEAN
+  DATE
+  IMAGE
+  VIDEO
+}
+
+class FeedbackType {
+  name: String
+  hasRating: boolean
+  recursive: boolean
+}
+
+class FeedbackDefinition {
+  name: String
+}
+
+class ValidationRule {
+  name: String
+  kind: ValidationKind
+  implementationId: String
+}
+
+enum ValidationKind {
+  AUTOMATIC
+  MANUAL
+}
+
+class AuthorizationRule {
+  allowedAction: ActionKind
+}
+
+enum ActionKind {
+  READ
+  WRITE
+  CREATE
+  UPDATE
+  DELETE
+  MODERATE
+  REPORT
+  VALIDATE
+}
+
+class AutomationRule {
+  name: String
+  trigger: String
+  condition: String
+  actionDescription: String
+}
+
+RefModel "1" o-- "*" UserType
+RefModel "1" o-- "*" ResourceType
+RefModel "1" o-- "*" FeedbackType
+RefModel "1" o-- "*" FeedbackDefinition
+RefModel "1" o-- "*" AutomationRule
+
+UserType "0..*" -- "0..*" UserType : superTypes
+
+ResourceType "1" o-- "*" Attribute
+ResourceType "1" o-- "*" AuthorizationRule
+
+FeedbackType "1" <-- "1" FeedbackDefinition : type
+ResourceType "1" <-- "1" FeedbackDefinition : subject
+FeedbackDefinition "1" o-- "*" AuthorizationRule : writers
+FeedbackDefinition "1" o-- "*" ValidationRule
+
+AutomationRule "0..*" o-- "*" ValidationRule : uses
+
+@enduml
+

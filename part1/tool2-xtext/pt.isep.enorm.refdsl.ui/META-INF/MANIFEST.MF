@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: REF DSL UI
+Bundle-SymbolicName: pt.isep.enorm.refdsl.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Require-Bundle: pt.isep.enorm.refdsl,
+ pt.isep.enorm.ref,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.ui.editors;bundle-version="3.14.300",
+ org.eclipse.ui.ide;bundle-version="3.18.500",
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: pt.isep.enorm.refdsl.ui.quickfix
