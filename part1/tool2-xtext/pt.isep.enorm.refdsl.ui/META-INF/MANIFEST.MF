@@ -12,6 +12,11 @@ Require-Bundle: pt.isep.enorm.refdsl,
  org.eclipse.ui.ide;bundle-version="3.18.500",
  org.eclipse.ui,
  org.eclipse.compare,
- org.eclipse.xtext.builder
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.ui.codetemplates.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: pt.isep.enorm.refdsl.ui.quickfix
+Export-Package: pt.isep.enorm.refdsl.ui.quickfix,
+ pt.isep.enorm.refdsl.ui.internal,
+ pt.isep.enorm.refdsl.ui.contentassist
+Import-Package: org.apache.log4j
+Bundle-Activator: pt.isep.enorm.refdsl.ui.internal.RefdslActivator

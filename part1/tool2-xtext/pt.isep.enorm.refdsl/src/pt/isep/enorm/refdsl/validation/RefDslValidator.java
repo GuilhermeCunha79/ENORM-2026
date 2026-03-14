@@ -10,15 +10,15 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.validation.Check;
 
-import pt.isep.enorm.ref.ref.Attribute;
-import pt.isep.enorm.ref.ref.AutomationRule;
-import pt.isep.enorm.ref.ref.FeedbackDefinition;
-import pt.isep.enorm.ref.ref.FeedbackType;
-import pt.isep.enorm.ref.ref.RefModel;
-import pt.isep.enorm.ref.ref.RefPackage;
-import pt.isep.enorm.ref.ref.ResourceType;
-import pt.isep.enorm.ref.ref.UserType;
-import pt.isep.enorm.ref.ref.ValidationRule;
+import pt.isep.enorm.refdsl.refDsl.Attribute;
+import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
+import pt.isep.enorm.refdsl.refDsl.FeedbackType;
+import pt.isep.enorm.refdsl.refDsl.RefModel;
+import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
+import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.UserType;
+import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 
 public class RefDslValidator extends AbstractRefDslValidator {
 
@@ -43,7 +43,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		if (model.getName() != null && !model.getName().isEmpty()
 				&& !Character.isUpperCase(model.getName().charAt(0))) {
 			warning("RefModel name should start with a capital letter.",
-					RefPackage.Literals.REF_MODEL__NAME,
+					RefDslPackage.Literals.REF_MODEL__NAME,
 					INVALID_REF_MODEL_NAME);
 		}
 	}
@@ -52,7 +52,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public void checkRefModelNameLength(RefModel model) {
 		if (model.getName() != null && model.getName().length() <= 2) {
 			error("RefModel name must have more than 2 characters.",
-					RefPackage.Literals.REF_MODEL__NAME,
+					RefDslPackage.Literals.REF_MODEL__NAME,
 					INVALID_REF_MODEL_NAME_LENGTH);
 		}
 	}
@@ -62,7 +62,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		if (userType.getName() != null && !userType.getName().isEmpty()
 				&& !Character.isUpperCase(userType.getName().charAt(0))) {
 			warning("UserType name should start with a capital letter.",
-					RefPackage.Literals.USER_TYPE__NAME,
+					RefDslPackage.Literals.USER_TYPE__NAME,
 					INVALID_USER_TYPE_NAME);
 		}
 	}
@@ -76,7 +76,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		for (UserType other : root.getUserTypes()) {
 			if (other != userType && name.equals(other.getName())) {
 				error("UserType name must be unique within the model.",
-						RefPackage.Literals.USER_TYPE__NAME,
+						RefDslPackage.Literals.USER_TYPE__NAME,
 						INVALID_USER_TYPE_NAME_DUPLICATE);
 				return;
 			}
@@ -87,7 +87,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public void checkUserTypeSuperTypesNoSelf(UserType userType) {
 		if (userType.getSuperTypes() != null && userType.getSuperTypes().contains(userType)) {
 			error("UserType must not have self in superTypes.",
-					RefPackage.Literals.USER_TYPE__SUPER_TYPES,
+					RefDslPackage.Literals.USER_TYPE__SUPER_TYPES,
 					INVALID_USER_TYPE_SUPERTYPES_SELF);
 		}
 	}
@@ -97,7 +97,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		if (resourceType.getName() != null && !resourceType.getName().isEmpty()
 				&& !Character.isUpperCase(resourceType.getName().charAt(0))) {
 			warning("ResourceType name should start with a capital letter.",
-					RefPackage.Literals.RESOURCE_TYPE__NAME,
+					RefDslPackage.Literals.RESOURCE_TYPE__NAME,
 					INVALID_RESOURCE_TYPE_NAME);
 		}
 	}
@@ -106,7 +106,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public void checkResourceTypeNameLength(ResourceType resourceType) {
 		if (resourceType.getName() != null && resourceType.getName().length() <= 2) {
 			error("ResourceType name must have more than 2 characters.",
-					RefPackage.Literals.RESOURCE_TYPE__NAME,
+					RefDslPackage.Literals.RESOURCE_TYPE__NAME,
 					INVALID_RESOURCE_TYPE_NAME_LENGTH);
 		}
 	}
@@ -120,7 +120,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		for (ResourceType other : root.getResourceTypes()) {
 			if (other != resourceType && name.equals(other.getName())) {
 				error("ResourceType name must be unique within the model.",
-						RefPackage.Literals.RESOURCE_TYPE__NAME,
+						RefDslPackage.Literals.RESOURCE_TYPE__NAME,
 						INVALID_RESOURCE_TYPE_NAME_DUPLICATE);
 				return;
 			}
@@ -138,7 +138,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 			for (Attribute a : rt.getAttributes()) {
 				if (a != attribute && name.equals(a.getName())) {
 					error("Attribute name must be unique within the ResourceType.",
-							RefPackage.Literals.ATTRIBUTE__NAME,
+							RefDslPackage.Literals.ATTRIBUTE__NAME,
 							INVALID_ATTRIBUTE_NAME_DUPLICATE);
 					return;
 				}
@@ -149,7 +149,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 			for (Attribute a : ft.getAttributes()) {
 				if (a != attribute && name.equals(a.getName())) {
 					error("Attribute name must be unique within the FeedbackType.",
-							RefPackage.Literals.ATTRIBUTE__NAME,
+							RefDslPackage.Literals.ATTRIBUTE__NAME,
 							INVALID_ATTRIBUTE_NAME_DUPLICATE);
 					return;
 				}
@@ -162,7 +162,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		if (feedbackType.getName() != null && !feedbackType.getName().isEmpty()
 				&& !Character.isUpperCase(feedbackType.getName().charAt(0))) {
 			warning("FeedbackType name should start with a capital letter.",
-					RefPackage.Literals.FEEDBACK_TYPE__NAME,
+					RefDslPackage.Literals.FEEDBACK_TYPE__NAME,
 					INVALID_FEEDBACK_TYPE_NAME);
 		}
 	}
@@ -176,7 +176,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		for (FeedbackType other : root.getFeedbackTypes()) {
 			if (other != feedbackType && name.equals(other.getName())) {
 				error("FeedbackType name must be unique within the model.",
-						RefPackage.Literals.FEEDBACK_TYPE__NAME,
+						RefDslPackage.Literals.FEEDBACK_TYPE__NAME,
 						INVALID_FEEDBACK_TYPE_NAME_DUPLICATE);
 				return;
 			}
@@ -187,7 +187,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public void checkFeedbackDefinitionWriters(FeedbackDefinition fd) {
 		if (fd.getWriters() == null || fd.getWriters().isEmpty()) {
 			warning("FeedbackDefinition should have at least one writer.",
-					RefPackage.Literals.FEEDBACK_DEFINITION__WRITERS,
+					RefDslPackage.Literals.FEEDBACK_DEFINITION__WRITERS,
 					INVALID_FEEDBACK_DEFINITION_WRITERS);
 		}
 	}
@@ -197,7 +197,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		String id = rule.getImplementationId();
 		if (id != null && id.length() > 0 && id.length() < 3) {
 			error("ValidationRule implementationId must have at least 3 characters.",
-					RefPackage.Literals.VALIDATION_RULE__IMPLEMENTATION_ID,
+					RefDslPackage.Literals.VALIDATION_RULE__IMPLEMENTATION_ID,
 					INVALID_VALIDATION_RULE_IMPL_ID_LENGTH);
 		}
 	}
@@ -207,7 +207,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		if (rule.getName() != null && !rule.getName().isEmpty()
 				&& !Character.isUpperCase(rule.getName().charAt(0))) {
 			warning("AutomationRule name should start with a capital letter.",
-					RefPackage.Literals.AUTOMATION_RULE__NAME,
+					RefDslPackage.Literals.AUTOMATION_RULE__NAME,
 					INVALID_AUTOMATION_RULE_NAME);
 		}
 	}
@@ -216,7 +216,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public void checkAutomationRuleTriggerNonEmpty(AutomationRule rule) {
 		if (rule.getTrigger() == null || rule.getTrigger().trim().isEmpty()) {
 			warning("AutomationRule trigger should be non-empty.",
-					RefPackage.Literals.AUTOMATION_RULE__TRIGGER,
+					RefDslPackage.Literals.AUTOMATION_RULE__TRIGGER,
 					INVALID_AUTOMATION_RULE_TRIGGER);
 		}
 	}

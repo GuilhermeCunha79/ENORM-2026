@@ -12,9 +12,9 @@ Workflow {
 			project = StandardProjectConfig {
 				baseName = "pt.isep.enorm.refdsl"
 				rootPath = rootPath
-				runtimeTest = { enabled = true }
+				runtimeTest = { enabled = false }
 				eclipsePlugin = { enabled = true }
-				eclipsePluginTest = { enabled = true }
+				eclipsePluginTest = { enabled = false }
 				createEclipseMetaData = true
 			}
 			code = {

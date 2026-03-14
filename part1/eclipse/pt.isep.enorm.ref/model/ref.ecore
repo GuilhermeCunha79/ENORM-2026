@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ref" nsURI="http://www.example.org/ref" nsPrefix="ref">
+  <eClassifiers xsi:type="ecore:EEnum" name="PrimitiveType">
+    <eLiterals name="TEXT" value="0"/>
+    <eLiterals name="NUMBER" value="1"/>
+    <eLiterals name="BOOLEAN" value="2"/>
+    <eLiterals name="DATE" value="3"/>
+    <eLiterals name="IMAGE" value="4"/>
+    <eLiterals name="VIDEO" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ValidationKind">
+    <eLiterals name="AUTOMATIC" value="0"/>
+    <eLiterals name="MANUAL" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ActionKind">
+    <eLiterals name="READ" value="0"/>
+    <eLiterals name="WRITE" value="1"/>
+    <eLiterals name="CREATE" value="2"/>
+    <eLiterals name="UPDATE" value="3"/>
+    <eLiterals name="DELETE" value="4"/>
+    <eLiterals name="MODERATE" value="5"/>
+    <eLiterals name="REPORT" value="6"/>
+    <eLiterals name="VALIDATE" value="7"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RefModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userTypes" upperBound="-1" eType="#//UserType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceTypes" upperBound="-1" eType="#//ResourceType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feedbackTypes" upperBound="-1" eType="#//FeedbackType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feedbackDefinitions" upperBound="-1" eType="#//FeedbackDefinition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="automationRules" upperBound="-1" eType="#//AutomationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superTypes" upperBound="-1" eType="#//UserType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1" eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="authorizationRules" upperBound="-1" eType="#//AuthorizationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PrimitiveType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeedbackType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasRating" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recursive" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1" eType="#//Attribute" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeedbackDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//FeedbackType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subject" eType="#//ResourceType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="writers" upperBound="-1" eType="#//UserType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validationRules" upperBound="-1" eType="#//ValidationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValidationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//ValidationKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="implementationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AuthorizationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowedAction" eType="#//ActionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="role" eType="#//UserType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AutomationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trigger" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usedValidationRules" upperBound="-1" eType="#//ValidationRule"/>
+  </eClassifiers>
+</ecore:EPackage>

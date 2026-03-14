@@ -12,13 +12,13 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix;
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
 
-import pt.isep.enorm.ref.ref.AutomationRule;
-import pt.isep.enorm.ref.ref.FeedbackDefinition;
-import pt.isep.enorm.ref.ref.RefModel;
-import pt.isep.enorm.ref.ref.ResourceType;
-import pt.isep.enorm.ref.ref.UserType;
-import pt.isep.enorm.ref.ref.FeedbackType;
-import pt.isep.enorm.ref.ref.ValidationRule;
+import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
+import pt.isep.enorm.refdsl.refDsl.RefModel;
+import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.UserType;
+import pt.isep.enorm.refdsl.refDsl.FeedbackType;
+import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 import pt.isep.enorm.refdsl.validation.RefDslValidator;
 
 public class RefDslQuickfixProvider extends DefaultQuickfixProvider {

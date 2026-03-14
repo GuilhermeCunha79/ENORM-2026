@@ -10,7 +10,21 @@ Require-Bundle: pt.isep.enorm.ref,
  org.eclipse.xtext.util,
  org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
  org.eclipse.emf.mwe2.launch,
- org.eclipse.emf.mwe2.runtime
+ org.eclipse.emf.mwe2.runtime,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.42.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: pt.isep.enorm.refdsl,
- pt.isep.enorm.refdsl.validation
+ pt.isep.enorm.refdsl.validation,
+ pt.isep.enorm.refdsl.services,
+ pt.isep.enorm.refdsl.serializer,
+ pt.isep.enorm.refdsl.scoping,
+ pt.isep.enorm.refdsl.parser.antlr,
+ pt.isep.enorm.refdsl.parser.antlr.internal,
+ pt.isep.enorm.refdsl.generator,
+ pt.isep.enorm.refdsl.formatting2,
+ pt.isep.enorm.refdsl.refDsl.impl,
+ pt.isep.enorm.refdsl.refDsl,
+ pt.isep.enorm.refdsl.refDsl.util
+Import-Package: org.apache.log4j

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="refDsl" nsURI="http://www.example.org/refdsl" nsPrefix="refDsl">
+  <eClassifiers xsi:type="ecore:EClass" name="RefModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userTypes" upperBound="-1"
+        eType="#//UserType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceTypes" upperBound="-1"
+        eType="#//ResourceType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feedbackTypes" upperBound="-1"
+        eType="#//FeedbackType" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feedbackDefinitions" upperBound="-1"
+        eType="#//FeedbackDefinition" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="automationRules" upperBound="-1"
+        eType="#//AutomationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superTypes" unique="false"
+        upperBound="-1" eType="#//UserType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="authorizationRules" upperBound="-1"
+        eType="#//AuthorizationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PrimitiveType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeedbackType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasRating" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recursive" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeedbackDefinition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//FeedbackType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subject" eType="#//ResourceType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="writers" unique="false"
+        upperBound="-1" eType="#//UserType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="validationRules" upperBound="-1"
+        eType="#//ValidationRule" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValidationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" eType="#//ValidationKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="implementationId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AuthorizationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowedAction" eType="#//ActionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="role" eType="#//UserType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AutomationRule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trigger" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PrimitiveType">
+    <eLiterals name="TEXT" literal="TEXT"/>
+    <eLiterals name="NUMBER" value="1" literal="NUMBER"/>
+    <eLiterals name="BOOLEAN" value="2" literal="BOOLEAN"/>
+    <eLiterals name="DATE" value="3" literal="DATE"/>
+    <eLiterals name="IMAGE" value="4" literal="IMAGE"/>
+    <eLiterals name="VIDEO" value="5" literal="VIDEO"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ValidationKind">
+    <eLiterals name="AUTOMATIC" literal="AUTOMATIC"/>
+    <eLiterals name="MANUAL" value="1" literal="MANUAL"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ActionKind">
+    <eLiterals name="READ" literal="READ"/>
+    <eLiterals name="WRITE" value="1" literal="WRITE"/>
+    <eLiterals name="CREATE" value="2" literal="CREATE"/>
+    <eLiterals name="UPDATE" value="3" literal="UPDATE"/>
+    <eLiterals name="DELETE" value="4" literal="DELETE"/>
+    <eLiterals name="MODERATE" value="5" literal="MODERATE"/>
+    <eLiterals name="REPORT" value="6" literal="REPORT"/>
+    <eLiterals name="VALIDATE" value="7" literal="VALIDATE"/>
+  </eClassifiers>
+</ecore:EPackage>

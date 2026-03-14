@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: pt.isep.enorm.refdsl.ide
+Bundle-SymbolicName: pt.isep.enorm.refdsl.ide;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-ActivationPolicy: lazy
+Export-Package: pt.isep.enorm.refdsl.ide.contentassist.antlr,
+ pt.isep.enorm.refdsl.ide.contentassist.antlr.internal
+Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Automatic-Module-Name: pt.isep.enorm.refdsl.ide
