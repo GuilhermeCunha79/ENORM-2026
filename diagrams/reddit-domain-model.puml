@@ -1,0 +1,100 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 80
+skinparam roundCorner 5
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+' Estilo Neutro e Profissional
+skinparam class {
+    BackgroundColor White
+    BorderColor #2D3E50
+    ArrowColor #2D3E50
+    FontSize 12
+}
+
+title Domain Model – Reddit Scenario
+
+package "Identity & Users" {
+    class User {
+        id: String
+        username: String
+        registrationDate: Date
+    }
+    class Moderator
+}
+
+package "Communities & Content" {
+    class Subreddit {
+        id: String
+        name: String
+        description: String
+    }
+    class Content {
+        id: String
+        creationDate: Date
+    }
+    class Post {
+        title: String
+        body: String
+        type: TEXT | LINK | MEDIA
+    }
+    class Comment {
+        body: String
+    }
+    class AutomationRule {
+        id: String
+        trigger: String
+        condition: String
+        actionDescription: String
+    }
+    class CommunityRule {
+        id: String
+        title: String
+        description: String
+    }
+}
+
+package "Feedback & Moderation" {
+    class Vote {
+        id: String
+        value: UPVOTE | DOWNVOTE
+        timestamp: Date
+    }
+    class Report {
+        id: String
+        reason: String
+        status: PENDING | REVIEWED | DISMISSED
+        timestamp: Date
+    }
+}
+
+' --- Posicionamento e Hierarquia ---
+
+' Herança (Topo)
+User <|-- Moderator
+Content <|-- Post
+Content <|-- Comment
+
+' Estrutura de Comunidade (Esquerda)
+Subreddit "1" -down-> "*" Post : contains >
+Subreddit "1" -left-> "*" AutomationRule : has >
+Subreddit "1" -left-> "*" CommunityRule : has >
+Subreddit "*" -right- "*" Moderator : moderated by
+
+' Autoria (Centro)
+Post "*" -right-> "1" User : author
+Comment "*" -right-> "1" User : author
+Comment "*" -up-> "1" Post : on
+Comment "0..1" -left-> "*" Comment : replies to
+
+' Ações e Feedback (Direita/Baixo)
+User "1" -- "*" Vote : casts >
+Vote "*" -up-> "1" Content : on
+
+User "1" -- "*" Report : submits >
+Report "*" -up-> "1" Content : targets
+Report "0..1" -left-> "1" Moderator : reviewed by
+
+@enduml
