@@ -1,0 +1,108 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 140
+skinparam ranksep 110
+skinparam roundCorner 5
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+' Estilo Neutro e Profissional (consistente com Amazon e Reddit)
+skinparam class {
+    BackgroundColor White
+    BorderColor #2D3E50
+    ArrowColor #2D3E50
+    FontSize 12
+}
+
+title Domain Model – YouTube Scenario\nVideos, Channels, Comments, Likes and Moderation
+
+' Ordem dos pacotes e ligações ocultas para afastar nós e reduzir sobreposição
+package "Identity & Users" {
+    class User {
+        id: String
+        username: String
+        registrationDate: Date
+    }
+    class Creator
+    class Moderator
+}
+
+package "Channels & Content" {
+    class Channel {
+        id: String
+        name: String
+        description: String
+        creationDate: Date
+    }
+    class Content {
+        id: String
+        creationDate: Date
+    }
+    class Video {
+        title: String
+        description: String
+        uploadDate: Date
+        duration: Integer
+    }
+    class Comment {
+        text: String
+    }
+}
+
+package "Feedback & Moderation" {
+    class Like {
+        id: String
+        value: LIKE | DISLIKE
+        timestamp: Date
+    }
+    class Subscription {
+        id: String
+        date: Date
+    }
+    class Report {
+        id: String
+        reason: String
+        status: PENDING | REVIEWED | REMOVED
+        timestamp: Date
+    }
+}
+
+' Ligações ocultas para melhorar o layout (mais espaço entre grupos)
+User -[hidden]right- Channel
+Channel -[hidden]right- Like
+Subscription -[hidden]down- Report
+
+' --- Herança (topo) ---
+User <|-- Creator
+User <|-- Moderator
+Content <|-- Video
+Content <|-- Comment
+
+' --- Canais: Creator -> Channel -> Video (fluxo vertical à esquerda) ---
+Creator "1" -down-> "*" Channel : owns >
+Channel "1" -down-> "*" Video : contains >
+Video "*" -up-> "1" Channel : on
+
+' --- Comentários: Video <-> Comment, threading, author (centro) ---
+Video "1" -right-> "*" Comment : has >
+Comment "*" -left-> "1" Video : on
+Comment "0..1" -down-> "*" Comment : replies to
+Comment "*" -up-> "1" User : author
+
+' --- Moderadores (lado direito do Channel) ---
+Channel "*" -right- "*" Moderator : moderated by
+
+' --- Likes: User -> Like -> Video (fluxo bem separado) ---
+User "1" -right-> "*" Like : gives >
+Like "*" -left-> "1" Video : on
+
+' --- Subscrições: User -> Subscription -> Channel ---
+User "1" -down-> "*" Subscription : has >
+Subscription "*" -up-> "1" Channel : to
+
+' --- Reports: User -> Report -> Content; Report -> Moderator ---
+User "1" -down-> "*" Report : submits >
+Report "*" -left-> "1" Content : targets
+Report "0..1" -right-> "1" Moderator : reviewed by
+
+@enduml
