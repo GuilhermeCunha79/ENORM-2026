@@ -6,7 +6,6 @@ skinparam roundCorner 5
 skinparam shadowing false
 skinparam classAttributeIconSize 0
 
-' Estilo Neutro e Profissional (consistente com Amazon e Reddit)
 skinparam class {
     BackgroundColor White
     BorderColor #2D3E50
@@ -14,95 +13,142 @@ skinparam class {
     FontSize 12
 }
 
-title Domain Model – YouTube Scenario\nVideos, Channels, Comments, Likes and Moderation
+title Domain Model – YouTube Scenario\nVideos, Channels, Comments, Likes, Reports, and Moderation
 
-' Ordem dos pacotes e ligações ocultas para afastar nós e reduzir sobreposição
 package "Identity & Users" {
     class User {
         id: String
         username: String
         registrationDate: Date
     }
+
     class Creator
     class Moderator
 }
 
 package "Channels & Content" {
+
     class Channel {
         id: String
         name: String
         description: String
         creationDate: Date
     }
+
     class Content {
         id: String
         creationDate: Date
+        status: ACTIVE | FLAGGED | REMOVED | UNDER_REVIEW
     }
+
     class Video {
         title: String
         description: String
         uploadDate: Date
         duration: Integer
+        commentStatus: ENABLED | DISABLED
     }
+
     class Comment {
         text: String
     }
 }
 
 package "Feedback & Moderation" {
+
     class Like {
         id: String
         value: LIKE | DISLIKE
         timestamp: Date
     }
+
+    class LikeHistory {
+        id: String
+        action: LIKE | DISLIKE | REMOVED
+        timestamp: Date
+    }
+
     class Subscription {
         id: String
         date: Date
     }
+
     class Report {
         id: String
         reason: String
         status: PENDING | REVIEWED | REMOVED
         timestamp: Date
     }
+
+    class VideoModerationCheck {
+        id: String
+        type: COPYRIGHT | CONTENT | SPAM
+        result: APPROVED | FLAGGED | BLOCKED
+        timestamp: Date
+    }
+
+    class CommentModerationCheck {
+        id: String
+        type: SPAM | TOXICITY | BLOCKED_WORD
+        result: APPROVED | FLAGGED | HIDDEN
+        timestamp: Date
+    }
+
+    class CommentSettingsChange {
+        id: String
+        newStatus: ENABLED | DISABLED
+        timestamp: Date
+    }
 }
 
-' Ligações ocultas para melhorar o layout (mais espaço entre grupos)
+' hidden layout helpers
 User -[hidden]right- Channel
 Channel -[hidden]right- Like
 Subscription -[hidden]down- Report
 
-' --- Herança (topo) ---
+' inheritance
 User <|-- Creator
 User <|-- Moderator
 Content <|-- Video
 Content <|-- Comment
 
-' --- Canais: Creator -> Channel -> Video (fluxo vertical à esquerda) ---
+' channels
 Creator "1" -down-> "*" Channel : owns >
 Channel "1" -down-> "*" Video : contains >
 Video "*" -up-> "1" Channel : on
 
-' --- Comentários: Video <-> Comment, threading, author (centro) ---
+' comments
 Video "1" -right-> "*" Comment : has >
 Comment "*" -left-> "1" Video : on
 Comment "0..1" -down-> "*" Comment : replies to
 Comment "*" -up-> "1" User : author
 
-' --- Moderadores (lado direito do Channel) ---
+' moderators
 Channel "*" -right- "*" Moderator : moderated by
 
-' --- Likes: User -> Like -> Video (fluxo bem separado) ---
+' likes (para video e comment)
 User "1" -right-> "*" Like : gives >
-Like "*" -left-> "1" Video : on
+Like "*" -left-> "1" Content : on
 
-' --- Subscrições: User -> Subscription -> Channel ---
+' histórico de likes
+User "1" -right-> "*" LikeHistory : performs >
+LikeHistory "*" -left-> "1" Content : on >
+
+' subscriptions
 User "1" -down-> "*" Subscription : has >
 Subscription "*" -up-> "1" Channel : to
 
-' --- Reports: User -> Report -> Content; Report -> Moderator ---
+' reports
 User "1" -down-> "*" Report : submits >
 Report "*" -left-> "1" Content : targets
 Report "0..1" -right-> "1" Moderator : reviewed by
+
+' automated moderation
+Video "1" -right-> "*" VideoModerationCheck : checked by >
+Comment "1" -right-> "*" CommentModerationCheck : checked by >
+
+' histórico de alterações de status de comentários
+Moderator "1" -down-> "*" CommentSettingsChange : performs >
+CommentSettingsChange "*" -left-> "1" Video : on >
 
 @enduml

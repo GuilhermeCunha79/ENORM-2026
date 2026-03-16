@@ -6,7 +6,7 @@ skinparam roundCorner 5
 skinparam shadowing false
 skinparam classAttributeIconSize 0
 
-' Estilo Neutro e Profissional
+' Neutral and professional style
 skinparam class {
     BackgroundColor White
     BorderColor #2D3E50
@@ -14,7 +14,7 @@ skinparam class {
     FontSize 12
 }
 
-title Domain Model – Reddit Scenario
+title Domain Model – Reddit Scenario with Moderation Checks
 
 package "Identity & Users" {
     class User {
@@ -31,28 +31,58 @@ package "Communities & Content" {
         name: String
         description: String
     }
+
     class Content {
         id: String
         creationDate: Date
     }
+
     class Post {
         title: String
         body: String
         type: TEXT | LINK | MEDIA
+        supportsVote: Boolean = true
+        supportsReport: Boolean = true
     }
+
     class Comment {
         body: String
+        supportsVote: Boolean = true
+        supportsReport: Boolean = true
     }
+
+    class MediaAttachment {
+        id: String
+        type: PHOTO | GIF | VIDEO | LINK
+        url: String
+    }
+
     class AutomationRule {
         id: String
         trigger: String
         condition: String
         actionDescription: String
     }
+
     class CommunityRule {
         id: String
         title: String
         description: String
+    }
+
+    ' Moderation checks
+    class PostModerationCheck {
+        id: String
+        type: SPAM | OFFENSIVE | OTHER
+        result: APPROVED | FLAGGED | REMOVED
+        timestamp: Date
+    }
+
+    class CommentModerationCheck {
+        id: String
+        type: SPAM | OFFENSIVE | OTHER
+        result: APPROVED | FLAGGED | HIDDEN
+        timestamp: Date
     }
 }
 
@@ -62,6 +92,7 @@ package "Feedback & Moderation" {
         value: UPVOTE | DOWNVOTE
         timestamp: Date
     }
+
     class Report {
         id: String
         reason: String
@@ -70,31 +101,40 @@ package "Feedback & Moderation" {
     }
 }
 
-' --- Posicionamento e Hierarquia ---
+' --- Positioning and Hierarchy ---
 
-' Herança (Topo)
+' Inheritance
 User <|-- Moderator
 Content <|-- Post
 Content <|-- Comment
 
-' Estrutura de Comunidade (Esquerda)
+' Community structure
 Subreddit "1" -down-> "*" Post : contains >
 Subreddit "1" -left-> "*" AutomationRule : has >
 Subreddit "1" -left-> "*" CommunityRule : has >
 Subreddit "*" -right- "*" Moderator : moderated by
 
-' Autoria (Centro)
+' Authorship
 Post "*" -right-> "1" User : author
 Comment "*" -right-> "1" User : author
 Comment "*" -up-> "1" Post : on
 Comment "0..1" -left-> "*" Comment : replies to
 
-' Ações e Feedback (Direita/Baixo)
+' Media in comments
+Comment "1" -down-> "*" MediaAttachment : attachments
+
+' Feedback actions
 User "1" -- "*" Vote : casts >
-Vote "*" -up-> "1" Content : on
+Vote "*" -up-> "1" Content : on (Post or Comment)
 
 User "1" -- "*" Report : submits >
-Report "*" -up-> "1" Content : targets
+Report "*" -up-> "1" Content : targets (Post or Comment)
 Report "0..1" -left-> "1" Moderator : reviewed by
+
+' Moderation checks
+Post "1" -right-> "*" PostModerationCheck : checked by >
+Comment "1" -right-> "*" CommentModerationCheck : checked by >
+Moderator "0..1" --> "*" PostModerationCheck : reviewed by
+Moderator "0..1" --> "*" CommentModerationCheck : reviewed by
 
 @enduml

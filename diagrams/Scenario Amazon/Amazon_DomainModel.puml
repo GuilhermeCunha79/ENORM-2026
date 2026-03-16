@@ -15,15 +15,17 @@ skinparam class {
 
 title Domain Model – Amazon Scenario\nProduct Evaluation and User Feedback
 
-
 package "Identity & Users" {
+
     class User {
         id: String
         name: String
         email: String
     }
+
     class Buyer
     class Seller
+
     class VerificationProcess {
         id: String
         type: AUTOMATIC | MANUAL
@@ -33,21 +35,25 @@ package "Identity & Users" {
 }
 
 package "Catalog & Sales" {
+
     class Product {
         id: String
         name: String
         description: String
     }
+
     class Order {
         id: String
         date: Date
     }
+
     class OrderItem {
         quantity: Integer
     }
 }
 
 package "Feedback System" {
+
     class ProductReview {
         id: String
         rating: Integer
@@ -55,10 +61,16 @@ package "Feedback System" {
         creationDate: Date
         verifiedPurchase: Boolean
     }
+
     class MediaAttachment {
         id: String
         type: PHOTO | VIDEO
         url: String
+    }
+
+    class HelpfulVote {
+        id: String
+        timestamp: Date
     }
 }
 
@@ -72,11 +84,14 @@ Seller "1" -- "*" Product : sells >
 
 User "1" -right-> "*" ProductReview : author
 Product "1" -right-> "*" ProductReview : receives
-ProductReview "1" -down-> "*" MediaAttachment : attachments
 
-ProductReview "*" -left-> "1" Product : about
+ProductReview "1" -down-> "*" MediaAttachment : attachments
 
 ProductReview "0..1" -down-> "1" VerificationProcess : verification
 VerificationProcess "0..1" -up-> "1" User : moderator
+
+' Helpful votes
+User "1" -right-> "*" HelpfulVote : gives >
+HelpfulVote "*" -left-> "1" ProductReview : on >
 
 @enduml
