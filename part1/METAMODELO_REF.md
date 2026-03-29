@@ -1,289 +1,294 @@
-# Metamodelo REF (Resource Evaluation and Feedback) — Documentação Detalhada
+# Metamodelo REF v2 (Resource Evaluation and Feedback)
 
-Este documento descreve em pormenor o metamodelo da linguagem REF DSL, criado no âmbito do projeto ENORM (Parte 1), e as justificações baseadas no **enunciado do projeto** e nos cenários de aplicação (YouTube, Amazon, Reddit).
+Este documento descreve o [metamodelo REF](../diagrams/metamodel/ref-metamodel-v2.png), construído a partir dos modelos de domínio dos contextos considerados (Amazon, Reddit e YouTube).
 
----
+Os modelos de domínio específicos desses contextos podem ser encontrados em:
 
-## 1. Objetivo e fundamentação
+- [Modelo de Domínio - Amazon](../diagrams/Scenario%20Amazon/Amazon_DomainModel.png)
+- [Modelo de Domínio - Reddit](../diagrams/Scenario%20Reddit/Reddit_DomainModel.png)
+- [Modelo de Domínio - YouTube](../diagrams/Scenario%20Youtube/Youtube_DomainModel.png)
 
-O enunciado do projeto ENORM prevê a conceção de uma linguagem de domínio para **avaliação e feedback sobre recursos** (REF — *Resource Evaluation and Feedback*), aplicável a vários cenários reais. Em vez de modelar cada cenário à parte, o metamodelo foi desenhado como **união e generalização** dos três cenários-alvo referidos no enunciado:
+## 1. Objetivo
 
-- **YouTube** (vídeos, comentários, likes, canais)
-- **Amazon** (produtos, reviews, compra verificada)
-- **Reddit** (posts, votos, comentários em thread, automations)
+O REF v2 foi desenhado para manter a ideia de união e generalização dos cenários Amazon, YouTube e Reddit, mas com maior capacidade para:
 
-> *«The metamodel for the REF DSL was designed as the **union and generalization** of the three target scenarios described in the **assignment**: YouTube, Amazon and Reddit.»* — Relatório da equipa (Part 1, Design of the Metamodel).
+- modelar contexto (global, comunidade, canal, catálogo)
+- separar tipo de feedback de definição de feedback
+- representar políticas de moderação e verificação explicitamente
+- suportar evolução/refatoração do próprio modelo
 
-Os três cenários partilham conceitos comuns que o metamodelo unifica:
+## 2. Visão global do REF v2
 
-- Existem **recursos** que são avaliados (vídeos, produtos, publicações).
-- Existem **tipos de utilizador / papéis** (espetadores, compradores, vendedores, moderadores) com permissões distintas.
-- Existem várias formas de **feedback** (ratings, comentários, votos, denúncias).
-- Existem **comportamentos e processos** em torno do feedback (verificação de reviews, moderação, automações).
+O elemento raiz `RefModel` agrega blocos conceptuais organizados em seis áreas:
 
-O enunciado fornece ainda uma **projeção textual de exemplo** (USER TYPES, RESOURCE TYPE, FEEDBACK TYPE, FEEDBACK, VALIDATION, AUTOMATION, etc.), com a qual o metamodelo foi alinhado para suportar essa representação.
+- Core: `RefModel`
+- Actors & Context: `UserType`, `ContextType`
+- Structure: `ResourceType`, `Attribute`, `ResourceRelation`
+- Feedback: `FeedbackType`, `FeedbackDefinition`, `FeedbackPolicy`, `RatingPolicy`
+- Governance & Behavior: `ValidationRule`, `ModerationPolicy`, `AuthorizationRule`, `AutomationRule`, `VerificationPolicy`
+- Evolution: `EvolutionRule`, `RefactoringOperation`
 
----
+Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio, moderação/automação e manutenção evolutiva da DSL.
 
-## 2. Visão geral do metamodelo
+## 2.1 Resumo sucinto dos conceitos
 
-O metamodelo REF tem um elemento raiz (**RefModel**) que agrega todos os tipos de utilizador, tipos de recurso, tipos e definições de feedback, regras de validação e autorização e regras de automação. A representação gráfica está no diagrama PlantUML em `../diagrams/ref-metamodel.puml`.
+### Classes principais
 
-Abaixo descreve-se cada conceito, as **ligações entre eles**, os **atributos** e a **justificação** de cada escolha (com citações do enunciado quando aplicável).
+- RefModel: raiz da especificação, agrega todos os elementos do metamodelo.
+- UserType: papel de utilizador e respetiva especialização por herança.
+- ContextType: âmbito onde recursos e regras se aplicam.
+- ResourceType: tipo de recurso do domínio (ex.: produto, video, post).
+- Attribute: propriedade tipada de um recurso.
+- ResourceRelation: ligação estrutural entre tipos de recurso.
+- FeedbackType: tipo abstrato de feedback (comment, review, vote, report, etc.).
+- FeedbackDefinition: configuração concreta de feedback (autor, tipo e alvo).
+- FeedbackPolicy: estado de disponibilidade de um feedback (ativo/inativo).
+- RatingPolicy: definição da escala de avaliação.
+- ValidationRule: regra de validação do domínio.
+- ModerationPolicy: política de moderação (modo, trigger e decisão).
+- AuthorizationRule: permissão de ação para um ator sobre um alvo.
+- AutomationRule: regra automática acionada por trigger/condição.
+- VerificationPolicy: política para verificar contexto do feedback (ex.: compra verificada).
+- EvolutionRule: regra de migração/evolução entre versões.
+- RefactoringOperation: operação concreta usada na evolução do modelo.
 
----
+### Enumerações
 
-## 3. Ligações entre conceitos (relações)
+- UserKind: categorias de utilizador.
+- ContextKind: categorias de contexto.
+- PrimitiveType: tipos primitivos de dados.
+- FeedbackKind: categorias de feedback.
+- FeedbackSubjectScope: define se o alvo do feedback é recurso, feedback ou ambos.
+- FeedbackStatus: estado operacional do feedback.
+- RatingScaleKind: formato da escala de rating.
+- ValidationKind: validação automática ou manual.
+- RuleSeverity: impacto da regra de validação.
+- ModerationMode: modo de moderação.
+- ModerationDecision: resultado da moderação.
+- ActionKind: ações que podem ser autorizadas.
+- RefactoringKind: tipos de operações de refatoração.
 
-As ligações definem **quem contém quem** (composição) e **quem referencia quem** (associação). A escolha entre contenção e referência segue o princípio: elementos que só existem no contexto de outro são **contidos**; elementos que podem ser partilhados ou reutilizados são **referenciados**.
+## 3. Mapeamento dos novos cenários para o metamodelo
 
-### 3.1 RefModel como raiz (contenção)
+### 3.1 Amazon
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| RefModel → UserType | **contenção** (o–) | 1 → * | Os tipos de utilizador pertencem a uma única especificação REF; sem o modelo não fazem sentido isolados. O enunciado agrupa tudo num único bloco (ex.: «REF MODEL MyApp»). |
-| RefModel → ResourceType | **contenção** | 1 → * | Os tipos de recurso (vídeo, produto, post) são definidos no âmbito da aplicação; mesma justificação. |
-| RefModel → FeedbackType | **contenção** | 1 → * | Os tipos de feedback (rating, comentário, voto) são definidos no modelo; podem ser reutilizados em várias FeedbackDefinitions. |
-| RefModel → FeedbackDefinition | **contenção** | 1 → * | Cada definição (ex.: «reviews sobre produtos») pertence a uma aplicação; liga tipo de feedback, recurso e writers. |
-| RefModel → AutomationRule | **contenção** | 1 → * | As automações (ex.: Reddit) são regras da aplicação; o enunciado inclui-as como bloco próprio. |
+- `Product`, `Order`, `OrderItem` e `ProductReview` mapeiam para `ResourceType` e `FeedbackDefinition`.
+- Regras de compra verificada e unicidade de review por autor/alvo mapeiam para `FeedbackDefinition.requiresVerifiedContext` e `FeedbackDefinition.uniquePerAuthorTarget`.
+- Escala 1..5 mapeia para `RatingPolicy` (`minValue`, `maxValue`, `step`, `scaleKind`).
+- Moderação de reviews mapeia para `ModerationPolicy` e `ValidationRule`.
 
-**Porquê contenção e não referência:** Todos estes elementos são **definidos** no modelo REF; não são entidades externas. Guardá-los dentro do RefModel permite um ficheiro de especificação autocontido e evita referências a modelos externos.
+### 3.2 YouTube
 
-### 3.2 UserType → UserType (superTypes)
+- `Video` e `Comment` mapeiam para `ResourceType`. As relações de resposta em comentário mapeiam para `ResourceRelation` recursiva e/ou `FeedbackDefinition.parent`.
+- `Like`, `Report`, `Subscription` mapeiam para `FeedbackType.kind` (`REACTION`, `REPORT`, `SUBSCRIPTION`) e respetivas `FeedbackDefinition`.
+- Regras de moderação de conteúdo mapeiam para `ModerationPolicy` e `ValidationRule` com severidade.
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| UserType → UserType : **superTypes** | **referência** (––) | 0..* → 0..* | Um papel pode estender vários outros (ex.: Buyer é User); vários papéis podem ter o mesmo supertipo. É **referência** porque o UserType referenciado já existe no RefModel; não o duplicamos. Evita ciclos e self-reference (garantido por restrições). Base: cenário Amazon «Buyer is a user», projeção «buyer IS user». |
+### 3.3 Reddit
 
-### 3.3 ResourceType (contenção de atributos e regras de autorização)
+- `Post` e `Comment` seguem o mesmo padrão estrutural de `ResourceType` + `ResourceRelation`.
+- `Vote` e `Report` encaixam naturalmente em `FeedbackKind.VOTE` e `FeedbackKind.REPORT`.
+- Automações por trigger/condition mapeiam diretamente para `AutomationRule`.
+- Políticas da comunidade e moderação por contexto mapeiam para `ContextType` + `AuthorizationRule` + `ModerationPolicy`.
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| ResourceType → Attribute | **contenção** | 1 → * | Os atributos (nome, descrição, preço, imagem) são a **estrutura** do recurso; não são partilhados entre recursos. Projeção «RESOURCE TYPE product : name AS TEXT, …». |
-| ResourceType → AuthorizationRule | **contenção** | 1 → * | Cada recurso pode ter regras próprias de quem pode READ/WRITE/MODERATE/etc. sobre ele; as regras são específicas desse ResourceType. |
+## 4. Elementos do metamodelo
 
-### 3.4 FeedbackType (sem filhos obrigatórios no diagrama)
+### 4.1 Core
 
-FeedbackType é referenciado por **FeedbackDefinition**; não contém outros elementos do metamodelo além de **attributes** (contenção opcional de Attribute para campos do feedback, ex.: texto, rating). No diagrama principal, FeedbackType tem apenas atributos primitivos (name, hasRating, recursive); em implementações pode ter `attributes : Attribute [*]` para campos adicionais (como na gramática Xtext).
+#### RefModel
 
-### 3.5 FeedbackDefinition (referências + contenção)
+- `name: String`
+- `version: String`
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| FeedbackDefinition → FeedbackType : **type** | **referência** | 1 → 1 | A definição **usa** um tipo de feedback já definido no RefModel (ex.: «ProductReview usa o tipo ReviewType»). Referência para reutilizar o mesmo FeedbackType em várias definições se necessário. |
-| FeedbackDefinition → ResourceType : **subject** | **referência** | 1 → 1 | O feedback aplica-se a um **recurso** (ex.: reviews sobre Product). Referência porque o ResourceType já existe no modelo. Enunciado: «evaluation of a product». |
-| FeedbackDefinition → UserType : **writers** | **referência** | 1 → * | Quem **pode criar** este feedback (ex.: Buyer para reviews). Referência porque os UserTypes estão definidos no RefModel. Projeção «WRITE buyer». |
-| FeedbackDefinition → ValidationRule | **contenção** | 1 → * | As regras de validação (ex.: compra verificada, texto não vazio) são **específicas desta** definição de feedback; por isso contidas. R1–R6 do cenário Amazon aplicam-se a ProductReview. |
+Função: raiz da especificação. Contém todos os elementos do domínio REF.
 
-### 3.6 AutomationRule → ValidationRule (uso opcional)
+### 4.2 Actors & Context
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| AutomationRule → ValidationRule : **uses** | **referência** | 0..* → * | Uma automação pode **reutilizar** regras de validação já definidas (ex.: numa FeedbackDefinition) para expressar condições. Referência para não duplicar regras. No diagrama aparece como «uses»; em algumas implementações pode ser opcional. |
+#### UserType
 
-### 3.7 AuthorizationRule → UserType : role
+- `name: String`
+- `kind: UserKind`
+- relação `superTypes` (0..* para 0..*)
 
-| Ligação | Tipo | Cardinalidade | Porquê |
-|--------|------|----------------|--------|
-| AuthorizationRule → UserType : **role** | **referência** | 1 → 1 | A regra diz «este **papel** (UserType) pode executar esta ação». O UserType já existe no RefModel; referência evita duplicação. |
+`UserKind`: `GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`.
 
----
+#### ContextType
 
-## 4. Atributos: resumo e justificação
+- `name: String`
+- `kind: ContextKind`
+- composição para `ResourceType` (`contains`)
 
-Cada atributo existe para cobrir os cenários ou a projeção textual do enunciado.
+`ContextKind`: `GLOBAL`, `COMMUNITY`, `CHANNEL`, `CATALOG`.
 
-| Classe | Atributo | Tipo | Porquê |
-|--------|----------|------|--------|
-| **RefModel** | name | String | Identifica a aplicação/modelo (ex.: «MyApp»); necessário para a projeção «REF MODEL MyApp» e para mensagens de validação. |
-| **UserType** | name | String | Nome do papel (User, Buyer, Seller, Moderator); obrigatório para referências (superTypes, writers, role) e para a projeção «USER TYPES user, buyer». |
-| **ResourceType** | name | String | Nome do recurso (Video, Product, Post); obrigatório para referências (subject em FeedbackDefinition) e projeção «RESOURCE TYPE product». |
-| **Attribute** | name | String | Nome do campo (title, description, rating); necessário para leitura/geração de código. |
-| **Attribute** | type | PrimitiveType | Tipo do valor (TEXT, NUMBER, etc.); os cenários precisam de texto, números (rating 1–5), booleanos (verified), datas, imagem, vídeo. |
-| **FeedbackType** | name | String | Nome do tipo de feedback (ReviewType, CommentType); usado em FeedbackDefinition.type. |
-| **FeedbackType** | hasRating | Boolean | Diferencia feedback com **estrelas/número** (Amazon 1–5) de feedback só textual (comentário). Cenário Amazon: «rating based on a five-star scale». |
-| **FeedbackType** | recursive | Boolean | Indica se o feedback pode ter **respostas em thread** (comentários a comentários, Reddit/YouTube). Um único booleano evita modelar recursão explícita no metamodelo. |
-| **FeedbackType** | attributes | Attribute [*] | Campos adicionais do feedback (texto do comentário, anexos); Amazon «text comment», «media attachments». |
-| **FeedbackDefinition** | name | String | Nome da definição (ex.: productReview); identifica esta ligação tipo–recurso–writers–validações. |
-| **ValidationRule** | name | String | Nome opcional da regra; útil para mensagens e documentação. |
-| **ValidationRule** | kind | ValidationKind | AUTOMATIC vs. MANUAL; cenário Amazon «verification can be automatic (system rules) or manual (performed by moderators)». |
-| **ValidationRule** | implementationId | String | Identificador para **ligar** a regra a código (validadores, geradores); enunciado e Activity 3 referem regras com lógica concreta (R1–R6). |
-| **AuthorizationRule** | allowedAction | ActionKind | Que ação está permitida (READ, WRITE, MODERATE, etc.); projeção «WRITE buyer», «MODERATE moderator». |
-| **AutomationRule** | name | String | Nome da automação; necessário para identificação e projeção. |
-| **AutomationRule** | trigger | String | **Evento ou condição** que dispara a automação; Reddit e enunciado «AUTOMATION onNewReport(...)». |
-| **AutomationRule** | condition | String | Condição opcional (expressão ou descrição); permite regras mais ricas. |
-| **AutomationRule** | actionDescription | String | Descrição do que acontece quando a regra dispara; suporta documentação e geração. |
+### 4.3 Structure
 
-Os **enumerados** (**PrimitiveType**, **ValidationKind**, **ActionKind**) fixam os valores permitidos para que a linguagem seja precisa e os três cenários (YouTube, Amazon, Reddit) fiquem cobertos sem precisar de tipos ou ações indefinidas.
+#### ResourceType
 
----
+- `name: String`
+- `supportsMedia: boolean`
+- composição de `Attribute`
+- relação `superTypes` com outros `ResourceType`
 
-## 5. Elemento raiz: RefModel
+#### Attribute
 
-**RefModel** é a raiz de uma especificação REF. Contém:
+- `name: String`
+- `type: PrimitiveType`
+- `required: boolean`
+- `multiValued: boolean`
 
-- `name : String` — nome do modelo (ex.: da aplicação).
-- Listas de: **UserType**, **ResourceType**, **FeedbackType**, **FeedbackDefinition**, **AutomationRule**.
+`PrimitiveType`: `TEXT`, `NUMBER`, `BOOLEAN`, `DATE`, `DATETIME`, `IMAGE`, `VIDEO`, `URL`.
 
-**Base no enunciado:** O enunciado estrutura a especificação em blocos (tipos de utilizador, tipos de recurso, tipos de feedback, definições de feedback, validações, automações). O RefModel corresponde a esse **contentor único** que agrupa todos esses blocos para uma dada aplicação, tal como na projeção textual de exemplo (ex.: «REF MODEL MyApp»). As **ligações** RefModel → * (secção 3.1) justificam que todos estes elementos sejam **contidos** no modelo.
+#### ResourceRelation
 
----
+- `name: String`
+- `sourceCardinality: String`
+- `targetCardinality: String`
+- `containment: boolean`
+- `recursive: boolean`
 
-## 6. UserType (papéis / tipos de utilizador)
+Permite representar associações entre recursos (incluindo hierarquias e auto-relações).
 
-**UserType** modela um **papel ou tipo de utilizador** na aplicação.
+### 4.4 Feedback
 
-- `name : String` — nome do tipo (ex.: `User`, `Buyer`, `Seller`, `Moderator`).
-- `superTypes : UserType [*]` — referência a outros UserTypes, permitindo uma **hierarquia de papéis** (ex.: Buyer *é um* User).
+#### FeedbackType
 
-**Base no enunciado e cenários:**
+- `name: String`
+- `kind: FeedbackKind`
+- `subjectScope: FeedbackSubjectScope`
+- `hasRating: boolean`
+- `recursive: boolean`
+- `allowsMedia: boolean`
 
-- No cenário **Amazon** (Activity 3): «A generic **User** represents anyone registered in the system. A **Buyer** is a user who has purchased products… A **Seller** is a user (or organization) that offers products for sale.» Isto justifica a necessidade de **tipos de utilizador** e de **herança** (Buyer/Seller como subtipos de User).
-- A projeção textual de exemplo no enunciado inclui construções do tipo «USER TYPES user, buyer IS user, seller», que correspondem a UserType e à relação **superTypes**.
+`FeedbackKind`: `COMMENT`, `REVIEW`, `REACTION`, `VOTE`, `REPORT`, `SUBSCRIPTION`.
 
----
+`FeedbackSubjectScope`: `RESOURCE_ONLY`, `FEEDBACK_ONLY`, `RESOURCE_OR_FEEDBACK`.
 
-## 7. ResourceType e Attribute (recursos avaliáveis)
+#### FeedbackDefinition
 
-**ResourceType** representa um **tipo de recurso** que pode ser avaliado (vídeo, produto, publicação, comentário, etc.).
+- `name: String`
+- `requiresVerifiedContext: boolean`
+- `uniquePerAuthorTarget: boolean`
+- referência para `FeedbackType` (`type`)
+- referência para `ResourceType` (`subjectResource`, opcional)
+- referência para `UserType` (`author`)
+- referências opcionais para outras `FeedbackDefinition` (`subjectFeedback`, `parent`)
+- composição opcional de `FeedbackPolicy` e `RatingPolicy`
 
-- `name : String` — nome do tipo (ex.: `Video`, `Product`, `Post`).
-- `attributes : Attribute [*]` — propriedades do recurso (nome, descrição, preço, imagem, etc.).
-- `authorizationRules : AuthorizationRule [*]` — que ações cada UserType pode executar sobre este recurso.
+#### FeedbackPolicy
 
-**Attribute** descreve uma propriedade nomeada de um recurso (ou de um tipo de feedback):
+- `status: FeedbackStatus`
 
-- `name : String`
-- `type : PrimitiveType` — tipo primitivo (TEXT, NUMBER, BOOLEAN, DATE, IMAGE, VIDEO).
+`FeedbackStatus`: `ENABLED`, `DISABLED`.
 
-**Base no enunciado:**
+#### RatingPolicy
 
-- O enunciado fala em **recursos** que são avaliados; nos cenários aparecem **vídeos** (YouTube), **produtos** (Amazon), **posts/comentários** (Reddit), cada um com **atributos** (título, descrição, rating, texto, etc.).
-- A projeção textual de exemplo inclui «RESOURCE TYPE product : name AS TEXT, description AS TEXT, image AS IMAGE», alinhada com ResourceType e Attribute e com o **PrimitiveType** para cobrir os campos típicos dos três cenários.
+- `minValue: Number`
+- `maxValue: Number`
+- `step: Number`
+- `scaleKind: RatingScaleKind`
 
----
+`RatingScaleKind`: `NUMERIC`, `ORDINAL`, `PERCENTAGE`.
 
-## 8. PrimitiveType (tipos de dados)
+### 4.5 Governance & Behavior
 
-**PrimitiveType** é um enumerado: **TEXT**, **NUMBER**, **BOOLEAN**, **DATE**, **IMAGE**, **VIDEO**.
+#### ValidationRule
 
-**Base no enunciado e cenários:** Os cenários exigem texto (comentários, descrições), números (ratings 1–5, preços), booleanos (compra verificada), datas, e media (imagem, vídeo). O enunciado e as regras de domínio (ex.: R1 — rating entre 1 e 5) justificam estes tipos para cobrir os três cenários de forma uniforme.
+- `name: String`
+- `kind: ValidationKind`
+- `severity: RuleSeverity`
+- `expression: String`
+- `implementationId: String`
+- alvo opcional: `appliesToResource` e/ou `appliesToFeedback`
+- pode ser invocada por `AutomationRule`
 
----
+`ValidationKind`: `AUTOMATIC`, `MANUAL`.
 
-## 9. FeedbackType (estrutura do feedback)
+`RuleSeverity`: `INFO`, `WARNING`, `ERROR`.
 
-**FeedbackType** define a **estrutura de um tipo de feedback** (rating com estrelas, comentário, voto, etc.).
+#### ModerationPolicy
 
-- `name : String`
-- `hasRating : Boolean` — indica se o feedback inclui uma **avaliação numérica** (ex.: 1–5 estrelas).
-- `recursive : Boolean` — indica se o feedback pode ter **respostas em thread** (ex.: comentários que respondem a comentários).
-- `attributes : Attribute [*]` — campos adicionais (texto, anexos, etc.).
+- `name: String`
+- `mode: ModerationMode`
+- `trigger: String`
+- `decision: ModerationDecision`
+- monitoriza recurso e/ou feedback
+- pode ser executada por um `UserType`
+- pode estar associada a um `ContextType`
 
-**Base no enunciado e cenários:**
+`ModerationMode`: `AUTOMATIC`, `MANUAL`, `HYBRID`.
 
-- **Amazon (Activity 3):** «A **ProductReview** represents a user's evaluation of a product. Each review contains a **rating** based on a five-star scale (1 to 5) and a **text** comment. Reviews may include **media attachments**.» Isto justifica **hasRating** (rating 1–5) e **attributes** (texto, media).
-- **Reddit/YouTube:** comentários em thread justificam **recursive** (comentários que podem ter respostas).
-- O enunciado referencia tipos de feedback distintos (ratings, comentários, votos), cobertos por FeedbackType com estes flags e atributos.
+`ModerationDecision`: `APPROVED`, `FLAGGED`, `HIDDEN`, `REMOVED`, `BLOCKED`, `REJECTED`.
 
----
+#### AuthorizationRule
 
-## 10. FeedbackDefinition (ligação feedback–recurso–utilizadores)
+- `allowedAction: ActionKind`
+- referência para `UserType` (`actor`)
+- contexto opcional (`ContextType`)
+- alvo em `ResourceType` ou `FeedbackDefinition`
 
-**FeedbackDefinition** liga um **FeedbackType** a um **ResourceType** (recurso ao qual o feedback se aplica) e define **quem pode criar** esse feedback e **que regras de validação** se aplicam.
+`ActionKind`: `READ`, `CREATE`, `UPDATE`, `DELETE`, `COMMENT`, `RATE`, `VOTE`, `REPORT`, `SUBSCRIBE`, `MODERATE`, `VALIDATE`.
 
-- `name : String`
-- `type : FeedbackType [1]` — referência ao tipo de feedback.
-- `subject : ResourceType [1]` — recurso alvo (ex.: Product para ProductReview).
-- `writers : UserType [*]` — tipos de utilizador que podem escrever este feedback (ex.: Buyer para reviews de produto).
-- `validationRules : ValidationRule [*]` — regras que o feedback deve satisfazer (ex.: compra verificada, texto não vazio).
+#### AutomationRule
 
-**Base no enunciado:**
+- `name: String`
+- `trigger: String`
+- `condition: String`
+- `actionDescription: String`
+- contexto opcional em `ResourceType`/`ContextType`
+- atua sobre `FeedbackDefinition`
+- reutiliza `ValidationRule` por referência
 
-- **Amazon:** «A Buyer is a user who… can create reviews that can be marked as "verified purchase".» Isto implica uma **definição de feedback** (ProductReview) sobre o recurso Product, com writers = Buyer e regras de validação (verified purchase).
-- A projeção textual de exemplo no enunciado inclui construções do tipo «FEEDBACK productReview : rateType, product, WRITE buyer, VALIDATION: …», correspondentes a FeedbackDefinition (type, subject, writers, validationRules).
+#### VerificationPolicy
 
----
+- `name: String`
+- `mode: ValidationKind`
+- `appliesWhen: String`
+- ligada a `FeedbackDefinition` (`verifies`)
 
-## 11. ValidationRule (regras de domínio)
+Representa explicitamente políticas de verificação do contexto do feedback (ex.: compra verificada no caso Amazon).
 
-**ValidationRule** representa uma **regra de domínio** que as instâncias (ou o feedback) devem cumprir.
+### 4.6 Evolution
 
-- `name : String` (opcional)
-- `kind : ValidationKind` — **AUTOMATIC** (aplicada pelo sistema) ou **MANUAL** (aplicada por moderadores/humanos).
-- `implementationId : String` — identificador para ligar a lógica concreta em validadores ou geradores de código.
+#### EvolutionRule
 
-**Base no enunciado e Activity 3 (Amazon):**
+- `name: String`
+- `fromVersion: String`
+- `toVersion: String`
+- `transformationId: String`
+- composição de uma ou mais `RefactoringOperation`
 
-- As regras R1–R6 do cenário Amazon (rating 1–5, compra verificada, verificação única por review, atributos obrigatórios da verificação, moderador em verificação manual, texto não vazio) são exemplos de **ValidationRule**.
-- «Verification can be **automatic** (system rules) or **manual** (performed by moderators/support staff)» — citado no relatório de domínio (Activity 3) — justifica o enumerado **ValidationKind** (AUTOMATIC, MANUAL) e a presença de ValidationRule no metamodelo.
+#### RefactoringOperation
 
----
+- `name: String`
+- `kind: RefactoringKind`
+- `scriptId: String`
 
-## 12. ValidationKind (tipo de validação)
+`RefactoringKind`: `RENAME_ELEMENT`, `MOVE_ELEMENT`, `SPLIT_ELEMENT`, `MERGE_ELEMENT`, `CHANGE_TYPE`.
 
-**ValidationKind**: **AUTOMATIC** | **MANUAL**.
+## 5. Relações estruturais principais
 
-**Base no enunciado:** Conforme descrito para ValidationRule e no cenário Amazon (verificação automática vs. manual).
+As relações mais relevantes do v2 são:
 
----
+- `RefModel` contém todas as definições centrais (`UserType`, `ResourceType`, `FeedbackType`, `FeedbackDefinition`, políticas, regras e elementos de evolução).
+- `FeedbackDefinition` é o ponto de ligação entre autor, tipo de feedback e alvo (recurso ou feedback).
+- `AuthorizationRule`, `ModerationPolicy` e `AutomationRule` aplicam comportamento por contexto e por alvo.
+- `ValidationRule` concentra restrições formais reutilizáveis por feedback e automação.
+- `VerificationPolicy` separa a verificação de contexto do resto das regras de validação.
 
-## 13. AuthorizationRule (permissões)
+## 6. Restrições explícitas no diagrama v2
 
-**AuthorizationRule** modela a **permissão** de um tipo de utilizador para executar uma **ação** sobre um recurso ou sobre feedback.
+O diagrama [diagrams/metamodel/ref-metamodel-v2.puml](diagrams/metamodel/ref-metamodel-v2.puml) define notas com restrições importantes:
 
-- `allowedAction : ActionKind` — ação permitida.
-- `role : UserType [1]` — tipo de utilizador ao qual a permissão se aplica.
+1. `ValidationRule` deve ter pelo menos um alvo (`ResourceType` ou `FeedbackDefinition`).
+2. Se `FeedbackPolicy.status = DISABLED`, não é permitida criação de novas instâncias para a `FeedbackDefinition` associada.
+3. `RatingPolicy` só pode existir quando `FeedbackType.hasRating = true`.
+4. O alvo em `FeedbackDefinition` deve respeitar `FeedbackType.subjectScope` e ter sempre pelo menos um alvo válido.
 
-**ActionKind** (enumerado): **READ**, **WRITE**, **CREATE**, **UPDATE**, **DELETE**, **MODERATE**, **REPORT**, **VALIDATE**.
+## 7. Justificação das principais evoluções face ao modelo anterior
 
-**Base no enunciado:**
+As mudanças do v2 respondem diretamente a necessidades que ficaram mais claras nos novos cenários:
 
-- O enunciado e os cenários exigem controlo de **quem pode fazer o quê** (criar feedback, moderar, reportar, validar). A projeção textual de exemplo inclui «WRITE buyer», «MODERATE moderator», alinhadas com AuthorizationRule e ActionKind.
-- **AuthorizationRule** aparece tanto em **ResourceType** (permissões sobre o recurso) como indiretamente em **FeedbackDefinition** através de **writers** (quem pode escrever esse feedback), cobrindo os aspetos de autorização referidos no enunciado.
-
----
-
-## 14. AutomationRule (automações)
-
-**AutomationRule** abstrai **mecanismos de automação** (ex.: automations do Reddit, processos automáticos de moderação ou verificação).
-
-- `name : String`
-- `trigger : String` — evento ou condição que dispara a automação.
-- `condition : String` (opcional)
-- `actionDescription : String` (opcional) — descrição do que acontece quando a regra é acionada.
-
-**Base no enunciado:**
-
-- O enunciado refere **automações** (ex.: Reddit) e processos automáticos (verificação, moderação). «**AutomationRule** – abstracts automation mechanisms like **Reddit's automations** and other automatic processes (e.g. auto-moderation, automatic verification).» — Relatório da equipa.
-- A projeção textual de exemplo inclui «AUTOMATION onNewReport(...) DO ...», correspondente a AutomationRule com trigger/condição e ação.
-
----
-
-## 15. Resumo das citações e alinhamento com o enunciado
-
-| Conceito do metamodelo | Base / citação no enunciado e relatórios |
-|------------------------|------------------------------------------|
-| **RefModel** | Contentor único que agrupa todos os blocos da especificação REF, conforme a estrutura e projeção textual do enunciado. |
-| **UserType** + **superTypes** | Cenário Amazon: User, Buyer, Seller; projeção «USER TYPES user, buyer IS user, seller». |
-| **ResourceType** + **Attribute** | Recursos avaliáveis (vídeo, produto, post) com atributos; projeção «RESOURCE TYPE … name AS TEXT, …». |
-| **PrimitiveType** | Tipos necessários para os três cenários (texto, número, rating, boolean, data, imagem, vídeo). |
-| **FeedbackType** (hasRating, recursive, attributes) | Amazon: rating 1–5 e texto; Reddit/YouTube: comentários em thread; media attachments. |
-| **FeedbackDefinition** (type, subject, writers, validationRules) | Amazon: ProductReview sobre Product, writers = Buyer; projeção «FEEDBACK … WRITE buyer, VALIDATION». |
-| **ValidationRule** + **ValidationKind** | Regras R1–R6 (Amazon); verificação automática vs. manual. |
-| **AuthorizationRule** + **ActionKind** | Quem pode criar, ler, moderar, reportar, validar; projeção «WRITE buyer», «MODERATE moderator». |
-| **AutomationRule** | Reddit automations; processos automáticos de moderação/verificação; projeção «AUTOMATION … DO …». |
-
----
-
-## 16. Conclusão
-
-O metamodelo REF foi desenhado para ser a **união e generalização** dos três cenários-alvo do enunciado (YouTube, Amazon, Reddit), cobrindo:
-
-- **Estrutura:** ResourceType, Attribute, UserType, FeedbackType, FeedbackDefinition.
-- **Autorização:** AuthorizationRule e ActionKind.
-- **Comportamento:** ValidationRule (incl. AUTOMATIC/MANUAL) e AutomationRule.
-
-As **ligações** entre conceitos (secção 3) seguem o critério contenção vs. referência: elementos definidos no modelo são contidos no RefModel ou no respetivo pai; elementos reutilizados (UserType, ResourceType, FeedbackType) são referenciados. Os **atributos** (secção 4) foram escolhidos para cobrir a projeção textual do enunciado e as necessidades dos três cenários (nome, hasRating, recursive, kind, implementationId, trigger, etc.).
-
-O diagrama completo do metamodelo encontra-se em `../diagrams/ref-metamodel.puml`; as restrições e refactorings estão documentados na secção *Constraints and Refactorings* do relatório da equipa em `part1/readme.md`.
+- Introdução de `ContextType` para distinguir regras globais, por comunidade, por canal e por catálogo.
+- Introdução de `FeedbackKind` e `FeedbackSubjectScope` para tipar melhor variações de feedback.
+- Separação entre `ValidationRule`, `ModerationPolicy` e `VerificationPolicy` para reduzir ambiguidades de responsabilidade.
+- Expansão de `ActionKind` para incluir operações específicas de plataformas sociais (`VOTE`, `SUBSCRIBE`, `REPORT`, etc.).
+- Inclusão de bloco de evolução (`EvolutionRule`, `RefactoringOperation`) para gerir mudanças da DSL entre versões.

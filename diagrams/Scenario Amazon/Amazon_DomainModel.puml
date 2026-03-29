@@ -25,6 +25,7 @@ package "Identity & Users" {
 
     class Buyer
     class Seller
+    class Moderator
 
     class VerificationProcess {
         id: String
@@ -72,10 +73,30 @@ package "Feedback System" {
         id: String
         timestamp: Date
     }
+
+    class RatingPolicy {
+        minValue: Integer = 1
+        maxValue: Integer = 5
+        step: Integer = 1
+    }
+
+    class ReviewPolicy {
+        id: String
+        requiresVerifiedPurchase: Boolean = true
+        oneReviewPerOrderItem: Boolean = true
+    }
+
+    class ReviewModerationCheck {
+        id: String
+        reason: SPAM | ABUSE | OFF_TOPIC | INCENTIVIZED
+        result: APPROVED | HIDDEN | REMOVED
+        timestamp: Date
+    }
 }
 
 User <|-- Buyer
 User <|-- Seller
+User <|-- Moderator
 
 Buyer "1" -- "*" Order : places >
 Order "1" -- "*" OrderItem : contains >
@@ -88,7 +109,13 @@ Product "1" -right-> "*" ProductReview : receives
 ProductReview "1" -down-> "*" MediaAttachment : attachments
 
 ProductReview "0..1" -down-> "1" VerificationProcess : verification
-VerificationProcess "0..1" -up-> "1" User : moderator
+VerificationProcess "0..1" -up-> "1" Moderator : moderator
+
+Product "1" -down-> "1" ReviewPolicy : review policy
+ProductReview "*" -left-> "1" RatingPolicy : uses scale
+ProductReview "*" -left-> "1" ReviewPolicy : constrained by
+ProductReview "1" -right-> "*" ReviewModerationCheck : moderation
+ReviewModerationCheck "*" -up-> "0..1" Moderator : reviewed by
 
 ' Helpful votes
 User "1" -right-> "*" HelpfulVote : gives >

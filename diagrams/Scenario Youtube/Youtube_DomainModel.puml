@@ -99,6 +99,19 @@ package "Feedback & Moderation" {
         newStatus: ENABLED | DISABLED
         timestamp: Date
     }
+
+    class ChannelPermissionPolicy {
+        id: String
+        action: COMMENT | LIVE_CHAT | UPLOAD | MODERATE
+        allowedFor: EVERYONE | SUBSCRIBERS | MEMBERS | MODERATORS
+    }
+
+    class ContentValidationRule {
+        id: String
+        target: VIDEO | COMMENT
+        policyType: COPYRIGHT | COMMUNITY_GUIDELINES | SPAM
+        severity: WARNING | STRIKE | REMOVAL
+    }
 }
 
 ' hidden layout helpers
@@ -116,12 +129,16 @@ Content <|-- Comment
 Creator "1" -down-> "*" Channel : owns >
 Channel "1" -down-> "*" Video : contains >
 Video "*" -up-> "1" Channel : on
+Channel "1" -right-> "*" ChannelPermissionPolicy : policy >
+Creator "1" --> "*" ChannelPermissionPolicy : configures
 
 ' comments
 Video "1" -right-> "*" Comment : has >
 Comment "*" -left-> "1" Video : on
 Comment "0..1" -down-> "*" Comment : replies to
 Comment "*" -up-> "1" User : author
+Video "1" --> "*" ContentValidationRule : validated by
+Comment "1" --> "*" ContentValidationRule : validated by
 
 ' moderators
 Channel "*" -right- "*" Moderator : moderated by
@@ -146,6 +163,7 @@ Report "0..1" -right-> "1" Moderator : reviewed by
 ' automated moderation
 Video "1" -right-> "*" VideoModerationCheck : checked by >
 Comment "1" -right-> "*" CommentModerationCheck : checked by >
+Moderator "0..1" --> "*" ContentValidationRule : reviewed by
 
 ' histórico de alterações de status de comentários
 Moderator "1" -down-> "*" CommentSettingsChange : performs >
