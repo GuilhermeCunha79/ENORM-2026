@@ -1,13 +1,5 @@
 # ENORM Project, Part 1, Tool 2 – Xtext
-
-In this folder you should add **all** artifacts developed for part 1 of the ENORM Project, related to tool 2 (Xtext).
-
-You should also include in this file the report for this part of the project (only for tool 2).
-
-**Note:** If for some reason you need to bypass these guidelines please ask for directions with your teacher and **always** state the exceptions in your commits and issues in bitbucket.
-
-The following sections correspond to the suggested structure for the individual report for tool 2.
-
+w
 ## Description of the Tool
 
 [Xtext](https://eclipse.dev/Xtext/index.html) is a framework integrated in the Eclipse IDE for developing domain-specific languages (DSLs). A DSL is a language tailored to a specific problem domain, offering domain experts a more intuitive and concise way of expressing solutions than general-purpose languages.
@@ -81,52 +73,21 @@ In this scenario, the main goal is to model how users evaluate products they buy
 
 This domain focuses on the structural elements (products, users, reviews, attachments, verification) and on the basic behaviours related to creating, verifying and managing product evaluations.
 
-### Informal domain model (structural view)
+### Domain model (PlantUML)
 
-The following text describes an informal class-diagram-like model for the Amazon scenario:
+The domain model for the Amazon scenario is given as a **PlantUML class diagram**:
 
-- **User**
-  - Attributes: `id`, `name`, `email`
-  - Relationships:
-    - `User` 1..* → 0..* `ProductReview` (a user can write many reviews; a review belongs to exactly one user)
-- **Buyer** (subtype of `User`)
-  - Relationships:
-    - `Buyer` 1..* → 0..* `Order` (a buyer can have many orders)
-- **Seller** (subtype of `User`)
-  - Relationships:
-    - `Seller` 1..* → 0..* `Product` (a seller can offer many products)
-- **Product**
-  - Attributes: `id`, `name`, `description`
-  - Relationships:
-    - `Product` 1 → 0..* `ProductReview`
-    - `Product` 1 → 1 `Seller`
-- **Order**
-  - Attributes: `id`, `date`
-  - Relationships:
-    - `Order` 1 → 1 `Buyer`
-    - `Order` 1 → 1..* `OrderItem`
-- **OrderItem**
-  - Attributes: `quantity`
-  - Relationships:
-    - `OrderItem` 1 → 1 `Product`
-- **ProductReview**
-  - Attributes: `id`, `rating` (1–5 stars), `text`, `creationDate`, `verifiedPurchase` (boolean)
-  - Relationships:
-    - `ProductReview` 1 → 1 `User` (author)
-    - `ProductReview` 1 → 1 `Product`
-    - `ProductReview` 1 → 0..* `MediaAttachment`
-    - `ProductReview` 0..1 → 1 `VerificationProcess`
-- **MediaAttachment**
-  - Attributes: `id`, `type` (PHOTO or VIDEO), `url`
-  - Relationships:
-    - `MediaAttachment` 1 → 1 `ProductReview`
-- **VerificationProcess**
-  - Attributes: `id`, `type` (AUTOMATIC or MANUAL), `status` (PENDING, APPROVED, REJECTED), `timestamp`
-  - Relationships:
-    - `VerificationProcess` 1 → 1 `ProductReview`
-    - (optionally) `VerificationProcess` 0..1 → 1 `User` (moderator responsible for manual verification)
+- **File:** `../../diagrams/amazon-domain-model.puml`
 
-This model can later be generalized and merged with the models for YouTube and Reddit to obtain the global REF metamodel.
+It includes:
+
+- **User** (attributes: `id`, `name`, `email`) and subtypes **Buyer** and **Seller**.
+- **Product** (id, name, description), linked to Seller; **Order** (id, date) and **OrderItem** (quantity), linking Buyer to Product.
+- **ProductReview** (id, rating 1–5, text, creationDate, verifiedPurchase), with author (User), product (Product), and optional **MediaAttachment** (id, type, url) and **VerificationProcess** (id, type, status, timestamp, optional moderator User).
+
+Relationships and cardinalities in the diagram match the structural view required for Activity 3. Notes in the diagram reference the domain rules R1–R6 (see below). This model can later be generalized and merged with the models for YouTube and Reddit to obtain the global REF metamodel.
+
+*To view the diagram: open the `.puml` file in a PlantUML editor (e.g. VS Code with PlantUML extension, or [PlantUML online](https://www.plantuml.com/plantuml/uml)).*
 
 ### Example of domain rules and invariants
 
