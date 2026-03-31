@@ -1,12 +1,33 @@
 # ENORM Project, Part 1 - Team Report
 
-In this folder you should add **all** artifacts developed for part 1 of the ENORM project, **related to team/group work**.
-
-**Note:** If for some reason you need to bypass these guidelines please ask for directions with your teacher and **always** state the exceptions in your commits and issues in bitbucket.
-
-Following there are examples of proposed sections for this part of the report (team part).
-
 ## Domain Knowledge Obtained from Analyzing the Applications
+
+## Justification of Domain Model Decisions
+
+The domain models for **YouTube**, **Amazon** and **Reddit** were designed to keep two goals in balance: faithfully representing each platform and enabling a common abstraction that supports the REF DSL metamodel.
+
+### Amazon
+
+###TODO
+
+### Reddit
+
+###TODO
+
+### YouTube
+
+| Domain decision in the model | Why this was modelled this way | Evidence/source (official) | What to verify/cite in the presentation |
+|---|---|---|---|
+| Separate user roles (`User`, `Creator`, `Moderator`) | YouTube has different responsibilities for content owners and moderation actors, so role separation makes permissions explicit. | [Channel permissions](https://support.google.com/youtube/answer/9481328); [Report content](https://support.google.com/youtube/answer/2802027) | Confirm role capabilities (manage channel, moderation/report handling) and map to `AuthorizationRule`. |
+| `Channel` as an aggregate that contains videos | Channels are the publishing unit in YouTube and organize creator content. | [Create/manage channel](https://support.google.com/youtube/answer/1646861) | Cite that channels are the owner context for uploaded videos. |
+| `Content` superclass with `Video` and `Comment` | Both videos and comments receive interactions and moderation, so a shared parent simplifies likes/reports/validation targeting. | [Comment and reply behavior](https://support.google.com/youtube/answer/6000976); [Community Guidelines](https://www.youtube.com/howyoutubeworks/policies/community-guidelines/) | Justify common lifecycle states and shared moderaton operations. |
+| Recursive `Comment` relationship (replies) | YouTube comments support threaded replies. Recursion is required to represent this conversation structure. | [Comment and reply behavior](https://support.google.com/youtube/answer/6000976) | Show that replies-to-comments are native behavior, not an artificial design choice. |
+| Explicit `Like` and `LikeHistory` entities | Engagement actions are distinct events over content; history supports auditability and behavior analysis over time. | [Like/dislike interactions](https://support.google.com/youtube/answer/6083270) | Verify if your scope requires persistent history; if not mandatory, classify as design extension. |
+| `Subscription` between user and channel | Channel subscription is a core YouTube interaction and must be represented as a first-class feedback/engagement action. | [Subscribe to channels](https://support.google.com/youtube/answer/4489286) | Cite subscription as a direct user-to-channel relation. |
+| `Report` with moderation status | Reporting harmful/inappropriate content is an explicit YouTube workflow with review outcomes. | [Report content](https://support.google.com/youtube/answer/2802027); [Community Guidelines](https://www.youtube.com/howyoutubeworks/policies/community-guidelines/) | Map report lifecycle states to moderation decisions in your metamodel. |
+| `VideoModerationCheck` and `CommentModerationCheck` | YouTube combines automated and human review processes; separate checks per target reflect different moderation signals and outcomes. | [Manage held comments](https://support.google.com/youtube/answer/9483359); [Fighting misinformation](https://www.youtube.com/howyoutubeworks/our-commitments/fighting-misinformation/) | Cite that moderation differs by content type and may involve automated systems. |
+| `ChannelPermissionPolicy` and comment status changes | YouTube allows creators to configure interaction permissions (for example, comment behavior), so policy objects make governance explicit. | [Manage held comments](https://support.google.com/youtube/answer/9483359); [Channel permissions](https://support.google.com/youtube/answer/9481328) | Verify exact policy options used in your model and align enum values to documented settings. |
+| `ContentValidationRule` abstraction | Platform policies (copyright, spam, community guidelines) are policy-driven constraints, so modelling them as reusable rules supports extensibility. | [Copyright policy basics](https://support.google.com/youtube/answer/2797466); [Community Guidelines](https://www.youtube.com/howyoutubeworks/policies/community-guidelines/) | Connect each rule type in the domain model to one policy family in YouTube docs. |
 
 ## Design of the Metamodel
 
