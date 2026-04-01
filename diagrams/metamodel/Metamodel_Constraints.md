@@ -161,23 +161,37 @@ if refModel.userTypes.size() > 0:
 
 ---
 
-### C5.3 Cannot be its own parent
+### C5.3 Cannot target itself via subjectFeedback
 
 ```pseudo
-if feedbackDefinition.parent == feedbackDefinition:
-    ERROR("FeedbackDefinition cannot be its own parent")
+if feedbackDefinition.subjectFeedback == feedbackDefinition:
+    ERROR("FeedbackDefinition cannot target itself via subjectFeedback")
 ```
 
 **Refactoring:**
 ```pseudo
-feedbackDefinition.parent = null
+feedbackDefinition.subjectFeedback = null
 ```
 
 ---
 
-## 6. RatingPolicy
+## 6. FeedbackPolicy
 
-### C6.1 Can only exist when FeedbackType.hasRating is true
+### C6.1 If status is DISABLED, new instances are not allowed
+
+```pseudo
+if feedbackDefinition.policy is not null:
+    if feedbackDefinition.policy.status == DISABLED:
+        ERROR("Creation of new instances is not allowed when FeedbackPolicy is DISABLED")
+```
+
+**Refactoring:** None.
+
+---
+
+## 7. RatingPolicy
+
+### C7.1 Can only exist when FeedbackType.hasRating is true
 
 ```pseudo
 if feedbackDefinition.rating is not null:
@@ -192,7 +206,7 @@ feedbackDefinition.type.hasRating = true
 
 ---
 
-### C6.2 minValue must be less than maxValue
+### C7.2 minValue must be less than maxValue
 
 ```pseudo
 if ratingPolicy.minValue >= ratingPolicy.maxValue:
@@ -206,9 +220,9 @@ swap(ratingPolicy.minValue, ratingPolicy.maxValue)
 
 ---
 
-## 7. ValidationRule
+## 8. ValidationRule
 
-### C7.1 Must target at least one element
+### C8.1 Must target at least one element
 
 ```pseudo
 if validationRule.appliesToResource is null and validationRule.appliesToFeedback is null:
@@ -219,7 +233,7 @@ if validationRule.appliesToResource is null and validationRule.appliesToFeedback
 
 ---
 
-### C7.2 Expression required when kind is AUTOMATIC
+### C8.2 Expression required when kind is AUTOMATIC
 
 ```pseudo
 if validationRule.kind == AUTOMATIC:
@@ -231,9 +245,9 @@ if validationRule.kind == AUTOMATIC:
 
 ---
 
-## 8. ModerationPolicy
+## 9. ModerationPolicy
 
-### C8.1 Must have executedBy when mode is MANUAL or HYBRID
+### C9.1 Must have executedBy when mode is MANUAL or HYBRID
 
 ```pseudo
 if moderationPolicy.mode in [MANUAL, HYBRID]:
@@ -250,9 +264,9 @@ if moderator is not null:
 
 ---
 
-## 9. AuthorizationRule
+## 10. AuthorizationRule
 
-### C9.1 Must have an actor
+### C10.1 Must have an actor
 
 ```pseudo
 if authorizationRule.actor is null:
@@ -267,7 +281,7 @@ if refModel.userTypes.size() > 0:
 
 ---
 
-### C9.2 Must have at least one target
+### C10.2 Must have at least one target
 
 ```pseudo
 if authorizationRule.resourceTarget is null and authorizationRule.feedbackTarget is null:
@@ -278,9 +292,9 @@ if authorizationRule.resourceTarget is null and authorizationRule.feedbackTarget
 
 ---
 
-## 10. AutomationRule
+## 11. AutomationRule
 
-### C10.1 Trigger must not be empty
+### C11.1 Trigger must not be empty
 
 ```pseudo
 if automationRule.trigger is null or automationRule.trigger.length == 0:
@@ -291,35 +305,11 @@ if automationRule.trigger is null or automationRule.trigger.length == 0:
 
 ---
 
-### C10.2 ActionDescription must not be empty
+### C11.2 ActionDescription must not be empty
 
 ```pseudo
 if automationRule.actionDescription is null or automationRule.actionDescription.length == 0:
     ERROR("AutomationRule actionDescription must not be empty")
-```
-
-**Refactoring:** None.
-
----
-
-## 11. EvolutionRule
-
-### C11.1 fromVersion must be different from toVersion
-
-```pseudo
-if evolutionRule.fromVersion == evolutionRule.toVersion:
-    ERROR("fromVersion must be different from toVersion")
-```
-
-**Refactoring:** None.
-
----
-
-### C11.2 Must have at least one RefactoringOperation
-
-```pseudo
-if evolutionRule.applies.size() == 0:
-    ERROR("EvolutionRule must have at least one operation")
 ```
 
 **Refactoring:** None.
@@ -340,18 +330,17 @@ if evolutionRule.applies.size() == 0:
 | C4.1 | FeedbackType | name unique | — |
 | C5.1 | FeedbackDefinition | target matches scope | — |
 | C5.2 | FeedbackDefinition | author required | Add first UserType |
-| C5.3 | FeedbackDefinition | no self parent | Set parent=null |
-| C6.1 | RatingPolicy | only when hasRating=true | Set hasRating=true |
-| C6.2 | RatingPolicy | min < max | Swap values |
-| C7.1 | ValidationRule | at least one target | — |
-| C7.2 | ValidationRule | expression for AUTOMATIC | — |
-| C8.1 | ModerationPolicy | executedBy for MANUAL/HYBRID | Add moderator |
-| C9.1 | AuthorizationRule | actor required | Add first UserType |
-| C9.2 | AuthorizationRule | at least one target | — |
-| C10.1 | AutomationRule | trigger not empty | — |
-| C10.2 | AutomationRule | actionDescription not empty | — |
-| C11.1 | EvolutionRule | fromVersion ≠ toVersion | — |
-| C11.2 | EvolutionRule | at least one operation | — |
+| C5.3 | FeedbackDefinition | no self subjectFeedback | Set subjectFeedback=null |
+| C6.1 | FeedbackPolicy | disabled blocks new instances | — |
+| C7.1 | RatingPolicy | only when hasRating=true | Set hasRating=true |
+| C7.2 | RatingPolicy | min < max | Swap values |
+| C8.1 | ValidationRule | at least one target | — |
+| C8.2 | ValidationRule | expression for AUTOMATIC | — |
+| C9.1 | ModerationPolicy | executedBy for MANUAL/HYBRID | Add moderator |
+| C10.1 | AuthorizationRule | actor required | Add first UserType |
+| C10.2 | AuthorizationRule | at least one target | — |
+| C11.1 | AutomationRule | trigger not empty | — |
+| C11.2 | AutomationRule | actionDescription not empty | — |
 
 ---
 

@@ -198,49 +198,23 @@ package "Governance & Behavior" {
   }
 }
 
-package "Evolution" {
-  class EvolutionRule {
-    name: String
-    fromVersion: String
-    toVersion: String
-    transformationId: String
-  }
-
-  class RefactoringOperation {
-    name: String
-    kind: RefactoringKind
-    scriptId: String
-  }
-
-  enum RefactoringKind {
-    RENAME_ELEMENT
-    MOVE_ELEMENT
-    SPLIT_ELEMENT
-    MERGE_ELEMENT
-    CHANGE_TYPE
-  }
-}
-
 RefModel "1" o-- "*" UserType
 RefModel "1" o-- "*" ResourceType
-RefModel "1" o-- "*" FeedbackPolicy
 RefModel "1" o-- "*" ContextType
 RefModel "1" o-- "*" ResourceRelation
 RefModel "1" o-- "*" FeedbackType
 RefModel "1" o-- "*" FeedbackDefinition
-RefModel "1" o-- "*" RatingPolicy
+RefModel "1" o-- "*" AuthorizationRule
 RefModel "1" o-- "*" ValidationRule
 RefModel "1" o-- "*" ModerationPolicy
 RefModel "1" o-- "*" AutomationRule
 RefModel "1" o-- "*" VerificationPolicy
-RefModel "1" o-- "*" EvolutionRule
-RefModel "1" o-- "*" RefactoringOperation
 
 UserType "0..*" -- "0..*" UserType : superTypes
 ResourceType "0..*" -- "0..*" ResourceType : superTypes
 
 ResourceType "1" o-- "*" Attribute
-ContextType "1" o-- "*" ResourceType : contains
+ContextType "1" --> "*" ResourceType : contains
 ResourceRelation "1" --> "1" ResourceType : source
 ResourceRelation "1" --> "1" ResourceType : target
 
@@ -248,7 +222,6 @@ FeedbackType "1" <-- "1" FeedbackDefinition : type
 ResourceType "0..1" <-- "1" FeedbackDefinition : subjectResource
 UserType "1" <-- "1" FeedbackDefinition : author
 FeedbackDefinition "0..1" <-- "1" FeedbackDefinition : subjectFeedback
-FeedbackDefinition "0..1" --> "1" FeedbackDefinition : parent
 FeedbackDefinition "0..1" o-- "1" FeedbackPolicy : policy
 FeedbackDefinition "0..1" o-- "1" RatingPolicy : rating
 
@@ -272,31 +245,5 @@ AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
 AutomationRule "0..*" --> "1" ValidationRule : uses
 
 VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
-
-EvolutionRule "1" o-- "1..*" RefactoringOperation : applies
-
-note bottom of ValidationRule
-  Constraint:
-  each ValidationRule must target at least one element
-  (ResourceType or FeedbackDefinition).
-end note
-
-note bottom of FeedbackPolicy
-  Constraint:
-  If status = DISABLED, creation of new instances
-  for the associated FeedbackDefinition is not allowed.
-end note
-
-note bottom of RatingPolicy
-  Constraint:
-  RatingPolicy can only be set when FeedbackType.hasRating = true.
-end note
-
-note bottom of FeedbackDefinition
-  Constraint:
-  according to FeedbackType.subjectScope,
-  each FeedbackDefinition targets resource, feedback,
-  or either one (but at least one target must exist).
-end note
 
 @enduml

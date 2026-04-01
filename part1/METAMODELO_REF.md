@@ -15,20 +15,18 @@ O REF v2 foi desenhado para manter a ideia de união e generalização dos cená
 - modelar contexto (global, comunidade, canal, catálogo)
 - separar tipo de feedback de definição de feedback
 - representar políticas de moderação e verificação explicitamente
-- suportar evolução/refatoração do próprio modelo
 
 ## 2. Visão global do REF v2
 
-O elemento raiz `RefModel` agrega blocos conceptuais organizados em seis áreas:
+O elemento raiz `RefModel` agrega blocos conceptuais organizados em cinco áreas:
 
 - Core: `RefModel`
 - Actors & Context: `UserType`, `ContextType`
 - Structure: `ResourceType`, `Attribute`, `ResourceRelation`
 - Feedback: `FeedbackType`, `FeedbackDefinition`, `FeedbackPolicy`, `RatingPolicy`
 - Governance & Behavior: `ValidationRule`, `ModerationPolicy`, `AuthorizationRule`, `AutomationRule`, `VerificationPolicy`
-- Evolution: `EvolutionRule`, `RefactoringOperation`
 
-Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio, moderação/automação e manutenção evolutiva da DSL.
+Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio e moderação/automação.
 
 ## 2.1 Resumo sucinto dos conceitos
 
@@ -49,8 +47,6 @@ Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio
 - AuthorizationRule: permissão de ação para um ator sobre um alvo.
 - AutomationRule: regra automática acionada por trigger/condição.
 - VerificationPolicy: política para verificar contexto do feedback (ex.: compra verificada).
-- EvolutionRule: regra de migração/evolução entre versões.
-- RefactoringOperation: operação concreta usada na evolução do modelo.
 
 ### Enumerações
 
@@ -66,7 +62,6 @@ Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio
 - ModerationMode: modo de moderação.
 - ModerationDecision: resultado da moderação.
 - ActionKind: ações que podem ser autorizadas.
-- RefactoringKind: tipos de operações de refatoração.
 
 ## 3. Mapeamento dos novos cenários para o metamodelo
 
@@ -79,7 +74,7 @@ Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio
 
 ### 3.2 YouTube
 
-- `Video` e `Comment` mapeiam para `ResourceType`. As relações de resposta em comentário mapeiam para `ResourceRelation` recursiva e/ou `FeedbackDefinition.parent`.
+- `Video` e `Comment` mapeiam para `ResourceType`. As relações de resposta em comentário mapeiam para `ResourceRelation` recursiva e/ou `FeedbackDefinition.subjectFeedback`.
 - `Like`, `Report`, `Subscription` mapeiam para `FeedbackType.kind` (`REACTION`, `REPORT`, `SUBSCRIPTION`) e respetivas `FeedbackDefinition`.
 - Regras de moderação de conteúdo mapeiam para `ModerationPolicy` e `ValidationRule` com severidade.
 
@@ -115,7 +110,7 @@ Função: raiz da especificação. Contém todos os elementos do domínio REF.
 
 - `name: String`
 - `kind: ContextKind`
-- composição para `ResourceType` (`contains`)
+- associação para `ResourceType` (`contains`)
 
 `ContextKind`: `GLOBAL`, `COMMUNITY`, `CHANNEL`, `CATALOG`.
 
@@ -170,7 +165,7 @@ Permite representar associações entre recursos (incluindo hierarquias e auto-r
 - referência para `FeedbackType` (`type`)
 - referência para `ResourceType` (`subjectResource`, opcional)
 - referência para `UserType` (`author`)
-- referências opcionais para outras `FeedbackDefinition` (`subjectFeedback`, `parent`)
+- referência opcional para outra `FeedbackDefinition` (`subjectFeedback`)
 - composição opcional de `FeedbackPolicy` e `RatingPolicy`
 
 #### FeedbackPolicy
@@ -246,29 +241,12 @@ Permite representar associações entre recursos (incluindo hierarquias e auto-r
 
 Representa explicitamente políticas de verificação do contexto do feedback (ex.: compra verificada no caso Amazon).
 
-### 4.6 Evolution
-
-#### EvolutionRule
-
-- `name: String`
-- `fromVersion: String`
-- `toVersion: String`
-- `transformationId: String`
-- composição de uma ou mais `RefactoringOperation`
-
-#### RefactoringOperation
-
-- `name: String`
-- `kind: RefactoringKind`
-- `scriptId: String`
-
-`RefactoringKind`: `RENAME_ELEMENT`, `MOVE_ELEMENT`, `SPLIT_ELEMENT`, `MERGE_ELEMENT`, `CHANGE_TYPE`.
-
 ## 5. Relações estruturais principais
 
 As relações mais relevantes do v2 são:
 
-- `RefModel` contém todas as definições centrais (`UserType`, `ResourceType`, `FeedbackType`, `FeedbackDefinition`, políticas, regras e elementos de evolução).
+- `RefModel` contém as definições centrais top-level (`UserType`, `ResourceType`, `ContextType`, `ResourceRelation`, `FeedbackType`, `FeedbackDefinition`, `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, `AutomationRule`, `VerificationPolicy`).
+- `FeedbackPolicy` e `RatingPolicy` são compostas localmente por `FeedbackDefinition`.
 - `FeedbackDefinition` é o ponto de ligação entre autor, tipo de feedback e alvo (recurso ou feedback).
 - `AuthorizationRule`, `ModerationPolicy` e `AutomationRule` aplicam comportamento por contexto e por alvo.
 - `ValidationRule` concentra restrições formais reutilizáveis por feedback e automação.
@@ -276,7 +254,7 @@ As relações mais relevantes do v2 são:
 
 ## 6. Restrições explícitas no diagrama v2
 
-O diagrama [diagrams/metamodel/ref-metamodel-v2.puml](diagrams/metamodel/ref-metamodel-v2.puml) define notas com restrições importantes:
+As restrições do metamodelo v2 estão centralizadas em [diagrams/metamodel/Metamodel_Constraints.md](../diagrams/metamodel/Metamodel_Constraints.md). As principais incluem:
 
 1. `ValidationRule` deve ter pelo menos um alvo (`ResourceType` ou `FeedbackDefinition`).
 2. Se `FeedbackPolicy.status = DISABLED`, não é permitida criação de novas instâncias para a `FeedbackDefinition` associada.
@@ -291,4 +269,3 @@ As mudanças do v2 respondem diretamente a necessidades que ficaram mais claras 
 - Introdução de `FeedbackKind` e `FeedbackSubjectScope` para tipar melhor variações de feedback.
 - Separação entre `ValidationRule`, `ModerationPolicy` e `VerificationPolicy` para reduzir ambiguidades de responsabilidade.
 - Expansão de `ActionKind` para incluir operações específicas de plataformas sociais (`VOTE`, `SUBSCRIBE`, `REPORT`, etc.).
-- Inclusão de bloco de evolução (`EvolutionRule`, `RefactoringOperation`) para gerir mudanças da DSL entre versões.
