@@ -40,4 +40,14 @@ gradle-app.setting
 # NetBeans
 nbactions.xml
 
+# JetBrains MPS (generated/local)
+**/.mps/workspace.xml
+**/source_gen/
+**/source_gen.caches/
+**/classes_gen/
+**/generator/source_gen/
+**/generator/source_gen.caches/
+**/generator/classes_gen/
+**/trace.info
+
 
