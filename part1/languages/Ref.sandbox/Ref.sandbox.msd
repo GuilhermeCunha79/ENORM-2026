@@ -11,7 +11,7 @@
     </facet>
   </facets>
   <languageVersions>
-    <language slang="l:75b0389b-83f9-4003-b95d-1b8432efd2b6:REF" version="0" />
+    <language slang="l:75b0389b-83f9-4003-b95d-1b8432efd2b6:Ref" version="0" />
     <language slang="l:ceab5195-25ea-4f22-9b92-103b95ca8c0c:jetbrains.mps.lang.core" version="2" />
   </languageVersions>
   <dependencyVersions>
