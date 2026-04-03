@@ -114,13 +114,6 @@ package "Feedback" {
     minValue: Number
     maxValue: Number
     step: Number
-    scaleKind: RatingScaleKind
-  }
-
-  enum RatingScaleKind {
-    NUMERIC
-    ORDINAL
-    PERCENTAGE
   }
 }
 
