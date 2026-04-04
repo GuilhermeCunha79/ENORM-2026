@@ -72,13 +72,6 @@
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="3nWBi3h36Ur" resolve="ContextType" />
     </node>
-    <node concept="1TJgyj" id="3nWBi3h36Vb" role="1TKVEi">
-      <property role="IQ2ns" value="3890156942413033163" />
-      <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="evolutionRule" />
-      <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="3nWBi3h36UV" resolve="EvolutionRule" />
-    </node>
     <node concept="1TJgyj" id="3nWBi3h36Vc" role="1TKVEi">
       <property role="IQ2ns" value="3890156942413033164" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
@@ -138,9 +131,14 @@
     <node concept="1TJgyj" id="7vG6G7pFVDH" role="1TKVEi">
       <property role="IQ2ns" value="8641311204900321901" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="verificationPOlicy" />
+      <property role="20kJfa" value="verificationPolicy" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="3nWBi3h36US" resolve="VerificationPolicy" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP65iGB" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182583079" />
+      <property role="TrG5h" value="version" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
   </node>
   <node concept="1TIwiD" id="3nWBi3h36Uo">
@@ -199,7 +197,7 @@
       <property role="IQ2ns" value="6041381794867197943" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="resourceTypeLink" />
-      <property role="20lbJX" value="fLJekj6/_1__n" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="5fnjbJr$zvM" resolve="ContextResourceTypeLink" />
     </node>
   </node>
@@ -265,6 +263,7 @@
       <property role="IQ2ns" value="746375748528706432" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="superType" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="DrEcBK1hdX" resolve="UserTypeSuperType" />
     </node>
   </node>
@@ -288,6 +287,31 @@
     <node concept="PrWs8" id="3nWBi3h36UE" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
+    <node concept="1TJgyi" id="3vc7gP656r1" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532801" />
+      <property role="TrG5h" value="kind" />
+      <ref role="AX2Wp" node="3vc7gP656r2" resolve="FeedbackKind" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656ra" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532810" />
+      <property role="TrG5h" value="subjectScope" />
+      <ref role="AX2Wp" node="3vc7gP656rb" resolve="FeedbackSubjectScope" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656rf" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532815" />
+      <property role="TrG5h" value="hasRating" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656rh" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532817" />
+      <property role="TrG5h" value="recursive" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656ri" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532818" />
+      <property role="TrG5h" value="allowsMedia" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
   </node>
   <node concept="1TIwiD" id="3nWBi3h36UG">
     <property role="EcuMT" value="3890156942413033132" />
@@ -305,7 +329,7 @@
     <node concept="1TJgyj" id="5fnjbJr$zsi" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197714" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="RatingPolicy" />
+      <property role="20kJfa" value="ratingPolicy" />
       <ref role="20lvS9" node="3nWBi3h36UJ" resolve="RatingPolicy" />
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsj" role="1TKVEi">
@@ -329,6 +353,16 @@
       <property role="20kJfa" value="author" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36Uz" resolve="UserType" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656rj" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532819" />
+      <property role="TrG5h" value="requiresVerifiedContext" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP656rk" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182532820" />
+      <property role="TrG5h" value="uniquePerAuthorTarget" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>
   <node concept="1TIwiD" id="3nWBi3h36UJ">
@@ -389,7 +423,6 @@
     <node concept="1TJgyj" id="5fnjbJr$zsw" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197728" />
       <property role="20kJfa" value="resourceType" />
-      <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36V4" resolve="ResourceType" />
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsx" role="1TKVEi">
@@ -402,6 +435,12 @@
       <property role="IQ2ns" value="6041381794867197730" />
       <property role="20kJfa" value="contextType" />
       <ref role="20lvS9" node="3nWBi3h36Ur" resolve="ContextType" />
+    </node>
+    <node concept="1TJgyj" id="3vc7gP65iGI" role="1TKVEi">
+      <property role="IQ2ns" value="4020620510182583086" />
+      <property role="20kJfa" value="invokedBy" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="3nWBi3h36UP" resolve="AutomationRule" />
     </node>
   </node>
   <node concept="1TIwiD" id="3nWBi3h36UP">
@@ -444,7 +483,7 @@
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsv" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197727" />
-      <property role="20kJfa" value="validationRule" />
+      <property role="20kJfa" value="uses" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36UM" resolve="ValidationRule" />
     </node>
@@ -473,14 +512,6 @@
       <ref role="20lvS9" node="3nWBi3h36UG" resolve="FeedbackDefinition" />
     </node>
   </node>
-  <node concept="1TIwiD" id="3nWBi3h36UV">
-    <property role="EcuMT" value="3890156942413033147" />
-    <property role="TrG5h" value="EvolutionRule" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
-    <node concept="PrWs8" id="3nWBi3h36UW" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
-    </node>
-  </node>
   <node concept="1TIwiD" id="3nWBi3h36V4">
     <property role="EcuMT" value="3890156942413033156" />
     <property role="TrG5h" value="ResourceType" />
@@ -499,7 +530,13 @@
       <property role="IQ2ns" value="746375748528706428" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="superType" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="DrEcBK1hdQ" resolve="ResourceTypeSuperType" />
+    </node>
+    <node concept="1TJgyi" id="3vc7gP65iGE" role="1TKVEl">
+      <property role="IQ2nx" value="4020620510182583082" />
+      <property role="TrG5h" value="supportsMedia" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>
   <node concept="1TIwiD" id="7vG6G7pFVDE">
@@ -530,6 +567,12 @@
       <property role="20kJfa" value="resourceTarget" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36V4" resolve="ResourceType" />
+    </node>
+    <node concept="1TJgyj" id="3vc7gP65iG_" role="1TKVEi">
+      <property role="IQ2ns" value="4020620510182583077" />
+      <property role="20kJfa" value="actor" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="3nWBi3h36Uz" resolve="UserType" />
     </node>
   </node>
   <node concept="25R3W" id="7vG6G7pFVDL">
@@ -803,6 +846,51 @@
       <property role="20kJfa" value="superType" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36Uz" resolve="UserType" />
+    </node>
+  </node>
+  <node concept="25R3W" id="3vc7gP656r2">
+    <property role="3F6X1D" value="4020620510182532802" />
+    <property role="TrG5h" value="FeedbackKind" />
+    <node concept="25R33" id="3vc7gP656r3" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532803" />
+      <property role="TrG5h" value="COMMENT" />
+    </node>
+    <node concept="25R33" id="3vc7gP656r4" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532804" />
+      <property role="TrG5h" value="REVIEW" />
+    </node>
+    <node concept="25R33" id="3vc7gP656r5" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532805" />
+      <property role="TrG5h" value="REACTION" />
+    </node>
+    <node concept="25R33" id="3vc7gP656r6" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532806" />
+      <property role="TrG5h" value="VOTE" />
+    </node>
+    <node concept="25R33" id="3vc7gP656r7" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532807" />
+      <property role="TrG5h" value="REPORT" />
+    </node>
+    <node concept="25R33" id="3vc7gP656r8" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532808" />
+      <property role="TrG5h" value="SUBSCRIPTION" />
+    </node>
+  </node>
+  <node concept="25R3W" id="3vc7gP656rb">
+    <property role="3F6X1D" value="4020620510182532811" />
+    <property role="TrG5h" value="FeedbackSubjectScope" />
+    <ref role="1H5jkz" node="3vc7gP656re" resolve="RESOURCE_OR_FEEDBACK" />
+    <node concept="25R33" id="3vc7gP656rc" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532812" />
+      <property role="TrG5h" value="RESOURCE_ONLY" />
+    </node>
+    <node concept="25R33" id="3vc7gP656rd" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532813" />
+      <property role="TrG5h" value="FEEDBACK_ONLY" />
+    </node>
+    <node concept="25R33" id="3vc7gP656re" role="25R1y">
+      <property role="3tVfz5" value="4020620510182532814" />
+      <property role="TrG5h" value="RESOURCE_OR_FEEDBACK" />
     </node>
   </node>
 </model>
