@@ -184,36 +184,6 @@ userType.superTypes.remove(userType)
 
 ---
 
-### C2.4 UserType superTypes must not form a cycle
-
-**OCL:**
-```ocl
-context UserType
-inv noCycleInSuperTypes:
-  not self.allSuperTypes()->includes(self)
-
--- where allSuperTypes() is the transitive closure of superTypes
-```
-
-**Pseudo-code:**
-```
-function hasCycle(userType, visited):
-    if userType in visited:
-        return true
-    visited.add(userType)
-    for parent in userType.superTypes:
-        if hasCycle(parent, visited):
-            return true
-    return false
-
-if hasCycle(userType, empty_set()):
-    error("Cycle detected in UserType inheritance hierarchy")
-```
-
-**Refactoring:** None (requires user decision to break the cycle).
-
----
-
 ### C2.5 ContextType name must be unique within RefModel
 
 **OCL:**
