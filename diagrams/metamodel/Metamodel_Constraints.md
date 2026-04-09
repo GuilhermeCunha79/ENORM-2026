@@ -289,19 +289,6 @@ resourceType.superTypes.remove(resourceType)
 
 ---
 
-### C3.5 ResourceType superTypes must not form a cycle
-
-**OCL:**
-```ocl
-context ResourceType
-inv noCycleInSuperTypes:
-  not self.allSuperTypes()->includes(self)
-```
-
-**Refactoring:** None (requires user decision).
-
----
-
 ### C3.6 Attribute name must be unique within its container (ResourceType)
 
 **OCL:**
@@ -320,23 +307,6 @@ for resourceType in refModel.resourceTypes:
 ```
 
 **Refactoring:** None.
-
----
-
-### C3.7 Attribute name should start with lowercase (convention)
-
-**OCL:**
-```ocl
-context Attribute
-inv nameStartsWithLowercase:
-  self.name <> null and self.name.size() > 0 implies
-    self.name.substring(1, 1) = self.name.substring(1, 1).toLower()
-```
-
-**Refactoring:**
-```
-attribute.name = attribute.name[0].toLowerCase() + attribute.name.substring(1)
-```
 
 ---
 
@@ -560,7 +530,7 @@ inv stepPositiveAndDividesRange:
 if ratingPolicy.step <= 0:
     error("RatingPolicy step must be positive")
 if (ratingPolicy.maxValue - ratingPolicy.minValue) % ratingPolicy.step != 0:
-    warning("RatingPolicy step should divide the range evenly")
+    error("RatingPolicy step should divide the range evenly")
 ```
 
 **Refactoring:**
