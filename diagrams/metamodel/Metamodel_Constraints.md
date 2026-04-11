@@ -657,7 +657,7 @@ inv implementationIdMinLength:
 **Refactoring:**
 ```
 if validationRule.implementationId.length < 3:
-    validationRule.implementationId = "val_" + validationRule.implementationId
+    validationRule.implementationId = "impl_" + validationRule.implementationId
 ```
 
 ---

@@ -26,12 +26,21 @@
         <reference id="746375748528706434" name="author" index="3UnFHb" />
         <child id="6041381794867197713" name="feedbackPolicy" index="28hnIE" />
       </concept>
+      <concept id="3890156942413033138" name="Ref.structure.ValidationRule" flags="ng" index="3$Wfei">
+        <property id="8641311204900472300" name="implementationId" index="2InxWH" />
+        <reference id="6041381794867197728" name="resourceType" index="28hnIr" />
+      </concept>
       <concept id="3890156942413033109" name="Ref.structure.RefModel" flags="ng" index="3$WfeP">
         <property id="4020620510182583079" name="version" index="1LQjoE" />
         <child id="8641311204900321895" name="userType" index="2IgU2A" />
         <child id="8641311204900321896" name="resourceType" index="2IgU2D" />
+        <child id="8641311204900321900" name="validationRule" index="2IgU2H" />
         <child id="3890156942413033164" name="feedbackDefinition" index="3$WffG" />
         <child id="3890156942413033167" name="feedbackType" index="3$WffJ" />
+        <child id="3890156942413033168" name="moderationPolicy" index="3$WffK" />
+      </concept>
+      <concept id="3890156942413033117" name="Ref.structure.ModerationPolicy" flags="ng" index="3$WfeX">
+        <reference id="6041381794867197718" name="executedBy" index="28hnIH" />
       </concept>
       <concept id="3890156942413033156" name="Ref.structure.ResourceType" flags="ng" index="3$Wff$">
         <child id="746375748528706428" name="superType" index="3UnFIP" />
@@ -44,6 +53,17 @@
   <node concept="3$WfeP" id="3HQf9Tjw$TD">
     <property role="TrG5h" value="Ref" />
     <property role="1LQjoE" value="2.2" />
+    <node concept="3$WfeX" id="42rXvlg40Ma" role="3$WffK">
+      <property role="TrG5h" value="Looool" />
+      <ref role="28hnIH" node="42rXvlg5Ney" resolve="Moderator" />
+    </node>
+    <node concept="3$Wfei" id="42rXvlg27JM" role="2IgU2H">
+      <property role="TrG5h" value="Lol" />
+      <property role="2InxWH" value="val_22" />
+      <ref role="28hnIr" node="or9vid_8Yg" resolve="AKA" />
+    </node>
+    <node concept="3$Wfei" id="42rXvlg27JP" role="2IgU2H" />
+    <node concept="3$Wfei" id="42rXvlg27JN" role="2IgU2H" />
     <node concept="3$Wff$" id="or9vid_8Yg" role="2IgU2D">
       <property role="TrG5h" value="AKA" />
       <node concept="3UnFIZ" id="or9vidLHkC" role="3UnFIP">
@@ -53,6 +73,10 @@
     <node concept="3$Wfe3" id="or9vid$STI" role="2IgU2A">
       <property role="TrG5h" value="Auhtor" />
       <property role="2InxW3" value="7vG6G7pGwmY/BUYER" />
+    </node>
+    <node concept="3$Wfe3" id="42rXvlg5Ney" role="2IgU2A">
+      <property role="TrG5h" value="Moderator" />
+      <property role="2InxW3" value="7vG6G7pGwn1/MODERATOR" />
     </node>
     <node concept="3$Wfe9" id="or9vid$STE" role="3$WffJ">
       <property role="TrG5h" value="Feed" />
