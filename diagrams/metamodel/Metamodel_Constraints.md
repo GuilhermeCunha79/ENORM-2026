@@ -1118,10 +1118,7 @@ for feedbackDefinition in refModel.feedbackDefinitions:
       error("uniquePerAuthorTarget requires a single target to avoid ambiguity")
 ```
 
-**Refactoring:**
-```
-feedbackDefinition.subjectFeedback = null
-```
+**Refactoring:** None. User should remove either the subjectResource or subjectFeedback.
 
 ---
 

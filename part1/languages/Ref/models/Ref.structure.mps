@@ -237,13 +237,13 @@
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsq" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197722" />
-      <property role="20kJfa" value="resourceType" />
+      <property role="20kJfa" value="monitorsResource" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36V4" resolve="ResourceType" />
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsr" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197723" />
-      <property role="20kJfa" value="contextType" />
+      <property role="20kJfa" value="inContext" />
       <ref role="20lvS9" node="3nWBi3h36Ur" resolve="ContextType" />
     </node>
   </node>
@@ -473,12 +473,12 @@
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zss" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197724" />
-      <property role="20kJfa" value="resourceType" />
+      <property role="20kJfa" value="context" />
       <ref role="20lvS9" node="3nWBi3h36V4" resolve="ResourceType" />
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsu" role="1TKVEi">
       <property role="IQ2ns" value="6041381794867197726" />
-      <property role="20kJfa" value="contextType" />
+      <property role="20kJfa" value="inContext" />
       <ref role="20lvS9" node="3nWBi3h36Ur" resolve="ContextType" />
     </node>
     <node concept="1TJgyj" id="5fnjbJr$zsv" role="1TKVEi">
@@ -698,6 +698,7 @@
   <node concept="25R3W" id="7vG6G7pGwnb">
     <property role="3F6X1D" value="8641311204900472267" />
     <property role="TrG5h" value="ModerationDecision" />
+    <ref role="1H5jkz" node="7vG6G7pGwnd" resolve="FLAGGED" />
     <node concept="25R33" id="7vG6G7pGwnc" role="25R1y">
       <property role="3tVfz5" value="8641311204900472268" />
       <property role="TrG5h" value="APPROVED" />
