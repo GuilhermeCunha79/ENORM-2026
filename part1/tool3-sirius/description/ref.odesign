@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/description/tool/1.1.0" name="REF" version="12.0.0.2017041100">
+  <ownedViewpoints name="Ref" modelFileExtension="ref,xmi">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RefDiagram" titleExpression="aql:self.name" domainClass="sirius.RefModel" enablePopupBars="true">
+      <metamodel href="http://www.example.org/sirius#/"/>
+      <defaultLayer name="Default">
+        <nodeMappings name="RefModel" semanticCandidatesExpression="var:self" domainClass="sirius.RefModel">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name + ' v' + self.version">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="UserType" semanticCandidatesExpression="feature:userTypes" domainClass="sirius.UserType">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ResourceType" semanticCandidatesExpression="feature:resourceTypes" domainClass="sirius.ResourceType">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Attribute" semanticCandidatesExpression="aql:self.resourceTypes.attributes" domainClass="sirius.Attribute">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ' : ' + self.type">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ContextType" semanticCandidatesExpression="feature:contextTypes" domainClass="sirius.ContextType">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ResourceRelation" semanticCandidatesExpression="feature:resourceRelations" domainClass="sirius.ResourceRelation">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FeedbackType" semanticCandidatesExpression="feature:feedbackTypes" domainClass="sirius.FeedbackType">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FeedbackDefinition" semanticCandidatesExpression="feature:feedbackDefinitions" domainClass="sirius.FeedbackDefinition">
+          <style xsi:type="style:SquareDescription" labelSize="12" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="FeedbackPolicy" semanticCandidatesExpression="aql:self.feedbackDefinitions.policy" domainClass="sirius.FeedbackPolicy">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:'policy: ' + self.status">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="RatingPolicy" semanticCandidatesExpression="aql:self.feedbackDefinitions.rating" domainClass="sirius.RatingPolicy">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:'rating ' + self.minValue + '..' + self.maxValue">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="AuthorizationRule" semanticCandidatesExpression="feature:authorizationRules" domainClass="sirius.AuthorizationRule">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:'auth: ' + self.allowedAction">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ValidationRule" semanticCandidatesExpression="feature:validationRules" domainClass="sirius.ValidationRule">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ModerationPolicy" semanticCandidatesExpression="feature:moderationPolicies" domainClass="sirius.ModerationPolicy">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="AutomationRule" semanticCandidatesExpression="feature:automationRules" domainClass="sirius.AutomationRule">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="VerificationPolicy" semanticCandidatesExpression="feature:verificationPolicies" domainClass="sirius.VerificationPolicy">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="pt.isep.enorm.m1a4.ref.design.Services"/>
+    <ownedValidationSets name="RefModelValidation">
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C1_1_RefModelNameNotEmpty" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.name &lt;> null and self.name.size() > 0" message="C1.1 RefModel name must not be empty"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C1_2_RefModelNameUppercase" targetClass="sirius.RefModel" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C1.2 RefModel name should start with uppercase">
+        <fixes name="QF_C1_2_CapitalizeRefModelName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C1_3_RefModelNameMinLength" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.name = null or self.name.size() > 2" message="C1.3 RefModel name must have more than 2 characters"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C1_4_RefModelVersionSemVer" targetClass="sirius.RefModel" level="WARNING" auditExpression="aql:self.version = null or self.version.matches('[0-9]+\\.[0-9]+\\.[0-9]+')" message="C1.4 RefModel version should follow semantic versioning (e.g., 1.0.0)">
+        <fixes name="QF_C1_4_SetDefaultVersion">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="version" valueExpression="service:ensureDefaultVersion"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_1_UserTypeNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.userTypes->isUnique(u | u.name)" message="C2.1 UserType names must be unique within the model"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_2_UserTypeNameUppercase" targetClass="sirius.UserType" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C2.2 UserType name should start with uppercase">
+        <fixes name="QF_C2_2_CapitalizeUserTypeName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_3_UserTypeNoSelfInSuperTypes" targetClass="sirius.UserType" level="ERROR" auditExpression="aql:not self.superTypes->includes(self)" message="C2.3 UserType cannot be its own supertype">
+        <fixes name="QF_C2_3_RemoveSelfFromSuperTypes">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="superTypes" valueExpression="aql:self.superTypes->excluding(self)"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_4_UserTypeNoCycleInSuperTypes" targetClass="sirius.UserType" level="ERROR" auditExpression="aql:not self.superTypes->closure(superTypes)->includes(self)" message="C2.4 UserType inheritance must not contain cycles"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_5_ContextTypeNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.contextTypes->isUnique(c | c.name)" message="C2.5 ContextType names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C2_6_ContextTypeNameUppercase" targetClass="sirius.ContextType" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C2.6 ContextType name should start with uppercase">
+        <fixes name="QF_C2_6_CapitalizeContextTypeName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_1_ResourceTypeNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.resourceTypes->isUnique(r | r.name)" message="C3.1 ResourceType names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_2_ResourceTypeNameUppercase" targetClass="sirius.ResourceType" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C3.2 ResourceType name should start with uppercase">
+        <fixes name="QF_C3_2_CapitalizeResourceTypeName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_3_ResourceTypeNameMinLength" targetClass="sirius.ResourceType" level="ERROR" auditExpression="aql:self.name = null or self.name.size() > 2" message="C3.3 ResourceType name must have more than 2 characters"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_4_ResourceTypeNoSelfInSuperTypes" targetClass="sirius.ResourceType" level="ERROR" auditExpression="aql:not self.superTypes->includes(self)" message="C3.4 ResourceType cannot be its own supertype">
+        <fixes name="QF_C3_4_RemoveSelfFromSuperTypes">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="superTypes" valueExpression="aql:self.superTypes->excluding(self)"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_5_ResourceTypeNoCycleInSuperTypes" targetClass="sirius.ResourceType" level="ERROR" auditExpression="aql:not self.superTypes->closure(superTypes)->includes(self)" message="C3.5 ResourceType inheritance must not contain cycles"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_6_AttributeNamesUniqueWithinResourceType" targetClass="sirius.ResourceType" level="ERROR" auditExpression="aql:self.attributes->isUnique(a | a.name)" message="C3.6 Attribute names must be unique within ResourceType"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_7_AttributeNameLowercase" targetClass="sirius.Attribute" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[a-z].*')" message="C3.7 Attribute name should start with lowercase">
+        <fixes name="QF_C3_7_LowercaseAttributeName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toLower() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_8_ResourceRelationNonRecursiveSourceTargetDifferent" targetClass="sirius.ResourceRelation" level="ERROR" auditExpression="aql:self.recursive or self.source &lt;> self.target" message="C3.8 Non-recursive relation cannot have the same source and target">
+        <fixes name="QF_C3_8_SetRecursiveTrue">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="recursive" valueExpression="aql:true"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C3_9_ResourceRelationNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.resourceRelations->isUnique(r | r.name)" message="C3.9 ResourceRelation names must be unique"/>
+
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_1_FeedbackTypeNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.feedbackTypes->isUnique(f | f.name)" message="C4.1 FeedbackType names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_2_FeedbackTypeNameUppercase" targetClass="sirius.FeedbackType" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C4.2 FeedbackType name should start with uppercase">
+        <fixes name="QF_C4_2_CapitalizeFeedbackTypeName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_3_FeedbackDefinitionTargetConsistentWithScope" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:(self.type.subjectScope.toString() &lt;> 'RESOURCE_ONLY' or (self.subjectResource &lt;> null and self.subjectFeedback = null)) and (self.type.subjectScope.toString() &lt;> 'FEEDBACK_ONLY' or (self.subjectFeedback &lt;> null and self.subjectResource = null)) and (self.type.subjectScope.toString() &lt;> 'RESOURCE_OR_FEEDBACK' or (self.subjectResource &lt;> null or self.subjectFeedback &lt;> null))" message="C4.3 FeedbackDefinition targets must be consistent with FeedbackType subjectScope"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_4_FeedbackDefinitionNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.feedbackDefinitions->isUnique(fd | fd.name)" message="C4.4 FeedbackDefinition names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_5_FeedbackDefinitionNameUppercase" targetClass="sirius.FeedbackDefinition" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C4.5 FeedbackDefinition name should start with uppercase">
+        <fixes name="QF_C4_5_CapitalizeFeedbackDefinitionName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_6_FeedbackDefinitionAuthorRequired" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.author &lt;> null" message="C4.6 FeedbackDefinition must have an author">
+        <fixes name="QF_C4_6_SetFirstUserAsAuthor">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="author" valueExpression="aql:if self.eContainer().userTypes->isEmpty() then self.author else self.eContainer().userTypes->first() endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_7_RatingOnlyWhenHasRating" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.rating = null or self.type.hasRating" message="C4.7 RatingPolicy can only exist when FeedbackType.hasRating is true">
+        <fixes name="QF_C4_7_EnableHasRatingOnType">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self.type">
+            <subModelOperations xsi:type="tool:SetValue" featureName="hasRating" valueExpression="aql:true"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_8_RatingPolicyMinLessThanMax" targetClass="sirius.RatingPolicy" level="ERROR" auditExpression="aql:self.minValue &lt; self.maxValue" message="C4.8 RatingPolicy minValue must be less than maxValue">
+        <fixes name="QF_C4_8_SwapRatingBounds">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="minValue" valueExpression="service:normalizeRatingBounds"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_9_RatingPolicyStepPositiveAndDividesRange" targetClass="sirius.RatingPolicy" level="WARNING" auditExpression="aql:self.step > 0 and (self.maxValue - self.minValue).mod(self.step) = 0" message="C4.9 RatingPolicy step must be positive and divide the range evenly">
+        <fixes name="QF_C4_9_SetStepToOne">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="step" valueExpression="aql:1"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_10_DisabledPolicyBlocksCreation_RuntimeInfo" targetClass="sirius.FeedbackDefinition" level="INFO" auditExpression="aql:self.policy = null or self.policy.status.toString() &lt;> 'DISABLED'" message="C4.10 FeedbackPolicy DISABLED blocks new feedback creation (runtime behavior)"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_11_SubjectFeedbackSameType" targetClass="sirius.FeedbackDefinition" level="WARNING" auditExpression="aql:self.subjectFeedback = null or self.subjectFeedback.type = self.type" message="C4.11 subjectFeedback should be of the same FeedbackType"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C4_12_NoSelfSubjectFeedback" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.subjectFeedback = null or self.subjectFeedback &lt;> self" message="C4.12 FeedbackDefinition cannot target itself via subjectFeedback">
+        <fixes name="QF_C4_12_ClearSubjectFeedback">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectFeedback" valueExpression="aql:null"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_1_ValidationRuleAtLeastOneTarget" targetClass="sirius.ValidationRule" level="ERROR" auditExpression="aql:self.appliesToResource &lt;> null or self.appliesToFeedback &lt;> null" message="C5.1 ValidationRule must target at least one element"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_2_ValidationRuleNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.validationRules->isUnique(v | v.name)" message="C5.2 ValidationRule names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_3_ValidationRuleNameUppercase" targetClass="sirius.ValidationRule" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C5.3 ValidationRule name should start with uppercase">
+        <fixes name="QF_C5_3_CapitalizeValidationRuleName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_4_ValidationRuleImplementationIdMinLength" targetClass="sirius.ValidationRule" level="WARNING" auditExpression="aql:self.implementationId = null or self.implementationId.size() >= 3" message="C5.4 ValidationRule implementationId must have at least 3 characters">
+        <fixes name="QF_C5_4_PrefixImplementationId">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="implementationId" valueExpression="aql:if self.implementationId = null then 'impl_default' else 'impl_' + self.implementationId endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_5_ValidationRuleExpressionRequiredForAutomatic" targetClass="sirius.ValidationRule" level="ERROR" auditExpression="aql:self.kind.toString() &lt;> 'AUTOMATIC' or (self.expression &lt;> null and self.expression.size() > 0)" message="C5.5 ValidationRule expression must not be empty when kind is AUTOMATIC"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_17_ValidationRuleTargetsMetamodelClass" targetClass="sirius.ValidationRule" level="ERROR" auditExpression="aql:self.appliesToResource &lt;> null or self.appliesToFeedback &lt;> null" message="C5.17 ValidationRule must refer to a metamodel class (ResourceType or FeedbackDefinition) via appliesToResource/appliesToFeedback"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_18_ValidationRuleInvokedByAutomationConsistency" targetClass="sirius.ValidationRule" level="ERROR" auditExpression="aql:self.invokedBy &lt;> null and self.invokedBy.uses = self" message="C5.18 ValidationRule must be consistently linked with its AutomationRule (invokedBy/uses)"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_19_ValidationRuleFeedbackTargetConsistency" targetClass="sirius.ValidationRule" level="ERROR" auditExpression="aql:self.appliesToFeedback = null or self.invokedBy = null or self.invokedBy.onFeedback = self.appliesToFeedback" message="C5.19 When ValidationRule targets FeedbackDefinition, AutomationRule.onFeedback should reference the same metamodel element"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_20_ValidationRuleResourceTargetConsistency" targetClass="sirius.ValidationRule" level="WARNING" auditExpression="aql:self.appliesToResource = null or self.invokedBy = null or self.invokedBy.context = null or self.invokedBy.context = self.appliesToResource" message="C5.20 When ValidationRule targets ResourceType, AutomationRule.context should reference the same metamodel element"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_21_ValidationRuleSeverityDiversity" targetClass="sirius.RefModel" level="INFO" auditExpression="aql:self.validationRules->exists(v | v.severity.toString() = 'ERROR') and self.validationRules->exists(v | v.severity.toString() = 'WARNING') and self.validationRules->exists(v | v.severity.toString() = 'INFO')" message="C5.21 Model should define ValidationRule severities with ERROR, WARNING, and INFO coverage"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_6_ModerationPolicyNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.moderationPolicies->isUnique(m | m.name)" message="C5.6 ModerationPolicy names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_7_ModerationPolicyExecutedByRequired" targetClass="sirius.ModerationPolicy" level="ERROR" auditExpression="aql:self.executedBy &lt;> null" message="C5.7 ModerationPolicy must have executedBy">
+        <fixes name="QF_C5_7_AssignModeratorExecutor">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="executedBy" valueExpression="service:ensureModerationExecutor"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_8_ModerationPolicyTriggerRequiredForAutomatic" targetClass="sirius.ModerationPolicy" level="ERROR" auditExpression="aql:self.mode.toString() &lt;> 'AUTOMATIC' or (self.trigger &lt;> null and self.trigger.size() > 0)" message="C5.8 ModerationPolicy trigger must not be empty when mode is AUTOMATIC"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_9_AuthorizationRuleActorRequired" targetClass="sirius.AuthorizationRule" level="ERROR" auditExpression="aql:self.actor &lt;> null" message="C5.9 AuthorizationRule must have an actor">
+        <fixes name="QF_C5_9_SetFirstUserAsActor">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="actor" valueExpression="aql:if self.eContainer().userTypes->isEmpty() then self.actor else self.eContainer().userTypes->first() endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_10_AuthorizationRuleBothTargetsRequired" targetClass="sirius.AuthorizationRule" level="ERROR" auditExpression="aql:self.resourceTarget &lt;> null and self.feedbackTarget &lt;> null" message="C5.10 AuthorizationRule must have both targets (resourceTarget and feedbackTarget)"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_11_AutomationRuleNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.automationRules->isUnique(a | a.name)" message="C5.11 AutomationRule names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_12_AutomationRuleNameUppercase" targetClass="sirius.AutomationRule" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C5.12 AutomationRule name should start with uppercase">
+        <fixes name="QF_C5_12_CapitalizeAutomationRuleName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_13_AutomationRuleTriggerNotEmpty" targetClass="sirius.AutomationRule" level="ERROR" auditExpression="aql:self.trigger &lt;> null and self.trigger.size() > 0" message="C5.13 AutomationRule trigger must not be empty"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_14_AutomationRuleActionDescriptionNotEmpty" targetClass="sirius.AutomationRule" level="ERROR" auditExpression="aql:self.actionDescription &lt;> null and self.actionDescription.size() > 0" message="C5.14 AutomationRule actionDescription must not be empty"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_15_VerificationPolicyNamesUnique" targetClass="sirius.RefModel" level="ERROR" auditExpression="aql:self.verificationPolicies->isUnique(v | v.name)" message="C5.15 VerificationPolicy names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_16_VerificationPolicyVerifiesRequired" targetClass="sirius.VerificationPolicy" level="ERROR" auditExpression="aql:self.verifies &lt;> null" message="C5.16 VerificationPolicy must verify a FeedbackDefinition"/>
+
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G1_HasRatingRequiresRatingPolicy" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:not self.type.hasRating or self.rating &lt;> null" message="G1 If FeedbackType.hasRating=true then FeedbackDefinition.rating is required">
+        <fixes name="QF_G1_CreateDefaultRatingPolicy">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="rating" valueExpression="service:ensureRatingPolicy"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G2_ReviewMustBeResourceOnly" targetClass="sirius.FeedbackType" level="ERROR" auditExpression="aql:self.kind.toString() &lt;> 'REVIEW' or self.subjectScope.toString() = 'RESOURCE_ONLY'" message="G2 REVIEW feedback must use subjectScope=RESOURCE_ONLY">
+        <fixes name="QF_G2_SetReviewScopeResourceOnly">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectScope" valueExpression="aql:sirius::FeedbackSubjectScope::RESOURCE_ONLY"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G3_ReactionVoteNotRatingOrRecursive" targetClass="sirius.FeedbackType" level="ERROR" auditExpression="aql:((self.kind.toString() &lt;> 'REACTION') and (self.kind.toString() &lt;> 'VOTE')) or (not self.hasRating and not self.recursive)" message="G3 REACTION/VOTE must have hasRating=false and recursive=false">
+        <fixes name="QF_G3_DisableRatingAndRecursion">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="hasRating" valueExpression="aql:false"/>
+            <subModelOperations xsi:type="tool:SetValue" featureName="recursive" valueExpression="aql:false"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G3_ReactionVoteFeedbackDefinitionNoRating" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.type = null or ((self.type.kind.toString() &lt;> 'REACTION') and (self.type.kind.toString() &lt;> 'VOTE')) or self.rating = null" message="G3 REACTION/VOTE feedback cannot define RatingPolicy">
+        <fixes name="QF_G3_ClearRatingPolicy">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="rating" valueExpression="aql:null"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G4_SubscriptionResourceOnlyNonRecursive" targetClass="sirius.FeedbackType" level="ERROR" auditExpression="aql:self.kind.toString() &lt;> 'SUBSCRIPTION' or (self.subjectScope.toString() = 'RESOURCE_ONLY' and not self.recursive)" message="G4 SUBSCRIPTION feedback must be RESOURCE_ONLY and non-recursive">
+        <fixes name="QF_G4_NormalizeSubscriptionType">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectScope" valueExpression="aql:sirius::FeedbackSubjectScope::RESOURCE_ONLY"/>
+            <subModelOperations xsi:type="tool:SetValue" featureName="recursive" valueExpression="aql:false"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G5_RecursiveFeedbackMustAllowFeedbackTargets" targetClass="sirius.FeedbackType" level="ERROR" auditExpression="aql:not self.recursive or self.subjectScope.toString() &lt;> 'RESOURCE_ONLY'" message="G5 Recursive feedback must allow FEEDBACK targets">
+        <fixes name="QF_G5_SetRecursiveScopeResourceOrFeedback">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectScope" valueExpression="aql:sirius::FeedbackSubjectScope::RESOURCE_OR_FEEDBACK"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G6_ResourceOnlyForbidsSubjectFeedback" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.type.subjectScope.toString() &lt;> 'RESOURCE_ONLY' or self.subjectFeedback = null" message="G6 RESOURCE_ONLY scope forbids subjectFeedback">
+        <fixes name="QF_G6_ClearSubjectFeedback">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectFeedback" valueExpression="aql:null"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G7_FeedbackOnlyForbidsSubjectResource" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:self.type.subjectScope.toString() &lt;> 'FEEDBACK_ONLY' or self.subjectResource = null" message="G7 FEEDBACK_ONLY scope forbids subjectResource">
+        <fixes name="QF_G7_ClearSubjectResource">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectResource" valueExpression="aql:null"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G8_RequiresVerifiedContextRequiresPolicy" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:not self.requiresVerifiedContext or self.eContainer().verificationPolicies->exists(vp | vp.verifies = self)" message="G8 requiresVerifiedContext=true requires a VerificationPolicy">
+        <fixes name="QF_G8_CreateDefaultVerificationPolicy">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="requiresVerifiedContext" valueExpression="service:ensureVerificationPolicy"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G9_UniquePerAuthorTargetNoDualTarget" targetClass="sirius.FeedbackDefinition" level="ERROR" auditExpression="aql:not self.uniquePerAuthorTarget or not (self.subjectResource &lt;> null and self.subjectFeedback &lt;> null)" message="G9 uniquePerAuthorTarget requires a single target">
+        <fixes name="QF_G9_ClearSubjectFeedbackForSingleTarget">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="subjectFeedback" valueExpression="aql:null"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G10_AuthorizationContextMustIncludeResourceTarget" targetClass="sirius.AuthorizationRule" level="ERROR" auditExpression="aql:self.context = null or self.resourceTarget = null or self.context.contains->includes(self.resourceTarget)" message="G10 AuthorizationRule resourceTarget must belong to selected context">
+        <fixes name="QF_G10_AddResourceTargetToContext">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="context" valueExpression="service:ensureAuthorizationContextContainsResourceTarget"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G11_ModerationContextMustIncludeMonitorsResource" targetClass="sirius.ModerationPolicy" level="ERROR" auditExpression="aql:self.inContext = null or self.monitorsResource = null or self.inContext.contains->includes(self.monitorsResource)" message="G11 ModerationPolicy monitorsResource must belong to selected context">
+        <fixes name="QF_G11_AddMonitorsResourceToInContext">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="inContext" valueExpression="service:ensureModerationContextContainsMonitorsResource"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G12_AutomationInContextMustIncludeContextResource" targetClass="sirius.AutomationRule" level="ERROR" auditExpression="aql:self.inContext = null or self.context = null or self.inContext.contains->includes(self.context)" message="G12 AutomationRule context resource must belong to selected context">
+        <fixes name="QF_G12_AddContextResourceToInContext">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="inContext" valueExpression="service:ensureAutomationInContextContainsContextResource"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+    </ownedValidationSets>
+  </ownedViewpoints>
+</description:Group>
+
