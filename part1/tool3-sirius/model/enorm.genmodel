@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/enorm/src-gen" creationIcons="false" editDirectory="/enorm.edit/src-gen"
+    editorDirectory="/enorm.editor/src-gen" modelPluginID="enorm" modelName="Enorm"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" codeFormatting="true"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="21.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>enorm.ecore</foreignModel>
+  <testsDirectory xsi:nil="true"/>
+  <genPackages prefix="Enorm" disposableProviderFactory="true" ecorePackage="enorm.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//UserKind">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//UserKind/GENERIC"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//UserKind/BUYER"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//UserKind/SELLER"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//UserKind/CREATOR"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//UserKind/MODERATOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//ContextKind">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ContextKind/GLOBAL"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ContextKind/COMMUNITY"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ContextKind/CHANNEL"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ContextKind/CATALOG"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//PrimitiveType">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/TEXT"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/NUMBER"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/BOOLEAN"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/DATETIME"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/IMAGE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/VIDEO"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//PrimitiveType/URL"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//FeedbackKind">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/COMMENT"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/REVIEW"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/REACTION"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/VOTE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/REPORT"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackKind/SUBSCRIPTION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//FeedbackSubjectScope">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackSubjectScope/RESOURCE_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackSubjectScope/FEEDBACK_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackSubjectScope/RESOURCE_OR_FEEDBACK"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//FeedbackStatus">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackStatus/ENABLED"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//FeedbackStatus/DISABLED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//ValidationKind">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ValidationKind/AUTOMATIC"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ValidationKind/MANUAL"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//RuleSeverity">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//RuleSeverity/INFO"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//RuleSeverity/WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//RuleSeverity/ERROR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//ModerationMode">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationMode/AUTOMATIC"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationMode/MANUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationMode/HYBRID"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//ModerationDecision">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/APPROVED"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/FLAGGED"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/HIDDEN"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/REMOVED"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/BLOCKED"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ModerationDecision/REJECTED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="enorm.ecore#//ActionKind">
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/READ"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/CREATE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/UPDATE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/DELETE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/COMMENT"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/RATE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/VOTE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/REPORT"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/SUBSCRIBE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/MODERATE"/>
+      <genEnumLiterals ecoreEnumLiteral="enorm.ecore#//ActionKind/VALIDATE"/>
+    </genEnums>
+    <genClasses ecoreClass="enorm.ecore#//RefModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//RefModel/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//RefModel/version"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/userTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/resourceTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/contextTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/resourceRelations"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/feedbackTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/feedbackDefinitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/authorizationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/validationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/moderationPolicies"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/automationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//RefModel/verificationPolicies"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//UserType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//UserType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//UserType/kind"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//UserType/superTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//ContextType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ContextType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ContextType/kind"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ContextType/contains"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//ResourceType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceType/supportsMedia"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ResourceType/superTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//ResourceType/attributes"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//Attribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//Attribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//Attribute/required"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//Attribute/multiValued"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//ResourceRelation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceRelation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceRelation/sourceCardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceRelation/targetCardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceRelation/containment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ResourceRelation/recursive"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ResourceRelation/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ResourceRelation/target"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//FeedbackType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/subjectScope"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/hasRating"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/recursive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackType/allowsMedia"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//FeedbackDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackDefinition/requiresVerifiedContext"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackDefinition/uniquePerAuthorTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/type"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/subjectResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/author"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/subjectFeedback"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/policy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enorm.ecore#//FeedbackDefinition/rating"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//FeedbackPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//FeedbackPolicy/status"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//RatingPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//RatingPolicy/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//RatingPolicy/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//RatingPolicy/step"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//ValidationRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ValidationRule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ValidationRule/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ValidationRule/severity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ValidationRule/expression"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ValidationRule/implementationId"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ValidationRule/appliesToResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ValidationRule/appliesToFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ValidationRule/invokedBy"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//ModerationPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ModerationPolicy/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ModerationPolicy/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ModerationPolicy/trigger"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//ModerationPolicy/decision"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ModerationPolicy/monitorsResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ModerationPolicy/monitorsFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ModerationPolicy/executedBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//ModerationPolicy/inContext"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//AuthorizationRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//AuthorizationRule/allowedAction"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AuthorizationRule/actor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AuthorizationRule/context"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AuthorizationRule/resourceTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AuthorizationRule/feedbackTarget"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//AutomationRule">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//AutomationRule/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//AutomationRule/trigger"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//AutomationRule/condition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//AutomationRule/actionDescription"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AutomationRule/context"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AutomationRule/inContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AutomationRule/onFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//AutomationRule/uses"/>
+    </genClasses>
+    <genClasses ecoreClass="enorm.ecore#//VerificationPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//VerificationPolicy/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//VerificationPolicy/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enorm.ecore#//VerificationPolicy/appliesWhen"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enorm.ecore#//VerificationPolicy/verifies"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

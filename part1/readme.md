@@ -147,23 +147,52 @@ Constraints are rules that instances of the REF DSL must satisfy beyond what is 
 
 These constraints and refactorings are implemented in the Xtext tool (Validation Rules and Quick Fixes) as described in the individual report for tool 2 (Xtext).
 
-## Metamodel Graphical Representation
+## Activity 6 - Model Projections/Visualizations (Team + Sirius)
 
-For later activities (especially visualizations), each element of the metamodel will need a concrete textual and graphical representation. A first draft of the mapping to PlantUML is the following:
+For Activity 6, we designed and implemented two complementary projections for REF models:
 
-Concept | Description | Example textual representation
-------- | ----------- | ------------------------------
-RefModel | Root of the REF specification; groups user types, resource types, feedback and automations | `REF MODEL MyApp`
-UserType | User role that can participate in feedback and processes | `USER TYPES user, buyer IS user, seller`
-ResourceType | Type of resource that can be evaluated | `RESOURCE TYPE product : name AS TEXT, description AS TEXT, image AS IMAGE`
-Attribute | Named property of a resource or feedback type | `text AS TEXT`, `rating AS NUMBER`
-FeedbackType | Structure of a feedback entity (fields, rating, recursive) | `FEEDBACK TYPE rateType : text AS TEXT, rate AS ONETOFIVE`
-FeedbackDefinition | Definition that binds a feedback type to a resource and permissions | `FEEDBACK productReview : rateType, product, WRITE buyer, VALIDATION: automatic: automaticProductReviewVerification(...)`
-ValidationRule | Named rule that must hold for models or feedback | `VALIDATION automatic: automaticProductReviewVerification(buyer, text, rate)`
-AuthorizationRule | Permission of a user type to perform an action | `WRITE buyer`, `MODERATE moderator`
-AutomationRule | Automatic process reacting to events (e.g. Reddit automation) | `AUTOMATION onNewReport(...) DO ...`
+- **Textual projection**: a deterministic canonical listing of model elements and key properties.
+- **Graphical projection**: a generated PlantUML view aligned with the same semantic elements.
 
-This table will be refined in Activity 6, when designing the concrete textual and graphical projections. For now, it documents how the metamodel elements relate to the example textual projection given in the assignment.
+Team deliverable (notation design + mapping) and individual deliverable (Sirius implementation) are covered by the representation table below and by the Java generators in `part1/tool3-sirius/src/pt/isep/enorm/m1a4/ref/design/Services.java`.
+
+### Representation mapping by metamodel element
+
+| Metamodel element | Textual notation | PlantUML notation |
+|---|---|---|
+| `RefModel` | `REF MODEL <name> VERSION <version>` | Root object `<<RefModel>>` |
+| `UserType` | `- <name> kind=<kind> extends [..]` | Object `<<UserType kind>>`; inheritance with `..|>` |
+| `ContextType` | `- <name> kind=<kind> contains [..]` | Object `<<ContextType kind>>`; `contains` links to resources |
+| `ResourceType` | `- <name> supportsMedia=<bool>` | Class `<<ResourceType>>` |
+| `Attribute` | `* <name>: <type> required=<bool> multiValued=<bool>` | Class members in `ResourceType` |
+| `ResourceRelation` | `- <name>: <src>[c1] -> <tgt>[c2] containment=<bool> recursive=<bool>` | Association with cardinalities and relation label |
+| `FeedbackType` | `- <name> kind=<kind> scope=<scope> hasRating=<bool> ...` | Object `<<FeedbackType kind>>` + detail note |
+| `FeedbackDefinition` | `- <name> type=<...> author=<...> subjectResource=<...> ...` | Object `<<FeedbackDefinition>>` + links to type/author/targets |
+| `FeedbackPolicy` | `* policy status=<status>` | Composed object `<<FeedbackPolicy>>` |
+| `RatingPolicy` | `* rating <min>..<max> step=<step>` | Composed object `<<RatingPolicy>>` |
+| `ValidationRule` | `- <name> kind=<kind> severity=<severity> ...` | Object `<<ValidationRule kind>>` + applies-to links |
+| `AuthorizationRule` | `- actor=<...> action=<...> context=<...> ...` | Object with stereotype `<<ActionKind>>` + actor/context/targets |
+| `ModerationPolicy` | `- <name> mode=<...> decision=<...> trigger=<...>` | Object `<<Moderation mode>>` + monitor/executor/context links |
+| `AutomationRule` | `- <name> trigger=<...> condition=<...> action=<...>` | Object `<<AutomationRule>>` + links to context/feedback/validation |
+| `VerificationPolicy` | `- <name> mode=<...> appliesWhen=<...> verifies=<...>` | Object `<<VerificationPolicy mode>>` + verifies link |
+
+### Sirius implementation detail (individual task)
+
+Implemented export services:
+
+- `exportPlantUml(EObject)` generates `<modelName>-plantuml.puml`.
+- `exportTextProjection(EObject)` generates `<modelName>-text.txt`.
+
+These services can be connected in Sirius tools through service calls (`service:exportPlantUml(self)`, `service:exportTextProjection(self)`) or through an **External Java Action Call** delegating to the same generator logic.
+
+### Evidence and validation checklist
+
+To validate this activity in the project delivery:
+
+- Execute both exports from a `RefModel` in Sirius.
+- Confirm generation of `*-plantuml.puml` and `*-text.txt` files.
+- Confirm output is deterministic for unchanged model inputs.
+- Confirm the PlantUML file renders correctly to PNG/SVG.
+- Confirm all REF metamodel elements in the table are represented in both projections.
 
 ## Presentations of Models (instances)
-
