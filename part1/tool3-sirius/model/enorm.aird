@@ -5,7 +5,7 @@
     <semanticResources>enorm.genmodel</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_InOoUDkJEfGNddhepx4zaA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_IoIAMDkJEfGNddhepx4zaA" name="enorm" repPath="#_IoBSgDkJEfGNddhepx4zaA" changeId="1776332887669">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_IoIAMDkJEfGNddhepx4zaA" name="enorm" repPath="#_IoBSgDkJEfGNddhepx4zaA" changeId="1776336881486">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="enorm.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -2453,7 +2453,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ContextType/contains"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ContextType/contains"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BDdAzlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BDdBTlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BDdBTlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BDdBDlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2476,7 +2478,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ResourceType/attributes"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ResourceType/attributes"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BHuczlwEfGvKdMGnTzaeg" description="__BHucDlwEfGvKdMGnTzaeg" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BHudTlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BHudTlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BHudDlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2487,7 +2491,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ResourceRelation/source"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ResourceRelation/source"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BI8kDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BI8kjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BI8kjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BI8kTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2498,7 +2504,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ResourceRelation/target"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ResourceRelation/target"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BJjoDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BJjojlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BJjojlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BJjoTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2509,7 +2517,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/type"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/type"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BKKsDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BKKsjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BKKsjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BKKsTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2532,7 +2542,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/author"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/author"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BLY0zlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BLY1TlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BLY1TlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BLY1DlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2555,7 +2567,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/policy"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/policy"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BNOADlwEfGvKdMGnTzaeg" description="__BHucDlwEfGvKdMGnTzaeg" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BNOAjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BNOAjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BNOATlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2566,7 +2580,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/rating"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//FeedbackDefinition/rating"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BN1EDlwEfGvKdMGnTzaeg" description="__BHucDlwEfGvKdMGnTzaeg" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BN1EjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BN1EjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BN1ETlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2601,7 +2617,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ValidationRule/invokedBy"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ValidationRule/invokedBy"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BQRUTlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BQRUzlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BQRUzlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BQRUjlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2612,7 +2630,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/monitorsResource"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/monitorsResource"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BRfcDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BRfcjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BRfcjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BRfcTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2623,7 +2643,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/monitorsFeedback"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/monitorsFeedback"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BSGgDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BSGgjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BSGgjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BSGgTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2634,7 +2656,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/executedBy"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//ModerationPolicy/executedBy"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BStkDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BStkjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BStkjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BStkTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2657,7 +2681,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//AuthorizationRule/actor"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//AuthorizationRule/actor"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BUiwDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BUiwjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BUiwjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BUiwTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2680,7 +2706,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//AuthorizationRule/resourceTarget"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//AuthorizationRule/resourceTarget"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BVw4TlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BVw4zlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BVw4zlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BVw4jlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2727,7 +2755,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//AutomationRule/onFeedback"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//AutomationRule/onFeedback"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BYNITlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BYNIzlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BYNIzlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BYNIjlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2738,7 +2768,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//AutomationRule/uses"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//AutomationRule/uses"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BY0MTlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BY0MzlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BY0MzlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BY0MjlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
@@ -2749,7 +2781,9 @@
       <target xmi:type="ecore:EReference" href="enorm.ecore#//VerificationPolicy/verifies"/>
       <semanticElements xmi:type="ecore:EReference" href="enorm.ecore#//VerificationPolicy/verifies"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="__BaCUDlwEfGvKdMGnTzaeg" description="__BDdADlwEfGvKdMGnTzaeg" routingStyle="manhattan" strokeColor="0,0,0">
-        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BaCUjlwEfGvKdMGnTzaeg" showIcon="false"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="__BaCUjlwEfGvKdMGnTzaeg" showIcon="false">
+          <labelFormat>bold</labelFormat>
+        </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="__BaCUTlwEfGvKdMGnTzaeg" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
         </endLabelStyle>
