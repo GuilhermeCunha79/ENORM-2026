@@ -837,6 +837,9 @@
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36V4" resolve="ResourceType" />
     </node>
+    <node concept="PrWs8" id="1m0vgSOyetq" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
   </node>
   <node concept="1TIwiD" id="DrEcBK1hdX">
     <property role="EcuMT" value="746375748528706429" />
@@ -847,6 +850,9 @@
       <property role="20kJfa" value="superType" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="3nWBi3h36Uz" resolve="UserType" />
+    </node>
+    <node concept="PrWs8" id="1m0vgSOvFGo" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
   <node concept="25R3W" id="3vc7gP656r2">

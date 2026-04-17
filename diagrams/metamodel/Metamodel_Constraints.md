@@ -17,10 +17,9 @@ For each constraint, when applicable, a **refactoring** (quick fix) is proposed 
 3. [Structure – ResourceType, Attribute, ResourceRelation](#3-structure)
 4. [Feedback – FeedbackType, FeedbackDefinition, FeedbackPolicy, RatingPolicy](#4-feedback)
 5. [Governance & Behavior – ValidationRule, ModerationPolicy, AuthorizationRule, AutomationRule, VerificationPolicy](#5-governance--behavior)
-6. [Evolution – EvolutionRule, RefactoringOperation](#6-evolution)
-7. [Generalized Naming Rule (Uppercase)](#7-generalized-naming-rule-uppercase)
-8. [Cross-Property Semantic Constraints](#8-cross-property-semantic-constraints)
-9. [Summary Table](#9-summary-table)
+6. [Generalized Naming Rule (Uppercase)](#7-generalized-naming-rule-uppercase)
+7. [Cross-Property Semantic Constraints](#8-cross-property-semantic-constraints)
+8. [Summary Table](#9-summary-table)
 
 ---
 
@@ -840,84 +839,7 @@ inv verifiesRequired:
 
 ---
 
-## 6. Evolution
-
-### C6.1 EvolutionRule name must be unique within RefModel
-
-**OCL:**
-```ocl
-context RefModel
-inv evolutionRuleNamesUnique:
-  self.evolutionRules->isUnique(e | e.name)
-```
-
-**Refactoring:** None.
-
----
-
-### C6.2 EvolutionRule fromVersion must be different from toVersion
-
-**OCL:**
-```ocl
-context EvolutionRule
-inv fromVersionDifferentFromToVersion:
-  self.fromVersion <> self.toVersion
-```
-
-**Pseudo-code:**
-```
-if evolutionRule.fromVersion == evolutionRule.toVersion:
-    error("EvolutionRule fromVersion must be different from toVersion")
-```
-
-**Refactoring:** None.
-
----
-
-### C6.3 EvolutionRule must have at least one RefactoringOperation
-
-**OCL:**
-```ocl
-context EvolutionRule
-inv atLeastOneOperation:
-  self.applies->size() >= 1
-```
-
-**Refactoring:** None.
-
----
-
-### C6.4 RefactoringOperation name must not be empty
-
-**OCL:**
-```ocl
-context RefactoringOperation
-inv nameNotEmpty:
-  self.name <> null and self.name.size() > 0
-```
-
-**Refactoring:** None.
-
----
-
-### C6.5 RefactoringOperation scriptId must have at least 3 characters
-
-**OCL:**
-```ocl
-context RefactoringOperation
-inv scriptIdMinLength:
-  self.scriptId <> null implies self.scriptId.size() >= 3
-```
-
-**Refactoring:**
-```
-if refactoringOperation.scriptId.length < 3:
-    refactoringOperation.scriptId = "ref_" + refactoringOperation.scriptId
-```
-
----
-
-## 7. Generalized Naming Rule (Uppercase)
+## 6. Generalized Naming Rule (Uppercase)
 
 To avoid duplication, all uppercase naming conventions can be expressed by a single reusable rule template.
 The specific constraints C1.2, C2.2, C2.6, C3.2, C4.2, C4.5, C5.3 and C5.12 are instances of this generalized rule.
@@ -955,7 +877,7 @@ function capitalize(s):
 
 ---
 
-## 8. Cross-Property Semantic Constraints
+## 7. Cross-Property Semantic Constraints
 
 These constraints are generic and scenario-agnostic.
 They derive restrictions from metamodel properties and enum values, without hardcoding application names.
@@ -1173,7 +1095,7 @@ automationRule.inContext.contains.add(automationRule.context)
 
 ---
 
-## 9. Summary Table
+## 8. Summary Table
 
 | ID | Element | Constraint | Severity | Refactoring |
 |----|---------|------------|----------|-------------|
