@@ -166,4 +166,3 @@ AutomationRule | Automatic process reacting to events (e.g. Reddit automation) |
 This table will be refined in Activity 6, when designing the concrete textual and graphical projections. For now, it documents how the metamodel elements relate to the example textual projection given in the assignment.
 
 ## Presentations of Models (instances)
-

@@ -1,16 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: pt.isep.enorm.ref.sirius;singleton:=true
-Automatic-Module-Name: pt.isep.enorm.ref.sirius
+Bundle-SymbolicName: enorm;singleton:=true
+Automatic-Module-Name: enorm
 Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: pt.isep.enorm.ref.sirius,
- pt.isep.enorm.ref.sirius.impl,
- pt.isep.enorm.ref.sirius.util
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: enorm,
+ enorm.impl,
+ enorm.util
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xmi,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy

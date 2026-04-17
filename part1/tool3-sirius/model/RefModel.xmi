@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:enorm="http://www.example.org/enorm"
+    name="DSL"
+    version="1.0.0">
+
+  <!-- User Types -->
+  <userTypes name="Buyer" kind="BUYER"/>
+  <userTypes name="Seller" kind="SELLER"/>
+  <userTypes name="Creator" kind="CREATOR"/>
+  <userTypes name="Moderator" kind="MODERATOR"/>
+  <userTypes name="Admin" kind="GENERIC"/>
+
+  <!-- Resource Types -->
+  <resourceTypes name="Product" supportsMedia="true">
+    <attributes name="title" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="description" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="price" type="NUMBER" required="true" multiValued="false"/>
+    <attributes name="category" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="images" type="IMAGE" required="false" multiValued="true"/>
+    <attributes name="videoUrl" type="VIDEO" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="Review" supportsMedia="true">
+    <attributes name="title" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="content" type="TEXT" required="true" multiValued="true"/>
+    <attributes name="rating" type="NUMBER" required="true" multiValued="false"/>
+    <attributes name="purchaseDate" type="DATE" required="true" multiValued="false"/>
+    <attributes name="helpful" type="NUMBER" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="Comment" supportsMedia="false">
+    <attributes name="text" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="Shop" supportsMedia="true">
+    <attributes name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes name="rating" type="NUMBER" required="false" multiValued="false"/>
+  </resourceTypes>
+  <resourceTypes name="User" supportsMedia="false">
+      <attributes name="name" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <!-- Context Types -->
+  <contextTypes name="Global" kind="GLOBAL" contains="//@resourceTypes.0 //@resourceTypes.1 //@resourceTypes.2 //@resourceTypes.3 //@resourceTypes.4"/>
+  <contextTypes name="Marketplace" kind="COMMUNITY" contains="//@resourceTypes.0 //@resourceTypes.3 //@resourceTypes.4"/>
+  <contextTypes name="ProductReviews" kind="CHANNEL" contains="//@resourceTypes.1 //@resourceTypes.2"/>
+
+  <!-- Resource Relations -->
+  <resourceRelations name="Product_Reviews" sourceCardinality="1" targetCardinality="*" containment="false" recursive="false" source="//@resourceTypes.0" target="//@resourceTypes.1"/>
+  <resourceRelations name="Review_Comments" sourceCardinality="1" targetCardinality="*" containment="false" recursive="false" source="//@resourceTypes.1" target="//@resourceTypes.2"/>
+  <resourceRelations name="Seller_Shop" sourceCardinality="1" targetCardinality="1" containment="false" recursive="false" source="//@resourceTypes.4" target="//@resourceTypes.3"/>
+
+  <!-- Feedback Types -->
+  <feedbackTypes name="ProductReview" kind="REVIEW" subjectScope="RESOURCE_ONLY" hasRating="true" recursive="false" allowsMedia="true"/>
+  <feedbackTypes name="ReviewComment" kind="COMMENT" subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="true" allowsMedia="false"/>
+  <feedbackTypes name="Reaction" kind="REACTION" subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="false" allowsMedia="false"/>
+  <feedbackTypes name="Vote" kind="VOTE" subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="false" allowsMedia="false"/>
+  <feedbackTypes name="Complaint" kind="REPORT" subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="false" allowsMedia="true"/>
+
+  <!-- Feedback Definitions -->
+  <feedbackDefinitions name="ProductRating" requiresVerifiedContext="true" uniquePerAuthorTarget="true" type="//@feedbackTypes.0" subjectResource="//@resourceTypes.0" author="//@userTypes.0">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="5" step="1"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions name="ReviewComment" requiresVerifiedContext="false" uniquePerAuthorTarget="false" type="//@feedbackTypes.1" subjectResource="//@resourceTypes.1" author="//@userTypes.0">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="1" step="1"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions name="SellerReport" requiresVerifiedContext="true" uniquePerAuthorTarget="false" type="//@feedbackTypes.4" subjectResource="//@resourceTypes.3" author="//@userTypes.0">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="1" step="1"/>
+  </feedbackDefinitions>
+
+  <!-- Validation Rules -->
+  <validationRules name="ProductPriceValidation" kind="AUTOMATIC" severity="ERROR" expression="self.price > 0" appliesToResource="//@resourceTypes.0" invokedBy="//@automationRules.1"/>
+  <validationRules name="ReviewRatingRange" kind="AUTOMATIC" severity="WARNING" expression="self.rating >= 1 and self.rating &lt;= 5" appliesToFeedback="//@feedbackDefinitions.0" invokedBy="//@automationRules.0"/>
+  <validationRules name="ReviewMinLength" kind="AUTOMATIC" severity="ERROR" expression="self.content.size() >= 10" appliesToResource="//@resourceTypes.1" invokedBy="//@automationRules.2"/>
+  <validationRules name="CommentNotEmpty" kind="AUTOMATIC" severity="ERROR" expression="self.text.size() > 0" appliesToResource="//@resourceTypes.2" invokedBy="//@automationRules.3"/>
+  <validationRules name="ShopNameRequired" kind="MANUAL" severity="ERROR" appliesToResource="//@resourceTypes.3" invokedBy="//@automationRules.4"/>
+
+  <!-- Authorization Rules -->
+  <authorizationRules allowedAction="READ" actor="//@userTypes.0" context="//@contextTypes.0" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules allowedAction="CREATE" actor="//@userTypes.1" context="//@contextTypes.1" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules allowedAction="UPDATE" actor="//@userTypes.1" context="//@contextTypes.1" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules allowedAction="DELETE" actor="//@userTypes.3" context="//@contextTypes.0" resourceTarget="//@resourceTypes.2" feedbackTarget="//@feedbackDefinitions.1"/>
+  <authorizationRules allowedAction="RATE" actor="//@userTypes.0" context="//@contextTypes.2" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules allowedAction="COMMENT" actor="//@userTypes.0" context="//@contextTypes.2" resourceTarget="//@resourceTypes.2" feedbackTarget="//@feedbackDefinitions.1"/>
+  <authorizationRules allowedAction="MODERATE" actor="//@userTypes.3" context="//@contextTypes.0" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.0"/>
+
+  <!-- Moderation Policies -->
+  <moderationPolicies name="SpamDetectionPolicy" mode="AUTOMATIC" trigger="spam_keywords" decision="FLAGGED" monitorsResource="//@resourceTypes.1" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.3" inContext="//@contextTypes.2"/>
+  <moderationPolicies name="OffensiveContentPolicy" mode="HYBRID" trigger="offensive_language" decision="HIDDEN" monitorsResource="//@resourceTypes.2" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.3" inContext="//@contextTypes.2"/>
+  <moderationPolicies name="FakeReviewPolicy" mode="MANUAL" trigger="suspicious_pattern" decision="REMOVED" monitorsResource="//@resourceTypes.1" monitorsFeedback="//@feedbackDefinitions.0" executedBy="//@userTypes.3" inContext="//@contextTypes.2"/>
+
+  <!-- Automation Rules -->
+  <automationRules name="LowRatingNotification" trigger="rating_below_2" condition="self.rating &lt; 2" actionDescription="Send notification to seller" context="//@resourceTypes.0" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.0" uses="//@validationRules.1"/>
+  <automationRules name="HighRatingBadge" trigger="rating_above_4.5" condition="self.rating > 4.5" actionDescription="Award seller badge" context="//@resourceTypes.0" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.0" uses="//@validationRules.0"/>
+  <automationRules name="ReviewLengthEscalation" trigger="review_too_short" condition="self.content.size() &lt; 10" actionDescription="Flag short review for moderation" context="//@resourceTypes.1" inContext="//@contextTypes.2" onFeedback="//@feedbackDefinitions.1" uses="//@validationRules.2"/>
+  <automationRules name="CommentQualityCheck" trigger="comment_empty_text" condition="self.text.size() = 0" actionDescription="Flag empty comment" context="//@resourceTypes.2" inContext="//@contextTypes.2" onFeedback="//@feedbackDefinitions.1" uses="//@validationRules.3"/>
+  <automationRules name="ShopProfileCheck" trigger="shop_name_missing" condition="self.name = null or self.name.size() = 0" actionDescription="Request shop profile completion" context="//@resourceTypes.3" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.2" uses="//@validationRules.4"/>
+
+  <!-- Verification Policies -->
+  <verificationPolicies name="BuyerVerification" mode="AUTOMATIC" appliesWhen="user_made_purchase" verifies="//@feedbackDefinitions.0"/>
+  <verificationPolicies name="SellerVerification" mode="MANUAL" appliesWhen="seller_account_age_gt_30days" verifies="//@feedbackDefinitions.2"/>
+
+</enorm:RefModel>
