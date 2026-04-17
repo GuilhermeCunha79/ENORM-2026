@@ -1,0 +1,26 @@
+@startuml
+title ValidationFlow Validation Process
+
+state "Collect Input" as collect
+state "Run Validation Rules" as validate
+state "Validation passed?" as decision <<choice>>
+state "Accept" as accept
+state "Reject" as reject
+[*] --> collect
+collect --> validate
+validate --> decision
+decision --> accept : yes
+decision --> reject : no
+accept --> [*]
+reject --> [*]
+state "Rule 1: ProductPriceValidation (ERROR)" as rule_1
+validate --> rule_1
+state "Rule 2: ReviewRatingRange (WARNING)" as rule_2
+validate --> rule_2
+state "Rule 3: ReviewMinLength (ERROR)" as rule_3
+validate --> rule_3
+state "Rule 4: CommentNotEmpty (ERROR)" as rule_4
+validate --> rule_4
+state "Rule 5: ShopNameRequired (ERROR)" as rule_5
+validate --> rule_5
+@enduml

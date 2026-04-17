@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:enorm="http://www.example.org/enorm#/"
+    name="SampleModel"
+    version="0.1">
+
+  <userTypes name="User" kind="GENERIC"/>
+
+  <resourceTypes name="Post" supportsMedia="true">
+    <attributes name="title" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <contextTypes name="Global" kind="GLOBAL" contains="//@resourceTypes.0"/>
+
+</enorm:RefModel>
