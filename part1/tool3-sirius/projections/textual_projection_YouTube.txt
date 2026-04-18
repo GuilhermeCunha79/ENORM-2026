@@ -1,0 +1,172 @@
+==============================================================
+ENORM Model: YouTubeScenario
+Version: 1.0.0
+==============================================================
+
+USER TYPES:
+-----------
+- User (kind: GENERIC)
+- Creator (kind: CREATOR)
+- Moderator (kind: MODERATOR)
+
+RESOURCE TYPES:
+---------------
+Resource Channel
+  - id: TEXT (required)
+  - name: TEXT (required)
+  - description: TEXT
+  - creationDate: DATE (required)
+
+Resource Content
+  - id: TEXT (required)
+  - creationDate: DATE (required)
+  - status: TEXT (required)
+
+Resource Video
+  Supports multimedia content
+  - title: TEXT (required)
+  - description: TEXT (required)
+  - uploadDate: DATE (required)
+  - duration: NUMBER (required)
+  - commentStatus: TEXT (required)
+
+Resource Comment
+  - text: TEXT (required)
+
+Resource LikeHistory
+  - id: TEXT (required)
+  - action: TEXT (required)
+  - timestamp: DATETIME (required)
+
+Resource VideoModerationCheck
+  - id: TEXT (required)
+  - type: TEXT (required)
+  - result: TEXT (required)
+  - timestamp: DATE (required)
+
+Resource CommentModerationCheck
+  - id: TEXT (required)
+  - type: TEXT (required)
+  - result: TEXT (required)
+  - timestamp: DATE (required)
+
+Resource CommentSettingsChange
+  - id: TEXT (required)
+  - newStatus: TEXT (required)
+  - timestamp: DATE (required)
+
+Resource ChannelPermissionPolicy
+  - id: TEXT (required)
+  - action: TEXT (required)
+  - allowedFor: TEXT (required)
+
+Resource ContentValidationRuleArtifact
+  - id: TEXT (required)
+  - target: TEXT (required)
+  - policyType: TEXT (required)
+  - severity: TEXT (required)
+
+
+CONTEXT TYPES:
+--------------
+Context Global (kind: GLOBAL)
+  Contains:
+    - Channel
+    - Content
+    - Video
+    - Comment
+    - LikeHistory
+    - VideoModerationCheck
+    - CommentModerationCheck
+    - CommentSettingsChange
+    - ChannelPermissionPolicy
+    - ContentValidationRuleArtifact
+
+Context ChannelSpace (kind: CHANNEL)
+  Contains:
+    - Channel
+    - Video
+    - Comment
+    - VideoModerationCheck
+    - CommentModerationCheck
+    - CommentSettingsChange
+    - ChannelPermissionPolicy
+    - ContentValidationRuleArtifact
+
+
+FEEDBACK SYSTEM:
+----------------
+Feedback type Like
+  Kind: VOTE
+  Subject scope: RESOURCE_ONLY
+
+Feedback type Subscription
+  Kind: SUBSCRIPTION
+  Subject scope: RESOURCE_ONLY
+
+Feedback type Report
+  Kind: REPORT
+  Subject scope: RESOURCE_ONLY
+
+
+Feedback definition LikeOnContent
+  Type: Like
+  Author: User
+
+Feedback definition SubscriptionToChannel
+  Type: Subscription
+  Author: User
+
+Feedback definition ReportOnContent
+  Type: Report
+  Author: User
+
+
+AUTHORIZATION RULES:
+-------------------
+- Creator can CREATE Video
+- User can COMMENT Comment
+- User can VOTE Content
+- User can REPORT Content
+- User can SUBSCRIBE Channel
+- Moderator can MODERATE Content
+
+MODERATION POLICIES:
+-------------------
+Moderation policy VideoModerationPolicy
+  Mode: HYBRID
+  Decision: FLAGGED
+  Trigger: COPYRIGHT_OR_CONTENT_OR_SPAM
+
+Moderation policy CommentModerationPolicy
+  Mode: HYBRID
+  Decision: HIDDEN
+  Trigger: SPAM_OR_TOXICITY_OR_BLOCKED_WORD
+
+
+VALIDATION RULES:
+-----------------
+Validation rule VideoPolicyValidation
+  Kind: AUTOMATIC
+  Severity: WARNING
+  Expression: video_passes_copyright_and_spam_checks
+
+Validation rule CommentPolicyValidation
+  Kind: AUTOMATIC
+  Severity: WARNING
+  Expression: comment_passes_toxicity_and_spam_checks
+
+
+AUTOMATION RULES:
+-----------------
+Automation rule VideoValidationAutomation
+  Trigger: video_uploaded
+  Condition: content_status_active
+  Action: run validation and create moderation check
+
+Automation rule CommentValidationAutomation
+  Trigger: comment_created
+  Condition: commenting_enabled_on_video
+  Action: run validation and create moderation check
+
+

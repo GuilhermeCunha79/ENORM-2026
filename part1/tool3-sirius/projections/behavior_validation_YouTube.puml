@@ -1,0 +1,20 @@
+@startuml
+title ValidationFlow Validation Process
+
+state "Collect Input" as collect
+state "Run Validation Rules" as validate
+state "Validation passed?" as decision <<choice>>
+state "Accept" as accept
+state "Reject" as reject
+[*] --> collect
+collect --> validate
+validate --> decision
+decision --> accept : yes
+decision --> reject : no
+accept --> [*]
+reject --> [*]
+state "Rule 1: VideoPolicyValidation (WARNING)" as rule_1
+validate --> rule_1
+state "Rule 2: CommentPolicyValidation (WARNING)" as rule_2
+validate --> rule_2
+@enduml
