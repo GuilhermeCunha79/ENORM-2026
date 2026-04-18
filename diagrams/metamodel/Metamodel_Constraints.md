@@ -1095,6 +1095,61 @@ automationRule.inContext.contains.add(automationRule.context)
 
 ---
 
+### G13 Product reviews must be rating-based and include a rating policy
+
+This is a generic domain constraint for any Product evaluation flow.
+
+**Pseudo-code:**
+```
+for feedbackDefinition in refModel.feedbackDefinitions:
+  if feedbackDefinition.type.kind == REVIEW and
+     feedbackDefinition.subjectResource is not null and
+     feedbackDefinition.subjectResource.name == "Product":
+    if feedbackDefinition.type.hasRating != true:
+      error("Product reviews must be rating-based")
+    if feedbackDefinition.rating is null:
+      error("Product reviews must define a RatingPolicy")
+```
+
+**Refactoring:**
+```
+feedbackDefinition.type.hasRating = true
+if feedbackDefinition.rating is null:
+  feedbackDefinition.rating = RatingPolicy(minValue=1, maxValue=5, step=1)
+```
+
+---
+
+### G14 Product star rating must be discrete integer scale 1..5
+
+This constraint guarantees star semantics and avoids continuous scales.
+
+**Pseudo-code:**
+```
+for feedbackDefinition in refModel.feedbackDefinitions:
+  if feedbackDefinition.type.kind == REVIEW and
+     feedbackDefinition.subjectResource is not null and
+     feedbackDefinition.subjectResource.name == "Product" and
+     feedbackDefinition.rating is not null:
+
+    p = feedbackDefinition.rating
+
+    if p.minValue != 1 or p.maxValue != 5 or p.step != 1:
+      error("Product star rating must use min=1, max=5, step=1")
+
+    if not isInteger(p.minValue) or not isInteger(p.maxValue) or not isInteger(p.step):
+      error("Product star rating values must be integers")
+```
+
+**Refactoring:**
+```
+feedbackDefinition.rating.minValue = 1
+feedbackDefinition.rating.maxValue = 5
+feedbackDefinition.rating.step = 1
+```
+
+---
+
 ## 8. Summary Table
 
 | ID | Element | Constraint | Severity | Refactoring |
@@ -1164,6 +1219,8 @@ automationRule.inContext.contains.add(automationRule.context)
 | G10 | AuthorizationRule/ContextType | context must include resourceTarget | ERROR | Add resourceTarget to context |
 | G11 | ModerationPolicy/ContextType | inContext must include monitorsResource | ERROR | Add monitorsResource to context |
 | G12 | AutomationRule/ContextType | inContext must include context resource | ERROR | Add context resource to inContext |
+| G13 | FeedbackDefinition/FeedbackType | Product review must be rating-based and have RatingPolicy | ERROR | Set hasRating=true and create default 1..5 policy |
+| G14 | RatingPolicy | Product review must use integer star scale 1..5 | ERROR | Normalize min/max/step to 1/5/1 |
 
 ---
 

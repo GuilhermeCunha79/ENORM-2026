@@ -106,6 +106,12 @@ package "Feedback & Moderation" {
         allowedFor: EVERYONE | SUBSCRIBERS | MEMBERS | MODERATORS
     }
 
+    class SortingPolicy {
+        id: String
+        criterion: DATE | VALUE | RELEVANCE
+        direction: ASC | DESC
+    }
+
     class ContentValidationRule {
         id: String
         target: VIDEO | COMMENT
@@ -130,6 +136,8 @@ Creator "1" -down-> "*" Channel : owns >
 Channel "1" -down-> "*" Video : contains >
 Video "*" -up-> "1" Channel : on
 Channel "1" -right-> "*" ChannelPermissionPolicy : policy >
+Channel "1" -right-> "*" SortingPolicy : sorting >
+SortingPolicy "*" -left-> "1" Content : orders >
 Creator "1" --> "*" ChannelPermissionPolicy : configures
 
 ' comments

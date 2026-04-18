@@ -77,7 +77,9 @@ package "Feedback" {
     subjectScope: FeedbackSubjectScope
     hasRating: boolean
     recursive: boolean
+    allowsText: boolean
     allowsMedia: boolean
+    polarity: FeedbackPolarity
   }
 
   enum FeedbackKind {
@@ -95,9 +97,16 @@ package "Feedback" {
     RESOURCE_OR_FEEDBACK
   }
 
+  enum FeedbackPolarity {
+    NONE
+    LIKE_DISLIKE
+    UP_DOWN
+  }
+
   class FeedbackDefinition {
     name: String
     requiresVerifiedContext: boolean
+    verificationRequirement: VerificationRequirement
     uniquePerAuthorTarget: boolean
   }
 
@@ -108,6 +117,12 @@ package "Feedback" {
   enum FeedbackStatus {
     ENABLED
     DISABLED
+  }
+
+  enum VerificationRequirement {
+    NONE
+    OPTIONAL
+    REQUIRED
   }
 
   class RatingPolicy {
@@ -189,6 +204,23 @@ package "Governance & Behavior" {
     mode: ValidationKind
     appliesWhen: String
   }
+
+  class SortingPolicy {
+    name: String
+    criterion: SortCriterion
+    direction: SortDirection
+  }
+
+  enum SortCriterion {
+    DATE
+    VALUE
+    RELEVANCE
+  }
+
+  enum SortDirection {
+    ASC
+    DESC
+  }
 }
 
 ' Associations - Core ownership
@@ -203,6 +235,7 @@ RefModel "1" o-- "*" ModerationPolicy
 RefModel "1" o-- "*" AuthorizationRule
 RefModel "1" o-- "*" AutomationRule
 RefModel "1" o-- "*" VerificationPolicy
+RefModel "1" o-- "*" SortingPolicy
 
 ' Associations - Type hierarchies
 UserType "0..*" -- "0..*" UserType : superTypes
@@ -243,6 +276,9 @@ AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
 AutomationRule "0..*" --> "1" ValidationRule : uses
 
 VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
+SortingPolicy "0..*" --> "0..1" ResourceType : appliesToResource
+SortingPolicy "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+SortingPolicy "0..*" --> "0..1" ContextType : inContext
 
 ' Main constraints (organized subset aligned with Metamodel_Constraints.md)
 note right of RefModel
@@ -260,6 +296,7 @@ note right of RefModel
   C5.6 ModerationPolicy
   C5.11 AutomationRule
   C5.15 VerificationPolicy
+  C5.17 SortingPolicy
 end note
 
 note right of UserType
@@ -282,6 +319,13 @@ note right of FeedbackDefinition
   C4.7: rating allowed only when type.hasRating = true
   G1: if type.hasRating = true, rating is required
   C4.12: subjectFeedback must not reference self
+  G16: verificationRequirement controls verified-context strictness
+end note
+
+note right of FeedbackType
+  G13: kind=REACTION should use polarity=LIKE_DISLIKE
+  G14: kind=VOTE should use polarity=UP_DOWN
+  G15: allowsText and allowsMedia model textual/media separation
 end note
 
 note right of RatingPolicy
@@ -312,6 +356,11 @@ end note
 
 note right of VerificationPolicy
   C5.16: verifies is required
+end note
+
+note right of SortingPolicy
+  C5.17: at least one target should be set
+  G18: criterion and direction must be explicit
 end note
 
 @enduml
