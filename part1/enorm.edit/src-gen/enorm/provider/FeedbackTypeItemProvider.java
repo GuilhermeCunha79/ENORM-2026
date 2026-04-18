@@ -58,7 +58,9 @@ public class FeedbackTypeItemProvider extends ItemProviderAdapter implements IEd
 			addSubjectScopePropertyDescriptor(object);
 			addHasRatingPropertyDescriptor(object);
 			addRecursivePropertyDescriptor(object);
+			addAllowsTextPropertyDescriptor(object);
 			addAllowsMediaPropertyDescriptor(object);
+			addPolarityPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -144,6 +146,22 @@ public class FeedbackTypeItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
+	 * This adds a property descriptor for the Allows Text feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addAllowsTextPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FeedbackType_allowsText_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_FeedbackType_allowsText_feature",
+								"_UI_FeedbackType_type"),
+						EnormPackage.Literals.FEEDBACK_TYPE__ALLOWS_TEXT, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds a property descriptor for the Allows Media feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -157,6 +175,22 @@ public class FeedbackTypeItemProvider extends ItemProviderAdapter implements IEd
 								"_UI_FeedbackType_type"),
 						EnormPackage.Literals.FEEDBACK_TYPE__ALLOWS_MEDIA, true, false, false,
 						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Polarity feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addPolarityPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_FeedbackType_polarity_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_FeedbackType_polarity_feature",
+								"_UI_FeedbackType_type"),
+						EnormPackage.Literals.FEEDBACK_TYPE__POLARITY, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -210,7 +244,9 @@ public class FeedbackTypeItemProvider extends ItemProviderAdapter implements IEd
 		case EnormPackage.FEEDBACK_TYPE__SUBJECT_SCOPE:
 		case EnormPackage.FEEDBACK_TYPE__HAS_RATING:
 		case EnormPackage.FEEDBACK_TYPE__RECURSIVE:
+		case EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
 		case EnormPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
+		case EnormPackage.FEEDBACK_TYPE__POLARITY:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

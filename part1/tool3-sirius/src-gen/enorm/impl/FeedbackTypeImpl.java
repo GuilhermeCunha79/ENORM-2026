@@ -4,6 +4,7 @@ package enorm.impl;
 
 import enorm.EnormPackage;
 import enorm.FeedbackKind;
+import enorm.FeedbackPolarity;
 import enorm.FeedbackSubjectScope;
 import enorm.FeedbackType;
 
@@ -27,7 +28,9 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link enorm.impl.FeedbackTypeImpl#getSubjectScope <em>Subject Scope</em>}</li>
  *   <li>{@link enorm.impl.FeedbackTypeImpl#isHasRating <em>Has Rating</em>}</li>
  *   <li>{@link enorm.impl.FeedbackTypeImpl#isRecursive <em>Recursive</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackTypeImpl#isAllowsText <em>Allows Text</em>}</li>
  *   <li>{@link enorm.impl.FeedbackTypeImpl#isAllowsMedia <em>Allows Media</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackTypeImpl#getPolarity <em>Polarity</em>}</li>
  * </ul>
  *
  * @generated
@@ -134,6 +137,26 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 	protected boolean recursive = RECURSIVE_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #isAllowsText() <em>Allows Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAllowsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean ALLOWS_TEXT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isAllowsText() <em>Allows Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAllowsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean allowsText = ALLOWS_TEXT_EDEFAULT;
+
+	/**
 	 * The default value of the '{@link #isAllowsMedia() <em>Allows Media</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -152,6 +175,26 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 	 * @ordered
 	 */
 	protected boolean allowsMedia = ALLOWS_MEDIA_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPolarity() <em>Polarity</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPolarity()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final FeedbackPolarity POLARITY_EDEFAULT = FeedbackPolarity.NONE;
+
+	/**
+	 * The cached value of the '{@link #getPolarity() <em>Polarity</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPolarity()
+	 * @generated
+	 * @ordered
+	 */
+	protected FeedbackPolarity polarity = POLARITY_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -296,6 +339,30 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 	 * @generated
 	 */
 	@Override
+	public boolean isAllowsText() {
+		return allowsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAllowsText(boolean newAllowsText) {
+		boolean oldAllowsText = allowsText;
+		allowsText = newAllowsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT,
+					oldAllowsText, allowsText));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isAllowsMedia() {
 		return allowsMedia;
 	}
@@ -320,6 +387,30 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 	 * @generated
 	 */
 	@Override
+	public FeedbackPolarity getPolarity() {
+		return polarity;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPolarity(FeedbackPolarity newPolarity) {
+		FeedbackPolarity oldPolarity = polarity;
+		polarity = newPolarity == null ? POLARITY_EDEFAULT : newPolarity;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_TYPE__POLARITY, oldPolarity,
+					polarity));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case EnormPackage.FEEDBACK_TYPE__NAME:
@@ -332,8 +423,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 			return isHasRating();
 		case EnormPackage.FEEDBACK_TYPE__RECURSIVE:
 			return isRecursive();
+		case EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+			return isAllowsText();
 		case EnormPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
 			return isAllowsMedia();
+		case EnormPackage.FEEDBACK_TYPE__POLARITY:
+			return getPolarity();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -361,8 +456,14 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 		case EnormPackage.FEEDBACK_TYPE__RECURSIVE:
 			setRecursive((Boolean) newValue);
 			return;
+		case EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+			setAllowsText((Boolean) newValue);
+			return;
 		case EnormPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
 			setAllowsMedia((Boolean) newValue);
+			return;
+		case EnormPackage.FEEDBACK_TYPE__POLARITY:
+			setPolarity((FeedbackPolarity) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -391,8 +492,14 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 		case EnormPackage.FEEDBACK_TYPE__RECURSIVE:
 			setRecursive(RECURSIVE_EDEFAULT);
 			return;
+		case EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+			setAllowsText(ALLOWS_TEXT_EDEFAULT);
+			return;
 		case EnormPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
 			setAllowsMedia(ALLOWS_MEDIA_EDEFAULT);
+			return;
+		case EnormPackage.FEEDBACK_TYPE__POLARITY:
+			setPolarity(POLARITY_EDEFAULT);
 			return;
 		}
 		super.eUnset(featureID);
@@ -416,8 +523,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 			return hasRating != HAS_RATING_EDEFAULT;
 		case EnormPackage.FEEDBACK_TYPE__RECURSIVE:
 			return recursive != RECURSIVE_EDEFAULT;
+		case EnormPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+			return allowsText != ALLOWS_TEXT_EDEFAULT;
 		case EnormPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
 			return allowsMedia != ALLOWS_MEDIA_EDEFAULT;
+		case EnormPackage.FEEDBACK_TYPE__POLARITY:
+			return polarity != POLARITY_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -443,8 +554,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
 		result.append(hasRating);
 		result.append(", recursive: ");
 		result.append(recursive);
+		result.append(", allowsText: ");
+		result.append(allowsText);
 		result.append(", allowsMedia: ");
 		result.append(allowsMedia);
+		result.append(", polarity: ");
+		result.append(polarity);
 		result.append(')');
 		return result.toString();
 	}

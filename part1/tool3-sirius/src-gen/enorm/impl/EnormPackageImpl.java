@@ -2,16 +2,21 @@
  */
 package enorm.impl;
 
+import enorm.Action;
 import enorm.ActionKind;
+import enorm.ActionResultKind;
 import enorm.Attribute;
 import enorm.AuthorizationRule;
 import enorm.AutomationRule;
+import enorm.Condition;
+import enorm.ConditionOperator;
 import enorm.ContextKind;
 import enorm.ContextType;
 import enorm.EnormFactory;
 import enorm.EnormPackage;
 import enorm.FeedbackDefinition;
 import enorm.FeedbackKind;
+import enorm.FeedbackPolarity;
 import enorm.FeedbackPolicy;
 import enorm.FeedbackStatus;
 import enorm.FeedbackSubjectScope;
@@ -25,12 +30,17 @@ import enorm.RefModel;
 import enorm.ResourceRelation;
 import enorm.ResourceType;
 import enorm.RuleSeverity;
+import enorm.SortCriterion;
+import enorm.SortDirection;
+import enorm.SortingPolicy;
+import enorm.TriggerEvent;
 import enorm.UserKind;
 import enorm.UserType;
 import enorm.ValidationKind;
 import enorm.ValidationRule;
 import enorm.VerificationPolicy;
 
+import enorm.VerificationRequirement;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
@@ -149,7 +159,28 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass conditionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass actionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass verificationPolicyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass sortingPolicyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -191,7 +222,21 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum feedbackPolarityEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum feedbackStatusEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum verificationRequirementEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -219,6 +264,13 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EEnum triggerEventEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EEnum moderationDecisionEEnum = null;
 
 	/**
@@ -227,6 +279,34 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	private EEnum actionKindEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum conditionOperatorEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum actionResultKindEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum sortCriterionEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum sortDirectionEEnum = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -430,6 +510,16 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	@Override
 	public EReference getRefModel_VerificationPolicies() {
 		return (EReference) refModelEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getRefModel_SortingPolicies() {
+		return (EReference) refModelEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -758,8 +848,28 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFeedbackType_AllowsMedia() {
+	public EAttribute getFeedbackType_AllowsText() {
 		return (EAttribute) feedbackTypeEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getFeedbackType_AllowsMedia() {
+		return (EAttribute) feedbackTypeEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getFeedbackType_Polarity() {
+		return (EAttribute) feedbackTypeEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -798,7 +908,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFeedbackDefinition_UniquePerAuthorTarget() {
+	public EAttribute getFeedbackDefinition_VerificationRequirement() {
 		return (EAttribute) feedbackDefinitionEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -808,8 +918,8 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Type() {
-		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(3);
+	public EAttribute getFeedbackDefinition_UniquePerAuthorTarget() {
+		return (EAttribute) feedbackDefinitionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -818,7 +928,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_SubjectResource() {
+	public EReference getFeedbackDefinition_Type() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -828,7 +938,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Author() {
+	public EReference getFeedbackDefinition_SubjectResource() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -838,7 +948,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_SubjectFeedback() {
+	public EReference getFeedbackDefinition_Author() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -848,7 +958,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Policy() {
+	public EReference getFeedbackDefinition_SubjectFeedback() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -858,8 +968,18 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Rating() {
+	public EReference getFeedbackDefinition_Policy() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getFeedbackDefinition_Rating() {
+		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1118,7 +1238,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAuthorizationRule_AllowedAction() {
+	public EAttribute getAuthorizationRule_Name() {
 		return (EAttribute) authorizationRuleEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1128,8 +1248,8 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAuthorizationRule_Actor() {
-		return (EReference) authorizationRuleEClass.getEStructuralFeatures().get(1);
+	public EAttribute getAuthorizationRule_AllowedAction() {
+		return (EAttribute) authorizationRuleEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1138,7 +1258,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAuthorizationRule_Context() {
+	public EReference getAuthorizationRule_Actor() {
 		return (EReference) authorizationRuleEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -1148,7 +1268,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAuthorizationRule_ResourceTarget() {
+	public EReference getAuthorizationRule_Context() {
 		return (EReference) authorizationRuleEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1158,8 +1278,18 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAuthorizationRule_FeedbackTarget() {
+	public EReference getAuthorizationRule_ResourceTarget() {
 		return (EReference) authorizationRuleEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAuthorizationRule_FeedbackTarget() {
+		return (EReference) authorizationRuleEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1198,28 +1328,8 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getAutomationRule_Condition() {
-		return (EAttribute) automationRuleEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getAutomationRule_ActionDescription() {
-		return (EAttribute) automationRuleEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getAutomationRule_Context() {
-		return (EReference) automationRuleEClass.getEStructuralFeatures().get(4);
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1229,7 +1339,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 */
 	@Override
 	public EReference getAutomationRule_InContext() {
-		return (EReference) automationRuleEClass.getEStructuralFeatures().get(5);
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1239,7 +1349,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 */
 	@Override
 	public EReference getAutomationRule_OnFeedback() {
-		return (EReference) automationRuleEClass.getEStructuralFeatures().get(6);
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1249,7 +1359,117 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 */
 	@Override
 	public EReference getAutomationRule_Uses() {
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAutomationRule_Conditions() {
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAutomationRule_Actions() {
 		return (EReference) automationRuleEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getCondition() {
+		return conditionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getCondition_Name() {
+		return (EAttribute) conditionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getCondition_Field() {
+		return (EAttribute) conditionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getCondition_Operator() {
+		return (EAttribute) conditionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getCondition_Value() {
+		return (EAttribute) conditionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getAction() {
+		return actionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAction_Name() {
+		return (EAttribute) actionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAction_Kind() {
+		return (EAttribute) actionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAction_Message() {
+		return (EAttribute) actionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1308,6 +1528,76 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getSortingPolicy() {
+		return sortingPolicyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getSortingPolicy_Name() {
+		return (EAttribute) sortingPolicyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getSortingPolicy_Criterion() {
+		return (EAttribute) sortingPolicyEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getSortingPolicy_Direction() {
+		return (EAttribute) sortingPolicyEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSortingPolicy_AppliesToResource() {
+		return (EReference) sortingPolicyEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSortingPolicy_AppliesToFeedback() {
+		return (EReference) sortingPolicyEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getSortingPolicy_InContext() {
+		return (EReference) sortingPolicyEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getUserKind() {
 		return userKindEEnum;
 	}
@@ -1358,8 +1648,28 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getFeedbackPolarity() {
+		return feedbackPolarityEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getFeedbackStatus() {
 		return feedbackStatusEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getVerificationRequirement() {
+		return verificationRequirementEEnum;
 	}
 
 	/**
@@ -1398,6 +1708,16 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	 * @generated
 	 */
 	@Override
+	public EEnum getTriggerEvent() {
+		return triggerEventEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getModerationDecision() {
 		return moderationDecisionEEnum;
 	}
@@ -1410,6 +1730,46 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 	@Override
 	public EEnum getActionKind() {
 		return actionKindEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getConditionOperator() {
+		return conditionOperatorEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getActionResultKind() {
+		return actionResultKindEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getSortCriterion() {
+		return sortCriterionEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EEnum getSortDirection() {
+		return sortDirectionEEnum;
 	}
 
 	/**
@@ -1456,6 +1816,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		createEReference(refModelEClass, REF_MODEL__MODERATION_POLICIES);
 		createEReference(refModelEClass, REF_MODEL__AUTOMATION_RULES);
 		createEReference(refModelEClass, REF_MODEL__VERIFICATION_POLICIES);
+		createEReference(refModelEClass, REF_MODEL__SORTING_POLICIES);
 
 		userTypeEClass = createEClass(USER_TYPE);
 		createEAttribute(userTypeEClass, USER_TYPE__NAME);
@@ -1494,11 +1855,14 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__SUBJECT_SCOPE);
 		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__HAS_RATING);
 		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__RECURSIVE);
+		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__ALLOWS_TEXT);
 		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__ALLOWS_MEDIA);
+		createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__POLARITY);
 
 		feedbackDefinitionEClass = createEClass(FEEDBACK_DEFINITION);
 		createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__NAME);
 		createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT);
+		createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT);
 		createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__TYPE);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__SUBJECT_RESOURCE);
@@ -1536,6 +1900,7 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		createEReference(moderationPolicyEClass, MODERATION_POLICY__IN_CONTEXT);
 
 		authorizationRuleEClass = createEClass(AUTHORIZATION_RULE);
+		createEAttribute(authorizationRuleEClass, AUTHORIZATION_RULE__NAME);
 		createEAttribute(authorizationRuleEClass, AUTHORIZATION_RULE__ALLOWED_ACTION);
 		createEReference(authorizationRuleEClass, AUTHORIZATION_RULE__ACTOR);
 		createEReference(authorizationRuleEClass, AUTHORIZATION_RULE__CONTEXT);
@@ -1545,12 +1910,23 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		automationRuleEClass = createEClass(AUTOMATION_RULE);
 		createEAttribute(automationRuleEClass, AUTOMATION_RULE__NAME);
 		createEAttribute(automationRuleEClass, AUTOMATION_RULE__TRIGGER);
-		createEAttribute(automationRuleEClass, AUTOMATION_RULE__CONDITION);
-		createEAttribute(automationRuleEClass, AUTOMATION_RULE__ACTION_DESCRIPTION);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__CONTEXT);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__IN_CONTEXT);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__ON_FEEDBACK);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__USES);
+		createEReference(automationRuleEClass, AUTOMATION_RULE__CONDITIONS);
+		createEReference(automationRuleEClass, AUTOMATION_RULE__ACTIONS);
+
+		conditionEClass = createEClass(CONDITION);
+		createEAttribute(conditionEClass, CONDITION__NAME);
+		createEAttribute(conditionEClass, CONDITION__FIELD);
+		createEAttribute(conditionEClass, CONDITION__OPERATOR);
+		createEAttribute(conditionEClass, CONDITION__VALUE);
+
+		actionEClass = createEClass(ACTION);
+		createEAttribute(actionEClass, ACTION__NAME);
+		createEAttribute(actionEClass, ACTION__KIND);
+		createEAttribute(actionEClass, ACTION__MESSAGE);
 
 		verificationPolicyEClass = createEClass(VERIFICATION_POLICY);
 		createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__NAME);
@@ -1558,18 +1934,33 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__APPLIES_WHEN);
 		createEReference(verificationPolicyEClass, VERIFICATION_POLICY__VERIFIES);
 
+		sortingPolicyEClass = createEClass(SORTING_POLICY);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__NAME);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__CRITERION);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__DIRECTION);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_RESOURCE);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_FEEDBACK);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__IN_CONTEXT);
+
 		// Create enums
 		userKindEEnum = createEEnum(USER_KIND);
 		contextKindEEnum = createEEnum(CONTEXT_KIND);
 		primitiveTypeEEnum = createEEnum(PRIMITIVE_TYPE);
 		feedbackKindEEnum = createEEnum(FEEDBACK_KIND);
 		feedbackSubjectScopeEEnum = createEEnum(FEEDBACK_SUBJECT_SCOPE);
+		feedbackPolarityEEnum = createEEnum(FEEDBACK_POLARITY);
 		feedbackStatusEEnum = createEEnum(FEEDBACK_STATUS);
+		verificationRequirementEEnum = createEEnum(VERIFICATION_REQUIREMENT);
 		validationKindEEnum = createEEnum(VALIDATION_KIND);
 		ruleSeverityEEnum = createEEnum(RULE_SEVERITY);
 		moderationModeEEnum = createEEnum(MODERATION_MODE);
+		triggerEventEEnum = createEEnum(TRIGGER_EVENT);
 		moderationDecisionEEnum = createEEnum(MODERATION_DECISION);
 		actionKindEEnum = createEEnum(ACTION_KIND);
+		conditionOperatorEEnum = createEEnum(CONDITION_OPERATOR);
+		actionResultKindEEnum = createEEnum(ACTION_RESULT_KIND);
+		sortCriterionEEnum = createEEnum(SORT_CRITERION);
+		sortDirectionEEnum = createEEnum(SORT_DIRECTION);
 	}
 
 	/**
@@ -1642,6 +2033,9 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		initEReference(getRefModel_VerificationPolicies(), this.getVerificationPolicy(), null, "verificationPolicies",
 				null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
 				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRefModel_SortingPolicies(), this.getSortingPolicy(), null, "sortingPolicies", null, 0, -1,
+				RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userTypeEClass, UserType.class, "UserType", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1728,7 +2122,13 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		initEAttribute(getFeedbackType_Recursive(), ecorePackage.getEBoolean(), "recursive", null, 0, 1,
 				FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFeedbackType_AllowsText(), ecorePackage.getEBoolean(), "allowsText", null, 0, 1,
+				FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeedbackType_AllowsMedia(), ecorePackage.getEBoolean(), "allowsMedia", null, 0, 1,
+				FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFeedbackType_Polarity(), this.getFeedbackPolarity(), "polarity", null, 0, 1,
 				FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
@@ -1739,6 +2139,9 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeedbackDefinition_RequiresVerifiedContext(), ecorePackage.getEBoolean(),
 				"requiresVerifiedContext", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFeedbackDefinition_VerificationRequirement(), this.getVerificationRequirement(),
+				"verificationRequirement", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFeedbackDefinition_UniquePerAuthorTarget(), ecorePackage.getEBoolean(),
 				"uniquePerAuthorTarget", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE,
@@ -1810,19 +2213,19 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModerationPolicy_Mode(), this.getModerationMode(), "mode", null, 0, 1, ModerationPolicy.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModerationPolicy_Trigger(), ecorePackage.getEString(), "trigger", null, 0, 1,
+		initEAttribute(getModerationPolicy_Trigger(), this.getTriggerEvent(), "trigger", null, 0, 1,
 				ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModerationPolicy_Decision(), this.getModerationDecision(), "decision", null, 0, 1,
 				ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getModerationPolicy_MonitorsResource(), this.getResourceType(), null, "monitorsResource", null,
-				1, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModerationPolicy_MonitorsFeedback(), this.getFeedbackDefinition(), null, "monitorsFeedback",
-				null, 1, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModerationPolicy_ExecutedBy(), this.getUserType(), null, "executedBy", null, 1, 1,
+		initEReference(getModerationPolicy_ExecutedBy(), this.getUserType(), null, "executedBy", null, 0, -1,
 				ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModerationPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1,
@@ -1831,6 +2234,9 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 
 		initEClass(authorizationRuleEClass, AuthorizationRule.class, "AuthorizationRule", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAuthorizationRule_Name(), ecorePackage.getEString(), "name", null, 0, 1,
+				AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAuthorizationRule_AllowedAction(), this.getActionKind(), "allowedAction", null, 0, 1,
 				AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
@@ -1851,27 +2257,45 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 				IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAutomationRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, AutomationRule.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAutomationRule_Trigger(), ecorePackage.getEString(), "trigger", null, 0, 1,
-				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAutomationRule_Condition(), ecorePackage.getEString(), "condition", null, 0, 1,
-				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAutomationRule_ActionDescription(), ecorePackage.getEString(), "actionDescription", null, 0,
-				1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAutomationRule_Trigger(), this.getTriggerEvent(), "trigger", null, 0, 1, AutomationRule.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAutomationRule_Context(), this.getResourceType(), null, "context", null, 0, 1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAutomationRule_InContext(), this.getContextType(), null, "inContext", null, 0, 1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAutomationRule_OnFeedback(), this.getFeedbackDefinition(), null, "onFeedback", null, 1, 1,
+		initEReference(getAutomationRule_OnFeedback(), this.getFeedbackDefinition(), null, "onFeedback", null, 0, 1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAutomationRule_Uses(), this.getValidationRule(), null, "uses", null, 1, 1,
+		initEReference(getAutomationRule_Uses(), this.getValidationRule(), null, "uses", null, 0, -1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAutomationRule_Conditions(), this.getCondition(), null, "conditions", null, 1, -1,
+				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAutomationRule_Actions(), this.getAction(), null, "actions", null, 1, -1,
+				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(conditionEClass, Condition.class, "Condition", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCondition_Name(), ecorePackage.getEString(), "name", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCondition_Field(), ecorePackage.getEString(), "field", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCondition_Operator(), this.getConditionOperator(), "operator", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCondition_Value(), ecorePackage.getEString(), "value", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAction_Name(), ecorePackage.getEString(), "name", null, 0, 1, Action.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAction_Kind(), this.getActionResultKind(), "kind", null, 0, 1, Action.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, Action.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(verificationPolicyEClass, VerificationPolicy.class, "VerificationPolicy", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1881,11 +2305,31 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		initEAttribute(getVerificationPolicy_Mode(), this.getValidationKind(), "mode", null, 0, 1,
 				VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVerificationPolicy_AppliesWhen(), ecorePackage.getEString(), "appliesWhen", null, 0, 1,
+		initEAttribute(getVerificationPolicy_AppliesWhen(), this.getTriggerEvent(), "appliesWhen", null, 0, 1,
 				VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getVerificationPolicy_Verifies(), this.getFeedbackDefinition(), null, "verifies", null, 1, 1,
 				VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(sortingPolicyEClass, SortingPolicy.class, "SortingPolicy", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSortingPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, SortingPolicy.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSortingPolicy_Criterion(), this.getSortCriterion(), "criterion", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSortingPolicy_Direction(), this.getSortDirection(), "direction", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_AppliesToResource(), this.getResourceType(), null, "appliesToResource", null, 0,
+				1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_AppliesToFeedback(), this.getFeedbackDefinition(), null, "appliesToFeedback",
+				null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
@@ -1925,9 +2369,19 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.FEEDBACK_ONLY);
 		addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.RESOURCE_OR_FEEDBACK);
 
+		initEEnum(feedbackPolarityEEnum, FeedbackPolarity.class, "FeedbackPolarity");
+		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.NONE);
+		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.LIKE_DISLIKE);
+		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.UP_DOWN);
+
 		initEEnum(feedbackStatusEEnum, FeedbackStatus.class, "FeedbackStatus");
 		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.ENABLED);
 		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.DISABLED);
+
+		initEEnum(verificationRequirementEEnum, VerificationRequirement.class, "VerificationRequirement");
+		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.NONE);
+		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.OPTIONAL);
+		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.REQUIRED);
 
 		initEEnum(validationKindEEnum, ValidationKind.class, "ValidationKind");
 		addEEnumLiteral(validationKindEEnum, ValidationKind.AUTOMATIC);
@@ -1942,6 +2396,17 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		addEEnumLiteral(moderationModeEEnum, ModerationMode.AUTOMATIC);
 		addEEnumLiteral(moderationModeEEnum, ModerationMode.MANUAL);
 		addEEnumLiteral(moderationModeEEnum, ModerationMode.HYBRID);
+
+		initEEnum(triggerEventEEnum, TriggerEvent.class, "TriggerEvent");
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_CREATE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_UPDATE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_DELETE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_CREATE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_UPDATE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_DELETE);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_REPORT_SUBMITTED);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_REPORT_THRESHOLD);
+		addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_MANUAL_REQUEST);
 
 		initEEnum(moderationDecisionEEnum, ModerationDecision.class, "ModerationDecision");
 		addEEnumLiteral(moderationDecisionEEnum, ModerationDecision.APPROVED);
@@ -1963,6 +2428,35 @@ public class EnormPackageImpl extends EPackageImpl implements EnormPackage {
 		addEEnumLiteral(actionKindEEnum, ActionKind.SUBSCRIBE);
 		addEEnumLiteral(actionKindEEnum, ActionKind.MODERATE);
 		addEEnumLiteral(actionKindEEnum, ActionKind.VALIDATE);
+
+		initEEnum(conditionOperatorEEnum, ConditionOperator.class, "ConditionOperator");
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.CONTAINS_KEYWORDS);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_CONTAINS_KEYWORDS);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.MATCH_REGEX);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_MATCH_REGEX);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.HAS_PROPERTY);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_HAS_PROPERTY);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.HAS_SPECIFIC_PROPERTY);
+		addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_HAS_SPECIFIC_PROPERTY);
+
+		initEEnum(actionResultKindEEnum, ActionResultKind.class, "ActionResultKind");
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.DISPLAY_MESSAGE);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.FLAG_CONTENT);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.HIDE_CONTENT);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.REMOVE_CONTENT);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.BLOCK_SUBMISSION);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.NOTIFY_MODERATOR);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.AUTO_APPROVE);
+		addEEnumLiteral(actionResultKindEEnum, ActionResultKind.AUTO_REJECT);
+
+		initEEnum(sortCriterionEEnum, SortCriterion.class, "SortCriterion");
+		addEEnumLiteral(sortCriterionEEnum, SortCriterion.DATE);
+		addEEnumLiteral(sortCriterionEEnum, SortCriterion.VALUE);
+		addEEnumLiteral(sortCriterionEEnum, SortCriterion.RELEVANCE);
+
+		initEEnum(sortDirectionEEnum, SortDirection.class, "SortDirection");
+		addEEnumLiteral(sortDirectionEEnum, SortDirection.ASC);
+		addEEnumLiteral(sortDirectionEEnum, SortDirection.DESC);
 
 		// Create resource
 		createResource(eNS_URI);

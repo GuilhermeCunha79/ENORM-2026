@@ -12,6 +12,7 @@ import enorm.ModerationPolicy;
 import enorm.RefModel;
 import enorm.ResourceRelation;
 import enorm.ResourceType;
+import enorm.SortingPolicy;
 import enorm.UserType;
 import enorm.ValidationRule;
 import enorm.VerificationPolicy;
@@ -53,6 +54,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link enorm.impl.RefModelImpl#getModerationPolicies <em>Moderation Policies</em>}</li>
  *   <li>{@link enorm.impl.RefModelImpl#getAutomationRules <em>Automation Rules</em>}</li>
  *   <li>{@link enorm.impl.RefModelImpl#getVerificationPolicies <em>Verification Policies</em>}</li>
+ *   <li>{@link enorm.impl.RefModelImpl#getSortingPolicies <em>Sorting Policies</em>}</li>
  * </ul>
  *
  * @generated
@@ -207,6 +209,16 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 	 * @ordered
 	 */
 	protected EList<VerificationPolicy> verificationPolicies;
+
+	/**
+	 * The cached value of the '{@link #getSortingPolicies() <em>Sorting Policies</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSortingPolicies()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<SortingPolicy> sortingPolicies;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -433,6 +445,20 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 	 * @generated
 	 */
 	@Override
+	public EList<SortingPolicy> getSortingPolicies() {
+		if (sortingPolicies == null) {
+			sortingPolicies = new EObjectContainmentEList<SortingPolicy>(SortingPolicy.class, this,
+					EnormPackage.REF_MODEL__SORTING_POLICIES);
+		}
+		return sortingPolicies;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case EnormPackage.REF_MODEL__USER_TYPES:
@@ -457,6 +483,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 			return ((InternalEList<?>) getAutomationRules()).basicRemove(otherEnd, msgs);
 		case EnormPackage.REF_MODEL__VERIFICATION_POLICIES:
 			return ((InternalEList<?>) getVerificationPolicies()).basicRemove(otherEnd, msgs);
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
+			return ((InternalEList<?>) getSortingPolicies()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -495,6 +523,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 			return getAutomationRules();
 		case EnormPackage.REF_MODEL__VERIFICATION_POLICIES:
 			return getVerificationPolicies();
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
+			return getSortingPolicies();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -558,6 +588,10 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 			getVerificationPolicies().clear();
 			getVerificationPolicies().addAll((Collection<? extends VerificationPolicy>) newValue);
 			return;
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
+			getSortingPolicies().clear();
+			getSortingPolicies().addAll((Collection<? extends SortingPolicy>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -609,6 +643,9 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 		case EnormPackage.REF_MODEL__VERIFICATION_POLICIES:
 			getVerificationPolicies().clear();
 			return;
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
+			getSortingPolicies().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -647,6 +684,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
 			return automationRules != null && !automationRules.isEmpty();
 		case EnormPackage.REF_MODEL__VERIFICATION_POLICIES:
 			return verificationPolicies != null && !verificationPolicies.isEmpty();
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
+			return sortingPolicies != null && !sortingPolicies.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

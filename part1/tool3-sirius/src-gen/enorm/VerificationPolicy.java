@@ -73,25 +73,28 @@ public interface VerificationPolicy extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Applies When</b></em>' attribute.
+	 * The literals are from the enumeration {@link enorm.TriggerEvent}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Applies When</em>' attribute.
-	 * @see #setAppliesWhen(String)
+	 * @see enorm.TriggerEvent
+	 * @see #setAppliesWhen(TriggerEvent)
 	 * @see enorm.EnormPackage#getVerificationPolicy_AppliesWhen()
 	 * @model
 	 * @generated
 	 */
-	String getAppliesWhen();
+	TriggerEvent getAppliesWhen();
 
 	/**
 	 * Sets the value of the '{@link enorm.VerificationPolicy#getAppliesWhen <em>Applies When</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Applies When</em>' attribute.
+	 * @see enorm.TriggerEvent
 	 * @see #getAppliesWhen()
 	 * @generated
 	 */
-	void setAppliesWhen(String value);
+	void setAppliesWhen(TriggerEvent value);
 
 	/**
 	 * Returns the value of the '<em><b>Verifies</b></em>' reference.

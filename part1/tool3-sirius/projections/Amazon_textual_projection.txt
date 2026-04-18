@@ -104,7 +104,7 @@ MODERATION POLICIES:
 Moderation policy ReviewModerationPolicy
   Mode: HYBRID
   Decision: HIDDEN
-  Trigger: SPAM_OR_ABUSE_OR_OFF_TOPIC_OR_INCENTIVIZED
+  Trigger: ON_REPORT_SUBMITTED
 
 
 VALIDATION RULES:
@@ -123,13 +123,9 @@ Validation rule HelpfulVoteConsistencyValidation
 AUTOMATION RULES:
 -----------------
 Automation rule ReviewSubmissionValidation
-  Trigger: review_created
-  Condition: review_submitted_on_product
-  Action: run verified purchase validation before publishing review
+  Trigger: ON_FEEDBACK_CREATE
 
 Automation rule HelpfulVoteValidation
-  Trigger: helpful_vote_created
-  Condition: vote_target_is_product_review
-  Action: run helpful vote consistency checks
+  Trigger: ON_FEEDBACK_CREATE
 
 

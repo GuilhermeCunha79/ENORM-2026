@@ -58,6 +58,7 @@ public class FeedbackDefinitionItemProvider extends ItemProviderAdapter implemen
 
 			addNamePropertyDescriptor(object);
 			addRequiresVerifiedContextPropertyDescriptor(object);
+			addVerificationRequirementPropertyDescriptor(object);
 			addUniquePerAuthorTargetPropertyDescriptor(object);
 			addTypePropertyDescriptor(object);
 			addSubjectResourcePropertyDescriptor(object);
@@ -97,6 +98,22 @@ public class FeedbackDefinitionItemProvider extends ItemProviderAdapter implemen
 						"_UI_FeedbackDefinition_requiresVerifiedContext_feature", "_UI_FeedbackDefinition_type"),
 				EnormPackage.Literals.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT, true, false, false,
 				ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Verification Requirement feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addVerificationRequirementPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_FeedbackDefinition_verificationRequirement_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_FeedbackDefinition_verificationRequirement_feature", "_UI_FeedbackDefinition_type"),
+				EnormPackage.Literals.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -254,6 +271,7 @@ public class FeedbackDefinitionItemProvider extends ItemProviderAdapter implemen
 		switch (notification.getFeatureID(FeedbackDefinition.class)) {
 		case EnormPackage.FEEDBACK_DEFINITION__NAME:
 		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
 		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;

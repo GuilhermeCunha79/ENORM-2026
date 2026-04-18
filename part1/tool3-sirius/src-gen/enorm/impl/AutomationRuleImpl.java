@@ -2,20 +2,29 @@
  */
 package enorm.impl;
 
+import enorm.Action;
 import enorm.AutomationRule;
+import enorm.Condition;
 import enorm.ContextType;
 import enorm.EnormPackage;
 import enorm.FeedbackDefinition;
 import enorm.ResourceType;
+import enorm.TriggerEvent;
 import enorm.ValidationRule;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,12 +36,12 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getTrigger <em>Trigger</em>}</li>
- *   <li>{@link enorm.impl.AutomationRuleImpl#getCondition <em>Condition</em>}</li>
- *   <li>{@link enorm.impl.AutomationRuleImpl#getActionDescription <em>Action Description</em>}</li>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getContext <em>Context</em>}</li>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getInContext <em>In Context</em>}</li>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link enorm.impl.AutomationRuleImpl#getUses <em>Uses</em>}</li>
+ *   <li>{@link enorm.impl.AutomationRuleImpl#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link enorm.impl.AutomationRuleImpl#getActions <em>Actions</em>}</li>
  * </ul>
  *
  * @generated
@@ -66,7 +75,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TRIGGER_EDEFAULT = null;
+	protected static final TriggerEvent TRIGGER_EDEFAULT = TriggerEvent.ON_RESOURCE_CREATE;
 
 	/**
 	 * The cached value of the '{@link #getTrigger() <em>Trigger</em>}' attribute.
@@ -76,47 +85,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected String trigger = TRIGGER_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getCondition() <em>Condition</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCondition()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String CONDITION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getCondition() <em>Condition</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getCondition()
-	 * @generated
-	 * @ordered
-	 */
-	protected String condition = CONDITION_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getActionDescription() <em>Action Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getActionDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String ACTION_DESCRIPTION_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getActionDescription() <em>Action Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getActionDescription()
-	 * @generated
-	 * @ordered
-	 */
-	protected String actionDescription = ACTION_DESCRIPTION_EDEFAULT;
+	protected TriggerEvent trigger = TRIGGER_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getContext() <em>Context</em>}' reference.
@@ -149,14 +118,34 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	protected FeedbackDefinition onFeedback;
 
 	/**
-	 * The cached value of the '{@link #getUses() <em>Uses</em>}' reference.
+	 * The cached value of the '{@link #getUses() <em>Uses</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getUses()
 	 * @generated
 	 * @ordered
 	 */
-	protected ValidationRule uses;
+	protected EList<ValidationRule> uses;
+
+	/**
+	 * The cached value of the '{@link #getConditions() <em>Conditions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConditions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Condition> conditions;
+
+	/**
+	 * The cached value of the '{@link #getActions() <em>Actions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getActions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Action> actions;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,7 +195,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public String getTrigger() {
+	public TriggerEvent getTrigger() {
 		return trigger;
 	}
 
@@ -216,60 +205,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setTrigger(String newTrigger) {
-		String oldTrigger = trigger;
-		trigger = newTrigger;
+	public void setTrigger(TriggerEvent newTrigger) {
+		TriggerEvent oldTrigger = trigger;
+		trigger = newTrigger == null ? TRIGGER_EDEFAULT : newTrigger;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.AUTOMATION_RULE__TRIGGER, oldTrigger,
 					trigger));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getCondition() {
-		return condition;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setCondition(String newCondition) {
-		String oldCondition = condition;
-		condition = newCondition;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.AUTOMATION_RULE__CONDITION, oldCondition,
-					condition));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getActionDescription() {
-		return actionDescription;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setActionDescription(String newActionDescription) {
-		String oldActionDescription = actionDescription;
-		actionDescription = newActionDescription;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION,
-					oldActionDescription, actionDescription));
 	}
 
 	/**
@@ -404,15 +345,10 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public ValidationRule getUses() {
-		if (uses != null && uses.eIsProxy()) {
-			InternalEObject oldUses = (InternalEObject) uses;
-			uses = (ValidationRule) eResolveProxy(oldUses);
-			if (uses != oldUses) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EnormPackage.AUTOMATION_RULE__USES,
-							oldUses, uses));
-			}
+	public EList<ValidationRule> getUses() {
+		if (uses == null) {
+			uses = new EObjectResolvingEList<ValidationRule>(ValidationRule.class, this,
+					EnormPackage.AUTOMATION_RULE__USES);
 		}
 		return uses;
 	}
@@ -422,8 +358,13 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ValidationRule basicGetUses() {
-		return uses;
+	@Override
+	public EList<Condition> getConditions() {
+		if (conditions == null) {
+			conditions = new EObjectContainmentEList<Condition>(Condition.class, this,
+					EnormPackage.AUTOMATION_RULE__CONDITIONS);
+		}
+		return conditions;
 	}
 
 	/**
@@ -432,11 +373,27 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setUses(ValidationRule newUses) {
-		ValidationRule oldUses = uses;
-		uses = newUses;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.AUTOMATION_RULE__USES, oldUses, uses));
+	public EList<Action> getActions() {
+		if (actions == null) {
+			actions = new EObjectContainmentEList<Action>(Action.class, this, EnormPackage.AUTOMATION_RULE__ACTIONS);
+		}
+		return actions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+			return ((InternalEList<?>) getConditions()).basicRemove(otherEnd, msgs);
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			return ((InternalEList<?>) getActions()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -451,10 +408,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			return getName();
 		case EnormPackage.AUTOMATION_RULE__TRIGGER:
 			return getTrigger();
-		case EnormPackage.AUTOMATION_RULE__CONDITION:
-			return getCondition();
-		case EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-			return getActionDescription();
 		case EnormPackage.AUTOMATION_RULE__CONTEXT:
 			if (resolve)
 				return getContext();
@@ -468,9 +421,11 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 				return getOnFeedback();
 			return basicGetOnFeedback();
 		case EnormPackage.AUTOMATION_RULE__USES:
-			if (resolve)
-				return getUses();
-			return basicGetUses();
+			return getUses();
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+			return getConditions();
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			return getActions();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -480,6 +435,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -487,13 +443,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			setName((String) newValue);
 			return;
 		case EnormPackage.AUTOMATION_RULE__TRIGGER:
-			setTrigger((String) newValue);
-			return;
-		case EnormPackage.AUTOMATION_RULE__CONDITION:
-			setCondition((String) newValue);
-			return;
-		case EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-			setActionDescription((String) newValue);
+			setTrigger((TriggerEvent) newValue);
 			return;
 		case EnormPackage.AUTOMATION_RULE__CONTEXT:
 			setContext((ResourceType) newValue);
@@ -505,7 +455,16 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			setOnFeedback((FeedbackDefinition) newValue);
 			return;
 		case EnormPackage.AUTOMATION_RULE__USES:
-			setUses((ValidationRule) newValue);
+			getUses().clear();
+			getUses().addAll((Collection<? extends ValidationRule>) newValue);
+			return;
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+			getConditions().clear();
+			getConditions().addAll((Collection<? extends Condition>) newValue);
+			return;
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			getActions().clear();
+			getActions().addAll((Collection<? extends Action>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -525,12 +484,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 		case EnormPackage.AUTOMATION_RULE__TRIGGER:
 			setTrigger(TRIGGER_EDEFAULT);
 			return;
-		case EnormPackage.AUTOMATION_RULE__CONDITION:
-			setCondition(CONDITION_EDEFAULT);
-			return;
-		case EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-			setActionDescription(ACTION_DESCRIPTION_EDEFAULT);
-			return;
 		case EnormPackage.AUTOMATION_RULE__CONTEXT:
 			setContext((ResourceType) null);
 			return;
@@ -541,7 +494,13 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			setOnFeedback((FeedbackDefinition) null);
 			return;
 		case EnormPackage.AUTOMATION_RULE__USES:
-			setUses((ValidationRule) null);
+			getUses().clear();
+			return;
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+			getConditions().clear();
+			return;
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			getActions().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -558,12 +517,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 		case EnormPackage.AUTOMATION_RULE__NAME:
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case EnormPackage.AUTOMATION_RULE__TRIGGER:
-			return TRIGGER_EDEFAULT == null ? trigger != null : !TRIGGER_EDEFAULT.equals(trigger);
-		case EnormPackage.AUTOMATION_RULE__CONDITION:
-			return CONDITION_EDEFAULT == null ? condition != null : !CONDITION_EDEFAULT.equals(condition);
-		case EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-			return ACTION_DESCRIPTION_EDEFAULT == null ? actionDescription != null
-					: !ACTION_DESCRIPTION_EDEFAULT.equals(actionDescription);
+			return trigger != TRIGGER_EDEFAULT;
 		case EnormPackage.AUTOMATION_RULE__CONTEXT:
 			return context != null;
 		case EnormPackage.AUTOMATION_RULE__IN_CONTEXT:
@@ -571,7 +525,11 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 		case EnormPackage.AUTOMATION_RULE__ON_FEEDBACK:
 			return onFeedback != null;
 		case EnormPackage.AUTOMATION_RULE__USES:
-			return uses != null;
+			return uses != null && !uses.isEmpty();
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+			return conditions != null && !conditions.isEmpty();
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			return actions != null && !actions.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -591,10 +549,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 		result.append(name);
 		result.append(", trigger: ");
 		result.append(trigger);
-		result.append(", condition: ");
-		result.append(condition);
-		result.append(", actionDescription: ");
-		result.append(actionDescription);
 		result.append(')');
 		return result.toString();
 	}

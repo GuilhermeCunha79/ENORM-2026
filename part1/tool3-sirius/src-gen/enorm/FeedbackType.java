@@ -18,7 +18,9 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link enorm.FeedbackType#getSubjectScope <em>Subject Scope</em>}</li>
  *   <li>{@link enorm.FeedbackType#isHasRating <em>Has Rating</em>}</li>
  *   <li>{@link enorm.FeedbackType#isRecursive <em>Recursive</em>}</li>
+ *   <li>{@link enorm.FeedbackType#isAllowsText <em>Allows Text</em>}</li>
  *   <li>{@link enorm.FeedbackType#isAllowsMedia <em>Allows Media</em>}</li>
+ *   <li>{@link enorm.FeedbackType#getPolarity <em>Polarity</em>}</li>
  * </ul>
  *
  * @see enorm.EnormPackage#getFeedbackType()
@@ -143,6 +145,28 @@ public interface FeedbackType extends EObject {
 	void setRecursive(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Allows Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Allows Text</em>' attribute.
+	 * @see #setAllowsText(boolean)
+	 * @see enorm.EnormPackage#getFeedbackType_AllowsText()
+	 * @model
+	 * @generated
+	 */
+	boolean isAllowsText();
+
+	/**
+	 * Sets the value of the '{@link enorm.FeedbackType#isAllowsText <em>Allows Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Allows Text</em>' attribute.
+	 * @see #isAllowsText()
+	 * @generated
+	 */
+	void setAllowsText(boolean value);
+
+	/**
 	 * Returns the value of the '<em><b>Allows Media</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -163,5 +187,30 @@ public interface FeedbackType extends EObject {
 	 * @generated
 	 */
 	void setAllowsMedia(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Polarity</b></em>' attribute.
+	 * The literals are from the enumeration {@link enorm.FeedbackPolarity}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Polarity</em>' attribute.
+	 * @see enorm.FeedbackPolarity
+	 * @see #setPolarity(FeedbackPolarity)
+	 * @see enorm.EnormPackage#getFeedbackType_Polarity()
+	 * @model
+	 * @generated
+	 */
+	FeedbackPolarity getPolarity();
+
+	/**
+	 * Sets the value of the '{@link enorm.FeedbackType#getPolarity <em>Polarity</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Polarity</em>' attribute.
+	 * @see enorm.FeedbackPolarity
+	 * @see #getPolarity()
+	 * @generated
+	 */
+	void setPolarity(FeedbackPolarity value);
 
 } // FeedbackType

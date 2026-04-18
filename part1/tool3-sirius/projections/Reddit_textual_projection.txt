@@ -129,12 +129,12 @@ MODERATION POLICIES:
 Moderation policy PostModerationPolicy
   Mode: HYBRID
   Decision: FLAGGED
-  Trigger: SPAM_OR_OFFENSIVE
+  Trigger: ON_REPORT_SUBMITTED
 
 Moderation policy CommentModerationPolicy
   Mode: HYBRID
   Decision: HIDDEN
-  Trigger: SPAM_OR_OFFENSIVE
+  Trigger: ON_REPORT_SUBMITTED
 
 
 VALIDATION RULES:
@@ -153,13 +153,9 @@ Validation rule CommentContentValidation
 AUTOMATION RULES:
 -----------------
 Automation rule PostRuleExecution
-  Trigger: post_created
-  Condition: post_submitted_in_subreddit
-  Action: execute post validation rules
+  Trigger: ON_RESOURCE_CREATE
 
 Automation rule CommentRuleExecution
-  Trigger: comment_created
-  Condition: comment_submitted_in_subreddit
-  Action: execute comment validation rules
+  Trigger: ON_RESOURCE_CREATE
 
 

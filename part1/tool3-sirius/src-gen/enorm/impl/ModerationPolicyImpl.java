@@ -9,15 +9,19 @@ import enorm.ModerationDecision;
 import enorm.ModerationMode;
 import enorm.ModerationPolicy;
 import enorm.ResourceType;
+import enorm.TriggerEvent;
 import enorm.UserType;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -88,7 +92,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String TRIGGER_EDEFAULT = null;
+	protected static final TriggerEvent TRIGGER_EDEFAULT = TriggerEvent.ON_RESOURCE_CREATE;
 
 	/**
 	 * The cached value of the '{@link #getTrigger() <em>Trigger</em>}' attribute.
@@ -98,7 +102,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 * @ordered
 	 */
-	protected String trigger = TRIGGER_EDEFAULT;
+	protected TriggerEvent trigger = TRIGGER_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDecision() <em>Decision</em>}' attribute.
@@ -141,14 +145,14 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	protected FeedbackDefinition monitorsFeedback;
 
 	/**
-	 * The cached value of the '{@link #getExecutedBy() <em>Executed By</em>}' reference.
+	 * The cached value of the '{@link #getExecutedBy() <em>Executed By</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getExecutedBy()
 	 * @generated
 	 * @ordered
 	 */
-	protected UserType executedBy;
+	protected EList<UserType> executedBy;
 
 	/**
 	 * The cached value of the '{@link #getInContext() <em>In Context</em>}' reference.
@@ -231,7 +235,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public String getTrigger() {
+	public TriggerEvent getTrigger() {
 		return trigger;
 	}
 
@@ -241,9 +245,9 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public void setTrigger(String newTrigger) {
-		String oldTrigger = trigger;
-		trigger = newTrigger;
+	public void setTrigger(TriggerEvent newTrigger) {
+		TriggerEvent oldTrigger = trigger;
+		trigger = newTrigger == null ? TRIGGER_EDEFAULT : newTrigger;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.MODERATION_POLICY__TRIGGER, oldTrigger,
 					trigger));
@@ -363,40 +367,12 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * @generated
 	 */
 	@Override
-	public UserType getExecutedBy() {
-		if (executedBy != null && executedBy.eIsProxy()) {
-			InternalEObject oldExecutedBy = (InternalEObject) executedBy;
-			executedBy = (UserType) eResolveProxy(oldExecutedBy);
-			if (executedBy != oldExecutedBy) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							EnormPackage.MODERATION_POLICY__EXECUTED_BY, oldExecutedBy, executedBy));
-			}
+	public EList<UserType> getExecutedBy() {
+		if (executedBy == null) {
+			executedBy = new EObjectResolvingEList<UserType>(UserType.class, this,
+					EnormPackage.MODERATION_POLICY__EXECUTED_BY);
 		}
 		return executedBy;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public UserType basicGetExecutedBy() {
-		return executedBy;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setExecutedBy(UserType newExecutedBy) {
-		UserType oldExecutedBy = executedBy;
-		executedBy = newExecutedBy;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.MODERATION_POLICY__EXECUTED_BY,
-					oldExecutedBy, executedBy));
 	}
 
 	/**
@@ -466,9 +442,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 				return getMonitorsFeedback();
 			return basicGetMonitorsFeedback();
 		case EnormPackage.MODERATION_POLICY__EXECUTED_BY:
-			if (resolve)
-				return getExecutedBy();
-			return basicGetExecutedBy();
+			return getExecutedBy();
 		case EnormPackage.MODERATION_POLICY__IN_CONTEXT:
 			if (resolve)
 				return getInContext();
@@ -482,6 +456,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -492,7 +467,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 			setMode((ModerationMode) newValue);
 			return;
 		case EnormPackage.MODERATION_POLICY__TRIGGER:
-			setTrigger((String) newValue);
+			setTrigger((TriggerEvent) newValue);
 			return;
 		case EnormPackage.MODERATION_POLICY__DECISION:
 			setDecision((ModerationDecision) newValue);
@@ -504,7 +479,8 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 			setMonitorsFeedback((FeedbackDefinition) newValue);
 			return;
 		case EnormPackage.MODERATION_POLICY__EXECUTED_BY:
-			setExecutedBy((UserType) newValue);
+			getExecutedBy().clear();
+			getExecutedBy().addAll((Collection<? extends UserType>) newValue);
 			return;
 		case EnormPackage.MODERATION_POLICY__IN_CONTEXT:
 			setInContext((ContextType) newValue);
@@ -540,7 +516,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 			setMonitorsFeedback((FeedbackDefinition) null);
 			return;
 		case EnormPackage.MODERATION_POLICY__EXECUTED_BY:
-			setExecutedBy((UserType) null);
+			getExecutedBy().clear();
 			return;
 		case EnormPackage.MODERATION_POLICY__IN_CONTEXT:
 			setInContext((ContextType) null);
@@ -562,7 +538,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 		case EnormPackage.MODERATION_POLICY__MODE:
 			return mode != MODE_EDEFAULT;
 		case EnormPackage.MODERATION_POLICY__TRIGGER:
-			return TRIGGER_EDEFAULT == null ? trigger != null : !TRIGGER_EDEFAULT.equals(trigger);
+			return trigger != TRIGGER_EDEFAULT;
 		case EnormPackage.MODERATION_POLICY__DECISION:
 			return decision != DECISION_EDEFAULT;
 		case EnormPackage.MODERATION_POLICY__MONITORS_RESOURCE:
@@ -570,7 +546,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
 		case EnormPackage.MODERATION_POLICY__MONITORS_FEEDBACK:
 			return monitorsFeedback != null;
 		case EnormPackage.MODERATION_POLICY__EXECUTED_BY:
-			return executedBy != null;
+			return executedBy != null && !executedBy.isEmpty();
 		case EnormPackage.MODERATION_POLICY__IN_CONTEXT:
 			return inContext != null;
 		}

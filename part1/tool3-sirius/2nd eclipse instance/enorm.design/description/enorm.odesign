@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/description/tool/1.1.0" name="enorm" version="12.0.0.2017041100">
   <ownedViewpoints name="MyViewpoint" modelFileExtension="enorm,ref,xmi">
-    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RefDiagram" titleExpression="aql:self.name" domainClass="enorm.RefModel" enablePopupBars="true">
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RefDiagram" titleExpression="aql:self.name + ' (' + self.version + ')'" domainClass="enorm.RefModel" enablePopupBars="true">
       <metamodel href="http://www.example.org/enorm#/"/>
       <defaultLayer name="Default">
         <nodeMappings name="RefModel" semanticCandidatesExpression="var:self" domainClass="enorm.RefModel">
@@ -75,7 +75,7 @@
           </style>
         </nodeMappings>
         <nodeMappings name="AuthorizationRule" semanticCandidatesExpression="feature:authorizationRules" domainClass="enorm.AuthorizationRule">
-          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:'auth: ' + self.allowedAction">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ': ' + self.allowedAction">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
@@ -96,7 +96,7 @@
           </style>
         </nodeMappings>
         <nodeMappings name="AutomationRule" semanticCandidatesExpression="feature:automationRules" domainClass="enorm.AutomationRule">
-          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ' [' + self.trigger + ']'">
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
@@ -107,6 +107,27 @@
             <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
             <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Condition" semanticCandidatesExpression="aql:self.automationRules.conditions" domainClass="enorm.Condition">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ' [' + self.operator + ']'">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Action" semanticCandidatesExpression="aql:self.automationRules.actions" domainClass="enorm.Action">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ' : ' + self.kind">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_yellow']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="SortingPolicy" semanticCandidatesExpression="feature:sortingPolicies" domainClass="enorm.SortingPolicy">
+          <style xsi:type="style:SquareDescription" labelSize="11" labelExpression="aql:self.name + ' [' + self.criterion + ' ' + self.direction + ']'">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
           </style>
         </nodeMappings>
         <!-- Edge Mappings for Relationships -->
@@ -206,7 +227,7 @@
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
           </style>
         </edgeMappings>
-        <edgeMappings name="ModerationPolicyExecutedBy" semanticCandidatesExpression="aql:Sequence{self.executedBy}" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='UserType']" domainClass="enorm.UserType">
+        <edgeMappings name="ModerationPolicyExecutedBy" semanticCandidatesExpression="aql:self.executedBy" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='UserType']" domainClass="enorm.UserType">
           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="InputArrow" labelSize="9" strokeDashStyle="Dash">
             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='yellow']"/>
@@ -258,6 +279,36 @@
            <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="InputArrow" labelSize="9" strokeDashStyle="Dash">
              <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
              <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='green']"/>
+           </style>
+         </edgeMappings>
+         <edgeMappings name="AutomationRuleConditions" semanticCandidatesExpression="aql:self.conditions" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='Condition']" domainClass="enorm.Condition">
+           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="FillDiamond" labelSize="9">
+             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+           </style>
+         </edgeMappings>
+         <edgeMappings name="AutomationRuleActions" semanticCandidatesExpression="aql:self.actions" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='Action']" domainClass="enorm.Action">
+           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="FillDiamond" labelSize="9">
+             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_purple']"/>
+           </style>
+         </edgeMappings>
+         <edgeMappings name="SortingPolicyAppliesToResource" semanticCandidatesExpression="aql:if self.appliesToResource &lt;> null then Sequence{self.appliesToResource} else Sequence{} endif" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='ResourceType']" domainClass="enorm.ResourceType">
+           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="InputArrow" labelSize="9" strokeDashStyle="Dash">
+             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+           </style>
+         </edgeMappings>
+         <edgeMappings name="SortingPolicyAppliesToFeedback" semanticCandidatesExpression="aql:if self.appliesToFeedback &lt;> null then Sequence{self.appliesToFeedback} else Sequence{} endif" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='FeedbackDefinition']" domainClass="enorm.FeedbackDefinition">
+           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="InputArrow" labelSize="9" strokeDashStyle="Dash">
+             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+           </style>
+         </edgeMappings>
+         <edgeMappings name="SortingPolicyInContext" semanticCandidatesExpression="aql:if self.inContext &lt;> null then Sequence{self.inContext} else Sequence{} endif" sourceMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='MyViewpoint']/@ownedRepresentations[name='RefDiagram']/@defaultLayer/@nodeMappings[name='ContextType']" domainClass="enorm.ContextType">
+           <style xsi:type="style:EdgeStyle" sourceArrow="NoDecoration" targetArrow="InputArrow" labelSize="9" strokeDashStyle="Dot">
+             <strokeColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
+             <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='light_blue']"/>
            </style>
          </edgeMappings>
        </defaultLayer>
@@ -413,7 +464,7 @@
       </ownedRules>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_5_ValidationRuleExpressionRequiredForAutomatic" targetClass="enorm.ValidationRule" level="ERROR" auditExpression="aql:self.kind.toString() &lt;> 'AUTOMATIC' or (self.expression &lt;> null and self.expression.size() > 0)" message="C5.5 ValidationRule expression must not be empty when kind is AUTOMATIC"/>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_17_ValidationRuleTargetsMetamodelClass" targetClass="enorm.ValidationRule" level="ERROR" auditExpression="aql:self.appliesToResource &lt;> null or self.appliesToFeedback &lt;> null" message="C5.17 ValidationRule must refer to a metamodel class (ResourceType or FeedbackDefinition) via appliesToResource/appliesToFeedback"/>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_18_ValidationRuleInvokedByAutomationConsistency" targetClass="enorm.ValidationRule" level="ERROR" auditExpression="aql:self.invokedBy &lt;> null and self.invokedBy.uses = self" message="C5.18 ValidationRule must be consistently linked with its AutomationRule (invokedBy/uses)"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_18_ValidationRuleInvokedByAutomationConsistency" targetClass="enorm.ValidationRule" level="ERROR" auditExpression="aql:self.invokedBy &lt;> null and self.invokedBy.uses->includes(self)" message="C5.18 ValidationRule must be consistently linked with its AutomationRule (invokedBy/uses)"/>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_19_ValidationRuleFeedbackTargetConsistency" targetClass="enorm.ValidationRule" level="ERROR" auditExpression="aql:self.appliesToFeedback = null or self.invokedBy = null or self.invokedBy.onFeedback = self.appliesToFeedback" message="C5.19 When ValidationRule targets FeedbackDefinition, AutomationRule.onFeedback should reference the same metamodel element"/>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_20_ValidationRuleResourceTargetConsistency" targetClass="enorm.ValidationRule" level="WARNING" auditExpression="aql:self.appliesToResource = null or self.invokedBy = null or self.invokedBy.context = null or self.invokedBy.context = self.appliesToResource" message="C5.20 When ValidationRule targets ResourceType, AutomationRule.context should reference the same metamodel element"/>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_21_ValidationRuleSeverityDiversity" targetClass="enorm.RefModel" level="INFO" auditExpression="aql:self.validationRules->exists(v | v.severity.toString() = 'ERROR') and self.validationRules->exists(v | v.severity.toString() = 'WARNING') and self.validationRules->exists(v | v.severity.toString() = 'INFO')" message="C5.21 Model should define ValidationRule severities with ERROR, WARNING, and INFO coverage"/>
@@ -425,7 +476,7 @@
           </initialOperation>
         </fixes>
       </ownedRules>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_8_ModerationPolicyTriggerRequiredForAutomatic" targetClass="enorm.ModerationPolicy" level="ERROR" auditExpression="aql:self.mode.toString() &lt;> 'AUTOMATIC' or (self.trigger &lt;> null and self.trigger.size() > 0)" message="C5.8 ModerationPolicy trigger must not be empty when mode is AUTOMATIC"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_8_ModerationPolicyTriggerRequiredForAutomatic" targetClass="enorm.ModerationPolicy" level="ERROR" auditExpression="aql:self.mode.toString() &lt;> 'AUTOMATIC' or self.trigger &lt;> null" message="C5.8 ModerationPolicy trigger must not be empty when mode is AUTOMATIC"/>
       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_9_AuthorizationRuleActorRequired" targetClass="enorm.AuthorizationRule" level="ERROR" auditExpression="aql:self.actor &lt;> null" message="C5.9 AuthorizationRule must have an actor">
         <fixes name="QF_C5_9_SetFirstUserAsActor">
           <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
@@ -442,10 +493,34 @@
           </initialOperation>
         </fixes>
       </ownedRules>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_13_AutomationRuleTriggerNotEmpty" targetClass="enorm.AutomationRule" level="ERROR" auditExpression="aql:self.trigger &lt;> null and self.trigger.size() > 0" message="C5.13 AutomationRule trigger must not be empty"/>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_14_AutomationRuleActionDescriptionNotEmpty" targetClass="enorm.AutomationRule" level="ERROR" auditExpression="aql:self.actionDescription &lt;> null and self.actionDescription.size() > 0" message="C5.14 AutomationRule actionDescription must not be empty"/>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_15_VerificationPolicyNamesUnique" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.verificationPolicies->isUnique(v | v.name)" message="C5.15 VerificationPolicy names must be unique"/>
-      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_16_VerificationPolicyVerifiesRequired" targetClass="enorm.VerificationPolicy" level="ERROR" auditExpression="aql:self.verifies &lt;> null" message="C5.16 VerificationPolicy must verify a FeedbackDefinition"/>
+       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_13_AutomationRuleTriggerNotEmpty" targetClass="enorm.AutomationRule" level="ERROR" auditExpression="aql:self.trigger &lt;> null" message="C5.13 AutomationRule trigger must not be empty"/>
+       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_14_AutomationRuleActionsNotEmpty" targetClass="enorm.AutomationRule" level="ERROR" auditExpression="aql:self.actions->notEmpty()" message="C5.14 AutomationRule must have at least one action"/>
+       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_15_VerificationPolicyNamesUnique" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.verificationPolicies->isUnique(v | v.name)" message="C5.15 VerificationPolicy names must be unique"/>
+       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_16_VerificationPolicyVerifiesRequired" targetClass="enorm.VerificationPolicy" level="ERROR" auditExpression="aql:self.verifies &lt;> null" message="C5.16 VerificationPolicy must verify a FeedbackDefinition"/>
+
+       <ownedRules xsi:type="description:SemanticValidationRule" name="C5_24_SortingPolicyNamesUnique" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.sortingPolicies->isUnique(s | s.name)" message="C5.24 SortingPolicy names must be unique"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_25_SortingPolicyNameUppercase" targetClass="enorm.SortingPolicy" level="WARNING" auditExpression="aql:self.name = null or self.name.size() = 0 or self.name.matches('[A-Z].*')" message="C5.25 SortingPolicy name should start with uppercase">
+        <fixes name="QF_C5_25_CapitalizeSortingPolicyName">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql:if self.name = null or self.name.size() = 0 then self.name else self.name.substring(1,1).toUpper() + self.name.substring(2,self.name.size()) endif"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="C5_26_SortingPolicyMustHaveTarget" targetClass="enorm.SortingPolicy" level="ERROR" auditExpression="aql:self.appliesToResource &lt;> null or self.appliesToFeedback &lt;> null" message="C5.26 SortingPolicy must target at least one element (resource or feedback)"/>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G13_ProductReviewMustBeRatingBased" targetClass="enorm.FeedbackDefinition" level="ERROR" auditExpression="aql:self.type.kind.toString() &lt;> 'REVIEW' or self.subjectResource = null or self.subjectResource.name &lt;> 'Product' or (self.type.hasRating = true and self.rating &lt;> null)" message="G13 Product reviews must be rating-based and include a rating policy">
+        <fixes name="QF_G13_EnableProductReviewRating">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="rating" valueExpression="service:ensureRatingPolicy"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="description:SemanticValidationRule" name="G14_ProductStarRatingScale" targetClass="enorm.FeedbackDefinition" level="ERROR" auditExpression="aql:self.type.kind.toString() &lt;> 'REVIEW' or self.subjectResource = null or self.subjectResource.name &lt;> 'Product' or self.rating = null or (self.rating.minValue = 1 and self.rating.maxValue = 5 and self.rating.step = 1)" message="G14 Product star rating must use integer scale min=1, max=5, step=1">
+        <fixes name="QF_G14_NormalizeProductStarRating">
+          <initialOperation xsi:type="tool:ChangeContext" browseExpression="aql:self">
+            <subModelOperations xsi:type="tool:SetValue" featureName="rating" valueExpression="service:normalizeProductRating"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
 
       <ownedRules xsi:type="description:SemanticValidationRule" name="G1_HasRatingRequiresRatingPolicy" targetClass="enorm.FeedbackDefinition" level="ERROR" auditExpression="aql:not self.type.hasRating or self.rating &lt;> null" message="G1 If FeedbackType.hasRating=true then FeedbackDefinition.rating is required">
         <fixes name="QF_G1_CreateDefaultRatingPolicy">
@@ -563,6 +638,9 @@
       <ownedRules xsi:type="description:DomainBasedValidationRule" name="D17_AutomationRuleFeedbackConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.automationRules->forAll(ar | ar.onFeedback = null or self.feedbackDefinitions->includes(ar.onFeedback))" message="D17 AutomationRule onFeedback must be a defined FeedbackDefinition or null"/>
       <ownedRules xsi:type="description:DomainBasedValidationRule" name="D18_VerificationPolicyFeedbackConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.verificationPolicies->forAll(vp | self.feedbackDefinitions->includes(vp.verifies))" message="D18 VerificationPolicy verifies must reference a defined FeedbackDefinition"/>
       <ownedRules xsi:type="description:DomainBasedValidationRule" name="D19_ContextTypeContainsConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.contextTypes->forAll(ct | ct.contains->forAll(r | self.resourceTypes->includes(r)))" message="D19 ContextType contains must only include defined ResourceTypes"/>
+      <ownedRules xsi:type="description:DomainBasedValidationRule" name="D20_SortingPolicyResourceConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.sortingPolicies->forAll(sp | sp.appliesToResource = null or self.resourceTypes->includes(sp.appliesToResource))" message="D20 SortingPolicy appliesToResource must be a defined ResourceType or null"/>
+      <ownedRules xsi:type="description:DomainBasedValidationRule" name="D21_SortingPolicyFeedbackConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.sortingPolicies->forAll(sp | sp.appliesToFeedback = null or self.feedbackDefinitions->includes(sp.appliesToFeedback))" message="D21 SortingPolicy appliesToFeedback must be a defined FeedbackDefinition or null"/>
+      <ownedRules xsi:type="description:DomainBasedValidationRule" name="D22_SortingPolicyContextConsistency" targetClass="enorm.RefModel" level="ERROR" auditExpression="aql:self.sortingPolicies->forAll(sp | sp.inContext = null or self.contextTypes->includes(sp.inContext))" message="D22 SortingPolicy inContext must be a defined ContextType or null"/>
     </ownedValidationSets>
   </ownedViewpoints>
 </description:Group>

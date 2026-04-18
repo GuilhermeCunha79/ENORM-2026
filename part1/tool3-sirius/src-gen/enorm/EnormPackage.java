@@ -185,13 +185,22 @@ public interface EnormPackage extends EPackage {
 	int REF_MODEL__VERIFICATION_POLICIES = 12;
 
 	/**
+	 * The feature id for the '<em><b>Sorting Policies</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REF_MODEL__SORTING_POLICIES = 13;
+
+	/**
 	 * The number of structural features of the '<em>Ref Model</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REF_MODEL_FEATURE_COUNT = 13;
+	int REF_MODEL_FEATURE_COUNT = 14;
 
 	/**
 	 * The number of operations of the '<em>Ref Model</em>' class.
@@ -587,13 +596,31 @@ public interface EnormPackage extends EPackage {
 	int FEEDBACK_TYPE__RECURSIVE = 4;
 
 	/**
+	 * The feature id for the '<em><b>Allows Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEEDBACK_TYPE__ALLOWS_TEXT = 5;
+
+	/**
 	 * The feature id for the '<em><b>Allows Media</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_TYPE__ALLOWS_MEDIA = 5;
+	int FEEDBACK_TYPE__ALLOWS_MEDIA = 6;
+
+	/**
+	 * The feature id for the '<em><b>Polarity</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEEDBACK_TYPE__POLARITY = 7;
 
 	/**
 	 * The number of structural features of the '<em>Feedback Type</em>' class.
@@ -602,7 +629,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_TYPE_FEATURE_COUNT = 6;
+	int FEEDBACK_TYPE_FEATURE_COUNT = 8;
 
 	/**
 	 * The number of operations of the '<em>Feedback Type</em>' class.
@@ -642,13 +669,22 @@ public interface EnormPackage extends EPackage {
 	int FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT = 1;
 
 	/**
+	 * The feature id for the '<em><b>Verification Requirement</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT = 2;
+
+	/**
 	 * The feature id for the '<em><b>Unique Per Author Target</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET = 2;
+	int FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET = 3;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' reference.
@@ -657,7 +693,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__TYPE = 3;
+	int FEEDBACK_DEFINITION__TYPE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Subject Resource</b></em>' reference.
@@ -666,7 +702,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__SUBJECT_RESOURCE = 4;
+	int FEEDBACK_DEFINITION__SUBJECT_RESOURCE = 5;
 
 	/**
 	 * The feature id for the '<em><b>Author</b></em>' reference.
@@ -675,7 +711,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__AUTHOR = 5;
+	int FEEDBACK_DEFINITION__AUTHOR = 6;
 
 	/**
 	 * The feature id for the '<em><b>Subject Feedback</b></em>' reference.
@@ -684,7 +720,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = 6;
+	int FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = 7;
 
 	/**
 	 * The feature id for the '<em><b>Policy</b></em>' containment reference.
@@ -693,7 +729,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__POLICY = 7;
+	int FEEDBACK_DEFINITION__POLICY = 8;
 
 	/**
 	 * The feature id for the '<em><b>Rating</b></em>' containment reference.
@@ -702,7 +738,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__RATING = 8;
+	int FEEDBACK_DEFINITION__RATING = 9;
 
 	/**
 	 * The number of structural features of the '<em>Feedback Definition</em>' class.
@@ -711,7 +747,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION_FEATURE_COUNT = 9;
+	int FEEDBACK_DEFINITION_FEATURE_COUNT = 10;
 
 	/**
 	 * The number of operations of the '<em>Feedback Definition</em>' class.
@@ -979,7 +1015,7 @@ public interface EnormPackage extends EPackage {
 	int MODERATION_POLICY__MONITORS_FEEDBACK = 5;
 
 	/**
-	 * The feature id for the '<em><b>Executed By</b></em>' reference.
+	 * The feature id for the '<em><b>Executed By</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -1025,13 +1061,22 @@ public interface EnormPackage extends EPackage {
 	int AUTHORIZATION_RULE = 12;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AUTHORIZATION_RULE__NAME = 0;
+
+	/**
 	 * The feature id for the '<em><b>Allowed Action</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE__ALLOWED_ACTION = 0;
+	int AUTHORIZATION_RULE__ALLOWED_ACTION = 1;
 
 	/**
 	 * The feature id for the '<em><b>Actor</b></em>' reference.
@@ -1040,7 +1085,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE__ACTOR = 1;
+	int AUTHORIZATION_RULE__ACTOR = 2;
 
 	/**
 	 * The feature id for the '<em><b>Context</b></em>' reference.
@@ -1049,7 +1094,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE__CONTEXT = 2;
+	int AUTHORIZATION_RULE__CONTEXT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Resource Target</b></em>' reference.
@@ -1058,7 +1103,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE__RESOURCE_TARGET = 3;
+	int AUTHORIZATION_RULE__RESOURCE_TARGET = 4;
 
 	/**
 	 * The feature id for the '<em><b>Feedback Target</b></em>' reference.
@@ -1067,7 +1112,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE__FEEDBACK_TARGET = 4;
+	int AUTHORIZATION_RULE__FEEDBACK_TARGET = 5;
 
 	/**
 	 * The number of structural features of the '<em>Authorization Rule</em>' class.
@@ -1076,7 +1121,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTHORIZATION_RULE_FEATURE_COUNT = 5;
+	int AUTHORIZATION_RULE_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Authorization Rule</em>' class.
@@ -1116,31 +1161,13 @@ public interface EnormPackage extends EPackage {
 	int AUTOMATION_RULE__TRIGGER = 1;
 
 	/**
-	 * The feature id for the '<em><b>Condition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AUTOMATION_RULE__CONDITION = 2;
-
-	/**
-	 * The feature id for the '<em><b>Action Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int AUTOMATION_RULE__ACTION_DESCRIPTION = 3;
-
-	/**
 	 * The feature id for the '<em><b>Context</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__CONTEXT = 4;
+	int AUTOMATION_RULE__CONTEXT = 2;
 
 	/**
 	 * The feature id for the '<em><b>In Context</b></em>' reference.
@@ -1149,7 +1176,7 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__IN_CONTEXT = 5;
+	int AUTOMATION_RULE__IN_CONTEXT = 3;
 
 	/**
 	 * The feature id for the '<em><b>On Feedback</b></em>' reference.
@@ -1158,16 +1185,34 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__ON_FEEDBACK = 6;
+	int AUTOMATION_RULE__ON_FEEDBACK = 4;
 
 	/**
-	 * The feature id for the '<em><b>Uses</b></em>' reference.
+	 * The feature id for the '<em><b>Uses</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__USES = 7;
+	int AUTOMATION_RULE__USES = 5;
+
+	/**
+	 * The feature id for the '<em><b>Conditions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AUTOMATION_RULE__CONDITIONS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AUTOMATION_RULE__ACTIONS = 7;
 
 	/**
 	 * The number of structural features of the '<em>Automation Rule</em>' class.
@@ -1188,6 +1233,125 @@ public interface EnormPackage extends EPackage {
 	int AUTOMATION_RULE_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link enorm.impl.ConditionImpl <em>Condition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.impl.ConditionImpl
+	 * @see enorm.impl.EnormPackageImpl#getCondition()
+	 * @generated
+	 */
+	int CONDITION = 14;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Field</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__FIELD = 1;
+
+	/**
+	 * The feature id for the '<em><b>Operator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__OPERATOR = 2;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__VALUE = 3;
+
+	/**
+	 * The number of structural features of the '<em>Condition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Condition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link enorm.impl.ActionImpl <em>Action</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.impl.ActionImpl
+	 * @see enorm.impl.EnormPackageImpl#getAction()
+	 * @generated
+	 */
+	int ACTION = 15;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__KIND = 1;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__MESSAGE = 2;
+
+	/**
+	 * The number of structural features of the '<em>Action</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Action</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link enorm.impl.VerificationPolicyImpl <em>Verification Policy</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1195,7 +1359,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getVerificationPolicy()
 	 * @generated
 	 */
-	int VERIFICATION_POLICY = 14;
+	int VERIFICATION_POLICY = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1252,6 +1416,88 @@ public interface EnormPackage extends EPackage {
 	int VERIFICATION_POLICY_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link enorm.impl.SortingPolicyImpl <em>Sorting Policy</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.impl.SortingPolicyImpl
+	 * @see enorm.impl.EnormPackageImpl#getSortingPolicy()
+	 * @generated
+	 */
+	int SORTING_POLICY = 17;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Criterion</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__CRITERION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Direction</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__DIRECTION = 2;
+
+	/**
+	 * The feature id for the '<em><b>Applies To Resource</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__APPLIES_TO_RESOURCE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Applies To Feedback</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__APPLIES_TO_FEEDBACK = 4;
+
+	/**
+	 * The feature id for the '<em><b>In Context</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__IN_CONTEXT = 5;
+
+	/**
+	 * The number of structural features of the '<em>Sorting Policy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY_FEATURE_COUNT = 6;
+
+	/**
+	 * The number of operations of the '<em>Sorting Policy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link enorm.UserKind <em>User Kind</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1259,7 +1505,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getUserKind()
 	 * @generated
 	 */
-	int USER_KIND = 15;
+	int USER_KIND = 18;
 
 	/**
 	 * The meta object id for the '{@link enorm.ContextKind <em>Context Kind</em>}' enum.
@@ -1269,7 +1515,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getContextKind()
 	 * @generated
 	 */
-	int CONTEXT_KIND = 16;
+	int CONTEXT_KIND = 19;
 
 	/**
 	 * The meta object id for the '{@link enorm.PrimitiveType <em>Primitive Type</em>}' enum.
@@ -1279,7 +1525,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 17;
+	int PRIMITIVE_TYPE = 20;
 
 	/**
 	 * The meta object id for the '{@link enorm.FeedbackKind <em>Feedback Kind</em>}' enum.
@@ -1289,7 +1535,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getFeedbackKind()
 	 * @generated
 	 */
-	int FEEDBACK_KIND = 18;
+	int FEEDBACK_KIND = 21;
 
 	/**
 	 * The meta object id for the '{@link enorm.FeedbackSubjectScope <em>Feedback Subject Scope</em>}' enum.
@@ -1299,7 +1545,17 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getFeedbackSubjectScope()
 	 * @generated
 	 */
-	int FEEDBACK_SUBJECT_SCOPE = 19;
+	int FEEDBACK_SUBJECT_SCOPE = 22;
+
+	/**
+	 * The meta object id for the '{@link enorm.FeedbackPolarity <em>Feedback Polarity</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.FeedbackPolarity
+	 * @see enorm.impl.EnormPackageImpl#getFeedbackPolarity()
+	 * @generated
+	 */
+	int FEEDBACK_POLARITY = 23;
 
 	/**
 	 * The meta object id for the '{@link enorm.FeedbackStatus <em>Feedback Status</em>}' enum.
@@ -1309,7 +1565,17 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getFeedbackStatus()
 	 * @generated
 	 */
-	int FEEDBACK_STATUS = 20;
+	int FEEDBACK_STATUS = 24;
+
+	/**
+	 * The meta object id for the '{@link enorm.VerificationRequirement <em>Verification Requirement</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.VerificationRequirement
+	 * @see enorm.impl.EnormPackageImpl#getVerificationRequirement()
+	 * @generated
+	 */
+	int VERIFICATION_REQUIREMENT = 25;
 
 	/**
 	 * The meta object id for the '{@link enorm.ValidationKind <em>Validation Kind</em>}' enum.
@@ -1319,7 +1585,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getValidationKind()
 	 * @generated
 	 */
-	int VALIDATION_KIND = 21;
+	int VALIDATION_KIND = 26;
 
 	/**
 	 * The meta object id for the '{@link enorm.RuleSeverity <em>Rule Severity</em>}' enum.
@@ -1329,7 +1595,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getRuleSeverity()
 	 * @generated
 	 */
-	int RULE_SEVERITY = 22;
+	int RULE_SEVERITY = 27;
 
 	/**
 	 * The meta object id for the '{@link enorm.ModerationMode <em>Moderation Mode</em>}' enum.
@@ -1339,7 +1605,17 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getModerationMode()
 	 * @generated
 	 */
-	int MODERATION_MODE = 23;
+	int MODERATION_MODE = 28;
+
+	/**
+	 * The meta object id for the '{@link enorm.TriggerEvent <em>Trigger Event</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.TriggerEvent
+	 * @see enorm.impl.EnormPackageImpl#getTriggerEvent()
+	 * @generated
+	 */
+	int TRIGGER_EVENT = 29;
 
 	/**
 	 * The meta object id for the '{@link enorm.ModerationDecision <em>Moderation Decision</em>}' enum.
@@ -1349,7 +1625,7 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getModerationDecision()
 	 * @generated
 	 */
-	int MODERATION_DECISION = 24;
+	int MODERATION_DECISION = 30;
 
 	/**
 	 * The meta object id for the '{@link enorm.ActionKind <em>Action Kind</em>}' enum.
@@ -1359,7 +1635,47 @@ public interface EnormPackage extends EPackage {
 	 * @see enorm.impl.EnormPackageImpl#getActionKind()
 	 * @generated
 	 */
-	int ACTION_KIND = 25;
+	int ACTION_KIND = 31;
+
+	/**
+	 * The meta object id for the '{@link enorm.ConditionOperator <em>Condition Operator</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.ConditionOperator
+	 * @see enorm.impl.EnormPackageImpl#getConditionOperator()
+	 * @generated
+	 */
+	int CONDITION_OPERATOR = 32;
+
+	/**
+	 * The meta object id for the '{@link enorm.ActionResultKind <em>Action Result Kind</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.ActionResultKind
+	 * @see enorm.impl.EnormPackageImpl#getActionResultKind()
+	 * @generated
+	 */
+	int ACTION_RESULT_KIND = 33;
+
+	/**
+	 * The meta object id for the '{@link enorm.SortCriterion <em>Sort Criterion</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.SortCriterion
+	 * @see enorm.impl.EnormPackageImpl#getSortCriterion()
+	 * @generated
+	 */
+	int SORT_CRITERION = 34;
+
+	/**
+	 * The meta object id for the '{@link enorm.SortDirection <em>Sort Direction</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see enorm.SortDirection
+	 * @see enorm.impl.EnormPackageImpl#getSortDirection()
+	 * @generated
+	 */
+	int SORT_DIRECTION = 35;
 
 	/**
 	 * Returns the meta object for class '{@link enorm.RefModel <em>Ref Model</em>}'.
@@ -1513,6 +1829,17 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getRefModel_VerificationPolicies();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link enorm.RefModel#getSortingPolicies <em>Sorting Policies</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Sorting Policies</em>'.
+	 * @see enorm.RefModel#getSortingPolicies()
+	 * @see #getRefModel()
+	 * @generated
+	 */
+	EReference getRefModel_SortingPolicies();
 
 	/**
 	 * Returns the meta object for class '{@link enorm.UserType <em>User Type</em>}'.
@@ -1861,6 +2188,17 @@ public interface EnormPackage extends EPackage {
 	EAttribute getFeedbackType_Recursive();
 
 	/**
+	 * Returns the meta object for the attribute '{@link enorm.FeedbackType#isAllowsText <em>Allows Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Allows Text</em>'.
+	 * @see enorm.FeedbackType#isAllowsText()
+	 * @see #getFeedbackType()
+	 * @generated
+	 */
+	EAttribute getFeedbackType_AllowsText();
+
+	/**
 	 * Returns the meta object for the attribute '{@link enorm.FeedbackType#isAllowsMedia <em>Allows Media</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1870,6 +2208,17 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getFeedbackType_AllowsMedia();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.FeedbackType#getPolarity <em>Polarity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Polarity</em>'.
+	 * @see enorm.FeedbackType#getPolarity()
+	 * @see #getFeedbackType()
+	 * @generated
+	 */
+	EAttribute getFeedbackType_Polarity();
 
 	/**
 	 * Returns the meta object for class '{@link enorm.FeedbackDefinition <em>Feedback Definition</em>}'.
@@ -1902,6 +2251,17 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getFeedbackDefinition_RequiresVerifiedContext();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Verification Requirement</em>'.
+	 * @see enorm.FeedbackDefinition#getVerificationRequirement()
+	 * @see #getFeedbackDefinition()
+	 * @generated
+	 */
+	EAttribute getFeedbackDefinition_VerificationRequirement();
 
 	/**
 	 * Returns the meta object for the attribute '{@link enorm.FeedbackDefinition#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}'.
@@ -2219,10 +2579,10 @@ public interface EnormPackage extends EPackage {
 	EReference getModerationPolicy_MonitorsFeedback();
 
 	/**
-	 * Returns the meta object for the reference '{@link enorm.ModerationPolicy#getExecutedBy <em>Executed By</em>}'.
+	 * Returns the meta object for the reference list '{@link enorm.ModerationPolicy#getExecutedBy <em>Executed By</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Executed By</em>'.
+	 * @return the meta object for the reference list '<em>Executed By</em>'.
 	 * @see enorm.ModerationPolicy#getExecutedBy()
 	 * @see #getModerationPolicy()
 	 * @generated
@@ -2249,6 +2609,17 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getAuthorizationRule();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.AuthorizationRule#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see enorm.AuthorizationRule#getName()
+	 * @see #getAuthorizationRule()
+	 * @generated
+	 */
+	EAttribute getAuthorizationRule_Name();
 
 	/**
 	 * Returns the meta object for the attribute '{@link enorm.AuthorizationRule#getAllowedAction <em>Allowed Action</em>}'.
@@ -2338,28 +2709,6 @@ public interface EnormPackage extends EPackage {
 	EAttribute getAutomationRule_Trigger();
 
 	/**
-	 * Returns the meta object for the attribute '{@link enorm.AutomationRule#getCondition <em>Condition</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Condition</em>'.
-	 * @see enorm.AutomationRule#getCondition()
-	 * @see #getAutomationRule()
-	 * @generated
-	 */
-	EAttribute getAutomationRule_Condition();
-
-	/**
-	 * Returns the meta object for the attribute '{@link enorm.AutomationRule#getActionDescription <em>Action Description</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Action Description</em>'.
-	 * @see enorm.AutomationRule#getActionDescription()
-	 * @see #getAutomationRule()
-	 * @generated
-	 */
-	EAttribute getAutomationRule_ActionDescription();
-
-	/**
 	 * Returns the meta object for the reference '{@link enorm.AutomationRule#getContext <em>Context</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2393,15 +2742,134 @@ public interface EnormPackage extends EPackage {
 	EReference getAutomationRule_OnFeedback();
 
 	/**
-	 * Returns the meta object for the reference '{@link enorm.AutomationRule#getUses <em>Uses</em>}'.
+	 * Returns the meta object for the reference list '{@link enorm.AutomationRule#getUses <em>Uses</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Uses</em>'.
+	 * @return the meta object for the reference list '<em>Uses</em>'.
 	 * @see enorm.AutomationRule#getUses()
 	 * @see #getAutomationRule()
 	 * @generated
 	 */
 	EReference getAutomationRule_Uses();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link enorm.AutomationRule#getConditions <em>Conditions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Conditions</em>'.
+	 * @see enorm.AutomationRule#getConditions()
+	 * @see #getAutomationRule()
+	 * @generated
+	 */
+	EReference getAutomationRule_Conditions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link enorm.AutomationRule#getActions <em>Actions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Actions</em>'.
+	 * @see enorm.AutomationRule#getActions()
+	 * @see #getAutomationRule()
+	 * @generated
+	 */
+	EReference getAutomationRule_Actions();
+
+	/**
+	 * Returns the meta object for class '{@link enorm.Condition <em>Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Condition</em>'.
+	 * @see enorm.Condition
+	 * @generated
+	 */
+	EClass getCondition();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Condition#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see enorm.Condition#getName()
+	 * @see #getCondition()
+	 * @generated
+	 */
+	EAttribute getCondition_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Condition#getField <em>Field</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Field</em>'.
+	 * @see enorm.Condition#getField()
+	 * @see #getCondition()
+	 * @generated
+	 */
+	EAttribute getCondition_Field();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Condition#getOperator <em>Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Operator</em>'.
+	 * @see enorm.Condition#getOperator()
+	 * @see #getCondition()
+	 * @generated
+	 */
+	EAttribute getCondition_Operator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Condition#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see enorm.Condition#getValue()
+	 * @see #getCondition()
+	 * @generated
+	 */
+	EAttribute getCondition_Value();
+
+	/**
+	 * Returns the meta object for class '{@link enorm.Action <em>Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Action</em>'.
+	 * @see enorm.Action
+	 * @generated
+	 */
+	EClass getAction();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Action#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see enorm.Action#getName()
+	 * @see #getAction()
+	 * @generated
+	 */
+	EAttribute getAction_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Action#getKind <em>Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Kind</em>'.
+	 * @see enorm.Action#getKind()
+	 * @see #getAction()
+	 * @generated
+	 */
+	EAttribute getAction_Kind();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.Action#getMessage <em>Message</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Message</em>'.
+	 * @see enorm.Action#getMessage()
+	 * @see #getAction()
+	 * @generated
+	 */
+	EAttribute getAction_Message();
 
 	/**
 	 * Returns the meta object for class '{@link enorm.VerificationPolicy <em>Verification Policy</em>}'.
@@ -2458,6 +2926,82 @@ public interface EnormPackage extends EPackage {
 	EReference getVerificationPolicy_Verifies();
 
 	/**
+	 * Returns the meta object for class '{@link enorm.SortingPolicy <em>Sorting Policy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Sorting Policy</em>'.
+	 * @see enorm.SortingPolicy
+	 * @generated
+	 */
+	EClass getSortingPolicy();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.SortingPolicy#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see enorm.SortingPolicy#getName()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EAttribute getSortingPolicy_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.SortingPolicy#getCriterion <em>Criterion</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Criterion</em>'.
+	 * @see enorm.SortingPolicy#getCriterion()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EAttribute getSortingPolicy_Criterion();
+
+	/**
+	 * Returns the meta object for the attribute '{@link enorm.SortingPolicy#getDirection <em>Direction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Direction</em>'.
+	 * @see enorm.SortingPolicy#getDirection()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EAttribute getSortingPolicy_Direction();
+
+	/**
+	 * Returns the meta object for the reference '{@link enorm.SortingPolicy#getAppliesToResource <em>Applies To Resource</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Applies To Resource</em>'.
+	 * @see enorm.SortingPolicy#getAppliesToResource()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EReference getSortingPolicy_AppliesToResource();
+
+	/**
+	 * Returns the meta object for the reference '{@link enorm.SortingPolicy#getAppliesToFeedback <em>Applies To Feedback</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Applies To Feedback</em>'.
+	 * @see enorm.SortingPolicy#getAppliesToFeedback()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EReference getSortingPolicy_AppliesToFeedback();
+
+	/**
+	 * Returns the meta object for the reference '{@link enorm.SortingPolicy#getInContext <em>In Context</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>In Context</em>'.
+	 * @see enorm.SortingPolicy#getInContext()
+	 * @see #getSortingPolicy()
+	 * @generated
+	 */
+	EReference getSortingPolicy_InContext();
+
+	/**
 	 * Returns the meta object for enum '{@link enorm.UserKind <em>User Kind</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2508,6 +3052,16 @@ public interface EnormPackage extends EPackage {
 	EEnum getFeedbackSubjectScope();
 
 	/**
+	 * Returns the meta object for enum '{@link enorm.FeedbackPolarity <em>Feedback Polarity</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Feedback Polarity</em>'.
+	 * @see enorm.FeedbackPolarity
+	 * @generated
+	 */
+	EEnum getFeedbackPolarity();
+
+	/**
 	 * Returns the meta object for enum '{@link enorm.FeedbackStatus <em>Feedback Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2516,6 +3070,16 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getFeedbackStatus();
+
+	/**
+	 * Returns the meta object for enum '{@link enorm.VerificationRequirement <em>Verification Requirement</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Verification Requirement</em>'.
+	 * @see enorm.VerificationRequirement
+	 * @generated
+	 */
+	EEnum getVerificationRequirement();
 
 	/**
 	 * Returns the meta object for enum '{@link enorm.ValidationKind <em>Validation Kind</em>}'.
@@ -2548,6 +3112,16 @@ public interface EnormPackage extends EPackage {
 	EEnum getModerationMode();
 
 	/**
+	 * Returns the meta object for enum '{@link enorm.TriggerEvent <em>Trigger Event</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Trigger Event</em>'.
+	 * @see enorm.TriggerEvent
+	 * @generated
+	 */
+	EEnum getTriggerEvent();
+
+	/**
 	 * Returns the meta object for enum '{@link enorm.ModerationDecision <em>Moderation Decision</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2566,6 +3140,46 @@ public interface EnormPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getActionKind();
+
+	/**
+	 * Returns the meta object for enum '{@link enorm.ConditionOperator <em>Condition Operator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Condition Operator</em>'.
+	 * @see enorm.ConditionOperator
+	 * @generated
+	 */
+	EEnum getConditionOperator();
+
+	/**
+	 * Returns the meta object for enum '{@link enorm.ActionResultKind <em>Action Result Kind</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Action Result Kind</em>'.
+	 * @see enorm.ActionResultKind
+	 * @generated
+	 */
+	EEnum getActionResultKind();
+
+	/**
+	 * Returns the meta object for enum '{@link enorm.SortCriterion <em>Sort Criterion</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Sort Criterion</em>'.
+	 * @see enorm.SortCriterion
+	 * @generated
+	 */
+	EEnum getSortCriterion();
+
+	/**
+	 * Returns the meta object for enum '{@link enorm.SortDirection <em>Sort Direction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Sort Direction</em>'.
+	 * @see enorm.SortDirection
+	 * @generated
+	 */
+	EEnum getSortDirection();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -2703,6 +3317,14 @@ public interface EnormPackage extends EPackage {
 		 * @generated
 		 */
 		EReference REF_MODEL__VERIFICATION_POLICIES = eINSTANCE.getRefModel_VerificationPolicies();
+
+		/**
+		 * The meta object literal for the '<em><b>Sorting Policies</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference REF_MODEL__SORTING_POLICIES = eINSTANCE.getRefModel_SortingPolicies();
 
 		/**
 		 * The meta object literal for the '{@link enorm.impl.UserTypeImpl <em>User Type</em>}' class.
@@ -2973,12 +3595,28 @@ public interface EnormPackage extends EPackage {
 		EAttribute FEEDBACK_TYPE__RECURSIVE = eINSTANCE.getFeedbackType_Recursive();
 
 		/**
+		 * The meta object literal for the '<em><b>Allows Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEEDBACK_TYPE__ALLOWS_TEXT = eINSTANCE.getFeedbackType_AllowsText();
+
+		/**
 		 * The meta object literal for the '<em><b>Allows Media</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute FEEDBACK_TYPE__ALLOWS_MEDIA = eINSTANCE.getFeedbackType_AllowsMedia();
+
+		/**
+		 * The meta object literal for the '<em><b>Polarity</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEEDBACK_TYPE__POLARITY = eINSTANCE.getFeedbackType_Polarity();
 
 		/**
 		 * The meta object literal for the '{@link enorm.impl.FeedbackDefinitionImpl <em>Feedback Definition</em>}' class.
@@ -3006,6 +3644,15 @@ public interface EnormPackage extends EPackage {
 		 */
 		EAttribute FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT = eINSTANCE
 				.getFeedbackDefinition_RequiresVerifiedContext();
+
+		/**
+		 * The meta object literal for the '<em><b>Verification Requirement</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT = eINSTANCE
+				.getFeedbackDefinition_VerificationRequirement();
 
 		/**
 		 * The meta object literal for the '<em><b>Unique Per Author Target</b></em>' attribute feature.
@@ -3249,7 +3896,7 @@ public interface EnormPackage extends EPackage {
 		EReference MODERATION_POLICY__MONITORS_FEEDBACK = eINSTANCE.getModerationPolicy_MonitorsFeedback();
 
 		/**
-		 * The meta object literal for the '<em><b>Executed By</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Executed By</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
@@ -3273,6 +3920,14 @@ public interface EnormPackage extends EPackage {
 		 * @generated
 		 */
 		EClass AUTHORIZATION_RULE = eINSTANCE.getAuthorizationRule();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute AUTHORIZATION_RULE__NAME = eINSTANCE.getAuthorizationRule_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Allowed Action</b></em>' attribute feature.
@@ -3341,22 +3996,6 @@ public interface EnormPackage extends EPackage {
 		EAttribute AUTOMATION_RULE__TRIGGER = eINSTANCE.getAutomationRule_Trigger();
 
 		/**
-		 * The meta object literal for the '<em><b>Condition</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute AUTOMATION_RULE__CONDITION = eINSTANCE.getAutomationRule_Condition();
-
-		/**
-		 * The meta object literal for the '<em><b>Action Description</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute AUTOMATION_RULE__ACTION_DESCRIPTION = eINSTANCE.getAutomationRule_ActionDescription();
-
-		/**
 		 * The meta object literal for the '<em><b>Context</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3381,12 +4020,104 @@ public interface EnormPackage extends EPackage {
 		EReference AUTOMATION_RULE__ON_FEEDBACK = eINSTANCE.getAutomationRule_OnFeedback();
 
 		/**
-		 * The meta object literal for the '<em><b>Uses</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Uses</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference AUTOMATION_RULE__USES = eINSTANCE.getAutomationRule_Uses();
+
+		/**
+		 * The meta object literal for the '<em><b>Conditions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AUTOMATION_RULE__CONDITIONS = eINSTANCE.getAutomationRule_Conditions();
+
+		/**
+		 * The meta object literal for the '<em><b>Actions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AUTOMATION_RULE__ACTIONS = eINSTANCE.getAutomationRule_Actions();
+
+		/**
+		 * The meta object literal for the '{@link enorm.impl.ConditionImpl <em>Condition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.impl.ConditionImpl
+		 * @see enorm.impl.EnormPackageImpl#getCondition()
+		 * @generated
+		 */
+		EClass CONDITION = eINSTANCE.getCondition();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONDITION__NAME = eINSTANCE.getCondition_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Field</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONDITION__FIELD = eINSTANCE.getCondition_Field();
+
+		/**
+		 * The meta object literal for the '<em><b>Operator</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONDITION__OPERATOR = eINSTANCE.getCondition_Operator();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CONDITION__VALUE = eINSTANCE.getCondition_Value();
+
+		/**
+		 * The meta object literal for the '{@link enorm.impl.ActionImpl <em>Action</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.impl.ActionImpl
+		 * @see enorm.impl.EnormPackageImpl#getAction()
+		 * @generated
+		 */
+		EClass ACTION = eINSTANCE.getAction();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACTION__NAME = eINSTANCE.getAction_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACTION__KIND = eINSTANCE.getAction_Kind();
+
+		/**
+		 * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ACTION__MESSAGE = eINSTANCE.getAction_Message();
 
 		/**
 		 * The meta object literal for the '{@link enorm.impl.VerificationPolicyImpl <em>Verification Policy</em>}' class.
@@ -3429,6 +4160,64 @@ public interface EnormPackage extends EPackage {
 		 * @generated
 		 */
 		EReference VERIFICATION_POLICY__VERIFIES = eINSTANCE.getVerificationPolicy_Verifies();
+
+		/**
+		 * The meta object literal for the '{@link enorm.impl.SortingPolicyImpl <em>Sorting Policy</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.impl.SortingPolicyImpl
+		 * @see enorm.impl.EnormPackageImpl#getSortingPolicy()
+		 * @generated
+		 */
+		EClass SORTING_POLICY = eINSTANCE.getSortingPolicy();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SORTING_POLICY__NAME = eINSTANCE.getSortingPolicy_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Criterion</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SORTING_POLICY__CRITERION = eINSTANCE.getSortingPolicy_Criterion();
+
+		/**
+		 * The meta object literal for the '<em><b>Direction</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SORTING_POLICY__DIRECTION = eINSTANCE.getSortingPolicy_Direction();
+
+		/**
+		 * The meta object literal for the '<em><b>Applies To Resource</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SORTING_POLICY__APPLIES_TO_RESOURCE = eINSTANCE.getSortingPolicy_AppliesToResource();
+
+		/**
+		 * The meta object literal for the '<em><b>Applies To Feedback</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SORTING_POLICY__APPLIES_TO_FEEDBACK = eINSTANCE.getSortingPolicy_AppliesToFeedback();
+
+		/**
+		 * The meta object literal for the '<em><b>In Context</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SORTING_POLICY__IN_CONTEXT = eINSTANCE.getSortingPolicy_InContext();
 
 		/**
 		 * The meta object literal for the '{@link enorm.UserKind <em>User Kind</em>}' enum.
@@ -3481,6 +4270,16 @@ public interface EnormPackage extends EPackage {
 		EEnum FEEDBACK_SUBJECT_SCOPE = eINSTANCE.getFeedbackSubjectScope();
 
 		/**
+		 * The meta object literal for the '{@link enorm.FeedbackPolarity <em>Feedback Polarity</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.FeedbackPolarity
+		 * @see enorm.impl.EnormPackageImpl#getFeedbackPolarity()
+		 * @generated
+		 */
+		EEnum FEEDBACK_POLARITY = eINSTANCE.getFeedbackPolarity();
+
+		/**
 		 * The meta object literal for the '{@link enorm.FeedbackStatus <em>Feedback Status</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3489,6 +4288,16 @@ public interface EnormPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum FEEDBACK_STATUS = eINSTANCE.getFeedbackStatus();
+
+		/**
+		 * The meta object literal for the '{@link enorm.VerificationRequirement <em>Verification Requirement</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.VerificationRequirement
+		 * @see enorm.impl.EnormPackageImpl#getVerificationRequirement()
+		 * @generated
+		 */
+		EEnum VERIFICATION_REQUIREMENT = eINSTANCE.getVerificationRequirement();
 
 		/**
 		 * The meta object literal for the '{@link enorm.ValidationKind <em>Validation Kind</em>}' enum.
@@ -3521,6 +4330,16 @@ public interface EnormPackage extends EPackage {
 		EEnum MODERATION_MODE = eINSTANCE.getModerationMode();
 
 		/**
+		 * The meta object literal for the '{@link enorm.TriggerEvent <em>Trigger Event</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.TriggerEvent
+		 * @see enorm.impl.EnormPackageImpl#getTriggerEvent()
+		 * @generated
+		 */
+		EEnum TRIGGER_EVENT = eINSTANCE.getTriggerEvent();
+
+		/**
 		 * The meta object literal for the '{@link enorm.ModerationDecision <em>Moderation Decision</em>}' enum.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3539,6 +4358,46 @@ public interface EnormPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum ACTION_KIND = eINSTANCE.getActionKind();
+
+		/**
+		 * The meta object literal for the '{@link enorm.ConditionOperator <em>Condition Operator</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.ConditionOperator
+		 * @see enorm.impl.EnormPackageImpl#getConditionOperator()
+		 * @generated
+		 */
+		EEnum CONDITION_OPERATOR = eINSTANCE.getConditionOperator();
+
+		/**
+		 * The meta object literal for the '{@link enorm.ActionResultKind <em>Action Result Kind</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.ActionResultKind
+		 * @see enorm.impl.EnormPackageImpl#getActionResultKind()
+		 * @generated
+		 */
+		EEnum ACTION_RESULT_KIND = eINSTANCE.getActionResultKind();
+
+		/**
+		 * The meta object literal for the '{@link enorm.SortCriterion <em>Sort Criterion</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.SortCriterion
+		 * @see enorm.impl.EnormPackageImpl#getSortCriterion()
+		 * @generated
+		 */
+		EEnum SORT_CRITERION = eINSTANCE.getSortCriterion();
+
+		/**
+		 * The meta object literal for the '{@link enorm.SortDirection <em>Sort Direction</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see enorm.SortDirection
+		 * @see enorm.impl.EnormPackageImpl#getSortDirection()
+		 * @generated
+		 */
+		EEnum SORT_DIRECTION = eINSTANCE.getSortDirection();
 
 	}
 

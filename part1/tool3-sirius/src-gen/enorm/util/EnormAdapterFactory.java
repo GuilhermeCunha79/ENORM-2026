@@ -137,8 +137,23 @@ public class EnormAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseCondition(Condition object) {
+			return createConditionAdapter();
+		}
+
+		@Override
+		public Adapter caseAction(Action object) {
+			return createActionAdapter();
+		}
+
+		@Override
 		public Adapter caseVerificationPolicy(VerificationPolicy object) {
 			return createVerificationPolicyAdapter();
+		}
+
+		@Override
+		public Adapter caseSortingPolicy(SortingPolicy object) {
+			return createSortingPolicyAdapter();
 		}
 
 		@Override
@@ -357,6 +372,34 @@ public class EnormAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link enorm.Condition <em>Condition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see enorm.Condition
+	 * @generated
+	 */
+	public Adapter createConditionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link enorm.Action <em>Action</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see enorm.Action
+	 * @generated
+	 */
+	public Adapter createActionAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link enorm.VerificationPolicy <em>Verification Policy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -367,6 +410,20 @@ public class EnormAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVerificationPolicyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link enorm.SortingPolicy <em>Sorting Policy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see enorm.SortingPolicy
+	 * @generated
+	 */
+	public Adapter createSortingPolicyAdapter() {
 		return null;
 	}
 

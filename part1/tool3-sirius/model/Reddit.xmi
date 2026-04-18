@@ -91,16 +91,16 @@
   <resourceRelations name="Comment_checked_by_CommentModerationCheck" sourceCardinality="1" targetCardinality="*" containment="false" recursive="false" source="//@resourceTypes.3" target="//@resourceTypes.9"/>
 
   <!-- Feedback Types -->
-  <feedbackTypes name="Vote" kind="VOTE" subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsMedia="false"/>
-  <feedbackTypes name="Report" kind="REPORT" subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsMedia="false"/>
+  <feedbackTypes name="Vote" kind="VOTE" subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsText="false" allowsMedia="false" polarity="UP_DOWN"/>
+  <feedbackTypes name="Report" kind="REPORT" subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsText="true" allowsMedia="false" polarity="NONE"/>
 
   <!-- Feedback Definitions -->
-  <feedbackDefinitions name="VoteOnContent" requiresVerifiedContext="false" uniquePerAuthorTarget="true" type="//@feedbackTypes.0" subjectResource="//@resourceTypes.1" author="//@userTypes.0">
+  <feedbackDefinitions name="VoteOnContent" requiresVerifiedContext="false" verificationRequirement="NONE" uniquePerAuthorTarget="true" type="//@feedbackTypes.0" subjectResource="//@resourceTypes.1" author="//@userTypes.0">
     <policy status="ENABLED"/>
     <rating minValue="1" maxValue="1" step="1"/>
   </feedbackDefinitions>
 
-  <feedbackDefinitions name="ReportOnContent" requiresVerifiedContext="false" uniquePerAuthorTarget="false" type="//@feedbackTypes.1" subjectResource="//@resourceTypes.1" author="//@userTypes.0">
+  <feedbackDefinitions name="ReportOnContent" requiresVerifiedContext="false" verificationRequirement="NONE" uniquePerAuthorTarget="false" type="//@feedbackTypes.1" subjectResource="//@resourceTypes.1" author="//@userTypes.0">
     <policy status="ENABLED"/>
     <rating minValue="1" maxValue="1" step="1"/>
   </feedbackDefinitions>
@@ -110,21 +110,32 @@
   <validationRules name="CommentContentValidation" kind="AUTOMATIC" severity="WARNING" expression="comment_body_not_empty_and_not_spam" appliesToResource="//@resourceTypes.3" invokedBy="//@automationRules.1"/>
 
   <!-- Authorization Rules -->
-  <authorizationRules allowedAction="CREATE" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.2" feedbackTarget="//@feedbackDefinitions.0"/>
-  <authorizationRules allowedAction="COMMENT" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.3" feedbackTarget="//@feedbackDefinitions.0"/>
-  <authorizationRules allowedAction="VOTE" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.0"/>
-  <authorizationRules allowedAction="REPORT" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.1"/>
-  <authorizationRules allowedAction="MODERATE" actor="//@userTypes.1" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.1"/>
+  <authorizationRules name="UserCreatePost" allowedAction="CREATE" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.2" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules name="UserCreateComment" allowedAction="COMMENT" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.3" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules name="UserVoteOnContent" allowedAction="VOTE" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules name="UserReportContent" allowedAction="REPORT" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.1"/>
+  <authorizationRules name="ModeratorModerateContent" allowedAction="MODERATE" actor="//@userTypes.1" context="//@contextTypes.1" resourceTarget="//@resourceTypes.1" feedbackTarget="//@feedbackDefinitions.1"/>
 
   <!-- Moderation Policies -->
-  <moderationPolicies name="PostModerationPolicy" mode="HYBRID" trigger="SPAM_OR_OFFENSIVE" decision="FLAGGED" monitorsResource="//@resourceTypes.2" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.1" inContext="//@contextTypes.1"/>
-  <moderationPolicies name="CommentModerationPolicy" mode="HYBRID" trigger="SPAM_OR_OFFENSIVE" decision="HIDDEN" monitorsResource="//@resourceTypes.3" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.1" inContext="//@contextTypes.1"/>
+  <moderationPolicies name="PostModerationPolicy" mode="HYBRID" trigger="ON_REPORT_SUBMITTED" decision="FLAGGED" monitorsResource="//@resourceTypes.2" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.1" inContext="//@contextTypes.1"/>
+  <moderationPolicies name="CommentModerationPolicy" mode="HYBRID" trigger="ON_REPORT_SUBMITTED" decision="HIDDEN" monitorsResource="//@resourceTypes.3" monitorsFeedback="//@feedbackDefinitions.1" executedBy="//@userTypes.1" inContext="//@contextTypes.1"/>
 
   <!-- Automation Rules -->
-  <automationRules name="PostRuleExecution" trigger="post_created" condition="post_submitted_in_subreddit" actionDescription="execute post validation rules" context="//@resourceTypes.2" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.1" uses="//@validationRules.0"/>
-  <automationRules name="CommentRuleExecution" trigger="comment_created" condition="comment_submitted_in_subreddit" actionDescription="execute comment validation rules" context="//@resourceTypes.3" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.1" uses="//@validationRules.1"/>
+  <automationRules name="PostRuleExecution" trigger="ON_RESOURCE_CREATE" context="//@resourceTypes.2" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.0" uses="//@validationRules.0">
+    <conditions name="PostBodyNotSpam" field="body" operator="NOT_CONTAINS_KEYWORDS" value="spam,prohibited,banned"/>
+    <actions name="FlagSpamPost" kind="FLAG_CONTENT" message="Post content flagged for policy validation"/>
+  </automationRules>
+  <automationRules name="CommentRuleExecution" trigger="ON_RESOURCE_CREATE" context="//@resourceTypes.3" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.0" uses="//@validationRules.1">
+    <conditions name="CommentBodyNotSpam" field="body" operator="NOT_CONTAINS_KEYWORDS" value="spam,prohibited,banned"/>
+    <actions name="FlagSpamComment" kind="FLAG_CONTENT" message="Comment content flagged for policy validation"/>
+  </automationRules>
 
   <!-- Verification Policies -->
-  <verificationPolicies name="ReportReviewVerification" mode="MANUAL" appliesWhen="report_reviewed_by_moderator" verifies="//@feedbackDefinitions.1"/>
+  <verificationPolicies name="ReportReviewVerification" mode="MANUAL" appliesWhen="ON_MANUAL_REQUEST" verifies="//@feedbackDefinitions.1"/>
+
+  <!-- Sorting Policies -->
+  <sortingPolicies name="PostsByRelevance" criterion="RELEVANCE" direction="DESC" appliesToResource="//@resourceTypes.2" inContext="//@contextTypes.1"/>
+  <sortingPolicies name="PostsByDate" criterion="DATE" direction="DESC" appliesToResource="//@resourceTypes.2" inContext="//@contextTypes.1"/>
+  <sortingPolicies name="CommentsByValue" criterion="VALUE" direction="DESC" appliesToResource="//@resourceTypes.3" inContext="//@contextTypes.1"/>
 
 </enorm:RefModel>

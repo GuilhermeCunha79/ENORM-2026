@@ -117,6 +117,7 @@ public class RefModelItemProvider extends ItemProviderAdapter implements IEditin
 			childrenFeatures.add(EnormPackage.Literals.REF_MODEL__MODERATION_POLICIES);
 			childrenFeatures.add(EnormPackage.Literals.REF_MODEL__AUTOMATION_RULES);
 			childrenFeatures.add(EnormPackage.Literals.REF_MODEL__VERIFICATION_POLICIES);
+			childrenFeatures.add(EnormPackage.Literals.REF_MODEL__SORTING_POLICIES);
 		}
 		return childrenFeatures;
 	}
@@ -195,6 +196,7 @@ public class RefModelItemProvider extends ItemProviderAdapter implements IEditin
 		case EnormPackage.REF_MODEL__MODERATION_POLICIES:
 		case EnormPackage.REF_MODEL__AUTOMATION_RULES:
 		case EnormPackage.REF_MODEL__VERIFICATION_POLICIES:
+		case EnormPackage.REF_MODEL__SORTING_POLICIES:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
@@ -244,6 +246,9 @@ public class RefModelItemProvider extends ItemProviderAdapter implements IEditin
 
 		newChildDescriptors.add(createChildParameter(EnormPackage.Literals.REF_MODEL__VERIFICATION_POLICIES,
 				EnormFactory.eINSTANCE.createVerificationPolicy()));
+
+		newChildDescriptors.add(createChildParameter(EnormPackage.Literals.REF_MODEL__SORTING_POLICIES,
+				EnormFactory.eINSTANCE.createSortingPolicy()));
 	}
 
 	/**

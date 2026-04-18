@@ -36,13 +36,14 @@ public class EnormProjectionGenerator {
     // ==================== HARDCODED PATHS ====================
     
     // Input XMI file path - MODIFY THIS TO YOUR MODEL FILE
-    private static final String INPUT_XMI_PATH = "C:\\Users\\franc\\Faculdade\\Mestrado\\2_Semestre\\ENORM\\project-enorm-25-26\\part1\\tool3-sirius\\model\\RefModel.xmi";
+    private static final String INPUT_XMI_PATH =
+            "C:\\Users\\franc\\Faculdade\\Mestrado\\2_Semestre\\ENORM\\project-enorm-25-26\\part1\\tool3-sirius\\model\\Reddit.xmi";
     
+    // Output model name - MODIFY THIS TO CUSTOMIZE OUTPUT FILENAMES
+    private static final String OUTPUT_MODEL_NAME = "Reddit";
+
     // Output paths (all artifacts saved under the same folder)
     private static final String OUTPUT_PROJECTIONS_DIR = "projections";
-    private static final String OUTPUT_STRUCTURE_DIAGRAM = OUTPUT_PROJECTIONS_DIR + "/structure_diagram_RefModel.puml";
-    private static final String OUTPUT_BEHAVIOR_VALIDATION = OUTPUT_PROJECTIONS_DIR + "/behavior_validation_RefModel.puml";
-    private static final String OUTPUT_TEXTUAL_PROJECTION = OUTPUT_PROJECTIONS_DIR + "/textual_projection_RefModel.txt";
 
     // ==================== MAIN ENTRY POINTS ====================
 
@@ -56,7 +57,8 @@ public class EnormProjectionGenerator {
             System.err.println("Error: Failed to load model from " + INPUT_XMI_PATH);
             return;
         }
-        generateStructureDiagramFromModel(refModel, OUTPUT_STRUCTURE_DIAGRAM);
+        String outputFile = OUTPUT_PROJECTIONS_DIR + "/" + OUTPUT_MODEL_NAME + "_structure_diagram.puml";
+        generateStructureDiagramFromModel(refModel, outputFile);
     }
 
     /**
@@ -160,7 +162,7 @@ public class EnormProjectionGenerator {
 
     /**
      * Generates behavior diagrams from hardcoded XMI file
-     * Creates separate diagrams for each process flow
+     * Creates separate diagrams for each validation rule
      */
     public static void generateBehaviorDiagrams() {
         Object refModel = loadModelFromXmi(INPUT_XMI_PATH);
@@ -168,63 +170,80 @@ public class EnormProjectionGenerator {
             System.err.println("Error: Failed to load model from " + INPUT_XMI_PATH);
             return;
         }
-        generateBehaviorDiagramsFromModel(refModel, OUTPUT_BEHAVIOR_VALIDATION);
+        generateBehaviorDiagramsFromModel(refModel, OUTPUT_PROJECTIONS_DIR, OUTPUT_MODEL_NAME);
     }
 
     /**
      * Generates behavior diagrams from model object
+     * Creates individual diagrams for each validation rule
      */
-    private static void generateBehaviorDiagramsFromModel(Object refModel, String outputFile) {
+    private static void generateBehaviorDiagramsFromModel(Object refModel, String outputDir, String modelName) {
         if (!isEClass(refModel, "RefModel")) {
             System.err.println("Error: Not a RefModel instance");
             return;
         }
 
-        if (!ensureParentDirectory(outputFile)) {
+        if (!ensureParentDirectory(outputDir + "/dummy")) {
             return;
         }
 
+        List<Object> validationRules = getObjectList(refModel, "validationRules");
+        if (validationRules.isEmpty()) {
+            System.out.println("No validation rules found in model");
+            return;
+        }
+
+        System.out.println("Generating " + validationRules.size() + " behavior diagrams for validation processes...");
+
+        for (Object valRule : validationRules) {
+            generateBehaviorDiagramForValidationRule(valRule, outputDir, modelName);
+        }
+
+        System.out.println("Behavior diagrams generation completed");
+    }
+
+    /**
+     * Generates a behavior diagram for a specific validation rule
+     */
+    private static void generateBehaviorDiagramForValidationRule(Object valRule, String outputDir, String modelName) {
+        String ruleName = safe(getFeatureValue(valRule, "name"));
+        String severity = safe(getFeatureValue(valRule, "severity"));
+        String expression = safe(getFeatureValue(valRule, "expression"));
+        Object kind = getFeatureValue(valRule, "kind");
+        String kindStr = kind != null ? String.valueOf(kind) : "AUTOMATIC";
+
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter(new FileWriter(outputFile));
+            String filename = java.nio.file.Paths.get(outputDir, modelName + "_" + ruleName + "-behavior.puml").toString();
+            writer = new PrintWriter(new FileWriter(filename));
 
-            generateBehaviorPumlHeader(writer, "ValidationFlow", "Validation Process", "", "", "");
+            generateBehaviorPumlHeader(writer, ruleName, "Validation Process", kindStr, "", expression);
             generateBehaviorStartNode(writer);
-            generateBehaviorNode(writer, "collect", "Collect Input", "box");
-            generateBehaviorNode(writer, "validate", "Run Validation Rules", "box");
-            generateBehaviorNode(writer, "decision", "Validation passed?", "diamond");
-            generateBehaviorNode(writer, "accept", "Accept", "box");
-            generateBehaviorNode(writer, "reject", "Reject", "box");
 
-            generateBehaviorEdge(writer, "start", "collect", null);
-            generateBehaviorEdge(writer, "collect", "validate", null);
-            generateBehaviorEdge(writer, "validate", "decision", null);
-            generateBehaviorEdge(writer, "decision", "accept", "yes");
-            generateBehaviorEdge(writer, "decision", "reject", "no");
-            generateBehaviorEdge(writer, "accept", "end", null);
-            generateBehaviorEdge(writer, "reject", "end", null);
+            generateBehaviorNode(writer, "trigger", "Validation Triggered", "box");
+            generateBehaviorNode(writer, "collect", "Collect Input Data", "box");
+            generateBehaviorNode(writer, "check", "Check Expression", "box");
+            generateBehaviorNode(writer, "decision", "Expression Valid?", "diamond");
+            generateBehaviorNode(writer, "pass", "Validation Passed", "box");
+            generateBehaviorNode(writer, "fail", "Validation Failed (" + severity + ")", "box");
+            generateBehaviorNode(writer, "report", "Report Result", "box");
 
-            // Add each validation rule as explicit state nodes linked to the validation step.
-            int idx = 1;
-            for (Object valRule : getObjectList(refModel, "validationRules")) {
-                String ruleName = safe(getFeatureValue(valRule, "name"));
-                String severity = safe(getFeatureValue(valRule, "severity"));
-                String ruleLabel = "Rule " + idx + ": " + (ruleName.isEmpty() ? "Unnamed" : ruleName);
-                if (!severity.isEmpty()) {
-                    ruleLabel += " (" + severity + ")";
-                }
-                String nodeId = "rule_" + idx;
-                writer.println("state \"" + escapeForPumlLabel(ruleLabel) + "\" as " + sanitizeGraphId(nodeId));
-                generateBehaviorEdge(writer, "validate", nodeId, null);
-                idx++;
-            }
+            generateBehaviorEdge(writer, "start", "trigger", null);
+            generateBehaviorEdge(writer, "trigger", "collect", null);
+            generateBehaviorEdge(writer, "collect", "check", null);
+            generateBehaviorEdge(writer, "check", "decision", null);
+            generateBehaviorEdge(writer, "decision", "pass", "true");
+            generateBehaviorEdge(writer, "decision", "fail", "false");
+            generateBehaviorEdge(writer, "pass", "report", null);
+            generateBehaviorEdge(writer, "fail", "report", null);
+            generateBehaviorEdge(writer, "report", "end", null);
 
             generateBehaviorPumlFooter(writer);
-            System.out.println("Behavior diagram generated: " + outputFile);
+            writer.close();
+            System.out.println("  Generated: " + filename);
 
         } catch (IOException e) {
-            System.err.println("Error generating behavior diagram: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error generating behavior diagram for " + ruleName + ": " + e.getMessage());
         } finally {
             if (writer != null) writer.close();
         }
@@ -239,7 +258,8 @@ public class EnormProjectionGenerator {
             System.err.println("Error: Failed to load model from " + INPUT_XMI_PATH);
             return;
         }
-        generateTextualProjectionFromModel(refModel, OUTPUT_TEXTUAL_PROJECTION);
+        String outputFile = OUTPUT_PROJECTIONS_DIR + "/" + OUTPUT_MODEL_NAME + "_textual_projection.txt";
+        generateTextualProjectionFromModel(refModel, outputFile);
     }
 
     /**
@@ -594,9 +614,7 @@ public class EnormProjectionGenerator {
             legend.append("Decision/Condition: ").append(escapeForPumlLabel(decisionOrCondition)).append("\\n");
         }
         if (legend.length() > 0) {
-            writer.println("legend right");
             writer.print(legend.toString());
-            writer.println("endlegend");
         }
         writer.println();
     }

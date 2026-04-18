@@ -2,6 +2,7 @@
  */
 package enorm;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -77,25 +78,28 @@ public interface ModerationPolicy extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Trigger</b></em>' attribute.
+	 * The literals are from the enumeration {@link enorm.TriggerEvent}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Trigger</em>' attribute.
-	 * @see #setTrigger(String)
+	 * @see enorm.TriggerEvent
+	 * @see #setTrigger(TriggerEvent)
 	 * @see enorm.EnormPackage#getModerationPolicy_Trigger()
 	 * @model
 	 * @generated
 	 */
-	String getTrigger();
+	TriggerEvent getTrigger();
 
 	/**
 	 * Sets the value of the '{@link enorm.ModerationPolicy#getTrigger <em>Trigger</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Trigger</em>' attribute.
+	 * @see enorm.TriggerEvent
 	 * @see #getTrigger()
 	 * @generated
 	 */
-	void setTrigger(String value);
+	void setTrigger(TriggerEvent value);
 
 	/**
 	 * Returns the value of the '<em><b>Decision</b></em>' attribute.
@@ -129,7 +133,7 @@ public interface ModerationPolicy extends EObject {
 	 * @return the value of the '<em>Monitors Resource</em>' reference.
 	 * @see #setMonitorsResource(ResourceType)
 	 * @see enorm.EnormPackage#getModerationPolicy_MonitorsResource()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	ResourceType getMonitorsResource();
@@ -151,7 +155,7 @@ public interface ModerationPolicy extends EObject {
 	 * @return the value of the '<em>Monitors Feedback</em>' reference.
 	 * @see #setMonitorsFeedback(FeedbackDefinition)
 	 * @see enorm.EnormPackage#getModerationPolicy_MonitorsFeedback()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	FeedbackDefinition getMonitorsFeedback();
@@ -167,26 +171,16 @@ public interface ModerationPolicy extends EObject {
 	void setMonitorsFeedback(FeedbackDefinition value);
 
 	/**
-	 * Returns the value of the '<em><b>Executed By</b></em>' reference.
+	 * Returns the value of the '<em><b>Executed By</b></em>' reference list.
+	 * The list contents are of type {@link enorm.UserType}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Executed By</em>' reference.
-	 * @see #setExecutedBy(UserType)
+	 * @return the value of the '<em>Executed By</em>' reference list.
 	 * @see enorm.EnormPackage#getModerationPolicy_ExecutedBy()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
-	UserType getExecutedBy();
-
-	/**
-	 * Sets the value of the '{@link enorm.ModerationPolicy#getExecutedBy <em>Executed By</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Executed By</em>' reference.
-	 * @see #getExecutedBy()
-	 * @generated
-	 */
-	void setExecutedBy(UserType value);
+	EList<UserType> getExecutedBy();
 
 	/**
 	 * Returns the value of the '<em><b>In Context</b></em>' reference.
