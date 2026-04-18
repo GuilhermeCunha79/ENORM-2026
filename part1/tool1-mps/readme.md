@@ -101,11 +101,7 @@ This structure allows one unified metamodel to instantiate multiple scenarios (A
 
 ## Implementation of Constraints
 
-The constraints were implemented as **Non-Typesystem Checking Rules** in MPS and generated to Java classes. The authoritative generated artifacts are located in:
-
-- `part1/tool1-mps/languages/Ref/source_gen/Ref/typesystem/TypesystemDescriptor.java`
-- `part1/tool1-mps/languages/Ref/source_gen/Ref/typesystem/*_NonTypesystemRule.java`
-- `part1/tool1-mps/languages/Ref/source_gen/Ref/typesystem/*_QuickFix.java`
+The constraints were implemented as **Checking Rules** in MPS.
 
 For this individual report, representative examples are presented instead of an exhaustive catalog. The selected examples prioritize constraints that already provide Quick Fix support.
 
@@ -113,38 +109,38 @@ For this individual report, representative examples are presented instead of an 
 
 | Checking Rule | Concept | What is tested | Example failing state | Quick Fix |
 |---|---|---|---|---|
-| checkNameUppercase | INamedConcept | Name must start with uppercase | `user` instead of `User` | `fixCapitalizeName_QuickFix` (`apply immediately = true`) |
-| checkValidationRuleLength | ValidationRule | `implementationId` must have at least 3 chars | `ab` | `fixValidationRuleImplementationIdLength_QuickFix` |
-| checkRatingPolicyMinMaxValue | RatingPolicy | `minValue < maxValue` | `min=5`, `max=1` | `swapRatingPolicyMinMaxIfMinBiggerMax_QuickFix` |
-| checkRatingPolicyPositiveEven | RatingPolicy | `step > 0` and range divisibility | `step=0` or uneven step | `fixRatingPolicyStepInvalidOrUneven_QuickFix` |
-| checkNoSelfInResourceTypeSuperTypes | ResourceType | No direct self-inheritance | `ResourceType A` extends `A` | `removeResourceTypeSuperTypeWhenContainSelf_QuickFix` |
+| checkNameUppercase | INamedConcept | Name must start with uppercase | `user` instead of `User` | `fixCapitalizeName` (`apply immediately = true`) |
+| checkValidationRuleLength | ValidationRule | `implementationId` must have at least 3 chars | `ab` | `fixValidationRuleImplementationIdLength` |
+| checkRatingPolicyMinMaxValue | RatingPolicy | `minValue < maxValue` | `min=5`, `max=1` | `swapRatingPolicyMinMaxIfMinBiggerMax` |
+| checkRatingPolicyPositiveEven | RatingPolicy | `step > 0` and range divisibility | `step=0` or uneven step | `fixRatingPolicyStepInvalidOrUneven` |
+| checkNoSelfInResourceTypeSuperTypes | ResourceType | No direct self-inheritance | `ResourceType A` extends `A` | `removeResourceTypeSuperTypeWhenContainSelf` |
 
 ### Business-rule constraints (domain semantics)
 
 | Checking Rule | Concept | Business rule enforced | Example failing state | Quick Fix |
 |---|---|---|---|---|
-| checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive | FeedbackType | SUBSCRIPTION must be RESOURCE_ONLY and non-recursive | `kind=SUBSCRIPTION` with `recursive=true` | `fixFeedbackTypeKindSubscription_QuickFix` |
-| checkFeedbackTypeReactionVoteDisallowRatingAndRecursion | FeedbackType | REACTION/VOTE cannot have rating or recursion | `kind=REACTION` and `hasRating=true` | `disableFeedbackTypeRatingAndRecursionForReactionVote_QuickFix` |
-| checkFeedbackDefinitionReactionVoteDisallowRating | FeedbackDefinition | REACTION/VOTE feedback definitions cannot keep `RatingPolicy` | Add `RatingPolicy` to reaction/vote feedback | `removeRatingPolicy_QuickFix` |
-| checkFeedbackDefinitionVerificationPolicy | FeedbackDefinition | Verified feedback requires matching `VerificationPolicy` | `requiresVerifiedContext=true` without policy | `createVerificationPolicyForFeedbackDefinition_QuickFix` |
-| checkModerationPolicyMandatoryExecutedBy | ModerationPolicy | Moderation policy must define moderator actor | `executedBy = null` | `fixAssignModeratorToModerationPolicyWhenExecutedByEmpty_QuickFix` |
+| checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive | FeedbackType | SUBSCRIPTION must be RESOURCE_ONLY and non-recursive | `kind=SUBSCRIPTION` with `recursive=true` | `fixFeedbackTypeKindSubscription` |
+| checkFeedbackTypeReactionVoteDisallowRatingAndRecursion | FeedbackType | REACTION/VOTE cannot have rating or recursion | `kind=REACTION` and `hasRating=true` | `disableFeedbackTypeRatingAndRecursionForReactionVote` |
+| checkFeedbackDefinitionReactionVoteDisallowRating | FeedbackDefinition | REACTION/VOTE feedback definitions cannot keep `RatingPolicy` | Add `RatingPolicy` to reaction/vote feedback | `removeRatingPolicy` |
+| checkFeedbackDefinitionVerificationPolicy | FeedbackDefinition | Verified feedback requires matching `VerificationPolicy` | `requiresVerifiedContext=true` without policy | `createVerificationPolicyForFeedbackDefinition` |
+| checkModerationPolicyMandatoryExecutedBy | ModerationPolicy | Moderation policy must define moderator actor | `executedBy = null` | `fixAssignModeratorToModerationPolicyWhenExecutedByEmpty` |
 
 Quick Fixes are connected to rules through `reportTypeError(...).addIntentionProvider(...)` using MPS "Intention to fix an error" providers (`BaseQuickFixProvider`).
 
 | Checking Rule | Quick Fix class | Apply immediately |
 |---|---|---|
-| checkNameUppercase | Ref.typesystem.fixCapitalizeName_QuickFix | true |
-| checkValidationRuleLength | Ref.typesystem.fixValidationRuleImplementationIdLength_QuickFix | false |
-| checkRatingPolicyMinMaxValue | Ref.typesystem.swapRatingPolicyMinMaxIfMinBiggerMax_QuickFix | false |
-| checkRatingPolicyPositiveEven | Ref.typesystem.fixRatingPolicyStepInvalidOrUneven_QuickFix | false |
-| checkNoSelfInResourceTypeSuperTypes | Ref.typesystem.removeResourceTypeSuperTypeWhenContainSelf_QuickFix | false |
-| checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive | Ref.typesystem.fixFeedbackTypeKindSubscription_QuickFix | false |
-| checkFeedbackTypeReactionVoteDisallowRatingAndRecursion | Ref.typesystem.disableFeedbackTypeRatingAndRecursionForReactionVote_QuickFix | false |
-| checkFeedbackDefinitionReactionVoteDisallowRating | Ref.typesystem.removeRatingPolicy_QuickFix | false |
-| checkFeedbackDefinitionVerificationPolicy | Ref.typesystem.createVerificationPolicyForFeedbackDefinition_QuickFix | false |
-| checkModerationPolicyMandatoryExecutedBy | Ref.typesystem.fixAssignModeratorToModerationPolicyWhenExecutedByEmpty_QuickFix | false |
+| checkNameUppercase | Ref.typesystem.fixCapitalizeName | true |
+| checkValidationRuleLength | Ref.typesystem.fixValidationRuleImplementationIdLength | false |
+| checkRatingPolicyMinMaxValue | Ref.typesystem.swapRatingPolicyMinMaxIfMinBiggerMax | false |
+| checkRatingPolicyPositiveEven | Ref.typesystem.fixRatingPolicyStepInvalidOrUneven | false |
+| checkNoSelfInResourceTypeSuperTypes | Ref.typesystem.removeResourceTypeSuperTypeWhenContainSelf | false |
+| checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive | Ref.typesystem.fixFeedbackTypeKindSubscription | false |
+| checkFeedbackTypeReactionVoteDisallowRatingAndRecursion | Ref.typesystem.disableFeedbackTypeRatingAndRecursionForReactionVote | false |
+| checkFeedbackDefinitionReactionVoteDisallowRating | Ref.typesystem.removeRatingPolicy | false |
+| checkFeedbackDefinitionVerificationPolicy | Ref.typesystem.createVerificationPolicyForFeedbackDefinition | false |
+| checkModerationPolicyMandatoryExecutedBy | Ref.typesystem.fixAssignModeratorToModerationPolicyWhenExecutedByEmpty | false |
 
-Special note: `checkNameUppercase` is the only selected example configured with `apply immediately = true`.
+Note: `checkNameUppercase` is the only selected example configured with `apply immediately = true`.
 
 ![Non-typesystem rule checkNameUppercase](images/figure-05-rule-checknameuppercase.png)
 
@@ -173,8 +169,8 @@ Visualizations were implemented in the **Behavior** aspect of the language, main
 The generated Java artifacts confirming this implementation are:
 
 - `part1/tool1-mps/languages/Ref/source_gen/Ref/behavior/RefModel__BehaviorDescriptor.java`
-- `part1/tool1-mps/languages/Ref/source_gen/Ref/intentions/GeneratePlantUml_Intention.java`
-- `part1/tool1-mps/languages/Ref/source_gen/Ref/intentions/GenerateTextRepresentation_Intention.java`
+- `part1/tool1-mps/languages/Ref/source_gen/Ref/intentions/GeneratePlantUml.java`
+- `part1/tool1-mps/languages/Ref/source_gen/Ref/intentions/GenerateTextRepresentation.java`
 
 ### Behavior design and generation flow
 
@@ -265,10 +261,10 @@ Using the current instances, the following representative violations are directl
 
 | Case | Type | Where to reproduce | Violated rule | What is wrong | Quick Fix behavior |
 |---|---|---|---|---|---|
-| 1 | Property | `YoutubeRef` -> `UserType: User` (in `Ref.sandbox.mps`) | `checkNameUppercase` | Rename `User` to `user` to violate uppercase naming on `INamedConcept`. | `fixCapitalizeName_QuickFix` restores uppercase (`apply immediately = true`). |
-| 2 | Property | `AmazonRef` -> `FeedbackDefinition: ProductReview` -> `RatingPolicy: ProductReviewRating` | `checkRatingPolicyMinMaxValue` | Set `minValue >= maxValue` (e.g., `minValue=5`, `maxValue=1`). | `swapRatingPolicyMinMaxIfMinBiggerMax_QuickFix` swaps values to a valid range. |
-| 3 | Business rule | `YoutubeRef` -> `FeedbackType: SubscriptionType` | `checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive` | Set `recursive=true` or a non-`RESOURCE_ONLY` subject scope for a SUBSCRIPTION type. | `fixFeedbackTypeKindSubscription_QuickFix` resets to valid semantics. |
-| 4 | Business rule | `AmazonRef` -> `FeedbackDefinition: ProductReview` | `checkFeedbackDefinitionVerificationPolicy` | Set `requiresVerifiedContext=true` and remove associated verification policy. | `createVerificationPolicyForFeedbackDefinition_QuickFix` creates the missing policy node and link. |
+| 1 | Property | `YoutubeRef` -> `UserType: User` (in `Ref.sandbox.mps`) | `checkNameUppercase` | Rename `User` to `user` to violate uppercase naming on `INamedConcept`. | `fixCapitalizeName` restores uppercase (`apply immediately = true`). |
+| 2 | Property | `AmazonRef` -> `FeedbackDefinition: ProductReview` -> `RatingPolicy: ProductReviewRating` | `checkRatingPolicyMinMaxValue` | Set `minValue >= maxValue` (e.g., `minValue=5`, `maxValue=1`). | `swapRatingPolicyMinMaxIfMinBiggerMax` swaps values to a valid range. |
+| 3 | Business rule | `YoutubeRef` -> `FeedbackType: SubscriptionType` | `checkFeedbackTypeKindSubscriptionResourceOnlyNonRecursive` | Set `recursive=true` or a non-`RESOURCE_ONLY` subject scope for a SUBSCRIPTION type. | `fixFeedbackTypeKindSubscription` resets to valid semantics. |
+| 4 | Business rule | `AmazonRef` -> `FeedbackDefinition: ProductReview` | `checkFeedbackDefinitionVerificationPolicy` | Set `requiresVerifiedContext=true` and remove associated verification policy. | `createVerificationPolicyForFeedbackDefinition` creates the missing policy node and link. |
 
 How MPS surfaces violations during execution:
 
@@ -366,3 +362,4 @@ ContextType: ChannelContext
 **Figure 19 - Rendered PlantUML diagram generated from mps-YoutubeRef.puml output**
 
 Note: rendering the diagram itself requires PlantUML rendering in an IDE/plugin or CLI renderer. The repository currently provides the `.puml` sources and textual projections.
+
