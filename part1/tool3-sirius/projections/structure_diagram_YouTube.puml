@@ -1,0 +1,108 @@
+@startuml
+title YouTubeScenario v1.0.0 - Structure Diagram
+
+' ===== RESOURCE TYPES =====
+class "Channel" as rt_0 << (R,#FF7700) >> {
+  id: TEXT [required]
+  name: TEXT [required]
+  description: TEXT
+  creationDate: DATE [required]
+}
+class "Content" as rt_1 << (R,#FF7700) >> {
+  id: TEXT [required]
+  creationDate: DATE [required]
+  status: TEXT [required]
+}
+class "Video" as rt_2 << (R,#FF7700) >> {
+  title: TEXT [required]
+  description: TEXT [required]
+  uploadDate: DATE [required]
+  duration: NUMBER [required]
+  commentStatus: TEXT [required]
+}
+class "Comment" as rt_3 << (R,#FF7700) >> {
+  text: TEXT [required]
+}
+class "LikeHistory" as rt_4 << (R,#FF7700) >> {
+  id: TEXT [required]
+  action: TEXT [required]
+  timestamp: DATETIME [required]
+}
+class "VideoModerationCheck" as rt_5 << (R,#FF7700) >> {
+  id: TEXT [required]
+  type: TEXT [required]
+  result: TEXT [required]
+  timestamp: DATE [required]
+}
+class "CommentModerationCheck" as rt_6 << (R,#FF7700) >> {
+  id: TEXT [required]
+  type: TEXT [required]
+  result: TEXT [required]
+  timestamp: DATE [required]
+}
+class "CommentSettingsChange" as rt_7 << (R,#FF7700) >> {
+  id: TEXT [required]
+  newStatus: TEXT [required]
+  timestamp: DATE [required]
+}
+class "ChannelPermissionPolicy" as rt_8 << (R,#FF7700) >> {
+  id: TEXT [required]
+  action: TEXT [required]
+  allowedFor: TEXT [required]
+}
+class "ContentValidationRuleArtifact" as rt_9 << (R,#FF7700) >> {
+  id: TEXT [required]
+  target: TEXT [required]
+  policyType: TEXT [required]
+  severity: TEXT [required]
+}
+
+' ===== USER TYPES =====
+class "User" as ut_0 << (U,#00CCFF) >> {
+  kind: GENERIC
+}
+class "Creator" as ut_1 << (U,#00CCFF) >> {
+  kind: CREATOR
+}
+class "Moderator" as ut_2 << (U,#00CCFF) >> {
+  kind: MODERATOR
+}
+
+' ===== FEEDBACK TYPES =====
+class "Like" as ft_0 << (F,#00FF00) >> {
+  kind: VOTE
+}
+class "Subscription" as ft_1 << (F,#00FF00) >> {
+  kind: SUBSCRIPTION
+}
+class "Report" as ft_2 << (F,#00FF00) >> {
+  kind: REPORT
+}
+
+' ===== FEEDBACK DEFINITIONS =====
+class "LikeOnContent" as fd_0 << (D,#CCFFCC) >>
+class "SubscriptionToChannel" as fd_1 << (D,#CCFFCC) >>
+class "ReportOnContent" as fd_2 << (D,#CCFFCC) >>
+
+' ===== RELATIONSHIPS =====
+rt_0 "1" --> "*" rt_2
+rt_2 "1" --> "*" rt_3
+rt_3 "0..1" --> "*" rt_3
+rt_0 "1" --> "*" rt_8
+rt_2 "1" --> "*" rt_5
+rt_3 "1" --> "*" rt_6
+rt_7 "*" --> "1" rt_2
+rt_4 "*" --> "1" rt_1
+rt_2 "1" --> "*" rt_9
+rt_3 "1" --> "*" rt_9
+
+ft_0 *--> fd_0: feedback
+fd_0 --> ut_0: author
+fd_0 --> rt_1: subjectResource
+ft_1 *--> fd_1: feedback
+fd_1 --> ut_0: author
+fd_1 --> rt_0: subjectResource
+ft_2 *--> fd_2: feedback
+fd_2 --> ut_0: author
+fd_2 --> rt_1: subjectResource
+@enduml

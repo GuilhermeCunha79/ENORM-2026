@@ -40,9 +40,9 @@ public class EnormProjectionGenerator {
     
     // Output paths (all artifacts saved under the same folder)
     private static final String OUTPUT_PROJECTIONS_DIR = "projections";
-    private static final String OUTPUT_STRUCTURE_DIAGRAM = OUTPUT_PROJECTIONS_DIR + "/structure_diagram.puml";
-    private static final String OUTPUT_BEHAVIOR_VALIDATION = OUTPUT_PROJECTIONS_DIR + "/behavior_validation.puml";
-    private static final String OUTPUT_TEXTUAL_PROJECTION = OUTPUT_PROJECTIONS_DIR + "/textual_projection.txt";
+    private static final String OUTPUT_STRUCTURE_DIAGRAM = OUTPUT_PROJECTIONS_DIR + "/structure_diagram_RefModel.puml";
+    private static final String OUTPUT_BEHAVIOR_VALIDATION = OUTPUT_PROJECTIONS_DIR + "/behavior_validation_RefModel.puml";
+    private static final String OUTPUT_TEXTUAL_PROJECTION = OUTPUT_PROJECTIONS_DIR + "/textual_projection_RefModel.txt";
 
     // ==================== MAIN ENTRY POINTS ====================
 

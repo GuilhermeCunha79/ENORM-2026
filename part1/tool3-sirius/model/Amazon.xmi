@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:enorm="http://www.example.org/enorm"
+    name="AmazonScenario"
+    version="1.0.0">
+
+  <!-- User Types -->
+  <userTypes name="User" kind="GENERIC"/>
+  <userTypes name="Buyer" kind="BUYER" superTypes="//@userTypes.0"/>
+  <userTypes name="Seller" kind="SELLER" superTypes="//@userTypes.0"/>
+  <userTypes name="Moderator" kind="MODERATOR" superTypes="//@userTypes.0"/>
+
+  <!-- Resource Types -->
+  <resourceTypes name="Product" supportsMedia="false">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="description" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="Order" supportsMedia="false">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="date" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="OrderItem" supportsMedia="false">
+    <attributes name="quantity" type="NUMBER" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="MediaAttachment" supportsMedia="true">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="url" type="URL" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="VerificationProcess" supportsMedia="false">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="HelpfulVote" supportsMedia="false">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes name="ReviewModerationCheck" supportsMedia="false">
+    <attributes name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="reason" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <!-- Context Types -->
+  <contextTypes name="Catalog" kind="CATALOG" contains="//@resourceTypes.0 //@resourceTypes.1 //@resourceTypes.2"/>
+  <contextTypes name="FeedbackSpace" kind="CHANNEL" contains="//@resourceTypes.3 //@resourceTypes.4 //@resourceTypes.5 //@resourceTypes.6"/>
+
+  <!-- Resource Relations -->
+  <resourceRelations name="Order_contains_OrderItem" sourceCardinality="1" targetCardinality="*" containment="true" recursive="false" source="//@resourceTypes.1" target="//@resourceTypes.2"/>
+  <resourceRelations name="OrderItem_refers_Product" sourceCardinality="*" targetCardinality="1" containment="false" recursive="false" source="//@resourceTypes.2" target="//@resourceTypes.0"/>
+
+  <!-- Feedback Types -->
+  <feedbackTypes name="ProductReview" kind="REVIEW" subjectScope="RESOURCE_ONLY" hasRating="true" recursive="false" allowsMedia="true"/>
+  <feedbackTypes name="HelpfulVote" kind="VOTE" subjectScope="FEEDBACK_ONLY" hasRating="false" recursive="false" allowsMedia="false"/>
+  <feedbackTypes name="ReviewModerationCheck" kind="REPORT" subjectScope="FEEDBACK_ONLY" hasRating="false" recursive="false" allowsMedia="false"/>
+
+  <!-- Feedback Definitions -->
+  <feedbackDefinitions name="ProductReviewOnProduct" requiresVerifiedContext="true" uniquePerAuthorTarget="true" type="//@feedbackTypes.0" subjectResource="//@resourceTypes.0" author="//@userTypes.1">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="5" step="1"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions name="HelpfulVoteOnReview" requiresVerifiedContext="false" uniquePerAuthorTarget="true" type="//@feedbackTypes.1" author="//@userTypes.0" subjectFeedback="//@feedbackDefinitions.0">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="1" step="1"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions name="ModerationCheckOnReview" requiresVerifiedContext="false" uniquePerAuthorTarget="false" type="//@feedbackTypes.2" author="//@userTypes.3" subjectFeedback="//@feedbackDefinitions.0">
+    <policy status="ENABLED"/>
+    <rating minValue="1" maxValue="1" step="1"/>
+  </feedbackDefinitions>
+
+  <!-- Authorization Rules -->
+  <authorizationRules allowedAction="CREATE" actor="//@userTypes.1" context="//@contextTypes.0" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.0"/>
+  <authorizationRules allowedAction="VOTE" actor="//@userTypes.0" context="//@contextTypes.1" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.1"/>
+  <authorizationRules allowedAction="MODERATE" actor="//@userTypes.3" context="//@contextTypes.1" resourceTarget="//@resourceTypes.0" feedbackTarget="//@feedbackDefinitions.2"/>
+
+  <!-- Moderation Policies -->
+  <moderationPolicies name="ReviewModerationPolicy" mode="HYBRID" trigger="SPAM_OR_ABUSE_OR_OFF_TOPIC_OR_INCENTIVIZED" decision="HIDDEN" monitorsResource="//@resourceTypes.0" monitorsFeedback="//@feedbackDefinitions.0" executedBy="//@userTypes.3" inContext="//@contextTypes.1"/>
+
+  <!-- Validation Rules -->
+  <validationRules name="ReviewVerifiedPurchaseValidation" kind="AUTOMATIC" severity="ERROR" expression="review_author_has_verified_purchase" appliesToFeedback="//@feedbackDefinitions.0" invokedBy="//@automationRules.0"/>
+  <validationRules name="HelpfulVoteConsistencyValidation" kind="AUTOMATIC" severity="WARNING" expression="helpful_vote_not_duplicate_and_target_is_review" appliesToFeedback="//@feedbackDefinitions.1" invokedBy="//@automationRules.1"/>
+
+  <!-- Automation Rules -->
+  <automationRules name="ReviewSubmissionValidation" trigger="review_created" condition="review_submitted_on_product" actionDescription="run verified purchase validation before publishing review" context="//@resourceTypes.0" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.0" uses="//@validationRules.0"/>
+  <automationRules name="HelpfulVoteValidation" trigger="helpful_vote_created" condition="vote_target_is_product_review" actionDescription="run helpful vote consistency checks" context="//@resourceTypes.5" inContext="//@contextTypes.1" onFeedback="//@feedbackDefinitions.1" uses="//@validationRules.1"/>
+
+  <!-- Verification Policies -->
+  <verificationPolicies name="VerifiedPurchaseReview" mode="AUTOMATIC" appliesWhen="buyer_has_purchased_product" verifies="//@feedbackDefinitions.0"/>
+
+</enorm:RefModel>

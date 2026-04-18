@@ -1,0 +1,82 @@
+@startuml
+title AmazonScenario v1.0.0 - Structure Diagram
+
+' ===== RESOURCE TYPES =====
+class "Product" as rt_0 << (R,#FF7700) >> {
+  id: TEXT [required]
+  name: TEXT [required]
+  description: TEXT [required]
+}
+class "Order" as rt_1 << (R,#FF7700) >> {
+  id: TEXT [required]
+  date: DATE [required]
+}
+class "OrderItem" as rt_2 << (R,#FF7700) >> {
+  quantity: NUMBER [required]
+}
+class "MediaAttachment" as rt_3 << (R,#FF7700) >> {
+  id: TEXT [required]
+  type: TEXT [required]
+  url: URL [required]
+}
+class "VerificationProcess" as rt_4 << (R,#FF7700) >> {
+  id: TEXT [required]
+  type: TEXT [required]
+  status: TEXT [required]
+  timestamp: DATETIME [required]
+}
+class "HelpfulVote" as rt_5 << (R,#FF7700) >> {
+  id: TEXT [required]
+  timestamp: DATETIME [required]
+}
+class "ReviewModerationCheck" as rt_6 << (R,#FF7700) >> {
+  id: TEXT [required]
+  reason: TEXT [required]
+  result: TEXT [required]
+  timestamp: DATETIME [required]
+}
+
+' ===== USER TYPES =====
+class "User" as ut_0 << (U,#00CCFF) >> {
+  kind: GENERIC
+}
+class "Buyer" as ut_1 << (U,#00CCFF) >> {
+  kind: BUYER
+}
+class "Seller" as ut_2 << (U,#00CCFF) >> {
+  kind: SELLER
+}
+class "Moderator" as ut_3 << (U,#00CCFF) >> {
+  kind: MODERATOR
+}
+
+' ===== FEEDBACK TYPES =====
+class "ProductReview" as ft_0 << (F,#00FF00) >> {
+  kind: REVIEW
+}
+class "HelpfulVote" as ft_1 << (F,#00FF00) >> {
+  kind: VOTE
+}
+class "ReviewModerationCheck" as ft_2 << (F,#00FF00) >> {
+  kind: REPORT
+}
+
+' ===== FEEDBACK DEFINITIONS =====
+class "ProductReviewOnProduct" as fd_0 << (D,#CCFFCC) >>
+class "HelpfulVoteOnReview" as fd_1 << (D,#CCFFCC) >>
+class "ModerationCheckOnReview" as fd_2 << (D,#CCFFCC) >>
+
+' ===== RELATIONSHIPS =====
+rt_1 "1" --> "*" rt_2
+rt_2 "*" --> "1" rt_0
+
+ft_0 *--> fd_0: feedback
+fd_0 --> ut_1: author
+fd_0 --> rt_0: subjectResource
+ft_1 *--> fd_1: feedback
+fd_1 --> ut_0: author
+fd_1 --> fd_0: subjectFeedback
+ft_2 *--> fd_2: feedback
+fd_2 --> ut_3: author
+fd_2 --> fd_0: subjectFeedback
+@enduml
