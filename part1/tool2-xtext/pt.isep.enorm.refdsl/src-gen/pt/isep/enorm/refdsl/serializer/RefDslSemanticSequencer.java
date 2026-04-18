@@ -17,13 +17,19 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransi
 import pt.isep.enorm.refdsl.refDsl.Attribute;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.ContextType;
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
+import pt.isep.enorm.refdsl.refDsl.FeedbackPolicy;
 import pt.isep.enorm.refdsl.refDsl.FeedbackType;
+import pt.isep.enorm.refdsl.refDsl.ModerationPolicy;
+import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
+import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
+import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
 import pt.isep.enorm.refdsl.services.RefDslGrammarAccess;
 
 @SuppressWarnings("all")
@@ -49,14 +55,29 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case RefDslPackage.AUTOMATION_RULE:
 				sequence_AutomationRule(context, (AutomationRule) semanticObject); 
 				return; 
+			case RefDslPackage.CONTEXT_TYPE:
+				sequence_ContextType(context, (ContextType) semanticObject); 
+				return; 
 			case RefDslPackage.FEEDBACK_DEFINITION:
 				sequence_FeedbackDefinition(context, (FeedbackDefinition) semanticObject); 
+				return; 
+			case RefDslPackage.FEEDBACK_POLICY:
+				sequence_FeedbackPolicy(context, (FeedbackPolicy) semanticObject); 
 				return; 
 			case RefDslPackage.FEEDBACK_TYPE:
 				sequence_FeedbackType(context, (FeedbackType) semanticObject); 
 				return; 
+			case RefDslPackage.MODERATION_POLICY:
+				sequence_ModerationPolicy(context, (ModerationPolicy) semanticObject); 
+				return; 
+			case RefDslPackage.RATING_POLICY:
+				sequence_RatingPolicy(context, (RatingPolicy) semanticObject); 
+				return; 
 			case RefDslPackage.REF_MODEL:
 				sequence_RefModel(context, (RefModel) semanticObject); 
+				return; 
+			case RefDslPackage.RESOURCE_RELATION:
+				sequence_ResourceRelation(context, (ResourceRelation) semanticObject); 
 				return; 
 			case RefDslPackage.RESOURCE_TYPE:
 				sequence_ResourceType(context, (ResourceType) semanticObject); 
@@ -66,6 +87,9 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case RefDslPackage.VALIDATION_RULE:
 				sequence_ValidationRule(context, (ValidationRule) semanticObject); 
+				return; 
+			case RefDslPackage.VERIFICATION_POLICY:
+				sequence_VerificationPolicy(context, (VerificationPolicy) semanticObject); 
 				return; 
 			}
 		if (errorAcceptor != null)
@@ -78,20 +102,11 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     Attribute returns Attribute
 	 *
 	 * Constraint:
-	 *     (name=EString type=PrimitiveType)
+	 *     (required=EBoolean? multiValued=EBoolean? name=EString type=PrimitiveType)
 	 * </pre>
 	 */
 	protected void sequence_Attribute(ISerializationContext context, Attribute semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.ATTRIBUTE__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.ATTRIBUTE__NAME));
-			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.ATTRIBUTE__TYPE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.ATTRIBUTE__TYPE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAttributeAccess().getNameEStringParserRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getAttributeAccess().getTypePrimitiveTypeEnumRuleCall_3_0(), semanticObject.getType());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -101,20 +116,17 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     AuthorizationRule returns AuthorizationRule
 	 *
 	 * Constraint:
-	 *     (allowedAction=ActionKind role=[UserType|EString])
+	 *     (
+	 *         allowedAction=ActionKind 
+	 *         actor=[UserType|EString] 
+	 *         context=[ContextType|EString]? 
+	 *         resourceTarget=[ResourceType|EString] 
+	 *         feedbackTarget=[FeedbackDefinition|EString]?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_AuthorizationRule(ISerializationContext context, AuthorizationRule semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.AUTHORIZATION_RULE__ALLOWED_ACTION) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.AUTHORIZATION_RULE__ALLOWED_ACTION));
-			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.AUTHORIZATION_RULE__ROLE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.AUTHORIZATION_RULE__ROLE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getAuthorizationRuleAccess().getAllowedActionActionKindEnumRuleCall_2_0(), semanticObject.getAllowedAction());
-		feeder.accept(grammarAccess.getAuthorizationRuleAccess().getRoleUserTypeEStringParserRuleCall_4_0_1(), semanticObject.eGet(RefDslPackage.Literals.AUTHORIZATION_RULE__ROLE, false));
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -124,10 +136,33 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     AutomationRule returns AutomationRule
 	 *
 	 * Constraint:
-	 *     (name=EString trigger=EString? condition=EString? actionDescription=EString?)
+	 *     (
+	 *         name=EString 
+	 *         trigger=EString 
+	 *         condition=EString? 
+	 *         actionDescription=EString 
+	 *         context=[ResourceType|EString]? 
+	 *         inContext=[ContextType|EString]? 
+	 *         onFeedback=[FeedbackDefinition|EString] 
+	 *         uses=[ValidationRule|EString]
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_AutomationRule(ISerializationContext context, AutomationRule semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ContextType returns ContextType
+	 *
+	 * Constraint:
+	 *     (name=EString kind=ContextKind (contains+=[ResourceType|EString] contains+=[ResourceType|EString]*)?)
+	 * </pre>
+	 */
+	protected void sequence_ContextType(ISerializationContext context, ContextType semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -141,9 +176,14 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     (
 	 *         name=EString 
 	 *         type=[FeedbackType|EString] 
-	 *         subject=[ResourceType|EString] 
-	 *         (writers+=[UserType|EString] writers+=[UserType|EString]*)? 
-	 *         (validationRules+=ValidationRule validationRules+=ValidationRule*)?
+	 *         requiresVerifiedContext=EBoolean? 
+	 *         uniquePerAuthorTarget=EBoolean? 
+	 *         author=[UserType|EString] 
+	 *         subjectResource=[ResourceType|EString]? 
+	 *         subjectFeedback=[FeedbackDefinition|EString]? 
+	 *         parent=[FeedbackDefinition|EString]? 
+	 *         policy=FeedbackPolicy? 
+	 *         rating=RatingPolicy?
 	 *     )
 	 * </pre>
 	 */
@@ -155,13 +195,77 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     FeedbackPolicy returns FeedbackPolicy
+	 *
+	 * Constraint:
+	 *     status=FeedbackStatus
+	 * </pre>
+	 */
+	protected void sequence_FeedbackPolicy(ISerializationContext context, FeedbackPolicy semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.FEEDBACK_POLICY__STATUS) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.FEEDBACK_POLICY__STATUS));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getFeedbackPolicyAccess().getStatusFeedbackStatusEnumRuleCall_1_1_0(), semanticObject.getStatus());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     FeedbackType returns FeedbackType
 	 *
 	 * Constraint:
-	 *     (name=EString hasRating=EBoolean? recursive=EBoolean? (attributes+=Attribute attributes+=Attribute*)?)
+	 *     (
+	 *         name=EString 
+	 *         kind=FeedbackKind 
+	 *         subjectScope=FeedbackSubjectScope? 
+	 *         hasRating=EBoolean? 
+	 *         recursive=EBoolean? 
+	 *         allowsMedia=EBoolean?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_FeedbackType(ISerializationContext context, FeedbackType semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ModerationPolicy returns ModerationPolicy
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=EString? 
+	 *         mode=ModerationMode 
+	 *         trigger=EString? 
+	 *         decision=ModerationDecision? 
+	 *         monitorsResource=[ResourceType|EString] 
+	 *         monitorsFeedback=[FeedbackDefinition|EString] 
+	 *         executedBy=[UserType|EString] 
+	 *         inContext=[ContextType|EString]?
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_ModerationPolicy(ISerializationContext context, ModerationPolicy semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     RatingPolicy returns RatingPolicy
+	 *
+	 * Constraint:
+	 *     (minValue=EDouble maxValue=EDouble step=EDouble? scaleKind=RatingScaleKind?)
+	 * </pre>
+	 */
+	protected void sequence_RatingPolicy(ISerializationContext context, RatingPolicy semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -174,11 +278,18 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * Constraint:
 	 *     (
 	 *         name=EString 
+	 *         version=EString? 
 	 *         (userTypes+=UserType userTypes+=UserType*)? 
 	 *         (resourceTypes+=ResourceType resourceTypes+=ResourceType*)? 
+	 *         (contextTypes+=ContextType contextTypes+=ContextType*)? 
+	 *         (resourceRelations+=ResourceRelation resourceRelations+=ResourceRelation*)? 
 	 *         (feedbackTypes+=FeedbackType feedbackTypes+=FeedbackType*)? 
 	 *         (feedbackDefinitions+=FeedbackDefinition feedbackDefinitions+=FeedbackDefinition*)? 
-	 *         (automationRules+=AutomationRule automationRules+=AutomationRule*)?
+	 *         (authorizationRules+=AuthorizationRule authorizationRules+=AuthorizationRule*)? 
+	 *         (validationRules+=ValidationRule validationRules+=ValidationRule*)? 
+	 *         (moderationPolicies+=ModerationPolicy moderationPolicies+=ModerationPolicy*)? 
+	 *         (automationRules+=AutomationRule automationRules+=AutomationRule*)? 
+	 *         (verificationPolicies+=VerificationPolicy verificationPolicies+=VerificationPolicy*)?
 	 *     )
 	 * </pre>
 	 */
@@ -190,10 +301,37 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     ResourceRelation returns ResourceRelation
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=EString 
+	 *         source=[ResourceType|EString] 
+	 *         target=[ResourceType|EString] 
+	 *         sourceCardinality=EString? 
+	 *         targetCardinality=EString? 
+	 *         containment=EBoolean? 
+	 *         recursive=EBoolean?
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_ResourceRelation(ISerializationContext context, ResourceRelation semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     ResourceType returns ResourceType
 	 *
 	 * Constraint:
-	 *     (name=EString (attributes+=Attribute attributes+=Attribute*)? (authorizationRules+=AuthorizationRule authorizationRules+=AuthorizationRule*)?)
+	 *     (
+	 *         name=EString 
+	 *         supportsMedia=EBoolean? 
+	 *         (superTypes+=[ResourceType|EString] superTypes+=[ResourceType|EString]*)? 
+	 *         (attributes+=Attribute attributes+=Attribute*)?
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ResourceType(ISerializationContext context, ResourceType semanticObject) {
@@ -207,7 +345,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     UserType returns UserType
 	 *
 	 * Constraint:
-	 *     (name=EString (superTypes+=[UserType|EString] superTypes+=[UserType|EString]*)?)
+	 *     (name=EString kind=UserKind (superTypes+=[UserType|EString] superTypes+=[UserType|EString]*)?)
 	 * </pre>
 	 */
 	protected void sequence_UserType(ISerializationContext context, UserType semanticObject) {
@@ -221,10 +359,33 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     ValidationRule returns ValidationRule
 	 *
 	 * Constraint:
-	 *     (name=EString? kind=ValidationKind implementationId=EString?)
+	 *     (
+	 *         name=EString? 
+	 *         kind=ValidationKind 
+	 *         severity=RuleSeverity? 
+	 *         expression=EString? 
+	 *         implementationId=EString? 
+	 *         appliesToResource=[ResourceType|EString]? 
+	 *         appliesToFeedback=[FeedbackDefinition|EString]? 
+	 *         invokedBy=[AutomationRule|EString]
+	 *     )
 	 * </pre>
 	 */
 	protected void sequence_ValidationRule(ISerializationContext context, ValidationRule semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     VerificationPolicy returns VerificationPolicy
+	 *
+	 * Constraint:
+	 *     (name=EString? mode=ValidationKind appliesWhen=EString verifies=[FeedbackDefinition|EString])
+	 * </pre>
+	 */
+	protected void sequence_VerificationPolicy(ISerializationContext context, VerificationPolicy semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

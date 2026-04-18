@@ -17,8 +17,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.ResourceType#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ResourceType#isSupportsMedia <em>Supports Media</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ResourceType#getSuperTypes <em>Super Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.ResourceType#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.ResourceType#getAuthorizationRules <em>Authorization Rules</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getResourceType()
@@ -50,6 +51,40 @@ public interface ResourceType extends EObject
   void setName(String value);
 
   /**
+   * Returns the value of the '<em><b>Supports Media</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Supports Media</em>' attribute.
+   * @see #setSupportsMedia(boolean)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getResourceType_SupportsMedia()
+   * @model
+   * @generated
+   */
+  boolean isSupportsMedia();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ResourceType#isSupportsMedia <em>Supports Media</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Supports Media</em>' attribute.
+   * @see #isSupportsMedia()
+   * @generated
+   */
+  void setSupportsMedia(boolean value);
+
+  /**
+   * Returns the value of the '<em><b>Super Types</b></em>' reference list.
+   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.ResourceType}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Super Types</em>' reference list.
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getResourceType_SuperTypes()
+   * @model
+   * @generated
+   */
+  EList<ResourceType> getSuperTypes();
+
+  /**
    * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
    * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.Attribute}.
    * <!-- begin-user-doc -->
@@ -60,17 +95,5 @@ public interface ResourceType extends EObject
    * @generated
    */
   EList<Attribute> getAttributes();
-
-  /**
-   * Returns the value of the '<em><b>Authorization Rules</b></em>' containment reference list.
-   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule}.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Authorization Rules</em>' containment reference list.
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getResourceType_AuthorizationRules()
-   * @model containment="true"
-   * @generated
-   */
-  EList<AuthorizationRule> getAuthorizationRules();
 
 } // ResourceType

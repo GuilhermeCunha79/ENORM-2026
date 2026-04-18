@@ -17,10 +17,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import pt.isep.enorm.refdsl.refDsl.Attribute;
-import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
 
@@ -33,8 +33,9 @@ import pt.isep.enorm.refdsl.refDsl.ResourceType;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ResourceTypeImpl#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ResourceTypeImpl#isSupportsMedia <em>Supports Media</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ResourceTypeImpl#getSuperTypes <em>Super Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ResourceTypeImpl#getAttributes <em>Attributes</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ResourceTypeImpl#getAuthorizationRules <em>Authorization Rules</em>}</li>
  * </ul>
  *
  * @generated
@@ -62,6 +63,36 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
   protected String name = NAME_EDEFAULT;
 
   /**
+   * The default value of the '{@link #isSupportsMedia() <em>Supports Media</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isSupportsMedia()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean SUPPORTS_MEDIA_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isSupportsMedia() <em>Supports Media</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isSupportsMedia()
+   * @generated
+   * @ordered
+   */
+  protected boolean supportsMedia = SUPPORTS_MEDIA_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getSuperTypes() <em>Super Types</em>}' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSuperTypes()
+   * @generated
+   * @ordered
+   */
+  protected EList<ResourceType> superTypes;
+
+  /**
    * The cached value of the '{@link #getAttributes() <em>Attributes</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -70,16 +101,6 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
    * @ordered
    */
   protected EList<Attribute> attributes;
-
-  /**
-   * The cached value of the '{@link #getAuthorizationRules() <em>Authorization Rules</em>}' containment reference list.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getAuthorizationRules()
-   * @generated
-   * @ordered
-   */
-  protected EList<AuthorizationRule> authorizationRules;
 
   /**
    * <!-- begin-user-doc -->
@@ -133,6 +154,46 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
    * @generated
    */
   @Override
+  public boolean isSupportsMedia()
+  {
+    return supportsMedia;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setSupportsMedia(boolean newSupportsMedia)
+  {
+    boolean oldSupportsMedia = supportsMedia;
+    supportsMedia = newSupportsMedia;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.RESOURCE_TYPE__SUPPORTS_MEDIA, oldSupportsMedia, supportsMedia));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EList<ResourceType> getSuperTypes()
+  {
+    if (superTypes == null)
+    {
+      superTypes = new EObjectResolvingEList<ResourceType>(ResourceType.class, this, RefDslPackage.RESOURCE_TYPE__SUPER_TYPES);
+    }
+    return superTypes;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EList<Attribute> getAttributes()
   {
     if (attributes == null)
@@ -148,29 +209,12 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
    * @generated
    */
   @Override
-  public EList<AuthorizationRule> getAuthorizationRules()
-  {
-    if (authorizationRules == null)
-    {
-      authorizationRules = new EObjectContainmentEList<AuthorizationRule>(AuthorizationRule.class, this, RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES);
-    }
-    return authorizationRules;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
     switch (featureID)
     {
       case RefDslPackage.RESOURCE_TYPE__ATTRIBUTES:
         return ((InternalEList<?>)getAttributes()).basicRemove(otherEnd, msgs);
-      case RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES:
-        return ((InternalEList<?>)getAuthorizationRules()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -187,10 +231,12 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
     {
       case RefDslPackage.RESOURCE_TYPE__NAME:
         return getName();
+      case RefDslPackage.RESOURCE_TYPE__SUPPORTS_MEDIA:
+        return isSupportsMedia();
+      case RefDslPackage.RESOURCE_TYPE__SUPER_TYPES:
+        return getSuperTypes();
       case RefDslPackage.RESOURCE_TYPE__ATTRIBUTES:
         return getAttributes();
-      case RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES:
-        return getAuthorizationRules();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -209,13 +255,16 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
       case RefDslPackage.RESOURCE_TYPE__NAME:
         setName((String)newValue);
         return;
+      case RefDslPackage.RESOURCE_TYPE__SUPPORTS_MEDIA:
+        setSupportsMedia((Boolean)newValue);
+        return;
+      case RefDslPackage.RESOURCE_TYPE__SUPER_TYPES:
+        getSuperTypes().clear();
+        getSuperTypes().addAll((Collection<? extends ResourceType>)newValue);
+        return;
       case RefDslPackage.RESOURCE_TYPE__ATTRIBUTES:
         getAttributes().clear();
         getAttributes().addAll((Collection<? extends Attribute>)newValue);
-        return;
-      case RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES:
-        getAuthorizationRules().clear();
-        getAuthorizationRules().addAll((Collection<? extends AuthorizationRule>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -234,11 +283,14 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
       case RefDslPackage.RESOURCE_TYPE__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case RefDslPackage.RESOURCE_TYPE__SUPPORTS_MEDIA:
+        setSupportsMedia(SUPPORTS_MEDIA_EDEFAULT);
+        return;
+      case RefDslPackage.RESOURCE_TYPE__SUPER_TYPES:
+        getSuperTypes().clear();
+        return;
       case RefDslPackage.RESOURCE_TYPE__ATTRIBUTES:
         getAttributes().clear();
-        return;
-      case RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES:
-        getAuthorizationRules().clear();
         return;
     }
     super.eUnset(featureID);
@@ -256,10 +308,12 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
     {
       case RefDslPackage.RESOURCE_TYPE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case RefDslPackage.RESOURCE_TYPE__SUPPORTS_MEDIA:
+        return supportsMedia != SUPPORTS_MEDIA_EDEFAULT;
+      case RefDslPackage.RESOURCE_TYPE__SUPER_TYPES:
+        return superTypes != null && !superTypes.isEmpty();
       case RefDslPackage.RESOURCE_TYPE__ATTRIBUTES:
         return attributes != null && !attributes.isEmpty();
-      case RefDslPackage.RESOURCE_TYPE__AUTHORIZATION_RULES:
-        return authorizationRules != null && !authorizationRules.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -277,6 +331,8 @@ public class ResourceTypeImpl extends MinimalEObjectImpl.Container implements Re
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", supportsMedia: ");
+    result.append(supportsMedia);
     result.append(')');
     return result.toString();
   }

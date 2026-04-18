@@ -4,78 +4,205 @@
     modelName="Ref" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     codeFormatting="true" complianceLevel="17.0" copyrightFields="false" importOrganizing="true">
   <foreignModel>ref.ecore</foreignModel>
-  <genPackages prefix="Ref" basePackage="pt.isep.enorm.ref" ecorePackage="ref.ecore#/">
-    <genEnums ecoreEnum="ref.ecore#//PrimitiveType">
+  <genPackages prefix="Ref" basePackage="pt.isep.enorm.ref" disposableProviderFactory="true"
+      ecorePackage="ref.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//UserKind">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//UserKind/GENERIC"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//UserKind/BUYER"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//UserKind/SELLER"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//UserKind/CREATOR"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//UserKind/MODERATOR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//ContextKind">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ContextKind/GLOBAL"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ContextKind/COMMUNITY"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ContextKind/CHANNEL"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ContextKind/CATALOG"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//PrimitiveType">
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/TEXT"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/NUMBER"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/BOOLEAN"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/DATE"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/DATETIME"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/IMAGE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/VIDEO"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//PrimitiveType/URL"/>
     </genEnums>
-    <genEnums ecoreEnum="ref.ecore#//ValidationKind">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//FeedbackKind">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/COMMENT"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/REVIEW"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/REACTION"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/VOTE"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/REPORT"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackKind/SUBSCRIPTION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//FeedbackSubjectScope">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackSubjectScope/RESOURCE_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackSubjectScope/FEEDBACK_ONLY"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackSubjectScope/RESOURCE_OR_FEEDBACK"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//FeedbackStatus">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackStatus/ENABLED"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//FeedbackStatus/DISABLED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//RatingScaleKind">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RatingScaleKind/NUMERIC"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RatingScaleKind/ORDINAL"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RatingScaleKind/PERCENTAGE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//ValidationKind">
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ValidationKind/AUTOMATIC"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ValidationKind/MANUAL"/>
     </genEnums>
-    <genEnums ecoreEnum="ref.ecore#//ActionKind">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//RuleSeverity">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RuleSeverity/INFO"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RuleSeverity/WARNING"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//RuleSeverity/ERROR"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//ModerationMode">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationMode/AUTOMATIC"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationMode/MANUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationMode/HYBRID"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//ModerationDecision">
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/APPROVED"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/FLAGGED"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/HIDDEN"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/REMOVED"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/BLOCKED"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ModerationDecision/REJECTED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="ref.ecore#//ActionKind">
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/READ"/>
-      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/WRITE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/CREATE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/UPDATE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/DELETE"/>
-      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/MODERATE"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/COMMENT"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/RATE"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/VOTE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/REPORT"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/SUBSCRIBE"/>
+      <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/MODERATE"/>
       <genEnumLiterals ecoreEnumLiteral="ref.ecore#//ActionKind/VALIDATE"/>
     </genEnums>
     <genClasses ecoreClass="ref.ecore#//RefModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RefModel/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RefModel/version"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/userTypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/resourceTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/contextTypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/resourceRelations"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/feedbackTypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/feedbackDefinitions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/authorizationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/validationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/moderationPolicies"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/automationRules"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//RefModel/verificationPolicies"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//UserType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//UserType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//UserType/kind"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//UserType/superTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//ContextType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ContextType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ContextType/kind"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ContextType/contains"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//ResourceType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceType/supportsMedia"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ResourceType/superTypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//ResourceType/attributes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//ResourceType/authorizationRules"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//Attribute/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//Attribute/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//Attribute/required"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//Attribute/multiValued"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//ResourceRelation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceRelation/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceRelation/sourceCardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceRelation/targetCardinality"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceRelation/containment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ResourceRelation/recursive"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ResourceRelation/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ResourceRelation/target"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//FeedbackType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/subjectScope"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/hasRating"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/recursive"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackType/attributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackType/allowsMedia"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//FeedbackPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackPolicy/status"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//RatingPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RatingPolicy/minValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RatingPolicy/maxValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RatingPolicy/step"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//RatingPolicy/scaleKind"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//FeedbackDefinition">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackDefinition/requiresVerifiedContext"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//FeedbackDefinition/uniquePerAuthorTarget"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/type"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/subject"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/writers"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/validationRules"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/subjectResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/author"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/subjectFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/policy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ref.ecore#//FeedbackDefinition/rating"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//ValidationRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ValidationRule/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ValidationRule/kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ValidationRule/severity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ValidationRule/expression"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ValidationRule/implementationId"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ValidationRule/appliesToResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ValidationRule/appliesToFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ValidationRule/invokedBy"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//ModerationPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ModerationPolicy/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ModerationPolicy/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ModerationPolicy/trigger"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//ModerationPolicy/decision"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ModerationPolicy/monitorsResource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ModerationPolicy/monitorsFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ModerationPolicy/executedBy"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//ModerationPolicy/inContext"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//AuthorizationRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//AuthorizationRule/allowedAction"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AuthorizationRule/role"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AuthorizationRule/actor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AuthorizationRule/context"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AuthorizationRule/resourceTarget"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AuthorizationRule/feedbackTarget"/>
     </genClasses>
     <genClasses ecoreClass="ref.ecore#//AutomationRule">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//AutomationRule/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//AutomationRule/trigger"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//AutomationRule/condition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//AutomationRule/actionDescription"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AutomationRule/usedValidationRules"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AutomationRule/context"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AutomationRule/inContext"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AutomationRule/onFeedback"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//AutomationRule/uses"/>
+    </genClasses>
+    <genClasses ecoreClass="ref.ecore#//VerificationPolicy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//VerificationPolicy/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//VerificationPolicy/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ref.ecore#//VerificationPolicy/appliesWhen"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference ref.ecore#//VerificationPolicy/verifies"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

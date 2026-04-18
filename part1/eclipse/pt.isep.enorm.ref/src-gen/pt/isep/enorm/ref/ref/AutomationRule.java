@@ -1,0 +1,193 @@
+/**
+ */
+package pt.isep.enorm.ref.ref;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the model object '<em><b>Automation Rule</b></em>'.
+ * <!-- end-user-doc -->
+ *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getTrigger <em>Trigger</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getContext <em>Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getInContext <em>In Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getOnFeedback <em>On Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getUses <em>Uses</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getActions <em>Actions</em>}</li>
+ * </ul>
+ *
+ * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule()
+ * @model
+ * @generated
+ */
+public interface AutomationRule extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Name()
+	 * @model
+	 * @generated
+	 */
+	String getName();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Trigger</b></em>' attribute.
+	 * The literals are from the enumeration {@link pt.isep.enorm.ref.ref.TriggerEvent}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Trigger</em>' attribute.
+	 * @see pt.isep.enorm.ref.ref.TriggerEvent
+	 * @see #setTrigger(TriggerEvent)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Trigger()
+	 * @model
+	 * @generated
+	 */
+	TriggerEvent getTrigger();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getTrigger <em>Trigger</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Trigger</em>' attribute.
+	 * @see pt.isep.enorm.ref.ref.TriggerEvent
+	 * @see #getTrigger()
+	 * @generated
+	 */
+	void setTrigger(TriggerEvent value);
+
+	/**
+	 * Returns the value of the '<em><b>Context</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Context</em>' reference.
+	 * @see #setContext(ResourceType)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Context()
+	 * @model
+	 * @generated
+	 */
+	ResourceType getContext();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getContext <em>Context</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Context</em>' reference.
+	 * @see #getContext()
+	 * @generated
+	 */
+	void setContext(ResourceType value);
+
+	/**
+	 * Returns the value of the '<em><b>In Context</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>In Context</em>' reference.
+	 * @see #setInContext(ContextType)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_InContext()
+	 * @model
+	 * @generated
+	 */
+	ContextType getInContext();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getInContext <em>In Context</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>In Context</em>' reference.
+	 * @see #getInContext()
+	 * @generated
+	 */
+	void setInContext(ContextType value);
+
+	/**
+	 * Returns the value of the '<em><b>On Feedback</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>On Feedback</em>' reference.
+	 * @see #setOnFeedback(FeedbackDefinition)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_OnFeedback()
+	 * @model required="true"
+	 * @generated
+	 */
+	FeedbackDefinition getOnFeedback();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getOnFeedback <em>On Feedback</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>On Feedback</em>' reference.
+	 * @see #getOnFeedback()
+	 * @generated
+	 */
+	void setOnFeedback(FeedbackDefinition value);
+
+	/**
+	 * Returns the value of the '<em><b>Uses</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy <em>Invoked By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Uses</em>' reference.
+	 * @see #setUses(ValidationRule)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Uses()
+	 * @see pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy
+	 * @model opposite="invokedBy" required="true"
+	 * @generated
+	 */
+	ValidationRule getUses();
+
+	/**
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.AutomationRule#getUses <em>Uses</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Uses</em>' reference.
+	 * @see #getUses()
+	 * @generated
+	 */
+	void setUses(ValidationRule value);
+
+	/**
+	 * Returns the value of the '<em><b>Conditions</b></em>' containment reference list.
+	 * The list contents are of type {@link pt.isep.enorm.ref.ref.Condition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Conditions</em>' containment reference list.
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Conditions()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	EList<Condition> getConditions();
+
+	/**
+	 * Returns the value of the '<em><b>Actions</b></em>' containment reference list.
+	 * The list contents are of type {@link pt.isep.enorm.ref.ref.Action}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Actions</em>' containment reference list.
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Actions()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	EList<Action> getActions();
+
+} // AutomationRule

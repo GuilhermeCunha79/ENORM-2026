@@ -1,0 +1,89 @@
+@startuml
+title REF Model (structure) - YoutubeScenario
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = YoutubeScenario
+  version = "1.0.0"
+}
+
+class UserType_Creator {
+  name = Creator
+  kind = CREATOR
+}
+RefModel --> UserType_Creator
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Channel {
+  name = Channel
+  supportsMedia = false
+}
+RefModel --> ResourceType_Channel
+class Attribute_Channel_channelName {
+  name = channelName
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Channel *-- Attribute_Channel_channelName
+class Attribute_Channel_subscriberCount {
+  name = subscriberCount
+  type = NUMBER
+  required = false
+  multiValued = false
+}
+ResourceType_Channel *-- Attribute_Channel_subscriberCount
+class ResourceType_Video {
+  name = Video
+  supportsMedia = true
+}
+RefModel --> ResourceType_Video
+class Attribute_Video_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_title
+class Attribute_Video_duration {
+  name = duration
+  type = NUMBER
+  required = false
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_duration
+
+class ContextType_YoutubePlatform {
+  name = YoutubePlatform
+  kind = CHANNEL
+}
+RefModel --> ContextType_YoutubePlatform
+ContextType_YoutubePlatform --> ResourceType_Channel : contains
+ContextType_YoutubePlatform --> ResourceType_Video : contains
+
+ResourceType_Channel --> ResourceType_Video : ChannelVideos ["1".."0..*"] recursive=false
+
+class FeedbackType_VideoComment {
+  name = VideoComment
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = true
+  allowsMedia = false
+}
+RefModel --> FeedbackType_VideoComment
+class FeedbackType_Like {
+  name = Like
+  kind = REACTION
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+  recursive = false
+  allowsMedia = false
+}
+RefModel --> FeedbackType_Like
+
+@enduml

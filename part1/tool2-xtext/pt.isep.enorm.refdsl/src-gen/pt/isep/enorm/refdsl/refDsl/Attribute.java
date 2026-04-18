@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.Attribute#isRequired <em>Required</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.Attribute#isMultiValued <em>Multi Valued</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.Attribute#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.Attribute#getType <em>Type</em>}</li>
  * </ul>
@@ -24,6 +26,50 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface Attribute extends EObject
 {
+  /**
+   * Returns the value of the '<em><b>Required</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Required</em>' attribute.
+   * @see #setRequired(boolean)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAttribute_Required()
+   * @model
+   * @generated
+   */
+  boolean isRequired();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.Attribute#isRequired <em>Required</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Required</em>' attribute.
+   * @see #isRequired()
+   * @generated
+   */
+  void setRequired(boolean value);
+
+  /**
+   * Returns the value of the '<em><b>Multi Valued</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Multi Valued</em>' attribute.
+   * @see #setMultiValued(boolean)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAttribute_MultiValued()
+   * @model
+   * @generated
+   */
+  boolean isMultiValued();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.Attribute#isMultiValued <em>Multi Valued</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Multi Valued</em>' attribute.
+   * @see #isMultiValued()
+   * @generated
+   */
+  void setMultiValued(boolean value);
+
   /**
    * Returns the value of the '<em><b>Name</b></em>' attribute.
    * <!-- begin-user-doc -->

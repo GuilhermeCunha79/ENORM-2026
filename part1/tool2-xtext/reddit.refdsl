@@ -1,0 +1,83 @@
+RefModel RedditScenario
+version "1.0.0"
+{
+  userTypes {
+    UserType Member kind GENERIC,
+    UserType Moderator kind MODERATOR
+  }
+
+  resourceTypes {
+    ResourceType Subreddit supportsMedia false {
+      attributes {
+        required true multiValued false Attribute subredditName type TEXT,
+        required false multiValued false Attribute description type TEXT
+      }
+    },
+    ResourceType Post supportsMedia false {
+      attributes {
+        required true multiValued false Attribute title type TEXT,
+        required true multiValued false Attribute content type TEXT
+      }
+    }
+  }
+
+  contextTypes {
+    ContextType RedditSite kind COMMUNITY contains ( Subreddit, Post )
+  }
+
+  resourceRelations {
+    ResourceRelation SubredditPosts source Subreddit target Post sourceCardinality "1" targetCardinality "0..*" containment true recursive false
+  }
+
+  feedbackTypes {
+    FeedbackType PostComment kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsMedia false,
+    FeedbackType Upvote kind VOTE subjectScope RESOURCE_ONLY hasRating false recursive false allowsMedia false
+  }
+
+  feedbackDefinitions {
+    FeedbackDefinition PostThreadComment
+      type PostComment
+      requiresVerifiedContext true
+      uniquePerAuthorTarget false
+      author Member
+      subjectResource Post
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition NestedReply
+      type PostComment
+      requiresVerifiedContext false
+      uniquePerAuthorTarget false
+      author Member
+      subjectFeedback PostThreadComment
+      parent PostThreadComment
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition PostUpvote
+      type Upvote
+      requiresVerifiedContext false
+      uniquePerAuthorTarget true
+      author Member
+      subjectResource Post
+      policy FeedbackPolicy status ENABLED
+  }
+
+  authorizationRules {
+    AuthorizationRule allowedAction CREATE actor Member context RedditSite resourceTarget Post feedbackTarget PostThreadComment
+  }
+
+  validationRules {
+    ValidationRule name RedditValidation kind MANUAL severity WARNING expression "lengthOk" implementationId rval01 appliesToResource Post appliesToFeedback PostThreadComment invokedBy RedditAutoValidate
+  }
+
+  moderationPolicies {
+    ModerationPolicy name PostModeration mode MANUAL trigger "onReport" decision REMOVED monitorsResource Post monitorsFeedback PostThreadComment executedBy Moderator inContext RedditSite
+  }
+
+  automationRules {
+    AutomationRule RedditAutoValidate trigger "onSubmit" condition "true" actionDescription "validate post feedback" context Post inContext RedditSite onFeedback PostThreadComment uses RedditValidation
+  }
+
+  verificationPolicies {
+    VerificationPolicy name PostCommentVerification mode MANUAL appliesWhen "onCreate" verifies PostThreadComment
+  }
+}

@@ -7,5 +7,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
 Export-Package: pt.isep.enorm.refdsl.ide.contentassist.antlr,
  pt.isep.enorm.refdsl.ide.contentassist.antlr.internal
-Require-Bundle: org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Require-Bundle: pt.isep.enorm.refdsl,
+ org.eclipse.xtext,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.util,
+ org.eclipse.equinox.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
 Automatic-Module-Name: pt.isep.enorm.refdsl.ide

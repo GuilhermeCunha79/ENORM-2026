@@ -1,0 +1,321 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+title REF DSL - Core Metamodel (P1) - v3
+
+package "Core" {
+  class RefModel {
+    name: String
+    version: String
+  }
+}
+
+package "Actors & Context" {
+  class UserType {
+    name: String
+    kind: UserKind
+  }
+
+  enum UserKind {
+    GENERIC
+    BUYER
+    SELLER
+    CREATOR
+    MODERATOR
+  }
+
+  class ContextType {
+    name: String
+    kind: ContextKind
+  }
+
+  enum ContextKind {
+    GLOBAL
+    COMMUNITY
+    CHANNEL
+    CATALOG
+  }
+}
+
+package "Structure" {
+  class ResourceType {
+    name: String
+    supportsMedia: boolean
+  }
+
+  class Attribute {
+    name: String
+    type: PrimitiveType
+    required: boolean
+    multiValued: boolean
+  }
+
+  enum PrimitiveType {
+    TEXT
+    NUMBER
+    BOOLEAN
+    DATE
+    DATETIME
+    IMAGE
+    VIDEO
+    URL
+  }
+
+  class ResourceRelation {
+    name: String
+    sourceCardinality: CardinalityKind
+    targetCardinality: CardinalityKind
+    containment: boolean
+    recursive: boolean
+  }
+
+  enum CardinalityKind {
+    ZERO_ONE
+    ONE
+    ZERO_MANY
+    ONE_MANY
+  }
+}
+
+package "Feedback" {
+  class FeedbackType {
+    name: String
+    kind: FeedbackKind
+    subjectScope: FeedbackSubjectScope
+    hasRating: boolean
+    recursive: boolean
+    allowsMedia: boolean
+  }
+
+  enum FeedbackKind {
+    COMMENT
+    REVIEW
+    REACTION
+    VOTE
+    REPORT
+    SUBSCRIPTION
+  }
+
+  enum FeedbackSubjectScope {
+    RESOURCE_ONLY
+    FEEDBACK_ONLY
+    RESOURCE_OR_FEEDBACK
+  }
+
+  class FeedbackDefinition {
+    name: String
+    requiresVerifiedContext: boolean
+    uniquePerAuthorTarget: boolean
+  }
+
+  class FeedbackPolicy {
+    status: FeedbackStatus
+  }
+
+  enum FeedbackStatus {
+    ENABLED
+    DISABLED
+  }
+
+  class RatingPolicy {
+    minValue: Number
+    maxValue: Number
+    step: Number
+    scaleKind: RatingScaleKind
+  }
+
+  enum RatingScaleKind {
+    NUMERIC
+    ORDINAL
+    PERCENTAGE
+  }
+}
+
+package "Governance & Behavior" {
+  class ValidationRule {
+    name: String
+    kind: ValidationKind
+    targetScope: TargetScope
+    severity: RuleSeverity
+    expression: String
+    implementationId: String
+  }
+
+  enum ValidationKind {
+    AUTOMATIC
+    MANUAL
+  }
+
+  enum TargetScope {
+    RESOURCE_ONLY
+    FEEDBACK_ONLY
+    RESOURCE_OR_FEEDBACK
+  }
+
+  enum RuleSeverity {
+    INFO
+    WARNING
+    ERROR
+  }
+
+  class ModerationPolicy {
+    name: String
+    mode: ModerationMode
+    trigger: String
+    decision: ModerationDecision
+  }
+
+  enum ModerationMode {
+    AUTOMATIC
+    MANUAL
+    HYBRID
+  }
+
+  enum ModerationDecision {
+    APPROVED
+    FLAGGED
+    HIDDEN
+    REMOVED
+    BLOCKED
+    REJECTED
+  }
+
+  class AuthorizationRule {
+    allowedAction: ActionKind
+  }
+
+  enum ActionKind {
+    READ
+    CREATE
+    UPDATE
+    DELETE
+    COMMENT
+    RATE
+    VOTE
+    REPORT
+    SUBSCRIBE
+    MODERATE
+    VALIDATE
+  }
+
+  class AutomationRule {
+    name: String
+    trigger: String
+    condition: String
+    actionDescription: String
+  }
+
+  class VerificationPolicy {
+    name: String
+    mode: VerificationMode
+    appliesWhen: String
+  }
+
+  enum VerificationMode {
+    AUTOMATIC
+    MANUAL
+    HYBRID
+  }
+}
+
+package "Evolution" {
+  class EvolutionRule {
+    name: String
+    fromVersion: String
+    toVersion: String
+    transformationId: String
+  }
+
+  class RefactoringOperation {
+    name: String
+    kind: RefactoringKind
+    scriptId: String
+  }
+
+  enum RefactoringKind {
+    RENAME_ELEMENT
+    MOVE_ELEMENT
+    SPLIT_ELEMENT
+    MERGE_ELEMENT
+    CHANGE_TYPE
+  }
+}
+
+RefModel "1" o-- "*" UserType
+RefModel "1" o-- "*" ResourceType
+RefModel "1" o-- "*" ContextType
+RefModel "1" o-- "*" ResourceRelation
+RefModel "1" o-- "*" FeedbackType
+RefModel "1" o-- "*" FeedbackDefinition
+RefModel "1" o-- "*" ValidationRule
+RefModel "1" o-- "*" ModerationPolicy
+RefModel "1" o-- "*" AutomationRule
+RefModel "1" o-- "*" VerificationPolicy
+RefModel "1" o-- "*" EvolutionRule
+RefModel "1" o-- "*" RefactoringOperation
+RefModel "1" o-- "*" AuthorizationRule
+
+UserType "0..*" -- "0..*" UserType : superTypes
+ResourceType "0..*" -- "0..*" ResourceType : superTypes
+
+ResourceType "1" o-- "*" Attribute
+ContextType "1" o-- "*" ResourceType : contains
+ResourceRelation "1" --> "1" ResourceType : source
+ResourceRelation "1" --> "1" ResourceType : target
+
+FeedbackType "1" <-- "1" FeedbackDefinition : type
+ResourceType "0..1" <-- "1" FeedbackDefinition : subjectResource
+UserType "1" <-- "1" FeedbackDefinition : author
+FeedbackDefinition "0..1" <-- "1" FeedbackDefinition : subjectFeedback
+FeedbackDefinition "0..1" --> "1" FeedbackDefinition : parent
+FeedbackDefinition "1" *-- "0..1" FeedbackPolicy : policy
+FeedbackDefinition "1" *-- "0..1" RatingPolicy : rating
+
+UserType "1" <-- "*" AuthorizationRule : actor
+AuthorizationRule "0..*" --> "0..1" ContextType : context
+AuthorizationRule "*" --> "1" ResourceType : resourceTarget
+AuthorizationRule "0..1" --> "1" FeedbackDefinition : feedbackTarget
+
+ValidationRule "0..*" --> "0..1" ResourceType : appliesToResource
+ValidationRule "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+ValidationRule "0..*" --> "1" AutomationRule : invokedBy
+
+ModerationPolicy "*" --> "1" ResourceType : monitorsResource
+ModerationPolicy "0..*" --> "1" FeedbackDefinition : monitorsFeedback
+ModerationPolicy "0..*" --> "1" UserType : executedBy
+ModerationPolicy "0..*" --> "0..1" ContextType : inContext
+
+AutomationRule "0..*" --> "0..1" ResourceType : context
+AutomationRule "0..*" --> "0..1" ContextType : inContext
+AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
+AutomationRule "0..*" --> "1" ValidationRule : uses
+
+VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
+
+EvolutionRule "1" o-- "1..*" RefactoringOperation : applies
+
+note bottom of ValidationRule
+  Constraint:
+  each ValidationRule must target at least one element
+  (ResourceType or FeedbackDefinition), matching targetScope.
+end note
+
+note bottom of FeedbackPolicy
+  Constraint:
+  If status = DISABLED, creation of new instances
+  for the associated FeedbackDefinition is not allowed.
+end note
+
+note bottom of RatingPolicy
+  Constraint:
+  RatingPolicy can only be set when FeedbackType.hasRating = true.
+end note
+
+note bottom of FeedbackDefinition
+  Constraint:
+  according to FeedbackType.subjectScope,
+  each FeedbackDefinition targets resource, feedback,
+  or either one (but at least one target must exist).
+end note
+
+@enduml

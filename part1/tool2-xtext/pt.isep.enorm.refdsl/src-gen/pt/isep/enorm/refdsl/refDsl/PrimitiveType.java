@@ -61,6 +61,16 @@ public enum PrimitiveType implements Enumerator
   DATE(3, "DATE", "DATE"),
 
   /**
+   * The '<em><b>DATETIME</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #DATETIME_VALUE
+   * @generated
+   * @ordered
+   */
+  DATETIME(4, "DATETIME", "DATETIME"),
+
+  /**
    * The '<em><b>IMAGE</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -68,7 +78,7 @@ public enum PrimitiveType implements Enumerator
    * @generated
    * @ordered
    */
-  IMAGE(4, "IMAGE", "IMAGE"),
+  IMAGE(5, "IMAGE", "IMAGE"),
 
   /**
    * The '<em><b>VIDEO</b></em>' literal object.
@@ -78,7 +88,17 @@ public enum PrimitiveType implements Enumerator
    * @generated
    * @ordered
    */
-  VIDEO(5, "VIDEO", "VIDEO");
+  VIDEO(6, "VIDEO", "VIDEO"),
+
+  /**
+   * The '<em><b>URL</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #URL_VALUE
+   * @generated
+   * @ordered
+   */
+  URL(7, "URL", "URL");
 
   /**
    * The '<em><b>TEXT</b></em>' literal value.
@@ -125,6 +145,17 @@ public enum PrimitiveType implements Enumerator
   public static final int DATE_VALUE = 3;
 
   /**
+   * The '<em><b>DATETIME</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #DATETIME
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int DATETIME_VALUE = 4;
+
+  /**
    * The '<em><b>IMAGE</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -133,7 +164,7 @@ public enum PrimitiveType implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int IMAGE_VALUE = 4;
+  public static final int IMAGE_VALUE = 5;
 
   /**
    * The '<em><b>VIDEO</b></em>' literal value.
@@ -144,7 +175,18 @@ public enum PrimitiveType implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int VIDEO_VALUE = 5;
+  public static final int VIDEO_VALUE = 6;
+
+  /**
+   * The '<em><b>URL</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #URL
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int URL_VALUE = 7;
 
   /**
    * An array of all the '<em><b>Primitive Type</b></em>' enumerators.
@@ -159,8 +201,10 @@ public enum PrimitiveType implements Enumerator
       NUMBER,
       BOOLEAN,
       DATE,
+      DATETIME,
       IMAGE,
       VIDEO,
+      URL,
     };
 
   /**
@@ -229,8 +273,10 @@ public enum PrimitiveType implements Enumerator
       case NUMBER_VALUE: return NUMBER;
       case BOOLEAN_VALUE: return BOOLEAN;
       case DATE_VALUE: return DATE;
+      case DATETIME_VALUE: return DATETIME;
       case IMAGE_VALUE: return IMAGE;
       case VIDEO_VALUE: return VIDEO;
+      case URL_VALUE: return URL;
     }
     return null;
   }

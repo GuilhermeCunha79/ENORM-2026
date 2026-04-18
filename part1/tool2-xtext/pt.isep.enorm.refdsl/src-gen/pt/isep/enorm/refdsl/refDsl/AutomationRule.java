@@ -18,6 +18,10 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getTrigger <em>Trigger</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getCondition <em>Condition</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActionDescription <em>Action Description</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getContext <em>Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getInContext <em>In Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getOnFeedback <em>On Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getUses <em>Uses</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule()
@@ -113,5 +117,93 @@ public interface AutomationRule extends EObject
    * @generated
    */
   void setActionDescription(String value);
+
+  /**
+   * Returns the value of the '<em><b>Context</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Context</em>' reference.
+   * @see #setContext(ResourceType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Context()
+   * @model
+   * @generated
+   */
+  ResourceType getContext();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getContext <em>Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Context</em>' reference.
+   * @see #getContext()
+   * @generated
+   */
+  void setContext(ResourceType value);
+
+  /**
+   * Returns the value of the '<em><b>In Context</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>In Context</em>' reference.
+   * @see #setInContext(ContextType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_InContext()
+   * @model
+   * @generated
+   */
+  ContextType getInContext();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getInContext <em>In Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>In Context</em>' reference.
+   * @see #getInContext()
+   * @generated
+   */
+  void setInContext(ContextType value);
+
+  /**
+   * Returns the value of the '<em><b>On Feedback</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>On Feedback</em>' reference.
+   * @see #setOnFeedback(FeedbackDefinition)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_OnFeedback()
+   * @model
+   * @generated
+   */
+  FeedbackDefinition getOnFeedback();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getOnFeedback <em>On Feedback</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>On Feedback</em>' reference.
+   * @see #getOnFeedback()
+   * @generated
+   */
+  void setOnFeedback(FeedbackDefinition value);
+
+  /**
+   * Returns the value of the '<em><b>Uses</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Uses</em>' reference.
+   * @see #setUses(ValidationRule)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Uses()
+   * @model
+   * @generated
+   */
+  ValidationRule getUses();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getUses <em>Uses</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Uses</em>' reference.
+   * @see #getUses()
+   * @generated
+   */
+  void setUses(ValidationRule value);
 
 } // AutomationRule

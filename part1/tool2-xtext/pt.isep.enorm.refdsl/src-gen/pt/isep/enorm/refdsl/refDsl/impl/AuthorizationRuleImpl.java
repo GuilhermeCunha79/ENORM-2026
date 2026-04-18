@@ -13,7 +13,10 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import pt.isep.enorm.refdsl.refDsl.ActionKind;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
+import pt.isep.enorm.refdsl.refDsl.ContextType;
+import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
+import pt.isep.enorm.refdsl.refDsl.ResourceType;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 
 /**
@@ -25,7 +28,10 @@ import pt.isep.enorm.refdsl.refDsl.UserType;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getAllowedAction <em>Allowed Action</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getRole <em>Role</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getActor <em>Actor</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getContext <em>Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getResourceTarget <em>Resource Target</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getFeedbackTarget <em>Feedback Target</em>}</li>
  * </ul>
  *
  * @generated
@@ -53,14 +59,44 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   protected ActionKind allowedAction = ALLOWED_ACTION_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getRole() <em>Role</em>}' reference.
+   * The cached value of the '{@link #getActor() <em>Actor</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getRole()
+   * @see #getActor()
    * @generated
    * @ordered
    */
-  protected UserType role;
+  protected UserType actor;
+
+  /**
+   * The cached value of the '{@link #getContext() <em>Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getContext()
+   * @generated
+   * @ordered
+   */
+  protected ContextType context;
+
+  /**
+   * The cached value of the '{@link #getResourceTarget() <em>Resource Target</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getResourceTarget()
+   * @generated
+   * @ordered
+   */
+  protected ResourceType resourceTarget;
+
+  /**
+   * The cached value of the '{@link #getFeedbackTarget() <em>Feedback Target</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getFeedbackTarget()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackDefinition feedbackTarget;
 
   /**
    * <!-- begin-user-doc -->
@@ -114,19 +150,19 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
    * @generated
    */
   @Override
-  public UserType getRole()
+  public UserType getActor()
   {
-    if (role != null && role.eIsProxy())
+    if (actor != null && actor.eIsProxy())
     {
-      InternalEObject oldRole = (InternalEObject)role;
-      role = (UserType)eResolveProxy(oldRole);
-      if (role != oldRole)
+      InternalEObject oldActor = (InternalEObject)actor;
+      actor = (UserType)eResolveProxy(oldActor);
+      if (actor != oldActor)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTHORIZATION_RULE__ROLE, oldRole, role));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTHORIZATION_RULE__ACTOR, oldActor, actor));
       }
     }
-    return role;
+    return actor;
   }
 
   /**
@@ -134,9 +170,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
    * <!-- end-user-doc -->
    * @generated
    */
-  public UserType basicGetRole()
+  public UserType basicGetActor()
   {
-    return role;
+    return actor;
   }
 
   /**
@@ -145,12 +181,147 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
    * @generated
    */
   @Override
-  public void setRole(UserType newRole)
+  public void setActor(UserType newActor)
   {
-    UserType oldRole = role;
-    role = newRole;
+    UserType oldActor = actor;
+    actor = newActor;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__ROLE, oldRole, role));
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__ACTOR, oldActor, actor));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ContextType getContext()
+  {
+    if (context != null && context.eIsProxy())
+    {
+      InternalEObject oldContext = (InternalEObject)context;
+      context = (ContextType)eResolveProxy(oldContext);
+      if (context != oldContext)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTHORIZATION_RULE__CONTEXT, oldContext, context));
+      }
+    }
+    return context;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ContextType basicGetContext()
+  {
+    return context;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setContext(ContextType newContext)
+  {
+    ContextType oldContext = context;
+    context = newContext;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__CONTEXT, oldContext, context));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ResourceType getResourceTarget()
+  {
+    if (resourceTarget != null && resourceTarget.eIsProxy())
+    {
+      InternalEObject oldResourceTarget = (InternalEObject)resourceTarget;
+      resourceTarget = (ResourceType)eResolveProxy(oldResourceTarget);
+      if (resourceTarget != oldResourceTarget)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET, oldResourceTarget, resourceTarget));
+      }
+    }
+    return resourceTarget;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ResourceType basicGetResourceTarget()
+  {
+    return resourceTarget;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setResourceTarget(ResourceType newResourceTarget)
+  {
+    ResourceType oldResourceTarget = resourceTarget;
+    resourceTarget = newResourceTarget;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET, oldResourceTarget, resourceTarget));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackDefinition getFeedbackTarget()
+  {
+    if (feedbackTarget != null && feedbackTarget.eIsProxy())
+    {
+      InternalEObject oldFeedbackTarget = (InternalEObject)feedbackTarget;
+      feedbackTarget = (FeedbackDefinition)eResolveProxy(oldFeedbackTarget);
+      if (feedbackTarget != oldFeedbackTarget)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET, oldFeedbackTarget, feedbackTarget));
+      }
+    }
+    return feedbackTarget;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FeedbackDefinition basicGetFeedbackTarget()
+  {
+    return feedbackTarget;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setFeedbackTarget(FeedbackDefinition newFeedbackTarget)
+  {
+    FeedbackDefinition oldFeedbackTarget = feedbackTarget;
+    feedbackTarget = newFeedbackTarget;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET, oldFeedbackTarget, feedbackTarget));
   }
 
   /**
@@ -165,9 +336,18 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
     {
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         return getAllowedAction();
-      case RefDslPackage.AUTHORIZATION_RULE__ROLE:
-        if (resolve) return getRole();
-        return basicGetRole();
+      case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
+        if (resolve) return getActor();
+        return basicGetActor();
+      case RefDslPackage.AUTHORIZATION_RULE__CONTEXT:
+        if (resolve) return getContext();
+        return basicGetContext();
+      case RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET:
+        if (resolve) return getResourceTarget();
+        return basicGetResourceTarget();
+      case RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET:
+        if (resolve) return getFeedbackTarget();
+        return basicGetFeedbackTarget();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -185,8 +365,17 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         setAllowedAction((ActionKind)newValue);
         return;
-      case RefDslPackage.AUTHORIZATION_RULE__ROLE:
-        setRole((UserType)newValue);
+      case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
+        setActor((UserType)newValue);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__CONTEXT:
+        setContext((ContextType)newValue);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET:
+        setResourceTarget((ResourceType)newValue);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET:
+        setFeedbackTarget((FeedbackDefinition)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -205,8 +394,17 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         setAllowedAction(ALLOWED_ACTION_EDEFAULT);
         return;
-      case RefDslPackage.AUTHORIZATION_RULE__ROLE:
-        setRole((UserType)null);
+      case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
+        setActor((UserType)null);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__CONTEXT:
+        setContext((ContextType)null);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET:
+        setResourceTarget((ResourceType)null);
+        return;
+      case RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET:
+        setFeedbackTarget((FeedbackDefinition)null);
         return;
     }
     super.eUnset(featureID);
@@ -224,8 +422,14 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
     {
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         return allowedAction != ALLOWED_ACTION_EDEFAULT;
-      case RefDslPackage.AUTHORIZATION_RULE__ROLE:
-        return role != null;
+      case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
+        return actor != null;
+      case RefDslPackage.AUTHORIZATION_RULE__CONTEXT:
+        return context != null;
+      case RefDslPackage.AUTHORIZATION_RULE__RESOURCE_TARGET:
+        return resourceTarget != null;
+      case RefDslPackage.AUTHORIZATION_RULE__FEEDBACK_TARGET:
+        return feedbackTarget != null;
     }
     return super.eIsSet(featureID);
   }

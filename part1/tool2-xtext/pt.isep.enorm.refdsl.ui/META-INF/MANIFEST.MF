@@ -5,7 +5,9 @@ Bundle-SymbolicName: pt.isep.enorm.refdsl.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ActivationPolicy: lazy
 Require-Bundle: pt.isep.enorm.refdsl,
+ pt.isep.enorm.refdsl.ide,
  pt.isep.enorm.ref,
+ org.eclipse.xtext.ide,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.ui.editors;bundle-version="3.14.300",

@@ -6,11 +6,16 @@ package pt.isep.enorm.refdsl.refDsl.impl;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
+import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.RuleSeverity;
 import pt.isep.enorm.refdsl.refDsl.ValidationKind;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 
@@ -24,7 +29,12 @@ import pt.isep.enorm.refdsl.refDsl.ValidationRule;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getKind <em>Kind</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getSeverity <em>Severity</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getExpression <em>Expression</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getImplementationId <em>Implementation Id</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getAppliesToResource <em>Applies To Resource</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getAppliesToFeedback <em>Applies To Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl#getInvokedBy <em>Invoked By</em>}</li>
  * </ul>
  *
  * @generated
@@ -72,6 +82,46 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
   protected ValidationKind kind = KIND_EDEFAULT;
 
   /**
+   * The default value of the '{@link #getSeverity() <em>Severity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSeverity()
+   * @generated
+   * @ordered
+   */
+  protected static final RuleSeverity SEVERITY_EDEFAULT = RuleSeverity.INFO;
+
+  /**
+   * The cached value of the '{@link #getSeverity() <em>Severity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSeverity()
+   * @generated
+   * @ordered
+   */
+  protected RuleSeverity severity = SEVERITY_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getExpression() <em>Expression</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExpression()
+   * @generated
+   * @ordered
+   */
+  protected static final String EXPRESSION_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getExpression() <em>Expression</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getExpression()
+   * @generated
+   * @ordered
+   */
+  protected String expression = EXPRESSION_EDEFAULT;
+
+  /**
    * The default value of the '{@link #getImplementationId() <em>Implementation Id</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -90,6 +140,36 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @ordered
    */
   protected String implementationId = IMPLEMENTATION_ID_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getAppliesToResource() <em>Applies To Resource</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAppliesToResource()
+   * @generated
+   * @ordered
+   */
+  protected ResourceType appliesToResource;
+
+  /**
+   * The cached value of the '{@link #getAppliesToFeedback() <em>Applies To Feedback</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAppliesToFeedback()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackDefinition appliesToFeedback;
+
+  /**
+   * The cached value of the '{@link #getInvokedBy() <em>Invoked By</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInvokedBy()
+   * @generated
+   * @ordered
+   */
+  protected AutomationRule invokedBy;
 
   /**
    * <!-- begin-user-doc -->
@@ -168,6 +248,56 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
+  public RuleSeverity getSeverity()
+  {
+    return severity;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setSeverity(RuleSeverity newSeverity)
+  {
+    RuleSeverity oldSeverity = severity;
+    severity = newSeverity == null ? SEVERITY_EDEFAULT : newSeverity;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.VALIDATION_RULE__SEVERITY, oldSeverity, severity));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String getExpression()
+  {
+    return expression;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setExpression(String newExpression)
+  {
+    String oldExpression = expression;
+    expression = newExpression;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.VALIDATION_RULE__EXPRESSION, oldExpression, expression));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public String getImplementationId()
   {
     return implementationId;
@@ -193,6 +323,141 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
+  public ResourceType getAppliesToResource()
+  {
+    if (appliesToResource != null && appliesToResource.eIsProxy())
+    {
+      InternalEObject oldAppliesToResource = (InternalEObject)appliesToResource;
+      appliesToResource = (ResourceType)eResolveProxy(oldAppliesToResource);
+      if (appliesToResource != oldAppliesToResource)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE, oldAppliesToResource, appliesToResource));
+      }
+    }
+    return appliesToResource;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ResourceType basicGetAppliesToResource()
+  {
+    return appliesToResource;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setAppliesToResource(ResourceType newAppliesToResource)
+  {
+    ResourceType oldAppliesToResource = appliesToResource;
+    appliesToResource = newAppliesToResource;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE, oldAppliesToResource, appliesToResource));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackDefinition getAppliesToFeedback()
+  {
+    if (appliesToFeedback != null && appliesToFeedback.eIsProxy())
+    {
+      InternalEObject oldAppliesToFeedback = (InternalEObject)appliesToFeedback;
+      appliesToFeedback = (FeedbackDefinition)eResolveProxy(oldAppliesToFeedback);
+      if (appliesToFeedback != oldAppliesToFeedback)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK, oldAppliesToFeedback, appliesToFeedback));
+      }
+    }
+    return appliesToFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FeedbackDefinition basicGetAppliesToFeedback()
+  {
+    return appliesToFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setAppliesToFeedback(FeedbackDefinition newAppliesToFeedback)
+  {
+    FeedbackDefinition oldAppliesToFeedback = appliesToFeedback;
+    appliesToFeedback = newAppliesToFeedback;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK, oldAppliesToFeedback, appliesToFeedback));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public AutomationRule getInvokedBy()
+  {
+    if (invokedBy != null && invokedBy.eIsProxy())
+    {
+      InternalEObject oldInvokedBy = (InternalEObject)invokedBy;
+      invokedBy = (AutomationRule)eResolveProxy(oldInvokedBy);
+      if (invokedBy != oldInvokedBy)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.VALIDATION_RULE__INVOKED_BY, oldInvokedBy, invokedBy));
+      }
+    }
+    return invokedBy;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AutomationRule basicGetInvokedBy()
+  {
+    return invokedBy;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setInvokedBy(AutomationRule newInvokedBy)
+  {
+    AutomationRule oldInvokedBy = invokedBy;
+    invokedBy = newInvokedBy;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.VALIDATION_RULE__INVOKED_BY, oldInvokedBy, invokedBy));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
@@ -201,8 +466,21 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
         return getName();
       case RefDslPackage.VALIDATION_RULE__KIND:
         return getKind();
+      case RefDslPackage.VALIDATION_RULE__SEVERITY:
+        return getSeverity();
+      case RefDslPackage.VALIDATION_RULE__EXPRESSION:
+        return getExpression();
       case RefDslPackage.VALIDATION_RULE__IMPLEMENTATION_ID:
         return getImplementationId();
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE:
+        if (resolve) return getAppliesToResource();
+        return basicGetAppliesToResource();
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK:
+        if (resolve) return getAppliesToFeedback();
+        return basicGetAppliesToFeedback();
+      case RefDslPackage.VALIDATION_RULE__INVOKED_BY:
+        if (resolve) return getInvokedBy();
+        return basicGetInvokedBy();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -223,8 +501,23 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.VALIDATION_RULE__KIND:
         setKind((ValidationKind)newValue);
         return;
+      case RefDslPackage.VALIDATION_RULE__SEVERITY:
+        setSeverity((RuleSeverity)newValue);
+        return;
+      case RefDslPackage.VALIDATION_RULE__EXPRESSION:
+        setExpression((String)newValue);
+        return;
       case RefDslPackage.VALIDATION_RULE__IMPLEMENTATION_ID:
         setImplementationId((String)newValue);
+        return;
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE:
+        setAppliesToResource((ResourceType)newValue);
+        return;
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK:
+        setAppliesToFeedback((FeedbackDefinition)newValue);
+        return;
+      case RefDslPackage.VALIDATION_RULE__INVOKED_BY:
+        setInvokedBy((AutomationRule)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -246,8 +539,23 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.VALIDATION_RULE__KIND:
         setKind(KIND_EDEFAULT);
         return;
+      case RefDslPackage.VALIDATION_RULE__SEVERITY:
+        setSeverity(SEVERITY_EDEFAULT);
+        return;
+      case RefDslPackage.VALIDATION_RULE__EXPRESSION:
+        setExpression(EXPRESSION_EDEFAULT);
+        return;
       case RefDslPackage.VALIDATION_RULE__IMPLEMENTATION_ID:
         setImplementationId(IMPLEMENTATION_ID_EDEFAULT);
+        return;
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE:
+        setAppliesToResource((ResourceType)null);
+        return;
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK:
+        setAppliesToFeedback((FeedbackDefinition)null);
+        return;
+      case RefDslPackage.VALIDATION_RULE__INVOKED_BY:
+        setInvokedBy((AutomationRule)null);
         return;
     }
     super.eUnset(featureID);
@@ -267,8 +575,18 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.VALIDATION_RULE__KIND:
         return kind != KIND_EDEFAULT;
+      case RefDslPackage.VALIDATION_RULE__SEVERITY:
+        return severity != SEVERITY_EDEFAULT;
+      case RefDslPackage.VALIDATION_RULE__EXPRESSION:
+        return EXPRESSION_EDEFAULT == null ? expression != null : !EXPRESSION_EDEFAULT.equals(expression);
       case RefDslPackage.VALIDATION_RULE__IMPLEMENTATION_ID:
         return IMPLEMENTATION_ID_EDEFAULT == null ? implementationId != null : !IMPLEMENTATION_ID_EDEFAULT.equals(implementationId);
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_RESOURCE:
+        return appliesToResource != null;
+      case RefDslPackage.VALIDATION_RULE__APPLIES_TO_FEEDBACK:
+        return appliesToFeedback != null;
+      case RefDslPackage.VALIDATION_RULE__INVOKED_BY:
+        return invokedBy != null;
     }
     return super.eIsSet(featureID);
   }
@@ -288,6 +606,10 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
     result.append(name);
     result.append(", kind: ");
     result.append(kind);
+    result.append(", severity: ");
+    result.append(severity);
+    result.append(", expression: ");
+    result.append(expression);
     result.append(", implementationId: ");
     result.append(implementationId);
     result.append(')');

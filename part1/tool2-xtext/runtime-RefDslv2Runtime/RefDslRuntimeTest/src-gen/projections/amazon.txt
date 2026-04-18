@@ -1,0 +1,52 @@
+REF MODEL: AmazonScenario (version="1.0.0")
+
+USER TYPES:
+- Buyer kind=BUYER superTypes=
+- Seller kind=SELLER superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Product supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * price : NUMBER required=true multi=false
+  * sku : TEXT required=false multi=false
+- Order supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * orderId : TEXT required=true multi=false
+  * total : NUMBER required=true multi=false
+
+CONTEXT TYPES:
+- AmazonMarketplace kind=CATALOG contains=[Product, Order]
+
+RESOURCE RELATIONS:
+- OrderForProduct source=Order target=Product srcCard="1" tgtCard="0..*" containment=false recursive=false
+
+FEEDBACK TYPES:
+- Review kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsMedia=false
+- Comment kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsMedia=false
+
+FEEDBACK DEFINITIONS:
+- ProductReview type=Review author=Buyer subjectResource=Product subjectFeedback=
+  requiresVerifiedContext=true uniquePerAuthorTarget=true parent=
+  policy.status=ENABLED
+rating=[min=1.0 max=5.0 step=1.0 scale=NUMERIC]
+- ProductComment type=Comment author=Buyer subjectResource=Product subjectFeedback=
+  requiresVerifiedContext=false uniquePerAuthorTarget=false parent=ProductReview
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- action=READ actor=Buyer context=AmazonMarketplace resourceTarget=Product feedbackTarget=ProductReview
+
+VALIDATION RULES:
+- AmazonValidation kind=MANUAL severity=WARNING expr="payload != null" impl=val01 appliesToResource=Product appliesToFeedback=ProductReview invokedBy=AmazonAutoValidate
+
+MODERATION POLICIES:
+- ReviewModeration mode=MANUAL trigger="onReport" decision=FLAGGED executedBy=Moderator inContext=AmazonMarketplace
+  monitorsResource=Product monitorsFeedback=ProductReview
+
+AUTOMATION RULES:
+- AmazonAutoValidate trigger="onCreate" condition="true" action="run validations" context=Product inContext=AmazonMarketplace onFeedback=ProductReview uses=AmazonValidation
+
+VERIFICATION POLICIES:
+- ProductReviewVerification mode=MANUAL appliesWhen="onCreate" verifies=ProductReview

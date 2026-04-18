@@ -1,0 +1,370 @@
+/**
+ */
+package pt.isep.enorm.ref.ref;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.emf.common.util.Enumerator;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the literals of the enumeration '<em><b>Trigger Event</b></em>',
+ * and utility methods for working with them.
+ * <!-- end-user-doc -->
+ * @see pt.isep.enorm.ref.ref.RefPackage#getTriggerEvent()
+ * @model
+ * @generated
+ */
+public enum TriggerEvent implements Enumerator {
+	/**
+	 * The '<em><b>ON RESOURCE CREATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_CREATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_RESOURCE_CREATE(0, "ON_RESOURCE_CREATE", "ON_RESOURCE_CREATE"),
+
+	/**
+	 * The '<em><b>ON RESOURCE UPDATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_UPDATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_RESOURCE_UPDATE(1, "ON_RESOURCE_UPDATE", "ON_RESOURCE_UPDATE"),
+
+	/**
+	 * The '<em><b>ON RESOURCE DELETE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_DELETE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_RESOURCE_DELETE(2, "ON_RESOURCE_DELETE", "ON_RESOURCE_DELETE"),
+
+	/**
+	 * The '<em><b>ON FEEDBACK CREATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_CREATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_FEEDBACK_CREATE(3, "ON_FEEDBACK_CREATE", "ON_FEEDBACK_CREATE"),
+
+	/**
+	 * The '<em><b>ON FEEDBACK UPDATE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_UPDATE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_FEEDBACK_UPDATE(4, "ON_FEEDBACK_UPDATE", "ON_FEEDBACK_UPDATE"),
+
+	/**
+	 * The '<em><b>ON FEEDBACK DELETE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_DELETE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_FEEDBACK_DELETE(5, "ON_FEEDBACK_DELETE", "ON_FEEDBACK_DELETE"),
+
+	/**
+	 * The '<em><b>ON REPORT SUBMITTED</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_REPORT_SUBMITTED_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_REPORT_SUBMITTED(6, "ON_REPORT_SUBMITTED", "ON_REPORT_SUBMITTED"),
+
+	/**
+	 * The '<em><b>ON REPORT THRESHOLD</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_REPORT_THRESHOLD_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_REPORT_THRESHOLD(7, "ON_REPORT_THRESHOLD", "ON_REPORT_THRESHOLD"),
+
+	/**
+	 * The '<em><b>ON MANUAL REQUEST</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_MANUAL_REQUEST_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	ON_MANUAL_REQUEST(8, "ON_MANUAL_REQUEST", "ON_MANUAL_REQUEST");
+
+	/**
+	 * The '<em><b>ON RESOURCE CREATE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_CREATE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_RESOURCE_CREATE_VALUE = 0;
+
+	/**
+	 * The '<em><b>ON RESOURCE UPDATE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_UPDATE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_RESOURCE_UPDATE_VALUE = 1;
+
+	/**
+	 * The '<em><b>ON RESOURCE DELETE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_RESOURCE_DELETE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_RESOURCE_DELETE_VALUE = 2;
+
+	/**
+	 * The '<em><b>ON FEEDBACK CREATE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_CREATE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_FEEDBACK_CREATE_VALUE = 3;
+
+	/**
+	 * The '<em><b>ON FEEDBACK UPDATE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_UPDATE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_FEEDBACK_UPDATE_VALUE = 4;
+
+	/**
+	 * The '<em><b>ON FEEDBACK DELETE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_FEEDBACK_DELETE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_FEEDBACK_DELETE_VALUE = 5;
+
+	/**
+	 * The '<em><b>ON REPORT SUBMITTED</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_REPORT_SUBMITTED
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_REPORT_SUBMITTED_VALUE = 6;
+
+	/**
+	 * The '<em><b>ON REPORT THRESHOLD</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_REPORT_THRESHOLD
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_REPORT_THRESHOLD_VALUE = 7;
+
+	/**
+	 * The '<em><b>ON MANUAL REQUEST</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #ON_MANUAL_REQUEST
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int ON_MANUAL_REQUEST_VALUE = 8;
+
+	/**
+	 * An array of all the '<em><b>Trigger Event</b></em>' enumerators.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private static final TriggerEvent[] VALUES_ARRAY = new TriggerEvent[] { ON_RESOURCE_CREATE, ON_RESOURCE_UPDATE,
+			ON_RESOURCE_DELETE, ON_FEEDBACK_CREATE, ON_FEEDBACK_UPDATE, ON_FEEDBACK_DELETE, ON_REPORT_SUBMITTED,
+			ON_REPORT_THRESHOLD, ON_MANUAL_REQUEST, };
+
+	/**
+	 * A public read-only list of all the '<em><b>Trigger Event</b></em>' enumerators.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final List<TriggerEvent> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+
+	/**
+	 * Returns the '<em><b>Trigger Event</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static TriggerEvent get(String literal) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			TriggerEvent result = VALUES_ARRAY[i];
+			if (result.toString().equals(literal)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Trigger Event</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static TriggerEvent getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			TriggerEvent result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Trigger Event</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static TriggerEvent get(int value) {
+		switch (value) {
+		case ON_RESOURCE_CREATE_VALUE:
+			return ON_RESOURCE_CREATE;
+		case ON_RESOURCE_UPDATE_VALUE:
+			return ON_RESOURCE_UPDATE;
+		case ON_RESOURCE_DELETE_VALUE:
+			return ON_RESOURCE_DELETE;
+		case ON_FEEDBACK_CREATE_VALUE:
+			return ON_FEEDBACK_CREATE;
+		case ON_FEEDBACK_UPDATE_VALUE:
+			return ON_FEEDBACK_UPDATE;
+		case ON_FEEDBACK_DELETE_VALUE:
+			return ON_FEEDBACK_DELETE;
+		case ON_REPORT_SUBMITTED_VALUE:
+			return ON_REPORT_SUBMITTED;
+		case ON_REPORT_THRESHOLD_VALUE:
+			return ON_REPORT_THRESHOLD;
+		case ON_MANUAL_REQUEST_VALUE:
+			return ON_MANUAL_REQUEST;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final int value;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String name;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String literal;
+
+	/**
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private TriggerEvent(int value, String name, String literal) {
+		this.value = value;
+		this.name = name;
+		this.literal = literal;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getLiteral() {
+		return literal;
+	}
+
+	/**
+	 * Returns the literal value of the enumerator, which is its string representation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		return literal;
+	}
+
+} //TriggerEvent

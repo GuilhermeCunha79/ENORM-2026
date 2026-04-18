@@ -1,0 +1,52 @@
+REF MODEL: YoutubeScenario (version="1.0.0")
+
+USER TYPES:
+- Creator kind=CREATOR superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Channel supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * channelName : TEXT required=true multi=false
+  * subscriberCount : NUMBER required=false multi=false
+- Video supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * duration : NUMBER required=false multi=false
+
+CONTEXT TYPES:
+- YoutubePlatform kind=CHANNEL contains=[Channel, Video]
+
+RESOURCE RELATIONS:
+- ChannelVideos source=Channel target=Video srcCard="1" tgtCard="0..*" containment=false recursive=false
+
+FEEDBACK TYPES:
+- VideoComment kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsMedia=false
+- Like kind=REACTION scope=RESOURCE_ONLY hasRating=false recursive=false allowsMedia=false
+
+FEEDBACK DEFINITIONS:
+- VideoTopComment type=VideoComment author=Creator subjectResource=Video subjectFeedback=
+  requiresVerifiedContext=true uniquePerAuthorTarget=false parent=
+  policy.status=ENABLED
+- CommentReply type=VideoComment author=Creator subjectResource= subjectFeedback=VideoTopComment
+  requiresVerifiedContext=false uniquePerAuthorTarget=false parent=VideoTopComment
+  policy.status=ENABLED
+- VideoLike type=Like author=Creator subjectResource=Video subjectFeedback=
+  requiresVerifiedContext=false uniquePerAuthorTarget=true parent=
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- action=COMMENT actor=Creator context=YoutubePlatform resourceTarget=Video feedbackTarget=VideoTopComment
+
+VALIDATION RULES:
+- YoutubeValidation kind=MANUAL severity=WARNING expr="notEmpty" impl=yval01 appliesToResource=Video appliesToFeedback=VideoTopComment invokedBy=YoutubeAutoValidate
+
+MODERATION POLICIES:
+- CommentModeration mode=MANUAL trigger="onReport" decision=HIDDEN executedBy=Moderator inContext=YoutubePlatform
+  monitorsResource=Video monitorsFeedback=VideoTopComment
+
+AUTOMATION RULES:
+- YoutubeAutoValidate trigger="onPublish" condition="true" action="validate comment" context=Video inContext=YoutubePlatform onFeedback=VideoTopComment uses=YoutubeValidation
+
+VERIFICATION POLICIES:
+- VideoCommentVerification mode=MANUAL appliesWhen="onCreate" verifies=VideoTopComment

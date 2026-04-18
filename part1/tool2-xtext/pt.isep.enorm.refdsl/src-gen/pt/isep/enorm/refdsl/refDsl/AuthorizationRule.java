@@ -15,7 +15,10 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getAllowedAction <em>Allowed Action</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getRole <em>Role</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getActor <em>Actor</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getContext <em>Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getResourceTarget <em>Resource Target</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getFeedbackTarget <em>Feedback Target</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule()
@@ -50,25 +53,91 @@ public interface AuthorizationRule extends EObject
   void setAllowedAction(ActionKind value);
 
   /**
-   * Returns the value of the '<em><b>Role</b></em>' reference.
+   * Returns the value of the '<em><b>Actor</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Role</em>' reference.
-   * @see #setRole(UserType)
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_Role()
+   * @return the value of the '<em>Actor</em>' reference.
+   * @see #setActor(UserType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_Actor()
    * @model
    * @generated
    */
-  UserType getRole();
+  UserType getActor();
 
   /**
-   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getRole <em>Role</em>}' reference.
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getActor <em>Actor</em>}' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Role</em>' reference.
-   * @see #getRole()
+   * @param value the new value of the '<em>Actor</em>' reference.
+   * @see #getActor()
    * @generated
    */
-  void setRole(UserType value);
+  void setActor(UserType value);
+
+  /**
+   * Returns the value of the '<em><b>Context</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Context</em>' reference.
+   * @see #setContext(ContextType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_Context()
+   * @model
+   * @generated
+   */
+  ContextType getContext();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getContext <em>Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Context</em>' reference.
+   * @see #getContext()
+   * @generated
+   */
+  void setContext(ContextType value);
+
+  /**
+   * Returns the value of the '<em><b>Resource Target</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Resource Target</em>' reference.
+   * @see #setResourceTarget(ResourceType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_ResourceTarget()
+   * @model
+   * @generated
+   */
+  ResourceType getResourceTarget();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getResourceTarget <em>Resource Target</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Resource Target</em>' reference.
+   * @see #getResourceTarget()
+   * @generated
+   */
+  void setResourceTarget(ResourceType value);
+
+  /**
+   * Returns the value of the '<em><b>Feedback Target</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Feedback Target</em>' reference.
+   * @see #setFeedbackTarget(FeedbackDefinition)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_FeedbackTarget()
+   * @model
+   * @generated
+   */
+  FeedbackDefinition getFeedbackTarget();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getFeedbackTarget <em>Feedback Target</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Feedback Target</em>' reference.
+   * @see #getFeedbackTarget()
+   * @generated
+   */
+  void setFeedbackTarget(FeedbackDefinition value);
 
 } // AuthorizationRule

@@ -1,0 +1,182 @@
+@startuml
+title REF Model - RedditScenario
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = RedditScenario
+  version = "1.0.0"
+}
+
+class UserType_Member {
+  name = Member
+  kind = GENERIC
+}
+RefModel --> UserType_Member
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Subreddit {
+  name = Subreddit
+  supportsMedia = false
+}
+RefModel --> ResourceType_Subreddit
+class Attribute_Subreddit_subredditName {
+  name = subredditName
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Subreddit *-- Attribute_Subreddit_subredditName
+class Attribute_Subreddit_description {
+  name = description
+  type = TEXT
+  required = false
+  multiValued = false
+}
+ResourceType_Subreddit *-- Attribute_Subreddit_description
+class ResourceType_Post {
+  name = Post
+  supportsMedia = false
+}
+RefModel --> ResourceType_Post
+class Attribute_Post_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Post *-- Attribute_Post_title
+class Attribute_Post_content {
+  name = content
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Post *-- Attribute_Post_content
+
+class ContextType_RedditSite {
+  name = RedditSite
+  kind = COMMUNITY
+}
+RefModel --> ContextType_RedditSite
+ContextType_RedditSite --> ResourceType_Subreddit : contains
+ContextType_RedditSite --> ResourceType_Post : contains
+
+ResourceType_Subreddit --> ResourceType_Post : SubredditPosts ["1".."0..*"] recursive=false
+
+class FeedbackType_PostComment {
+  name = PostComment
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = true
+  allowsMedia = false
+}
+RefModel --> FeedbackType_PostComment
+class FeedbackType_Upvote {
+  name = Upvote
+  kind = VOTE
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+  recursive = false
+  allowsMedia = false
+}
+RefModel --> FeedbackType_Upvote
+
+class FeedbackDefinition_PostThreadComment {
+  name = PostThreadComment
+  requiresVerifiedContext = true
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_PostThreadComment
+FeedbackDefinition_PostThreadComment --> FeedbackType_PostComment : type
+FeedbackDefinition_PostThreadComment --> UserType_Member : author
+FeedbackDefinition_PostThreadComment --> ResourceType_Post : subjectResource
+class FeedbackPolicy_PostThreadComment {
+  status = ENABLED
+}
+FeedbackDefinition_PostThreadComment *-- FeedbackPolicy_PostThreadComment
+class FeedbackDefinition_NestedReply {
+  name = NestedReply
+  requiresVerifiedContext = false
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_NestedReply
+FeedbackDefinition_NestedReply --> FeedbackType_PostComment : type
+FeedbackDefinition_NestedReply --> UserType_Member : author
+FeedbackDefinition_NestedReply --> FeedbackDefinition_PostThreadComment : subjectFeedback
+FeedbackDefinition_NestedReply --> FeedbackDefinition_PostThreadComment : parent
+class FeedbackPolicy_NestedReply {
+  status = ENABLED
+}
+FeedbackDefinition_NestedReply *-- FeedbackPolicy_NestedReply
+class FeedbackDefinition_PostUpvote {
+  name = PostUpvote
+  requiresVerifiedContext = false
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_PostUpvote
+FeedbackDefinition_PostUpvote --> FeedbackType_Upvote : type
+FeedbackDefinition_PostUpvote --> UserType_Member : author
+FeedbackDefinition_PostUpvote --> ResourceType_Post : subjectResource
+class FeedbackPolicy_PostUpvote {
+  status = ENABLED
+}
+FeedbackDefinition_PostUpvote *-- FeedbackPolicy_PostUpvote
+
+class ValidationRule_RedditValidation {
+  name = RedditValidation
+  kind = MANUAL
+  severity = WARNING
+  expression = "lengthOk"
+  implementationId = rval01
+}
+RefModel --> ValidationRule_RedditValidation
+ValidationRule_RedditValidation --> ResourceType_Post : appliesToResource
+ValidationRule_RedditValidation --> FeedbackDefinition_PostThreadComment : appliesToFeedback
+
+class AuthorizationRule_CREATE_Member {
+  allowedAction = CREATE
+}
+RefModel --> AuthorizationRule_CREATE_Member
+AuthorizationRule_CREATE_Member --> UserType_Member : actor
+AuthorizationRule_CREATE_Member --> ResourceType_Post : resourceTarget
+AuthorizationRule_CREATE_Member --> FeedbackDefinition_PostThreadComment : feedbackTarget
+AuthorizationRule_CREATE_Member --> ContextType_RedditSite : context
+
+class ModerationPolicy_PostModeration {
+  name = PostModeration
+  mode = MANUAL
+  trigger = "onReport"
+  decision = REMOVED
+}
+RefModel --> ModerationPolicy_PostModeration
+ModerationPolicy_PostModeration --> ResourceType_Post : monitorsResource
+ModerationPolicy_PostModeration --> FeedbackDefinition_PostThreadComment : monitorsFeedback
+ModerationPolicy_PostModeration --> UserType_Moderator : executedBy
+ModerationPolicy_PostModeration --> ContextType_RedditSite : inContext
+
+class AutomationRule_RedditAutoValidate {
+  name = RedditAutoValidate
+  trigger = "onSubmit"
+  condition = "true"
+  action = "validate post feedback"
+}
+RefModel --> AutomationRule_RedditAutoValidate
+AutomationRule_RedditAutoValidate --> ResourceType_Post : context
+AutomationRule_RedditAutoValidate --> ContextType_RedditSite : inContext
+AutomationRule_RedditAutoValidate --> FeedbackDefinition_PostThreadComment : onFeedback
+AutomationRule_RedditAutoValidate --> ValidationRule_RedditValidation : uses
+
+class VerificationPolicy_PostCommentVerification {
+  name = PostCommentVerification
+  mode = MANUAL
+  appliesWhen = "onCreate"
+}
+RefModel --> VerificationPolicy_PostCommentVerification
+VerificationPolicy_PostCommentVerification --> FeedbackDefinition_PostThreadComment : verifies
+
+@enduml

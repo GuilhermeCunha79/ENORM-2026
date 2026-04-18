@@ -1,0 +1,83 @@
+RefModel YoutubeScenario
+version "1.0.0"
+{
+  userTypes {
+    UserType Creator kind CREATOR,
+    UserType Moderator kind MODERATOR
+  }
+
+  resourceTypes {
+    ResourceType Channel supportsMedia false {
+      attributes {
+        required true multiValued false Attribute channelName type TEXT,
+        required false multiValued false Attribute subscriberCount type NUMBER
+      }
+    },
+    ResourceType Video supportsMedia true {
+      attributes {
+        required true multiValued false Attribute title type TEXT,
+        required false multiValued false Attribute duration type NUMBER
+      }
+    }
+  }
+
+  contextTypes {
+    ContextType YoutubePlatform kind CHANNEL contains ( Channel, Video )
+  }
+
+  resourceRelations {
+    ResourceRelation ChannelVideos source Channel target Video sourceCardinality "1" targetCardinality "0..*" containment false recursive false
+  }
+
+  feedbackTypes {
+    FeedbackType VideoComment kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsMedia false,
+    FeedbackType Like kind REACTION subjectScope RESOURCE_ONLY hasRating false recursive false allowsMedia false
+  }
+
+  feedbackDefinitions {
+    FeedbackDefinition VideoTopComment
+      type VideoComment
+      requiresVerifiedContext true
+      uniquePerAuthorTarget false
+      author Creator
+      subjectResource Video
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition CommentReply
+      type VideoComment
+      requiresVerifiedContext false
+      uniquePerAuthorTarget false
+      author Creator
+      subjectFeedback VideoTopComment
+      parent VideoTopComment
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition VideoLike
+      type Like
+      requiresVerifiedContext false
+      uniquePerAuthorTarget true
+      author Creator
+      subjectResource Video
+      policy FeedbackPolicy status ENABLED
+  }
+
+  authorizationRules {
+    AuthorizationRule allowedAction COMMENT actor Creator context YoutubePlatform resourceTarget Video feedbackTarget VideoTopComment
+  }
+
+  validationRules {
+    ValidationRule name YoutubeValidation kind MANUAL severity WARNING expression "notEmpty" implementationId yval01 appliesToResource Video appliesToFeedback VideoTopComment invokedBy YoutubeAutoValidate
+  }
+
+  moderationPolicies {
+    ModerationPolicy name CommentModeration mode MANUAL trigger "onReport" decision HIDDEN monitorsResource Video monitorsFeedback VideoTopComment executedBy Moderator inContext YoutubePlatform
+  }
+
+  automationRules {
+    AutomationRule YoutubeAutoValidate trigger "onPublish" condition "true" actionDescription "validate comment" context Video inContext YoutubePlatform onFeedback VideoTopComment uses YoutubeValidation
+  }
+
+  verificationPolicies {
+    VerificationPolicy name VideoCommentVerification mode MANUAL appliesWhen "onCreate" verifies VideoTopComment
+  }
+}

@@ -1,5 +1,5 @@
 # ENORM Project, Part 1, Tool 2 – Xtext
-w
+
 ## Description of the Tool
 
 [Xtext](https://eclipse.dev/Xtext/index.html) is a framework integrated in the Eclipse IDE for developing domain-specific languages (DSLs). A DSL is a language tailored to a specific problem domain, offering domain experts a more intuitive and concise way of expressing solutions than general-purpose languages.

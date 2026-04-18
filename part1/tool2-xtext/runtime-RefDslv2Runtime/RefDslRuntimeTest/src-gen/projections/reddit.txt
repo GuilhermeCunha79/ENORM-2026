@@ -1,0 +1,52 @@
+REF MODEL: RedditScenario (version="1.0.0")
+
+USER TYPES:
+- Member kind=GENERIC superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Subreddit supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * subredditName : TEXT required=true multi=false
+  * description : TEXT required=false multi=false
+- Post supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * content : TEXT required=true multi=false
+
+CONTEXT TYPES:
+- RedditSite kind=COMMUNITY contains=[Subreddit, Post]
+
+RESOURCE RELATIONS:
+- SubredditPosts source=Subreddit target=Post srcCard="1" tgtCard="0..*" containment=true recursive=false
+
+FEEDBACK TYPES:
+- PostComment kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsMedia=false
+- Upvote kind=VOTE scope=RESOURCE_ONLY hasRating=false recursive=false allowsMedia=false
+
+FEEDBACK DEFINITIONS:
+- PostThreadComment type=PostComment author=Member subjectResource=Post subjectFeedback=
+  requiresVerifiedContext=true uniquePerAuthorTarget=false parent=
+  policy.status=ENABLED
+- NestedReply type=PostComment author=Member subjectResource= subjectFeedback=PostThreadComment
+  requiresVerifiedContext=false uniquePerAuthorTarget=false parent=PostThreadComment
+  policy.status=ENABLED
+- PostUpvote type=Upvote author=Member subjectResource=Post subjectFeedback=
+  requiresVerifiedContext=false uniquePerAuthorTarget=true parent=
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- action=CREATE actor=Member context=RedditSite resourceTarget=Post feedbackTarget=PostThreadComment
+
+VALIDATION RULES:
+- RedditValidation kind=MANUAL severity=WARNING expr="lengthOk" impl=rval01 appliesToResource=Post appliesToFeedback=PostThreadComment invokedBy=RedditAutoValidate
+
+MODERATION POLICIES:
+- PostModeration mode=MANUAL trigger="onReport" decision=REMOVED executedBy=Moderator inContext=RedditSite
+  monitorsResource=Post monitorsFeedback=PostThreadComment
+
+AUTOMATION RULES:
+- RedditAutoValidate trigger="onSubmit" condition="true" action="validate post feedback" context=Post inContext=RedditSite onFeedback=PostThreadComment uses=RedditValidation
+
+VERIFICATION POLICIES:
+- PostCommentVerification mode=MANUAL appliesWhen="onCreate" verifies=PostThreadComment

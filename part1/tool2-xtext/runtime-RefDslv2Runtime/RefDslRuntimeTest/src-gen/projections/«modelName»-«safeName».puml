@@ -1,0 +1,8 @@
+@startuml
+class Attribute_content {
+  name = content
+  required = false
+  multiValued = false
+  type = TEXT
+}
+@enduml

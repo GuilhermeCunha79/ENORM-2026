@@ -24,7 +24,8 @@
 			<name>org.eclipse.pde.SchemaBuilder</name>
 			<arguments>
 			</arguments>
-		</buildSpec>
+		</buildCommand>
+	</buildSpec>
 	<natures>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>

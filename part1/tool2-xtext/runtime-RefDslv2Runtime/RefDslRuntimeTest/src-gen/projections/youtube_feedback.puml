@@ -1,0 +1,141 @@
+@startuml
+title REF Model (feedback & governance) - YoutubeScenario
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = YoutubeScenario
+  version = "1.0.0"
+}
+
+class UserType_Creator {
+  name = Creator
+}
+RefModel --> UserType_Creator
+class UserType_Moderator {
+  name = Moderator
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Channel {
+  name = Channel
+}
+RefModel --> ResourceType_Channel
+class ResourceType_Video {
+  name = Video
+}
+RefModel --> ResourceType_Video
+
+class ContextType_YoutubePlatform {
+  name = YoutubePlatform
+}
+RefModel --> ContextType_YoutubePlatform
+
+class FeedbackType_VideoComment {
+  name = VideoComment
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+}
+RefModel --> FeedbackType_VideoComment
+class FeedbackType_Like {
+  name = Like
+  kind = REACTION
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+}
+RefModel --> FeedbackType_Like
+
+class FeedbackDefinition_VideoTopComment {
+  name = VideoTopComment
+  requiresVerifiedContext = true
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_VideoTopComment
+FeedbackDefinition_VideoTopComment --> FeedbackType_VideoComment : type
+FeedbackDefinition_VideoTopComment --> UserType_Creator : author
+FeedbackDefinition_VideoTopComment --> ResourceType_Video : subjectResource
+class FeedbackPolicy_VideoTopComment {
+  status = ENABLED
+}
+FeedbackDefinition_VideoTopComment *-- FeedbackPolicy_VideoTopComment
+class FeedbackDefinition_CommentReply {
+  name = CommentReply
+  requiresVerifiedContext = false
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_CommentReply
+FeedbackDefinition_CommentReply --> FeedbackType_VideoComment : type
+FeedbackDefinition_CommentReply --> UserType_Creator : author
+FeedbackDefinition_CommentReply --> FeedbackDefinition_VideoTopComment : subjectFeedback
+FeedbackDefinition_CommentReply --> FeedbackDefinition_VideoTopComment : parent
+class FeedbackPolicy_CommentReply {
+  status = ENABLED
+}
+FeedbackDefinition_CommentReply *-- FeedbackPolicy_CommentReply
+class FeedbackDefinition_VideoLike {
+  name = VideoLike
+  requiresVerifiedContext = false
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_VideoLike
+FeedbackDefinition_VideoLike --> FeedbackType_Like : type
+FeedbackDefinition_VideoLike --> UserType_Creator : author
+FeedbackDefinition_VideoLike --> ResourceType_Video : subjectResource
+class FeedbackPolicy_VideoLike {
+  status = ENABLED
+}
+FeedbackDefinition_VideoLike *-- FeedbackPolicy_VideoLike
+
+class ValidationRule_YoutubeValidation {
+  name = YoutubeValidation
+  kind = MANUAL
+  severity = WARNING
+  expression = "notEmpty"
+  implementationId = yval01
+}
+RefModel --> ValidationRule_YoutubeValidation
+ValidationRule_YoutubeValidation --> ResourceType_Video : appliesToResource
+ValidationRule_YoutubeValidation --> FeedbackDefinition_VideoTopComment : appliesToFeedback
+
+class AuthorizationRule_COMMENT_Creator {
+  allowedAction = COMMENT
+}
+RefModel --> AuthorizationRule_COMMENT_Creator
+AuthorizationRule_COMMENT_Creator --> UserType_Creator : actor
+AuthorizationRule_COMMENT_Creator --> ResourceType_Video : resourceTarget
+AuthorizationRule_COMMENT_Creator --> FeedbackDefinition_VideoTopComment : feedbackTarget
+AuthorizationRule_COMMENT_Creator --> ContextType_YoutubePlatform : context
+
+class ModerationPolicy_CommentModeration {
+  name = CommentModeration
+  mode = MANUAL
+  trigger = "onReport"
+  decision = HIDDEN
+}
+RefModel --> ModerationPolicy_CommentModeration
+ModerationPolicy_CommentModeration --> ResourceType_Video : monitorsResource
+ModerationPolicy_CommentModeration --> FeedbackDefinition_VideoTopComment : monitorsFeedback
+ModerationPolicy_CommentModeration --> UserType_Moderator : executedBy
+ModerationPolicy_CommentModeration --> ContextType_YoutubePlatform : inContext
+
+class AutomationRule_YoutubeAutoValidate {
+  name = YoutubeAutoValidate
+  trigger = "onPublish"
+  condition = "true"
+  action = "validate comment"
+}
+RefModel --> AutomationRule_YoutubeAutoValidate
+AutomationRule_YoutubeAutoValidate --> ResourceType_Video : context
+AutomationRule_YoutubeAutoValidate --> ContextType_YoutubePlatform : inContext
+AutomationRule_YoutubeAutoValidate --> FeedbackDefinition_VideoTopComment : onFeedback
+AutomationRule_YoutubeAutoValidate --> ValidationRule_YoutubeValidation : uses
+
+class VerificationPolicy_VideoCommentVerification {
+  name = VideoCommentVerification
+  mode = MANUAL
+  appliesWhen = "onCreate"
+}
+RefModel --> VerificationPolicy_VideoCommentVerification
+VerificationPolicy_VideoCommentVerification --> FeedbackDefinition_VideoTopComment : verifies
+
+@enduml

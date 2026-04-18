@@ -16,7 +16,12 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getKind <em>Kind</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getSeverity <em>Severity</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getExpression <em>Expression</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getImplementationId <em>Implementation Id</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getAppliesToResource <em>Applies To Resource</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getAppliesToFeedback <em>Applies To Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getInvokedBy <em>Invoked By</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule()
@@ -73,6 +78,53 @@ public interface ValidationRule extends EObject
   void setKind(ValidationKind value);
 
   /**
+   * Returns the value of the '<em><b>Severity</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.RuleSeverity}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Severity</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.RuleSeverity
+   * @see #setSeverity(RuleSeverity)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule_Severity()
+   * @model
+   * @generated
+   */
+  RuleSeverity getSeverity();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getSeverity <em>Severity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Severity</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.RuleSeverity
+   * @see #getSeverity()
+   * @generated
+   */
+  void setSeverity(RuleSeverity value);
+
+  /**
+   * Returns the value of the '<em><b>Expression</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Expression</em>' attribute.
+   * @see #setExpression(String)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule_Expression()
+   * @model
+   * @generated
+   */
+  String getExpression();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getExpression <em>Expression</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Expression</em>' attribute.
+   * @see #getExpression()
+   * @generated
+   */
+  void setExpression(String value);
+
+  /**
    * Returns the value of the '<em><b>Implementation Id</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -93,5 +145,71 @@ public interface ValidationRule extends EObject
    * @generated
    */
   void setImplementationId(String value);
+
+  /**
+   * Returns the value of the '<em><b>Applies To Resource</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Applies To Resource</em>' reference.
+   * @see #setAppliesToResource(ResourceType)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule_AppliesToResource()
+   * @model
+   * @generated
+   */
+  ResourceType getAppliesToResource();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getAppliesToResource <em>Applies To Resource</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Applies To Resource</em>' reference.
+   * @see #getAppliesToResource()
+   * @generated
+   */
+  void setAppliesToResource(ResourceType value);
+
+  /**
+   * Returns the value of the '<em><b>Applies To Feedback</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Applies To Feedback</em>' reference.
+   * @see #setAppliesToFeedback(FeedbackDefinition)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule_AppliesToFeedback()
+   * @model
+   * @generated
+   */
+  FeedbackDefinition getAppliesToFeedback();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getAppliesToFeedback <em>Applies To Feedback</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Applies To Feedback</em>' reference.
+   * @see #getAppliesToFeedback()
+   * @generated
+   */
+  void setAppliesToFeedback(FeedbackDefinition value);
+
+  /**
+   * Returns the value of the '<em><b>Invoked By</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Invoked By</em>' reference.
+   * @see #setInvokedBy(AutomationRule)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getValidationRule_InvokedBy()
+   * @model
+   * @generated
+   */
+  AutomationRule getInvokedBy();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule#getInvokedBy <em>Invoked By</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Invoked By</em>' reference.
+   * @see #getInvokedBy()
+   * @generated
+   */
+  void setInvokedBy(AutomationRule value);
 
 } // ValidationRule

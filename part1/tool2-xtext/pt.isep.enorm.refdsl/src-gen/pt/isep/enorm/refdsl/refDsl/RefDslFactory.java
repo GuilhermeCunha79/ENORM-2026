@@ -42,6 +42,15 @@ public interface RefDslFactory extends EFactory
   UserType createUserType();
 
   /**
+   * Returns a new object of class '<em>Context Type</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Context Type</em>'.
+   * @generated
+   */
+  ContextType createContextType();
+
+  /**
    * Returns a new object of class '<em>Resource Type</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -49,6 +58,15 @@ public interface RefDslFactory extends EFactory
    * @generated
    */
   ResourceType createResourceType();
+
+  /**
+   * Returns a new object of class '<em>Resource Relation</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Resource Relation</em>'.
+   * @generated
+   */
+  ResourceRelation createResourceRelation();
 
   /**
    * Returns a new object of class '<em>Attribute</em>'.
@@ -78,6 +96,24 @@ public interface RefDslFactory extends EFactory
   FeedbackDefinition createFeedbackDefinition();
 
   /**
+   * Returns a new object of class '<em>Feedback Policy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Feedback Policy</em>'.
+   * @generated
+   */
+  FeedbackPolicy createFeedbackPolicy();
+
+  /**
+   * Returns a new object of class '<em>Rating Policy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Rating Policy</em>'.
+   * @generated
+   */
+  RatingPolicy createRatingPolicy();
+
+  /**
    * Returns a new object of class '<em>Validation Rule</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -85,6 +121,15 @@ public interface RefDslFactory extends EFactory
    * @generated
    */
   ValidationRule createValidationRule();
+
+  /**
+   * Returns a new object of class '<em>Moderation Policy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Moderation Policy</em>'.
+   * @generated
+   */
+  ModerationPolicy createModerationPolicy();
 
   /**
    * Returns a new object of class '<em>Authorization Rule</em>'.
@@ -103,6 +148,15 @@ public interface RefDslFactory extends EFactory
    * @generated
    */
   AutomationRule createAutomationRule();
+
+  /**
+   * Returns a new object of class '<em>Verification Policy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Verification Policy</em>'.
+   * @generated
+   */
+  VerificationPolicy createVerificationPolicy();
 
   /**
    * Returns the package supported by this factory.

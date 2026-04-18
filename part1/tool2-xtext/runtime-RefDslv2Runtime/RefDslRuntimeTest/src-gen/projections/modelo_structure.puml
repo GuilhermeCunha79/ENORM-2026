@@ -1,0 +1,100 @@
+@startuml
+title REF Model (structure) - Marketplace
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = Marketplace
+  version = "1.0.0"
+}
+
+class UserType_Buyer {
+  name = Buyer
+  kind = BUYER
+}
+RefModel --> UserType_Buyer
+class UserType_Seller {
+  name = Seller
+  kind = SELLER
+}
+RefModel --> UserType_Seller
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+class UserType_TrustedBuyer {
+  name = TrustedBuyer
+  kind = BUYER
+}
+RefModel --> UserType_TrustedBuyer
+UserType_TrustedBuyer --|> UserType_Buyer
+
+class ResourceType_Product {
+  name = Product
+  supportsMedia = true
+}
+RefModel --> ResourceType_Product
+class Attribute_Product_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_title
+class Attribute_Product_price {
+  name = price
+  type = NUMBER
+  required = true
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_price
+class Attribute_Product_publishedAt {
+  name = publishedAt
+  type = DATETIME
+  required = false
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_publishedAt
+class ResourceType_Category {
+  name = Category
+  supportsMedia = false
+}
+RefModel --> ResourceType_Category
+class Attribute_Category_categoryName {
+  name = categoryName
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Category *-- Attribute_Category_categoryName
+
+class ContextType_Shop {
+  name = Shop
+  kind = CATALOG
+}
+RefModel --> ContextType_Shop
+ContextType_Shop --> ResourceType_Product : contains
+ContextType_Shop --> ResourceType_Category : contains
+
+ResourceType_Product --> ResourceType_Category : ProductInCategory ["0..*".."1"] recursive=false
+
+class FeedbackType_Review {
+  name = Review
+  kind = REVIEW
+  subjectScope = RESOURCE_ONLY
+  hasRating = true
+  recursive = false
+  allowsMedia = false
+}
+RefModel --> FeedbackType_Review
+class FeedbackType_Comment {
+  name = Comment
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = true
+  allowsMedia = false
+}
+RefModel --> FeedbackType_Comment
+
+@enduml

@@ -31,16 +31,6 @@ public enum ActionKind implements Enumerator
   READ(0, "READ", "READ"),
 
   /**
-   * The '<em><b>WRITE</b></em>' literal object.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #WRITE_VALUE
-   * @generated
-   * @ordered
-   */
-  WRITE(1, "WRITE", "WRITE"),
-
-  /**
    * The '<em><b>CREATE</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -48,7 +38,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  CREATE(2, "CREATE", "CREATE"),
+  CREATE(1, "CREATE", "CREATE"),
 
   /**
    * The '<em><b>UPDATE</b></em>' literal object.
@@ -58,7 +48,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  UPDATE(3, "UPDATE", "UPDATE"),
+  UPDATE(2, "UPDATE", "UPDATE"),
 
   /**
    * The '<em><b>DELETE</b></em>' literal object.
@@ -68,17 +58,37 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  DELETE(4, "DELETE", "DELETE"),
+  DELETE(3, "DELETE", "DELETE"),
 
   /**
-   * The '<em><b>MODERATE</b></em>' literal object.
+   * The '<em><b>COMMENT</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #MODERATE_VALUE
+   * @see #COMMENT_VALUE
    * @generated
    * @ordered
    */
-  MODERATE(5, "MODERATE", "MODERATE"),
+  COMMENT(4, "COMMENT", "COMMENT"),
+
+  /**
+   * The '<em><b>RATE</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #RATE_VALUE
+   * @generated
+   * @ordered
+   */
+  RATE(5, "RATE", "RATE"),
+
+  /**
+   * The '<em><b>VOTE</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #VOTE_VALUE
+   * @generated
+   * @ordered
+   */
+  VOTE(6, "VOTE", "VOTE"),
 
   /**
    * The '<em><b>REPORT</b></em>' literal object.
@@ -88,7 +98,27 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  REPORT(6, "REPORT", "REPORT"),
+  REPORT(7, "REPORT", "REPORT"),
+
+  /**
+   * The '<em><b>SUBSCRIBE</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #SUBSCRIBE_VALUE
+   * @generated
+   * @ordered
+   */
+  SUBSCRIBE(8, "SUBSCRIBE", "SUBSCRIBE"),
+
+  /**
+   * The '<em><b>MODERATE</b></em>' literal object.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #MODERATE_VALUE
+   * @generated
+   * @ordered
+   */
+  MODERATE(9, "MODERATE", "MODERATE"),
 
   /**
    * The '<em><b>VALIDATE</b></em>' literal object.
@@ -98,7 +128,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  VALIDATE(7, "VALIDATE", "VALIDATE");
+  VALIDATE(10, "VALIDATE", "VALIDATE");
 
   /**
    * The '<em><b>READ</b></em>' literal value.
@@ -112,17 +142,6 @@ public enum ActionKind implements Enumerator
   public static final int READ_VALUE = 0;
 
   /**
-   * The '<em><b>WRITE</b></em>' literal value.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #WRITE
-   * @model
-   * @generated
-   * @ordered
-   */
-  public static final int WRITE_VALUE = 1;
-
-  /**
    * The '<em><b>CREATE</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -131,7 +150,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int CREATE_VALUE = 2;
+  public static final int CREATE_VALUE = 1;
 
   /**
    * The '<em><b>UPDATE</b></em>' literal value.
@@ -142,7 +161,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int UPDATE_VALUE = 3;
+  public static final int UPDATE_VALUE = 2;
 
   /**
    * The '<em><b>DELETE</b></em>' literal value.
@@ -153,18 +172,40 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int DELETE_VALUE = 4;
+  public static final int DELETE_VALUE = 3;
 
   /**
-   * The '<em><b>MODERATE</b></em>' literal value.
+   * The '<em><b>COMMENT</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #MODERATE
+   * @see #COMMENT
    * @model
    * @generated
    * @ordered
    */
-  public static final int MODERATE_VALUE = 5;
+  public static final int COMMENT_VALUE = 4;
+
+  /**
+   * The '<em><b>RATE</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #RATE
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int RATE_VALUE = 5;
+
+  /**
+   * The '<em><b>VOTE</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #VOTE
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int VOTE_VALUE = 6;
 
   /**
    * The '<em><b>REPORT</b></em>' literal value.
@@ -175,7 +216,29 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int REPORT_VALUE = 6;
+  public static final int REPORT_VALUE = 7;
+
+  /**
+   * The '<em><b>SUBSCRIBE</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #SUBSCRIBE
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int SUBSCRIBE_VALUE = 8;
+
+  /**
+   * The '<em><b>MODERATE</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #MODERATE
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int MODERATE_VALUE = 9;
 
   /**
    * The '<em><b>VALIDATE</b></em>' literal value.
@@ -186,7 +249,7 @@ public enum ActionKind implements Enumerator
    * @generated
    * @ordered
    */
-  public static final int VALIDATE_VALUE = 7;
+  public static final int VALIDATE_VALUE = 10;
 
   /**
    * An array of all the '<em><b>Action Kind</b></em>' enumerators.
@@ -198,12 +261,15 @@ public enum ActionKind implements Enumerator
     new ActionKind[]
     {
       READ,
-      WRITE,
       CREATE,
       UPDATE,
       DELETE,
-      MODERATE,
+      COMMENT,
+      RATE,
+      VOTE,
       REPORT,
+      SUBSCRIBE,
+      MODERATE,
       VALIDATE,
     };
 
@@ -270,12 +336,15 @@ public enum ActionKind implements Enumerator
     switch (value)
     {
       case READ_VALUE: return READ;
-      case WRITE_VALUE: return WRITE;
       case CREATE_VALUE: return CREATE;
       case UPDATE_VALUE: return UPDATE;
       case DELETE_VALUE: return DELETE;
-      case MODERATE_VALUE: return MODERATE;
+      case COMMENT_VALUE: return COMMENT;
+      case RATE_VALUE: return RATE;
+      case VOTE_VALUE: return VOTE;
       case REPORT_VALUE: return REPORT;
+      case SUBSCRIBE_VALUE: return SUBSCRIBE;
+      case MODERATE_VALUE: return MODERATE;
       case VALIDATE_VALUE: return VALIDATE;
     }
     return null;

@@ -86,9 +86,19 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
         return createUserTypeAdapter();
       }
       @Override
+      public Adapter caseContextType(ContextType object)
+      {
+        return createContextTypeAdapter();
+      }
+      @Override
       public Adapter caseResourceType(ResourceType object)
       {
         return createResourceTypeAdapter();
+      }
+      @Override
+      public Adapter caseResourceRelation(ResourceRelation object)
+      {
+        return createResourceRelationAdapter();
       }
       @Override
       public Adapter caseAttribute(Attribute object)
@@ -106,9 +116,24 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
         return createFeedbackDefinitionAdapter();
       }
       @Override
+      public Adapter caseFeedbackPolicy(FeedbackPolicy object)
+      {
+        return createFeedbackPolicyAdapter();
+      }
+      @Override
+      public Adapter caseRatingPolicy(RatingPolicy object)
+      {
+        return createRatingPolicyAdapter();
+      }
+      @Override
       public Adapter caseValidationRule(ValidationRule object)
       {
         return createValidationRuleAdapter();
+      }
+      @Override
+      public Adapter caseModerationPolicy(ModerationPolicy object)
+      {
+        return createModerationPolicyAdapter();
       }
       @Override
       public Adapter caseAuthorizationRule(AuthorizationRule object)
@@ -119,6 +144,11 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
       public Adapter caseAutomationRule(AutomationRule object)
       {
         return createAutomationRuleAdapter();
+      }
+      @Override
+      public Adapter caseVerificationPolicy(VerificationPolicy object)
+      {
+        return createVerificationPolicyAdapter();
       }
       @Override
       public Adapter defaultCase(EObject object)
@@ -173,6 +203,21 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.ContextType <em>Context Type</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.ContextType
+   * @generated
+   */
+  public Adapter createContextTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.ResourceType <em>Resource Type</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -183,6 +228,21 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createResourceTypeAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.ResourceRelation <em>Resource Relation</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.ResourceRelation
+   * @generated
+   */
+  public Adapter createResourceRelationAdapter()
   {
     return null;
   }
@@ -233,6 +293,36 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.FeedbackPolicy <em>Feedback Policy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolicy
+   * @generated
+   */
+  public Adapter createFeedbackPolicyAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy <em>Rating Policy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.RatingPolicy
+   * @generated
+   */
+  public Adapter createRatingPolicyAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule <em>Validation Rule</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -243,6 +333,21 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createValidationRuleAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.ModerationPolicy <em>Moderation Policy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.ModerationPolicy
+   * @generated
+   */
+  public Adapter createModerationPolicyAdapter()
   {
     return null;
   }
@@ -273,6 +378,21 @@ public class RefDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAutomationRuleAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link pt.isep.enorm.refdsl.refDsl.VerificationPolicy <em>Verification Policy</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see pt.isep.enorm.refdsl.refDsl.VerificationPolicy
+   * @generated
+   */
+  public Adapter createVerificationPolicyAdapter()
   {
     return null;
   }

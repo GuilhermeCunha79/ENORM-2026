@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
+import pt.isep.enorm.refdsl.refDsl.UserKind;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 
 /**
@@ -28,6 +29,7 @@ import pt.isep.enorm.refdsl.refDsl.UserType;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl#getKind <em>Kind</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl#getSuperTypes <em>Super Types</em>}</li>
  * </ul>
  *
@@ -54,6 +56,26 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getKind() <em>Kind</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getKind()
+   * @generated
+   * @ordered
+   */
+  protected static final UserKind KIND_EDEFAULT = UserKind.GENERIC;
+
+  /**
+   * The cached value of the '{@link #getKind() <em>Kind</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getKind()
+   * @generated
+   * @ordered
+   */
+  protected UserKind kind = KIND_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getSuperTypes() <em>Super Types</em>}' reference list.
@@ -117,6 +139,31 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
    * @generated
    */
   @Override
+  public UserKind getKind()
+  {
+    return kind;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setKind(UserKind newKind)
+  {
+    UserKind oldKind = kind;
+    kind = newKind == null ? KIND_EDEFAULT : newKind;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.USER_TYPE__KIND, oldKind, kind));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EList<UserType> getSuperTypes()
   {
     if (superTypes == null)
@@ -138,6 +185,8 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
     {
       case RefDslPackage.USER_TYPE__NAME:
         return getName();
+      case RefDslPackage.USER_TYPE__KIND:
+        return getKind();
       case RefDslPackage.USER_TYPE__SUPER_TYPES:
         return getSuperTypes();
     }
@@ -157,6 +206,9 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
     {
       case RefDslPackage.USER_TYPE__NAME:
         setName((String)newValue);
+        return;
+      case RefDslPackage.USER_TYPE__KIND:
+        setKind((UserKind)newValue);
         return;
       case RefDslPackage.USER_TYPE__SUPER_TYPES:
         getSuperTypes().clear();
@@ -179,6 +231,9 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
       case RefDslPackage.USER_TYPE__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case RefDslPackage.USER_TYPE__KIND:
+        setKind(KIND_EDEFAULT);
+        return;
       case RefDslPackage.USER_TYPE__SUPER_TYPES:
         getSuperTypes().clear();
         return;
@@ -198,6 +253,8 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
     {
       case RefDslPackage.USER_TYPE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case RefDslPackage.USER_TYPE__KIND:
+        return kind != KIND_EDEFAULT;
       case RefDslPackage.USER_TYPE__SUPER_TYPES:
         return superTypes != null && !superTypes.isEmpty();
     }
@@ -217,6 +274,8 @@ public class UserTypeImpl extends MinimalEObjectImpl.Container implements UserTy
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", kind: ");
+    result.append(kind);
     result.append(')');
     return result.toString();
   }

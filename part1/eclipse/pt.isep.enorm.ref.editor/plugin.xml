@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated ref -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="pt.isep.enorm.ref.ref.presentation.RefModelWizardID"
+            name="%_UI_RefModelWizard_label"
+            class="pt.isep.enorm.ref.ref.presentation.RefModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/RefModelFile.gif">
+         <description>%_UI_RefModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated ref -->
+      <editor
+            id="pt.isep.enorm.ref.ref.presentation.RefEditorID"
+            name="%_UI_RefEditor_label"
+            icon="icons/full/obj16/RefModelFile.gif"
+            extensions="ref"
+            class="pt.isep.enorm.ref.ref.presentation.RefEditor"
+            contributorClass="pt.isep.enorm.ref.ref.presentation.RefActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

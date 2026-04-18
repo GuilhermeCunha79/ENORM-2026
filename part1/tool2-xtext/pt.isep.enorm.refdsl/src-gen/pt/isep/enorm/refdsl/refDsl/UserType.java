@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.UserType#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.UserType#getKind <em>Kind</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.UserType#getSuperTypes <em>Super Types</em>}</li>
  * </ul>
  *
@@ -47,6 +48,31 @@ public interface UserType extends EObject
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Kind</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.UserKind}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Kind</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.UserKind
+   * @see #setKind(UserKind)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getUserType_Kind()
+   * @model
+   * @generated
+   */
+  UserKind getKind();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.UserType#getKind <em>Kind</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Kind</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.UserKind
+   * @see #getKind()
+   * @generated
+   */
+  void setKind(UserKind value);
 
   /**
    * Returns the value of the '<em><b>Super Types</b></em>' reference list.

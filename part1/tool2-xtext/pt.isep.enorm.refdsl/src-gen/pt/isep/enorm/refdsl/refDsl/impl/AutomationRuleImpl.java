@@ -6,12 +6,17 @@ package pt.isep.enorm.refdsl.refDsl.impl;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.ContextType;
+import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
+import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,6 +30,10 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getTrigger <em>Trigger</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getCondition <em>Condition</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getActionDescription <em>Action Description</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getContext <em>Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getInContext <em>In Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getOnFeedback <em>On Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getUses <em>Uses</em>}</li>
  * </ul>
  *
  * @generated
@@ -110,6 +119,46 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @ordered
    */
   protected String actionDescription = ACTION_DESCRIPTION_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getContext() <em>Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getContext()
+   * @generated
+   * @ordered
+   */
+  protected ResourceType context;
+
+  /**
+   * The cached value of the '{@link #getInContext() <em>In Context</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInContext()
+   * @generated
+   * @ordered
+   */
+  protected ContextType inContext;
+
+  /**
+   * The cached value of the '{@link #getOnFeedback() <em>On Feedback</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getOnFeedback()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackDefinition onFeedback;
+
+  /**
+   * The cached value of the '{@link #getUses() <em>Uses</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getUses()
+   * @generated
+   * @ordered
+   */
+  protected ValidationRule uses;
 
   /**
    * <!-- begin-user-doc -->
@@ -238,6 +287,186 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
+  public ResourceType getContext()
+  {
+    if (context != null && context.eIsProxy())
+    {
+      InternalEObject oldContext = (InternalEObject)context;
+      context = (ResourceType)eResolveProxy(oldContext);
+      if (context != oldContext)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTOMATION_RULE__CONTEXT, oldContext, context));
+      }
+    }
+    return context;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ResourceType basicGetContext()
+  {
+    return context;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setContext(ResourceType newContext)
+  {
+    ResourceType oldContext = context;
+    context = newContext;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__CONTEXT, oldContext, context));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ContextType getInContext()
+  {
+    if (inContext != null && inContext.eIsProxy())
+    {
+      InternalEObject oldInContext = (InternalEObject)inContext;
+      inContext = (ContextType)eResolveProxy(oldInContext);
+      if (inContext != oldInContext)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTOMATION_RULE__IN_CONTEXT, oldInContext, inContext));
+      }
+    }
+    return inContext;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ContextType basicGetInContext()
+  {
+    return inContext;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setInContext(ContextType newInContext)
+  {
+    ContextType oldInContext = inContext;
+    inContext = newInContext;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__IN_CONTEXT, oldInContext, inContext));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackDefinition getOnFeedback()
+  {
+    if (onFeedback != null && onFeedback.eIsProxy())
+    {
+      InternalEObject oldOnFeedback = (InternalEObject)onFeedback;
+      onFeedback = (FeedbackDefinition)eResolveProxy(oldOnFeedback);
+      if (onFeedback != oldOnFeedback)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK, oldOnFeedback, onFeedback));
+      }
+    }
+    return onFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FeedbackDefinition basicGetOnFeedback()
+  {
+    return onFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setOnFeedback(FeedbackDefinition newOnFeedback)
+  {
+    FeedbackDefinition oldOnFeedback = onFeedback;
+    onFeedback = newOnFeedback;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK, oldOnFeedback, onFeedback));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ValidationRule getUses()
+  {
+    if (uses != null && uses.eIsProxy())
+    {
+      InternalEObject oldUses = (InternalEObject)uses;
+      uses = (ValidationRule)eResolveProxy(oldUses);
+      if (uses != oldUses)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.AUTOMATION_RULE__USES, oldUses, uses));
+      }
+    }
+    return uses;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ValidationRule basicGetUses()
+  {
+    return uses;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setUses(ValidationRule newUses)
+  {
+    ValidationRule oldUses = uses;
+    uses = newUses;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__USES, oldUses, uses));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
@@ -250,6 +479,18 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return getCondition();
       case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
         return getActionDescription();
+      case RefDslPackage.AUTOMATION_RULE__CONTEXT:
+        if (resolve) return getContext();
+        return basicGetContext();
+      case RefDslPackage.AUTOMATION_RULE__IN_CONTEXT:
+        if (resolve) return getInContext();
+        return basicGetInContext();
+      case RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK:
+        if (resolve) return getOnFeedback();
+        return basicGetOnFeedback();
+      case RefDslPackage.AUTOMATION_RULE__USES:
+        if (resolve) return getUses();
+        return basicGetUses();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -275,6 +516,18 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return;
       case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
         setActionDescription((String)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__CONTEXT:
+        setContext((ResourceType)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__IN_CONTEXT:
+        setInContext((ContextType)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK:
+        setOnFeedback((FeedbackDefinition)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__USES:
+        setUses((ValidationRule)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -302,6 +555,18 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
         setActionDescription(ACTION_DESCRIPTION_EDEFAULT);
         return;
+      case RefDslPackage.AUTOMATION_RULE__CONTEXT:
+        setContext((ResourceType)null);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__IN_CONTEXT:
+        setInContext((ContextType)null);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK:
+        setOnFeedback((FeedbackDefinition)null);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__USES:
+        setUses((ValidationRule)null);
+        return;
     }
     super.eUnset(featureID);
   }
@@ -324,6 +589,14 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return CONDITION_EDEFAULT == null ? condition != null : !CONDITION_EDEFAULT.equals(condition);
       case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
         return ACTION_DESCRIPTION_EDEFAULT == null ? actionDescription != null : !ACTION_DESCRIPTION_EDEFAULT.equals(actionDescription);
+      case RefDslPackage.AUTOMATION_RULE__CONTEXT:
+        return context != null;
+      case RefDslPackage.AUTOMATION_RULE__IN_CONTEXT:
+        return inContext != null;
+      case RefDslPackage.AUTOMATION_RULE__ON_FEEDBACK:
+        return onFeedback != null;
+      case RefDslPackage.AUTOMATION_RULE__USES:
+        return uses != null;
     }
     return super.eIsSet(featureID);
   }

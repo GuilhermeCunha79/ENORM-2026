@@ -4,7 +4,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.example.org/ref"
-            class="pt.isep.enorm.ref.RefPackage"
+            class="pt.isep.enorm.ref.ref.RefPackage"
             genModel="model/ref.genmodel"/>
    </extension>
 </plugin>

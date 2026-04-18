@@ -22,6 +22,8 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AttributeImpl#isRequired <em>Required</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AttributeImpl#isMultiValued <em>Multi Valued</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AttributeImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AttributeImpl#getType <em>Type</em>}</li>
  * </ul>
@@ -30,6 +32,46 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
  */
 public class AttributeImpl extends MinimalEObjectImpl.Container implements Attribute
 {
+  /**
+   * The default value of the '{@link #isRequired() <em>Required</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isRequired()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean REQUIRED_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isRequired() <em>Required</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isRequired()
+   * @generated
+   * @ordered
+   */
+  protected boolean required = REQUIRED_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #isMultiValued() <em>Multi Valued</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isMultiValued()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean MULTI_VALUED_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isMultiValued() <em>Multi Valued</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isMultiValued()
+   * @generated
+   * @ordered
+   */
+  protected boolean multiValued = MULTI_VALUED_EDEFAULT;
+
   /**
    * The default value of the '{@link #getName() <em>Name</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -97,6 +139,56 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
    * @generated
    */
   @Override
+  public boolean isRequired()
+  {
+    return required;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setRequired(boolean newRequired)
+  {
+    boolean oldRequired = required;
+    required = newRequired;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.ATTRIBUTE__REQUIRED, oldRequired, required));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public boolean isMultiValued()
+  {
+    return multiValued;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setMultiValued(boolean newMultiValued)
+  {
+    boolean oldMultiValued = multiValued;
+    multiValued = newMultiValued;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.ATTRIBUTE__MULTI_VALUED, oldMultiValued, multiValued));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public String getName()
   {
     return name;
@@ -151,6 +243,10 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
   {
     switch (featureID)
     {
+      case RefDslPackage.ATTRIBUTE__REQUIRED:
+        return isRequired();
+      case RefDslPackage.ATTRIBUTE__MULTI_VALUED:
+        return isMultiValued();
       case RefDslPackage.ATTRIBUTE__NAME:
         return getName();
       case RefDslPackage.ATTRIBUTE__TYPE:
@@ -169,6 +265,12 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
   {
     switch (featureID)
     {
+      case RefDslPackage.ATTRIBUTE__REQUIRED:
+        setRequired((Boolean)newValue);
+        return;
+      case RefDslPackage.ATTRIBUTE__MULTI_VALUED:
+        setMultiValued((Boolean)newValue);
+        return;
       case RefDslPackage.ATTRIBUTE__NAME:
         setName((String)newValue);
         return;
@@ -189,6 +291,12 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
   {
     switch (featureID)
     {
+      case RefDslPackage.ATTRIBUTE__REQUIRED:
+        setRequired(REQUIRED_EDEFAULT);
+        return;
+      case RefDslPackage.ATTRIBUTE__MULTI_VALUED:
+        setMultiValued(MULTI_VALUED_EDEFAULT);
+        return;
       case RefDslPackage.ATTRIBUTE__NAME:
         setName(NAME_EDEFAULT);
         return;
@@ -209,6 +317,10 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
   {
     switch (featureID)
     {
+      case RefDslPackage.ATTRIBUTE__REQUIRED:
+        return required != REQUIRED_EDEFAULT;
+      case RefDslPackage.ATTRIBUTE__MULTI_VALUED:
+        return multiValued != MULTI_VALUED_EDEFAULT;
       case RefDslPackage.ATTRIBUTE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.ATTRIBUTE__TYPE:
@@ -228,7 +340,11 @@ public class AttributeImpl extends MinimalEObjectImpl.Container implements Attri
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (name: ");
+    result.append(" (required: ");
+    result.append(required);
+    result.append(", multiValued: ");
+    result.append(multiValued);
+    result.append(", name: ");
     result.append(name);
     result.append(", type: ");
     result.append(type);

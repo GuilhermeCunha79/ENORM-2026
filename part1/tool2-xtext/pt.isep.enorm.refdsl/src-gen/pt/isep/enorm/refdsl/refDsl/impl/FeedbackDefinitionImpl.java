@@ -3,12 +3,8 @@
  */
 package pt.isep.enorm.refdsl.refDsl.impl;
 
-import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -16,16 +12,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
+import pt.isep.enorm.refdsl.refDsl.FeedbackPolicy;
 import pt.isep.enorm.refdsl.refDsl.FeedbackType;
+import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
 import pt.isep.enorm.refdsl.refDsl.UserType;
-import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 
 /**
  * <!-- begin-user-doc -->
@@ -37,9 +30,14 @@ import pt.isep.enorm.refdsl.refDsl.ValidationRule;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getType <em>Type</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getSubject <em>Subject</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getWriters <em>Writers</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getValidationRules <em>Validation Rules</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getAuthor <em>Author</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getSubjectResource <em>Subject Resource</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getSubjectFeedback <em>Subject Feedback</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getParent <em>Parent</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getPolicy <em>Policy</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getRating <em>Rating</em>}</li>
  * </ul>
  *
  * @generated
@@ -77,34 +75,104 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
   protected FeedbackType type;
 
   /**
-   * The cached value of the '{@link #getSubject() <em>Subject</em>}' reference.
+   * The default value of the '{@link #isRequiresVerifiedContext() <em>Requires Verified Context</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getSubject()
+   * @see #isRequiresVerifiedContext()
    * @generated
    * @ordered
    */
-  protected ResourceType subject;
+  protected static final boolean REQUIRES_VERIFIED_CONTEXT_EDEFAULT = false;
 
   /**
-   * The cached value of the '{@link #getWriters() <em>Writers</em>}' reference list.
+   * The cached value of the '{@link #isRequiresVerifiedContext() <em>Requires Verified Context</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getWriters()
+   * @see #isRequiresVerifiedContext()
    * @generated
    * @ordered
    */
-  protected EList<UserType> writers;
+  protected boolean requiresVerifiedContext = REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
 
   /**
-   * The cached value of the '{@link #getValidationRules() <em>Validation Rules</em>}' containment reference list.
+   * The default value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getValidationRules()
+   * @see #isUniquePerAuthorTarget()
    * @generated
    * @ordered
    */
-  protected EList<ValidationRule> validationRules;
+  protected static final boolean UNIQUE_PER_AUTHOR_TARGET_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isUniquePerAuthorTarget()
+   * @generated
+   * @ordered
+   */
+  protected boolean uniquePerAuthorTarget = UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getAuthor()
+   * @generated
+   * @ordered
+   */
+  protected UserType author;
+
+  /**
+   * The cached value of the '{@link #getSubjectResource() <em>Subject Resource</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSubjectResource()
+   * @generated
+   * @ordered
+   */
+  protected ResourceType subjectResource;
+
+  /**
+   * The cached value of the '{@link #getSubjectFeedback() <em>Subject Feedback</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSubjectFeedback()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackDefinition subjectFeedback;
+
+  /**
+   * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getParent()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackDefinition parent;
+
+  /**
+   * The cached value of the '{@link #getPolicy() <em>Policy</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getPolicy()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackPolicy policy;
+
+  /**
+   * The cached value of the '{@link #getRating() <em>Rating</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getRating()
+   * @generated
+   * @ordered
+   */
+  protected RatingPolicy rating;
 
   /**
    * <!-- begin-user-doc -->
@@ -203,19 +271,69 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @generated
    */
   @Override
-  public ResourceType getSubject()
+  public boolean isRequiresVerifiedContext()
   {
-    if (subject != null && subject.eIsProxy())
+    return requiresVerifiedContext;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setRequiresVerifiedContext(boolean newRequiresVerifiedContext)
+  {
+    boolean oldRequiresVerifiedContext = requiresVerifiedContext;
+    requiresVerifiedContext = newRequiresVerifiedContext;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT, oldRequiresVerifiedContext, requiresVerifiedContext));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public boolean isUniquePerAuthorTarget()
+  {
+    return uniquePerAuthorTarget;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setUniquePerAuthorTarget(boolean newUniquePerAuthorTarget)
+  {
+    boolean oldUniquePerAuthorTarget = uniquePerAuthorTarget;
+    uniquePerAuthorTarget = newUniquePerAuthorTarget;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET, oldUniquePerAuthorTarget, uniquePerAuthorTarget));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public UserType getAuthor()
+  {
+    if (author != null && author.eIsProxy())
     {
-      InternalEObject oldSubject = (InternalEObject)subject;
-      subject = (ResourceType)eResolveProxy(oldSubject);
-      if (subject != oldSubject)
+      InternalEObject oldAuthor = (InternalEObject)author;
+      author = (UserType)eResolveProxy(oldAuthor);
+      if (author != oldAuthor)
       {
         if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT, oldSubject, subject));
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__AUTHOR, oldAuthor, author));
       }
     }
-    return subject;
+    return author;
   }
 
   /**
@@ -223,9 +341,9 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * <!-- end-user-doc -->
    * @generated
    */
-  public ResourceType basicGetSubject()
+  public UserType basicGetAuthor()
   {
-    return subject;
+    return author;
   }
 
   /**
@@ -234,12 +352,12 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @generated
    */
   @Override
-  public void setSubject(ResourceType newSubject)
+  public void setAuthor(UserType newAuthor)
   {
-    ResourceType oldSubject = subject;
-    subject = newSubject;
+    UserType oldAuthor = author;
+    author = newAuthor;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT, oldSubject, subject));
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__AUTHOR, oldAuthor, author));
   }
 
   /**
@@ -248,13 +366,29 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @generated
    */
   @Override
-  public EList<UserType> getWriters()
+  public ResourceType getSubjectResource()
   {
-    if (writers == null)
+    if (subjectResource != null && subjectResource.eIsProxy())
     {
-      writers = new EObjectResolvingEList<UserType>(UserType.class, this, RefDslPackage.FEEDBACK_DEFINITION__WRITERS);
+      InternalEObject oldSubjectResource = (InternalEObject)subjectResource;
+      subjectResource = (ResourceType)eResolveProxy(oldSubjectResource);
+      if (subjectResource != oldSubjectResource)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE, oldSubjectResource, subjectResource));
+      }
     }
-    return writers;
+    return subjectResource;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ResourceType basicGetSubjectResource()
+  {
+    return subjectResource;
   }
 
   /**
@@ -263,13 +397,202 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @generated
    */
   @Override
-  public EList<ValidationRule> getValidationRules()
+  public void setSubjectResource(ResourceType newSubjectResource)
   {
-    if (validationRules == null)
+    ResourceType oldSubjectResource = subjectResource;
+    subjectResource = newSubjectResource;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE, oldSubjectResource, subjectResource));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackDefinition getSubjectFeedback()
+  {
+    if (subjectFeedback != null && subjectFeedback.eIsProxy())
     {
-      validationRules = new EObjectContainmentEList<ValidationRule>(ValidationRule.class, this, RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES);
+      InternalEObject oldSubjectFeedback = (InternalEObject)subjectFeedback;
+      subjectFeedback = (FeedbackDefinition)eResolveProxy(oldSubjectFeedback);
+      if (subjectFeedback != oldSubjectFeedback)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK, oldSubjectFeedback, subjectFeedback));
+      }
     }
-    return validationRules;
+    return subjectFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FeedbackDefinition basicGetSubjectFeedback()
+  {
+    return subjectFeedback;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setSubjectFeedback(FeedbackDefinition newSubjectFeedback)
+  {
+    FeedbackDefinition oldSubjectFeedback = subjectFeedback;
+    subjectFeedback = newSubjectFeedback;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK, oldSubjectFeedback, subjectFeedback));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackDefinition getParent()
+  {
+    if (parent != null && parent.eIsProxy())
+    {
+      InternalEObject oldParent = (InternalEObject)parent;
+      parent = (FeedbackDefinition)eResolveProxy(oldParent);
+      if (parent != oldParent)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__PARENT, oldParent, parent));
+      }
+    }
+    return parent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public FeedbackDefinition basicGetParent()
+  {
+    return parent;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setParent(FeedbackDefinition newParent)
+  {
+    FeedbackDefinition oldParent = parent;
+    parent = newParent;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__PARENT, oldParent, parent));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public FeedbackPolicy getPolicy()
+  {
+    return policy;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetPolicy(FeedbackPolicy newPolicy, NotificationChain msgs)
+  {
+    FeedbackPolicy oldPolicy = policy;
+    policy = newPolicy;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__POLICY, oldPolicy, newPolicy);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setPolicy(FeedbackPolicy newPolicy)
+  {
+    if (newPolicy != policy)
+    {
+      NotificationChain msgs = null;
+      if (policy != null)
+        msgs = ((InternalEObject)policy).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RefDslPackage.FEEDBACK_DEFINITION__POLICY, null, msgs);
+      if (newPolicy != null)
+        msgs = ((InternalEObject)newPolicy).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RefDslPackage.FEEDBACK_DEFINITION__POLICY, null, msgs);
+      msgs = basicSetPolicy(newPolicy, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__POLICY, newPolicy, newPolicy));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public RatingPolicy getRating()
+  {
+    return rating;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetRating(RatingPolicy newRating, NotificationChain msgs)
+  {
+    RatingPolicy oldRating = rating;
+    rating = newRating;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__RATING, oldRating, newRating);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setRating(RatingPolicy newRating)
+  {
+    if (newRating != rating)
+    {
+      NotificationChain msgs = null;
+      if (rating != null)
+        msgs = ((InternalEObject)rating).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RefDslPackage.FEEDBACK_DEFINITION__RATING, null, msgs);
+      if (newRating != null)
+        msgs = ((InternalEObject)newRating).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RefDslPackage.FEEDBACK_DEFINITION__RATING, null, msgs);
+      msgs = basicSetRating(newRating, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__RATING, newRating, newRating));
   }
 
   /**
@@ -282,8 +605,10 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
   {
     switch (featureID)
     {
-      case RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES:
-        return ((InternalEList<?>)getValidationRules()).basicRemove(otherEnd, msgs);
+      case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
+        return basicSetPolicy(null, msgs);
+      case RefDslPackage.FEEDBACK_DEFINITION__RATING:
+        return basicSetRating(null, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -303,13 +628,26 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__TYPE:
         if (resolve) return getType();
         return basicGetType();
-      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT:
-        if (resolve) return getSubject();
-        return basicGetSubject();
-      case RefDslPackage.FEEDBACK_DEFINITION__WRITERS:
-        return getWriters();
-      case RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES:
-        return getValidationRules();
+      case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+        return isRequiresVerifiedContext();
+      case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+        return isUniquePerAuthorTarget();
+      case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
+        if (resolve) return getAuthor();
+        return basicGetAuthor();
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+        if (resolve) return getSubjectResource();
+        return basicGetSubjectResource();
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+        if (resolve) return getSubjectFeedback();
+        return basicGetSubjectFeedback();
+      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
+        if (resolve) return getParent();
+        return basicGetParent();
+      case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
+        return getPolicy();
+      case RefDslPackage.FEEDBACK_DEFINITION__RATING:
+        return getRating();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -319,7 +657,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * <!-- end-user-doc -->
    * @generated
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -331,16 +668,29 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__TYPE:
         setType((FeedbackType)newValue);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT:
-        setSubject((ResourceType)newValue);
+      case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+        setRequiresVerifiedContext((Boolean)newValue);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__WRITERS:
-        getWriters().clear();
-        getWriters().addAll((Collection<? extends UserType>)newValue);
+      case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+        setUniquePerAuthorTarget((Boolean)newValue);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES:
-        getValidationRules().clear();
-        getValidationRules().addAll((Collection<? extends ValidationRule>)newValue);
+      case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
+        setAuthor((UserType)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+        setSubjectResource((ResourceType)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+        setSubjectFeedback((FeedbackDefinition)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
+        setParent((FeedbackDefinition)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
+        setPolicy((FeedbackPolicy)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__RATING:
+        setRating((RatingPolicy)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -362,14 +712,29 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__TYPE:
         setType((FeedbackType)null);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT:
-        setSubject((ResourceType)null);
+      case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+        setRequiresVerifiedContext(REQUIRES_VERIFIED_CONTEXT_EDEFAULT);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__WRITERS:
-        getWriters().clear();
+      case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+        setUniquePerAuthorTarget(UNIQUE_PER_AUTHOR_TARGET_EDEFAULT);
         return;
-      case RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES:
-        getValidationRules().clear();
+      case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
+        setAuthor((UserType)null);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+        setSubjectResource((ResourceType)null);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+        setSubjectFeedback((FeedbackDefinition)null);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
+        setParent((FeedbackDefinition)null);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
+        setPolicy((FeedbackPolicy)null);
+        return;
+      case RefDslPackage.FEEDBACK_DEFINITION__RATING:
+        setRating((RatingPolicy)null);
         return;
     }
     super.eUnset(featureID);
@@ -389,12 +754,22 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.FEEDBACK_DEFINITION__TYPE:
         return type != null;
-      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT:
-        return subject != null;
-      case RefDslPackage.FEEDBACK_DEFINITION__WRITERS:
-        return writers != null && !writers.isEmpty();
-      case RefDslPackage.FEEDBACK_DEFINITION__VALIDATION_RULES:
-        return validationRules != null && !validationRules.isEmpty();
+      case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+        return requiresVerifiedContext != REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+      case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+        return uniquePerAuthorTarget != UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
+      case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
+        return author != null;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+        return subjectResource != null;
+      case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+        return subjectFeedback != null;
+      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
+        return parent != null;
+      case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
+        return policy != null;
+      case RefDslPackage.FEEDBACK_DEFINITION__RATING:
+        return rating != null;
     }
     return super.eIsSet(featureID);
   }
@@ -412,6 +787,10 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
     StringBuilder result = new StringBuilder(super.toString());
     result.append(" (name: ");
     result.append(name);
+    result.append(", requiresVerifiedContext: ");
+    result.append(requiresVerifiedContext);
+    result.append(", uniquePerAuthorTarget: ");
+    result.append(uniquePerAuthorTarget);
     result.append(')');
     return result.toString();
   }

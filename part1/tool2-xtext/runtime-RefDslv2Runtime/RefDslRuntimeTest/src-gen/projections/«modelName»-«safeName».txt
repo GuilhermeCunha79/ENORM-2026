@@ -1,0 +1,4 @@
+ATTRIBUTE: content
+  required: false
+  multiValued: false
+  type: TEXT

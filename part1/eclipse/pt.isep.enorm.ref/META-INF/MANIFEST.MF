@@ -1,12 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: REF Metamodel
+Bundle-Name: %pluginName
 Bundle-SymbolicName: pt.isep.enorm.ref;singleton:=true
+Automatic-Module-Name: pt.isep.enorm.ref
 Bundle-Version: 0.1.0.qualifier
 Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: pt.isep.enorm.ref,
- pt.isep.enorm.ref.impl,
- pt.isep.enorm.ref.util
+Export-Package: pt.isep.enorm.ref.ref,
+ pt.isep.enorm.ref.ref.impl,
+ pt.isep.enorm.ref.ref.util
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy

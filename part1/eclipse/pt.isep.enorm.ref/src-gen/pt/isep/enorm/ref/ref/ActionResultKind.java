@@ -1,0 +1,346 @@
+/**
+ */
+package pt.isep.enorm.ref.ref;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.emf.common.util.Enumerator;
+
+/**
+ * <!-- begin-user-doc -->
+ * A representation of the literals of the enumeration '<em><b>Action Result Kind</b></em>',
+ * and utility methods for working with them.
+ * <!-- end-user-doc -->
+ * @see pt.isep.enorm.ref.ref.RefPackage#getActionResultKind()
+ * @model
+ * @generated
+ */
+public enum ActionResultKind implements Enumerator {
+	/**
+	 * The '<em><b>DISPLAY MESSAGE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DISPLAY_MESSAGE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	DISPLAY_MESSAGE(0, "DISPLAY_MESSAGE", "DISPLAY_MESSAGE"),
+
+	/**
+	 * The '<em><b>FLAG CONTENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FLAG_CONTENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	FLAG_CONTENT(1, "FLAG_CONTENT", "FLAG_CONTENT"),
+
+	/**
+	 * The '<em><b>HIDE CONTENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #HIDE_CONTENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	HIDE_CONTENT(2, "HIDE_CONTENT", "HIDE_CONTENT"),
+
+	/**
+	 * The '<em><b>REMOVE CONTENT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #REMOVE_CONTENT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	REMOVE_CONTENT(3, "REMOVE_CONTENT", "REMOVE_CONTENT"),
+
+	/**
+	 * The '<em><b>BLOCK SUBMISSION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BLOCK_SUBMISSION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	BLOCK_SUBMISSION(4, "BLOCK_SUBMISSION", "BLOCK_SUBMISSION"),
+
+	/**
+	 * The '<em><b>NOTIFY MODERATOR</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #NOTIFY_MODERATOR_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	NOTIFY_MODERATOR(5, "NOTIFY_MODERATOR", "NOTIFY_MODERATOR"),
+
+	/**
+	 * The '<em><b>AUTO APPROVE</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #AUTO_APPROVE_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	AUTO_APPROVE(6, "AUTO_APPROVE", "AUTO_APPROVE"),
+
+	/**
+	 * The '<em><b>AUTO REJECT</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #AUTO_REJECT_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	AUTO_REJECT(7, "AUTO_REJECT", "AUTO_REJECT");
+
+	/**
+	 * The '<em><b>DISPLAY MESSAGE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #DISPLAY_MESSAGE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int DISPLAY_MESSAGE_VALUE = 0;
+
+	/**
+	 * The '<em><b>FLAG CONTENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #FLAG_CONTENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int FLAG_CONTENT_VALUE = 1;
+
+	/**
+	 * The '<em><b>HIDE CONTENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #HIDE_CONTENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int HIDE_CONTENT_VALUE = 2;
+
+	/**
+	 * The '<em><b>REMOVE CONTENT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #REMOVE_CONTENT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int REMOVE_CONTENT_VALUE = 3;
+
+	/**
+	 * The '<em><b>BLOCK SUBMISSION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #BLOCK_SUBMISSION
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int BLOCK_SUBMISSION_VALUE = 4;
+
+	/**
+	 * The '<em><b>NOTIFY MODERATOR</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #NOTIFY_MODERATOR
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int NOTIFY_MODERATOR_VALUE = 5;
+
+	/**
+	 * The '<em><b>AUTO APPROVE</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #AUTO_APPROVE
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int AUTO_APPROVE_VALUE = 6;
+
+	/**
+	 * The '<em><b>AUTO REJECT</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #AUTO_REJECT
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int AUTO_REJECT_VALUE = 7;
+
+	/**
+	 * An array of all the '<em><b>Action Result Kind</b></em>' enumerators.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private static final ActionResultKind[] VALUES_ARRAY = new ActionResultKind[] { DISPLAY_MESSAGE, FLAG_CONTENT,
+			HIDE_CONTENT, REMOVE_CONTENT, BLOCK_SUBMISSION, NOTIFY_MODERATOR, AUTO_APPROVE, AUTO_REJECT, };
+
+	/**
+	 * A public read-only list of all the '<em><b>Action Result Kind</b></em>' enumerators.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public static final List<ActionResultKind> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+
+	/**
+	 * Returns the '<em><b>Action Result Kind</b></em>' literal with the specified literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param literal the literal.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static ActionResultKind get(String literal) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			ActionResultKind result = VALUES_ARRAY[i];
+			if (result.toString().equals(literal)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Action Result Kind</b></em>' literal with the specified name.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param name the name.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static ActionResultKind getByName(String name) {
+		for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+			ActionResultKind result = VALUES_ARRAY[i];
+			if (result.getName().equals(name)) {
+				return result;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the '<em><b>Action Result Kind</b></em>' literal with the specified integer value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the integer value.
+	 * @return the matching enumerator or <code>null</code>.
+	 * @generated
+	 */
+	public static ActionResultKind get(int value) {
+		switch (value) {
+		case DISPLAY_MESSAGE_VALUE:
+			return DISPLAY_MESSAGE;
+		case FLAG_CONTENT_VALUE:
+			return FLAG_CONTENT;
+		case HIDE_CONTENT_VALUE:
+			return HIDE_CONTENT;
+		case REMOVE_CONTENT_VALUE:
+			return REMOVE_CONTENT;
+		case BLOCK_SUBMISSION_VALUE:
+			return BLOCK_SUBMISSION;
+		case NOTIFY_MODERATOR_VALUE:
+			return NOTIFY_MODERATOR;
+		case AUTO_APPROVE_VALUE:
+			return AUTO_APPROVE;
+		case AUTO_REJECT_VALUE:
+			return AUTO_REJECT;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final int value;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String name;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private final String literal;
+
+	/**
+	 * Only this class can construct instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private ActionResultKind(int value, String name, String literal) {
+		this.value = value;
+		this.name = name;
+		this.literal = literal;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int getValue() {
+		return value;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getLiteral() {
+		return literal;
+	}
+
+	/**
+	 * Returns the literal value of the enumerator, which is its string representation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		return literal;
+	}
+
+} //ActionResultKind

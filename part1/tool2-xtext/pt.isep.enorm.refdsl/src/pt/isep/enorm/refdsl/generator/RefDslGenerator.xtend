@@ -7,19 +7,285 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import pt.isep.enorm.refdsl.refDsl.RefModel
 
 /**
- * Generates code from your model files on save.
- * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
+ * Generates textual and PlantUML projections for Activity 6.
  */
 class RefDslGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-//			resource.allContents
-//				.filter(Greeting)
-//				.map[name]
-//				.join(', '))
+		val modelBaseName = resource.URI.trimFileExtension.lastSegment
+		val roots = resource.contents.filter(RefModel).toList
+
+		if (!roots.empty) {
+			var index = 0
+			for (m : roots) {
+				val suffix = if (roots.size > 1) "_" + index else ""
+				val outName = '''«modelBaseName»«suffix»'''
+
+				fsa.generateFile('''projections/«outName».txt''', generateTextProjection(m))
+				fsa.generateFile('''projections/«outName».puml''', generatePlantUmlProjection(m))
+				index = index + 1
+			}
+		}
+	}
+
+	def CharSequence generateTextProjection(RefModel m) '''
+REF MODEL: «m.name» (version=«m.version»)
+
+USER TYPES:
+«FOR u : m.userTypes»
+- «u.name» kind=«u.kind» superTypes=«u.superTypes.map[name].join(", ")»
+«ENDFOR»
+
+RESOURCE TYPES:
+«FOR r : m.resourceTypes»
+- «r.name» supportsMedia=«r.supportsMedia» superTypes=«r.superTypes.map[name].join(", ")»
+  ATTRIBUTES:
+  «FOR a : r.attributes»
+  * «a.name» : «a.type» required=«a.required» multi=«a.multiValued»
+  «ENDFOR»
+«ENDFOR»
+
+CONTEXT TYPES:
+«FOR c : m.contextTypes»
+- «c.name» kind=«c.kind» contains=[«c.contains.map[name].join(", ")»]
+«ENDFOR»
+
+RESOURCE RELATIONS:
+«FOR rr : m.resourceRelations»
+- «rr.name» source=«rr.source?.name» target=«rr.target?.name» srcCard=«rr.sourceCardinality» tgtCard=«rr.targetCardinality» containment=«rr.containment» recursive=«rr.recursive»
+«ENDFOR»
+
+FEEDBACK TYPES:
+«FOR f : m.feedbackTypes»
+- «f.name» kind=«f.kind» scope=«f.subjectScope» hasRating=«f.hasRating» recursive=«f.recursive» allowsMedia=«f.allowsMedia»
+«ENDFOR»
+
+FEEDBACK DEFINITIONS:
+«FOR fd : m.feedbackDefinitions»
+- «fd.name» type=«fd.type?.name» author=«fd.author?.name» subjectResource=«fd.subjectResource?.name» subjectFeedback=«fd.subjectFeedback?.name»
+  requiresVerifiedContext=«fd.requiresVerifiedContext» uniquePerAuthorTarget=«fd.uniquePerAuthorTarget» parent=«fd.parent?.name»
+  policy.status=«fd.policy?.status»
+«IF fd.rating !== null»
+  rating=[min=«fd.rating.minValue» max=«fd.rating.maxValue» step=«fd.rating.step» scale=«fd.rating.scaleKind»]
+«ENDIF»
+«ENDFOR»
+
+AUTHORIZATION RULES:
+«FOR ar : m.authorizationRules»
+- action=«ar.allowedAction» actor=«ar.actor?.name» context=«ar.context?.name» resourceTarget=«ar.resourceTarget?.name» feedbackTarget=«ar.feedbackTarget?.name»
+«ENDFOR»
+
+VALIDATION RULES:
+«FOR v : m.validationRules»
+- «v.name» kind=«v.kind» severity=«v.severity» expr=«v.expression» impl=«v.implementationId» appliesToResource=«v.appliesToResource?.name» appliesToFeedback=«v.appliesToFeedback?.name» invokedBy=«v.invokedBy?.name»
+«ENDFOR»
+
+MODERATION POLICIES:
+«FOR mp : m.moderationPolicies»
+- «mp.name» mode=«mp.mode» trigger=«mp.trigger» decision=«mp.decision» executedBy=«mp.executedBy?.name» inContext=«mp.inContext?.name»
+  monitorsResource=«mp.monitorsResource?.name» monitorsFeedback=«mp.monitorsFeedback?.name»
+«ENDFOR»
+
+AUTOMATION RULES:
+«FOR a : m.automationRules»
+- «a.name» trigger=«a.trigger» condition=«a.condition» action=«a.actionDescription» context=«a.context?.name» inContext=«a.inContext?.name» onFeedback=«a.onFeedback?.name» uses=«a.uses?.name»
+«ENDFOR»
+
+VERIFICATION POLICIES:
+«FOR vp : m.verificationPolicies»
+- «vp.name» mode=«vp.mode» appliesWhen=«vp.appliesWhen» verifies=«vp.verifies?.name»
+«ENDFOR»
+'''
+
+	def CharSequence generatePlantUmlProjection(RefModel m) '''
+@startuml
+title REF Model - «m.name»
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = «m.name»
+  version = «m.version»
+}
+
+«FOR u : m.userTypes»
+class UserType_«safeId(u.name)» {
+  name = «u.name»
+  kind = «u.kind»
+}
+RefModel --> UserType_«safeId(u.name)»
+«FOR st : u.superTypes»
+UserType_«safeId(u.name)» --|> UserType_«safeId(st.name)»
+«ENDFOR»
+«ENDFOR»
+
+«FOR r : m.resourceTypes»
+class ResourceType_«safeId(r.name)» {
+  name = «r.name»
+  supportsMedia = «r.supportsMedia»
+}
+RefModel --> ResourceType_«safeId(r.name)»
+«FOR st : r.superTypes»
+ResourceType_«safeId(r.name)» --|> ResourceType_«safeId(st.name)»
+«ENDFOR»
+«FOR a : r.attributes»
+class Attribute_«safeId(r.name)»_«safeId(a.name)» {
+  name = «a.name»
+  type = «a.type»
+  required = «a.required»
+  multiValued = «a.multiValued»
+}
+ResourceType_«safeId(r.name)» *-- Attribute_«safeId(r.name)»_«safeId(a.name)»
+«ENDFOR»
+«ENDFOR»
+
+«FOR c : m.contextTypes»
+class ContextType_«safeId(c.name)» {
+  name = «c.name»
+  kind = «c.kind»
+}
+RefModel --> ContextType_«safeId(c.name)»
+«FOR contained : c.contains»
+ContextType_«safeId(c.name)» --> ResourceType_«safeId(contained.name)» : contains
+«ENDFOR»
+«ENDFOR»
+
+«FOR rr : m.resourceRelations»
+ResourceType_«safeId(rr.source?.name)» --> ResourceType_«safeId(rr.target?.name)» : «rr.name» [«rr.sourceCardinality»..«rr.targetCardinality»] recursive=«rr.recursive»
+«ENDFOR»
+
+«FOR f : m.feedbackTypes»
+class FeedbackType_«safeId(f.name)» {
+  name = «f.name»
+  kind = «f.kind»
+  subjectScope = «f.subjectScope»
+  hasRating = «f.hasRating»
+  recursive = «f.recursive»
+  allowsMedia = «f.allowsMedia»
+}
+RefModel --> FeedbackType_«safeId(f.name)»
+«ENDFOR»
+
+«FOR fd : m.feedbackDefinitions»
+class FeedbackDefinition_«safeId(fd.name)» {
+  name = «fd.name»
+  requiresVerifiedContext = «fd.requiresVerifiedContext»
+  uniquePerAuthorTarget = «fd.uniquePerAuthorTarget»
+}
+RefModel --> FeedbackDefinition_«safeId(fd.name)»
+FeedbackDefinition_«safeId(fd.name)» --> FeedbackType_«safeId(fd.type?.name)» : type
+FeedbackDefinition_«safeId(fd.name)» --> UserType_«safeId(fd.author?.name)» : author
+«IF fd.subjectResource !== null»
+FeedbackDefinition_«safeId(fd.name)» --> ResourceType_«safeId(fd.subjectResource.name)» : subjectResource
+«ENDIF»
+«IF fd.subjectFeedback !== null»
+FeedbackDefinition_«safeId(fd.name)» --> FeedbackDefinition_«safeId(fd.subjectFeedback.name)» : subjectFeedback
+«ENDIF»
+«IF fd.parent !== null»
+FeedbackDefinition_«safeId(fd.name)» --> FeedbackDefinition_«safeId(fd.parent.name)» : parent
+«ENDIF»
+«IF fd.policy !== null»
+class FeedbackPolicy_«safeId(fd.name)» {
+  status = «fd.policy.status»
+}
+FeedbackDefinition_«safeId(fd.name)» *-- FeedbackPolicy_«safeId(fd.name)»
+«ENDIF»
+«IF fd.rating !== null»
+class RatingPolicy_«safeId(fd.name)» {
+  min = «fd.rating.minValue»
+  max = «fd.rating.maxValue»
+  step = «fd.rating.step»
+  scale = «fd.rating.scaleKind»
+}
+FeedbackDefinition_«safeId(fd.name)» *-- RatingPolicy_«safeId(fd.name)»
+«ENDIF»
+«ENDFOR»
+
+«FOR v : m.validationRules»
+class ValidationRule_«safeId(v.name)» {
+  name = «v.name»
+  kind = «v.kind»
+  severity = «v.severity»
+  expression = «v.expression»
+  implementationId = «v.implementationId»
+}
+RefModel --> ValidationRule_«safeId(v.name)»
+«IF v.appliesToResource !== null»
+ValidationRule_«safeId(v.name)» --> ResourceType_«safeId(v.appliesToResource.name)» : appliesToResource
+«ENDIF»
+«IF v.appliesToFeedback !== null»
+ValidationRule_«safeId(v.name)» --> FeedbackDefinition_«safeId(v.appliesToFeedback.name)» : appliesToFeedback
+«ENDIF»
+«ENDFOR»
+
+«FOR ar : m.authorizationRules»
+class AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)» {
+  allowedAction = «ar.allowedAction»
+}
+RefModel --> AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)»
+AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)» --> UserType_«safeId(ar.actor?.name)» : actor
+AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)» --> ResourceType_«safeId(ar.resourceTarget?.name)» : resourceTarget
+«IF ar.feedbackTarget !== null»
+AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)» --> FeedbackDefinition_«safeId(ar.feedbackTarget.name)» : feedbackTarget
+«ENDIF»
+«IF ar.context !== null»
+AuthorizationRule_«safeId(ar.allowedAction.literal + "_" + ar.actor?.name)» --> ContextType_«safeId(ar.context.name)» : context
+«ENDIF»
+«ENDFOR»
+
+«FOR mp : m.moderationPolicies»
+class ModerationPolicy_«safeId(mp.name)» {
+  name = «mp.name»
+  mode = «mp.mode»
+  trigger = «mp.trigger»
+  decision = «mp.decision»
+}
+RefModel --> ModerationPolicy_«safeId(mp.name)»
+ModerationPolicy_«safeId(mp.name)» --> ResourceType_«safeId(mp.monitorsResource?.name)» : monitorsResource
+ModerationPolicy_«safeId(mp.name)» --> FeedbackDefinition_«safeId(mp.monitorsFeedback?.name)» : monitorsFeedback
+ModerationPolicy_«safeId(mp.name)» --> UserType_«safeId(mp.executedBy?.name)» : executedBy
+«IF mp.inContext !== null»
+ModerationPolicy_«safeId(mp.name)» --> ContextType_«safeId(mp.inContext.name)» : inContext
+«ENDIF»
+«ENDFOR»
+
+«FOR a : m.automationRules»
+class AutomationRule_«safeId(a.name)» {
+  name = «a.name»
+  trigger = «a.trigger»
+  condition = «a.condition»
+  action = «a.actionDescription»
+}
+RefModel --> AutomationRule_«safeId(a.name)»
+«IF a.context !== null»
+AutomationRule_«safeId(a.name)» --> ResourceType_«safeId(a.context.name)» : context
+«ENDIF»
+«IF a.inContext !== null»
+AutomationRule_«safeId(a.name)» --> ContextType_«safeId(a.inContext.name)» : inContext
+«ENDIF»
+AutomationRule_«safeId(a.name)» --> FeedbackDefinition_«safeId(a.onFeedback?.name)» : onFeedback
+AutomationRule_«safeId(a.name)» --> ValidationRule_«safeId(a.uses?.name)» : uses
+«ENDFOR»
+
+«FOR vp : m.verificationPolicies»
+class VerificationPolicy_«safeId(vp.name)» {
+  name = «vp.name»
+  mode = «vp.mode»
+  appliesWhen = «vp.appliesWhen»
+}
+RefModel --> VerificationPolicy_«safeId(vp.name)»
+VerificationPolicy_«safeId(vp.name)» --> FeedbackDefinition_«safeId(vp.verifies?.name)» : verifies
+«ENDFOR»
+
+@enduml
+'''
+
+	def String safeId(String raw) {
+		if (raw === null || raw.empty) {
+			return "UNNAMED"
+		}
+		raw.replaceAll("[^A-Za-z0-9_]", "_")
 	}
 }

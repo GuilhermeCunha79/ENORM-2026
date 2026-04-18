@@ -87,10 +87,24 @@ public class RefDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case RefDslPackage.CONTEXT_TYPE:
+      {
+        ContextType contextType = (ContextType)theEObject;
+        T result = caseContextType(contextType);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case RefDslPackage.RESOURCE_TYPE:
       {
         ResourceType resourceType = (ResourceType)theEObject;
         T result = caseResourceType(resourceType);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.RESOURCE_RELATION:
+      {
+        ResourceRelation resourceRelation = (ResourceRelation)theEObject;
+        T result = caseResourceRelation(resourceRelation);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -115,10 +129,31 @@ public class RefDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case RefDslPackage.FEEDBACK_POLICY:
+      {
+        FeedbackPolicy feedbackPolicy = (FeedbackPolicy)theEObject;
+        T result = caseFeedbackPolicy(feedbackPolicy);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.RATING_POLICY:
+      {
+        RatingPolicy ratingPolicy = (RatingPolicy)theEObject;
+        T result = caseRatingPolicy(ratingPolicy);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case RefDslPackage.VALIDATION_RULE:
       {
         ValidationRule validationRule = (ValidationRule)theEObject;
         T result = caseValidationRule(validationRule);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.MODERATION_POLICY:
+      {
+        ModerationPolicy moderationPolicy = (ModerationPolicy)theEObject;
+        T result = caseModerationPolicy(moderationPolicy);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -133,6 +168,13 @@ public class RefDslSwitch<T> extends Switch<T>
       {
         AutomationRule automationRule = (AutomationRule)theEObject;
         T result = caseAutomationRule(automationRule);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.VERIFICATION_POLICY:
+      {
+        VerificationPolicy verificationPolicy = (VerificationPolicy)theEObject;
+        T result = caseVerificationPolicy(verificationPolicy);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -173,6 +215,22 @@ public class RefDslSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Context Type</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Context Type</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseContextType(ContextType object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Resource Type</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -184,6 +242,22 @@ public class RefDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseResourceType(ResourceType object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Resource Relation</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Resource Relation</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseResourceRelation(ResourceRelation object)
   {
     return null;
   }
@@ -237,6 +311,38 @@ public class RefDslSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Feedback Policy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Feedback Policy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseFeedbackPolicy(FeedbackPolicy object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Rating Policy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Rating Policy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRatingPolicy(RatingPolicy object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Validation Rule</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -248,6 +354,22 @@ public class RefDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseValidationRule(ValidationRule object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Moderation Policy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Moderation Policy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseModerationPolicy(ModerationPolicy object)
   {
     return null;
   }
@@ -280,6 +402,22 @@ public class RefDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAutomationRule(AutomationRule object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Verification Policy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Verification Policy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseVerificationPolicy(VerificationPolicy object)
   {
     return null;
   }

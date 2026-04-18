@@ -1,0 +1,52 @@
+REF MODEL: Marketplace (version="1.0.0")
+
+USER TYPES:
+- Buyer kind=BUYER superTypes=
+- Seller kind=SELLER superTypes=
+- Moderator kind=MODERATOR superTypes=
+- TrustedBuyer kind=BUYER superTypes=Buyer
+
+RESOURCE TYPES:
+- Product supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * price : NUMBER required=true multi=false
+  * publishedAt : DATETIME required=false multi=false
+- Category supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * categoryName : TEXT required=true multi=false
+
+CONTEXT TYPES:
+- Shop kind=CATALOG contains=[Product, Category]
+
+RESOURCE RELATIONS:
+- ProductInCategory source=Product target=Category srcCard="0..*" tgtCard="1" containment=false recursive=false
+
+FEEDBACK TYPES:
+- Review kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsMedia=false
+- Comment kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsMedia=false
+
+FEEDBACK DEFINITIONS:
+- ProductReview type=Review author=Buyer subjectResource=Product subjectFeedback=
+  requiresVerifiedContext=true uniquePerAuthorTarget=true parent=
+  policy.status=ENABLED
+rating=[min=1.0 max=5.0 step=1.0 scale=NUMERIC]
+- ProductComment type=Comment author=Seller subjectResource=Product subjectFeedback=
+  requiresVerifiedContext=false uniquePerAuthorTarget=false parent=ProductReview
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- action=READ actor=Buyer context=Shop resourceTarget=Product feedbackTarget=ProductReview
+
+VALIDATION RULES:
+- BasicValidation kind=MANUAL severity=WARNING expr="payload != null" impl=val01 appliesToResource=Product appliesToFeedback=ProductReview invokedBy=AutoValidate
+
+MODERATION POLICIES:
+- ReviewModeration mode=MANUAL trigger="onReport" decision=FLAGGED executedBy=Moderator inContext=Shop
+  monitorsResource=Product monitorsFeedback=ProductReview
+
+AUTOMATION RULES:
+- AutoValidate trigger="onCreate" condition="true" action="run validations" context=Product inContext=Shop onFeedback=ProductReview uses=BasicValidation
+
+VERIFICATION POLICIES:
+- ReviewVerification mode=MANUAL appliesWhen="onCreate" verifies=ProductReview

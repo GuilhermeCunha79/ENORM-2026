@@ -1,0 +1,78 @@
+RefModel AmazonScenario
+version "1.0.0"
+{
+  userTypes {
+    UserType Buyer kind BUYER,
+    UserType Seller kind SELLER,
+    UserType Moderator kind MODERATOR
+  }
+
+  resourceTypes {
+    ResourceType Product supportsMedia true {
+      attributes {
+        required true multiValued false Attribute title type TEXT,
+        required true multiValued false Attribute price type NUMBER,
+        required false multiValued false Attribute sku type TEXT
+      }
+    },
+    ResourceType Order supportsMedia false {
+      attributes {
+        required true multiValued false Attribute orderId type TEXT,
+        required true multiValued false Attribute total type NUMBER
+      }
+    }
+  }
+
+  contextTypes {
+    ContextType AmazonMarketplace kind CATALOG contains ( Product, Order )
+  }
+
+  resourceRelations {
+    ResourceRelation OrderForProduct source Order target Product sourceCardinality "1" targetCardinality "0..*" containment false recursive false
+  }
+
+  feedbackTypes {
+    FeedbackType Review kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsMedia false,
+    FeedbackType Comment kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsMedia false
+  }
+
+  feedbackDefinitions {
+    FeedbackDefinition ProductReview
+      type Review
+      requiresVerifiedContext true
+      uniquePerAuthorTarget true
+      author Buyer
+      subjectResource Product
+      policy FeedbackPolicy status ENABLED
+      rating RatingPolicy min 1 max 5 step 1 scaleKind NUMERIC,
+
+    FeedbackDefinition ProductComment
+      type Comment
+      requiresVerifiedContext false
+      uniquePerAuthorTarget false
+      author Buyer
+      subjectResource Product
+      parent ProductReview
+      policy FeedbackPolicy status ENABLED
+  }
+
+  authorizationRules {
+    AuthorizationRule allowedAction READ actor Buyer context AmazonMarketplace resourceTarget Product feedbackTarget ProductReview
+  }
+
+  validationRules {
+    ValidationRule name AmazonValidation kind MANUAL severity WARNING expression "payload != null" implementationId val01 appliesToResource Product appliesToFeedback ProductReview invokedBy AmazonAutoValidate
+  }
+
+  moderationPolicies {
+    ModerationPolicy name ReviewModeration mode MANUAL trigger "onReport" decision FLAGGED monitorsResource Product monitorsFeedback ProductReview executedBy Moderator inContext AmazonMarketplace
+  }
+
+  automationRules {
+    AutomationRule AmazonAutoValidate trigger "onCreate" condition "true" actionDescription "run validations" context Product inContext AmazonMarketplace onFeedback ProductReview uses AmazonValidation
+  }
+
+  verificationPolicies {
+    VerificationPolicy name ProductReviewVerification mode MANUAL appliesWhen "onCreate" verifies ProductReview
+  }
+}

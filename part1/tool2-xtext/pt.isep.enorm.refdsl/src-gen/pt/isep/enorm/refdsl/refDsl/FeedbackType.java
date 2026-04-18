@@ -3,8 +3,6 @@
  */
 package pt.isep.enorm.refdsl.refDsl;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -17,9 +15,11 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getName <em>Name</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getKind <em>Kind</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getSubjectScope <em>Subject Scope</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isHasRating <em>Has Rating</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isRecursive <em>Recursive</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getAttributes <em>Attributes</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsMedia <em>Allows Media</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType()
@@ -49,6 +49,56 @@ public interface FeedbackType extends EObject
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Kind</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.FeedbackKind}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Kind</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackKind
+   * @see #setKind(FeedbackKind)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_Kind()
+   * @model
+   * @generated
+   */
+  FeedbackKind getKind();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getKind <em>Kind</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Kind</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackKind
+   * @see #getKind()
+   * @generated
+   */
+  void setKind(FeedbackKind value);
+
+  /**
+   * Returns the value of the '<em><b>Subject Scope</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Subject Scope</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope
+   * @see #setSubjectScope(FeedbackSubjectScope)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_SubjectScope()
+   * @model
+   * @generated
+   */
+  FeedbackSubjectScope getSubjectScope();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getSubjectScope <em>Subject Scope</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Subject Scope</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope
+   * @see #getSubjectScope()
+   * @generated
+   */
+  void setSubjectScope(FeedbackSubjectScope value);
 
   /**
    * Returns the value of the '<em><b>Has Rating</b></em>' attribute.
@@ -95,15 +145,25 @@ public interface FeedbackType extends EObject
   void setRecursive(boolean value);
 
   /**
-   * Returns the value of the '<em><b>Attributes</b></em>' containment reference list.
-   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.Attribute}.
+   * Returns the value of the '<em><b>Allows Media</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Attributes</em>' containment reference list.
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_Attributes()
-   * @model containment="true"
+   * @return the value of the '<em>Allows Media</em>' attribute.
+   * @see #setAllowsMedia(boolean)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_AllowsMedia()
+   * @model
    * @generated
    */
-  EList<Attribute> getAttributes();
+  boolean isAllowsMedia();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsMedia <em>Allows Media</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Allows Media</em>' attribute.
+   * @see #isAllowsMedia()
+   * @generated
+   */
+  void setAllowsMedia(boolean value);
 
 } // FeedbackType

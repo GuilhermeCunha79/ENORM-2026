@@ -6,64 +6,173 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 RefModel returns RefModel:
 	'RefModel' name=EString
+	('version' version=EString)?
 	'{'
 		('userTypes' '{' userTypes+=UserType (',' userTypes+=UserType)* '}')?
 		('resourceTypes' '{' resourceTypes+=ResourceType (',' resourceTypes+=ResourceType)* '}')?
+		('contextTypes' '{' contextTypes+=ContextType (',' contextTypes+=ContextType)* '}')?
+		('resourceRelations' '{' resourceRelations+=ResourceRelation (',' resourceRelations+=ResourceRelation)* '}')?
 		('feedbackTypes' '{' feedbackTypes+=FeedbackType (',' feedbackTypes+=FeedbackType)* '}')?
 		('feedbackDefinitions' '{' feedbackDefinitions+=FeedbackDefinition (',' feedbackDefinitions+=FeedbackDefinition)* '}')?
+		('authorizationRules' '{' authorizationRules+=AuthorizationRule (',' authorizationRules+=AuthorizationRule)* '}')?
+		('validationRules' '{' validationRules+=ValidationRule (',' validationRules+=ValidationRule)* '}')?
+		('moderationPolicies' '{' moderationPolicies+=ModerationPolicy (',' moderationPolicies+=ModerationPolicy)* '}')?
 		('automationRules' '{' automationRules+=AutomationRule (',' automationRules+=AutomationRule)* '}')?
+		('verificationPolicies' '{' verificationPolicies+=VerificationPolicy (',' verificationPolicies+=VerificationPolicy)* '}')?
 	'}';
 
 UserType returns UserType:
 	'UserType' name=EString
+	'kind' kind=UserKind
 	('superTypes' '(' superTypes+=[UserType|EString] (',' superTypes+=[UserType|EString])* ')')?;
+
+ContextType returns ContextType:
+	'ContextType' name=EString
+	'kind' kind=ContextKind
+	('contains' '(' contains+=[ResourceType|EString] (',' contains+=[ResourceType|EString])* ')')?;
 
 ResourceType returns ResourceType:
 	'ResourceType' name=EString
+	('supportsMedia' supportsMedia=EBoolean)?
+	('superTypes' '(' superTypes+=[ResourceType|EString] (',' superTypes+=[ResourceType|EString])* ')')?
 	'{'
 		('attributes' '{' attributes+=Attribute (',' attributes+=Attribute)* '}')?
-		('authorizationRules' '{' authorizationRules+=AuthorizationRule (',' authorizationRules+=AuthorizationRule)* '}')?
 	'}';
 
+ResourceRelation returns ResourceRelation:
+	'ResourceRelation' name=EString
+	'source' source=[ResourceType|EString]
+	'target' target=[ResourceType|EString]
+	('sourceCardinality' sourceCardinality=EString)?
+	('targetCardinality' targetCardinality=EString)?
+	('containment' containment=EBoolean)?
+	('recursive' recursive=EBoolean)?;
+
 Attribute returns Attribute:
-	'Attribute' name=EString 'type' type=PrimitiveType;
+	('required' required=EBoolean)?
+	('multiValued' multiValued=EBoolean)?
+	'Attribute' name=EString
+	'type' type=PrimitiveType;
 
 FeedbackType returns FeedbackType:
 	'FeedbackType' name=EString
+	'kind' kind=FeedbackKind
+	('subjectScope' subjectScope=FeedbackSubjectScope)?
 	('hasRating' hasRating=EBoolean)?
 	('recursive' recursive=EBoolean)?
-	('attributes' '{' attributes+=Attribute (',' attributes+=Attribute)* '}')?;
+	('allowsMedia' allowsMedia=EBoolean)?;
 
 FeedbackDefinition returns FeedbackDefinition:
 	'FeedbackDefinition' name=EString
 	'type' type=[FeedbackType|EString]
-	'subject' subject=[ResourceType|EString]
-	('writers' '(' writers+=[UserType|EString] (',' writers+=[UserType|EString])* ')')?
-	('validationRules' '{' validationRules+=ValidationRule (',' validationRules+=ValidationRule)* '}')?;
+	('requiresVerifiedContext' requiresVerifiedContext=EBoolean)?
+	('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
+	'author' author=[UserType|EString]
+	('subjectResource' subjectResource=[ResourceType|EString])?
+	('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
+	('parent' parent=[FeedbackDefinition|EString])?
+	('policy' policy=FeedbackPolicy)?
+	('rating' rating=RatingPolicy)?;
+
+FeedbackPolicy returns FeedbackPolicy:
+	'FeedbackPolicy' ('status' status=FeedbackStatus)?;
+
+RatingPolicy returns RatingPolicy:
+	'RatingPolicy'
+	'min' minValue=EDouble
+	'max' maxValue=EDouble
+	('step' step=EDouble)?
+	('scaleKind' scaleKind=RatingScaleKind)?;
 
 ValidationRule returns ValidationRule:
-	'ValidationRule' ('name' name=EString)? 'kind' kind=ValidationKind ('implementationId' implementationId=EString)?;
+	'ValidationRule' ('name' name=EString)?
+	'kind' kind=ValidationKind
+	('severity' severity=RuleSeverity)?
+	('expression' expression=EString)?
+	('implementationId' implementationId=EString)?
+	('appliesToResource' appliesToResource=[ResourceType|EString])?
+	('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+	'invokedBy' invokedBy=[AutomationRule|EString];
+
+ModerationPolicy returns ModerationPolicy:
+	'ModerationPolicy' ('name' name=EString)?
+	'mode' mode=ModerationMode
+	('trigger' trigger=EString)?
+	('decision' decision=ModerationDecision)?
+	'monitorsResource' monitorsResource=[ResourceType|EString]
+	'monitorsFeedback' monitorsFeedback=[FeedbackDefinition|EString]
+	'executedBy' executedBy=[UserType|EString]
+	('inContext' inContext=[ContextType|EString])?;
 
 AuthorizationRule returns AuthorizationRule:
-	'AuthorizationRule' 'allowedAction' allowedAction=ActionKind 'role' role=[UserType|EString];
+	'AuthorizationRule'
+	'allowedAction' allowedAction=ActionKind
+	'actor' actor=[UserType|EString]
+	('context' context=[ContextType|EString])?
+	'resourceTarget' resourceTarget=[ResourceType|EString]
+	('feedbackTarget' feedbackTarget=[FeedbackDefinition|EString])?;
 
 AutomationRule returns AutomationRule:
 	'AutomationRule' name=EString
-	('trigger' trigger=EString)?
+	'trigger' trigger=EString
 	('condition' condition=EString)?
-	('actionDescription' actionDescription=EString)?;
+	'actionDescription' actionDescription=EString
+	('context' context=[ResourceType|EString])?
+	('inContext' inContext=[ContextType|EString])?
+	'onFeedback' onFeedback=[FeedbackDefinition|EString]
+	'uses' uses=[ValidationRule|EString];
+
+VerificationPolicy returns VerificationPolicy:
+	'VerificationPolicy' ('name' name=EString)?
+	'mode' mode=ValidationKind
+	'appliesWhen' appliesWhen=EString
+	'verifies' verifies=[FeedbackDefinition|EString];
+
+enum UserKind returns UserKind:
+	GENERIC = 'GENERIC' | BUYER = 'BUYER' | SELLER = 'SELLER' | CREATOR = 'CREATOR' | MODERATOR = 'MODERATOR';
+
+enum ContextKind returns ContextKind:
+	GLOBAL = 'GLOBAL' | COMMUNITY = 'COMMUNITY' | CHANNEL = 'CHANNEL' | CATALOG = 'CATALOG';
 
 enum PrimitiveType returns PrimitiveType:
-	TEXT = 'TEXT' | NUMBER = 'NUMBER' | BOOLEAN = 'BOOLEAN' | DATE = 'DATE' | IMAGE = 'IMAGE' | VIDEO = 'VIDEO';
+	TEXT = 'TEXT' | NUMBER = 'NUMBER' | BOOLEAN = 'BOOLEAN' | DATE = 'DATE' | DATETIME = 'DATETIME'
+	| IMAGE = 'IMAGE' | VIDEO = 'VIDEO' | URL = 'URL';
+
+enum FeedbackKind returns FeedbackKind:
+	COMMENT = 'COMMENT' | REVIEW = 'REVIEW' | REACTION = 'REACTION' | VOTE = 'VOTE' | REPORT = 'REPORT'
+	| SUBSCRIPTION = 'SUBSCRIPTION';
+
+enum FeedbackSubjectScope returns FeedbackSubjectScope:
+	RESOURCE_ONLY = 'RESOURCE_ONLY' | FEEDBACK_ONLY = 'FEEDBACK_ONLY' | RESOURCE_OR_FEEDBACK = 'RESOURCE_OR_FEEDBACK';
+
+enum FeedbackStatus returns FeedbackStatus:
+	ENABLED = 'ENABLED' | DISABLED = 'DISABLED';
+
+enum RatingScaleKind returns RatingScaleKind:
+	NUMERIC = 'NUMERIC' | ORDINAL = 'ORDINAL' | PERCENTAGE = 'PERCENTAGE';
 
 enum ValidationKind returns ValidationKind:
 	AUTOMATIC = 'AUTOMATIC' | MANUAL = 'MANUAL';
 
+enum RuleSeverity returns RuleSeverity:
+	INFO = 'INFO' | WARNING = 'WARNING' | ERROR = 'ERROR';
+
+enum ModerationMode returns ModerationMode:
+	AUTOMATIC = 'AUTOMATIC' | MANUAL = 'MANUAL' | HYBRID = 'HYBRID';
+
+enum ModerationDecision returns ModerationDecision:
+	APPROVED = 'APPROVED' | FLAGGED = 'FLAGGED' | HIDDEN = 'HIDDEN' | REMOVED = 'REMOVED' | BLOCKED = 'BLOCKED'
+	| REJECTED = 'REJECTED';
+
 enum ActionKind returns ActionKind:
-	READ = 'READ' | WRITE = 'WRITE' | CREATE = 'CREATE' | UPDATE = 'UPDATE' | DELETE = 'DELETE' | MODERATE = 'MODERATE' | REPORT = 'REPORT' | VALIDATE = 'VALIDATE';
+	READ = 'READ' | CREATE = 'CREATE' | UPDATE = 'UPDATE' | DELETE = 'DELETE' | COMMENT = 'COMMENT' | RATE = 'RATE'
+	| VOTE = 'VOTE' | REPORT = 'REPORT' | SUBSCRIBE = 'SUBSCRIBE' | MODERATE = 'MODERATE' | VALIDATE = 'VALIDATE';
 
 EString returns ecore::EString:
 	STRING | ID;
 
 EBoolean returns ecore::EBoolean:
 	'true' | 'false';
+
+EDouble returns ecore::EDouble:
+	INT ('.' INT)?;
