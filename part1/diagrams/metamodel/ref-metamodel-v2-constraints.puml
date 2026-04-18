@@ -1,0 +1,366 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+title REF DSL - Core Metamodel + Main Constraints (P1)
+
+package "Core" {
+  class RefModel {
+    name: String
+    version: String
+  }
+}
+
+package "Actors & Context" {
+  class UserType {
+    name: String
+    kind: UserKind
+  }
+
+  enum UserKind {
+    GENERIC
+    BUYER
+    SELLER
+    CREATOR
+    MODERATOR
+  }
+
+  class ContextType {
+    name: String
+    kind: ContextKind
+  }
+
+  enum ContextKind {
+    GLOBAL
+    COMMUNITY
+    CHANNEL
+    CATALOG
+  }
+}
+
+package "Structure" {
+  class ResourceType {
+    name: String
+    supportsMedia: boolean
+  }
+
+  class Attribute {
+    name: String
+    type: PrimitiveType
+    required: boolean
+    multiValued: boolean
+  }
+
+  enum PrimitiveType {
+    TEXT
+    NUMBER
+    BOOLEAN
+    DATE
+    DATETIME
+    IMAGE
+    VIDEO
+    URL
+  }
+
+  class ResourceRelation {
+    name: String
+    sourceCardinality: String
+    targetCardinality: String
+    containment: boolean
+    recursive: boolean
+  }
+}
+
+package "Feedback" {
+  class FeedbackType {
+    name: String
+    kind: FeedbackKind
+    subjectScope: FeedbackSubjectScope
+    hasRating: boolean
+    recursive: boolean
+    allowsText: boolean
+    allowsMedia: boolean
+    polarity: FeedbackPolarity
+  }
+
+  enum FeedbackKind {
+    COMMENT
+    REVIEW
+    REACTION
+    VOTE
+    REPORT
+    SUBSCRIPTION
+  }
+
+  enum FeedbackSubjectScope {
+    RESOURCE_ONLY
+    FEEDBACK_ONLY
+    RESOURCE_OR_FEEDBACK
+  }
+
+  enum FeedbackPolarity {
+    NONE
+    LIKE_DISLIKE
+    UP_DOWN
+  }
+
+  class FeedbackDefinition {
+    name: String
+    requiresVerifiedContext: boolean
+    verificationRequirement: VerificationRequirement
+    uniquePerAuthorTarget: boolean
+  }
+
+  class FeedbackPolicy {
+    status: FeedbackStatus
+  }
+
+  enum FeedbackStatus {
+    ENABLED
+    DISABLED
+  }
+
+  enum VerificationRequirement {
+    NONE
+    OPTIONAL
+    REQUIRED
+  }
+
+  class RatingPolicy {
+    minValue: Number
+    maxValue: Number
+    step: Number
+  }
+}
+
+package "Governance & Behavior" {
+  class ValidationRule {
+    name: String
+    kind: ValidationKind
+    severity: RuleSeverity
+    expression: String
+    implementationId: String
+  }
+
+  enum ValidationKind {
+    AUTOMATIC
+    MANUAL
+  }
+
+  enum RuleSeverity {
+    INFO
+    WARNING
+    ERROR
+  }
+
+  class ModerationPolicy {
+    name: String
+    mode: ModerationMode
+    trigger: String
+    decision: ModerationDecision
+  }
+
+  enum ModerationMode {
+    AUTOMATIC
+    MANUAL
+    HYBRID
+  }
+
+  enum ModerationDecision {
+    APPROVED
+    FLAGGED
+    HIDDEN
+    REMOVED
+    BLOCKED
+    REJECTED
+  }
+
+  class AuthorizationRule {
+    allowedAction: ActionKind
+  }
+
+  enum ActionKind {
+    READ
+    CREATE
+    UPDATE
+    DELETE
+    COMMENT
+    RATE
+    VOTE
+    REPORT
+    SUBSCRIBE
+    MODERATE
+    VALIDATE
+  }
+
+  class AutomationRule {
+    name: String
+    trigger: String
+    condition: String
+    actionDescription: String
+  }
+
+  class VerificationPolicy {
+    name: String
+    mode: ValidationKind
+    appliesWhen: String
+  }
+
+  class SortingPolicy {
+    name: String
+    criterion: SortCriterion
+    direction: SortDirection
+  }
+
+  enum SortCriterion {
+    DATE
+    VALUE
+    RELEVANCE
+  }
+
+  enum SortDirection {
+    ASC
+    DESC
+  }
+}
+
+' Associations - Core ownership
+RefModel "1" o-- "*" UserType
+RefModel "1" o-- "*" ContextType
+RefModel "1" o-- "*" ResourceType
+RefModel "1" o-- "*" ResourceRelation
+RefModel "1" o-- "*" FeedbackType
+RefModel "1" o-- "*" FeedbackDefinition
+RefModel "1" o-- "*" ValidationRule
+RefModel "1" o-- "*" ModerationPolicy
+RefModel "1" o-- "*" AuthorizationRule
+RefModel "1" o-- "*" AutomationRule
+RefModel "1" o-- "*" VerificationPolicy
+RefModel "1" o-- "*" SortingPolicy
+
+' Associations - Type hierarchies
+UserType "0..*" -- "0..*" UserType : superTypes
+ResourceType "0..*" -- "0..*" ResourceType : superTypes
+
+' Associations - Structure
+ResourceType "1" o-- "*" Attribute
+ContextType "1" --> "*" ResourceType : contains
+ResourceRelation "1" --> "1" ResourceType : source
+ResourceRelation "1" --> "1" ResourceType : target
+
+' Associations - Feedback
+FeedbackType "1" <-- "1" FeedbackDefinition : type
+UserType "1" <-- "1" FeedbackDefinition : author
+ResourceType "0..1" <-- "1" FeedbackDefinition : subjectResource
+FeedbackDefinition "0..1" <-- "1" FeedbackDefinition : subjectFeedback
+FeedbackDefinition "0..1" o-- "1" FeedbackPolicy : policy
+FeedbackDefinition "0..1" o-- "1" RatingPolicy : rating
+
+' Associations - Governance and behavior
+ValidationRule "0..*" --> "0..1" ResourceType : appliesToResource
+ValidationRule "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+ValidationRule "0..*" --> "1" AutomationRule : invokedBy
+
+ModerationPolicy "*" --> "1" ResourceType : monitorsResource
+ModerationPolicy "0..*" --> "1" FeedbackDefinition : monitorsFeedback
+ModerationPolicy "0..*" --> "1" UserType : executedBy
+ModerationPolicy "0..*" --> "0..1" ContextType : inContext
+
+AuthorizationRule "*" --> "1" ResourceType : resourceTarget
+AuthorizationRule "0..1" --> "1" FeedbackDefinition : feedbackTarget
+AuthorizationRule "0..*" --> "0..1" ContextType : context
+UserType "1" <-- "*" AuthorizationRule : actor
+
+AutomationRule "0..*" --> "0..1" ResourceType : context
+AutomationRule "0..*" --> "0..1" ContextType : inContext
+AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
+AutomationRule "0..*" --> "1" ValidationRule : uses
+
+VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
+SortingPolicy "0..*" --> "0..1" ResourceType : appliesToResource
+SortingPolicy "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+SortingPolicy "0..*" --> "0..1" ContextType : inContext
+
+' Main constraints (organized subset aligned with Metamodel_Constraints.md)
+note right of RefModel
+  [C1 - Core]
+  C1.1: name must not be empty
+
+  [Unique names in RefModel collections]
+  C2.1 UserType
+  C2.5 ContextType
+  C3.1 ResourceType
+  C3.9 ResourceRelation
+  C4.1 FeedbackType
+  C4.4 FeedbackDefinition
+  C5.2 ValidationRule
+  C5.6 ModerationPolicy
+  C5.11 AutomationRule
+  C5.15 VerificationPolicy
+  C5.17 SortingPolicy
+end note
+
+note right of UserType
+  C2.3: superTypes must not contain self
+end note
+
+note right of ResourceType
+  C3.4: superTypes must not contain self
+  C3.5: superTypes must not form cycles
+  C3.6: attribute names unique per ResourceType
+end note
+
+note right of ResourceRelation
+  C3.8: if recursive = false, source <> target
+end note
+
+note right of FeedbackDefinition
+  C4.3: target must match type.subjectScope
+  C4.6: author is required
+  C4.7: rating allowed only when type.hasRating = true
+  G1: if type.hasRating = true, rating is required
+  C4.12: subjectFeedback must not reference self
+  G16: verificationRequirement controls verified-context strictness
+end note
+
+note right of FeedbackType
+  G13: kind=REACTION should use polarity=LIKE_DISLIKE
+  G14: kind=VOTE should use polarity=UP_DOWN
+  G15: allowsText and allowsMedia model textual/media separation
+end note
+
+note right of RatingPolicy
+  C4.8: minValue < maxValue
+  C4.9: step > 0 and divides (maxValue - minValue)
+end note
+
+note right of ValidationRule
+  C5.1: at least one target is required
+  C5.5: expression required when kind = AUTOMATIC
+end note
+
+note right of ModerationPolicy
+  C5.7: executedBy is required
+  C5.8: trigger required when mode = AUTOMATIC
+end note
+
+note right of AuthorizationRule
+  C5.9: actor is required
+  C5.10: resourceTarget and feedbackTarget are required
+  G10: context must include resourceTarget
+end note
+
+note right of AutomationRule
+  C5.13: trigger must not be empty
+  C5.14: actionDescription must not be empty
+end note
+
+note right of VerificationPolicy
+  C5.16: verifies is required
+end note
+
+note right of SortingPolicy
+  C5.17: at least one target should be set
+  G18: criterion and direction must be explicit
+end note
+
+@enduml

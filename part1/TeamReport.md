@@ -111,7 +111,7 @@ Instead of three unrelated models, REF is a **generic** metamodel whose **instan
 |----------|------|------|
 | **Ecore (canonical)** | [`part1/eclipse/pt.isep.enorm.ref/model/ref.ecore`](eclipse/pt.isep.enorm.ref/model/ref.ecore) | EMF schema: packages, classifiers, references, enumerations |
 | **GenModel** | [`part1/eclipse/pt.isep.enorm.ref/model/ref.genmodel`](eclipse/pt.isep.enorm.ref/model/ref.genmodel) | EMF generator configuration |
-| **PlantUML (domain view)** | [`diagrams/metamodel/ref-metamodel-v2.puml`](../diagrams/metamodel/ref-metamodel-v2.puml) | Human-readable UML-style class diagram for reporting |
+| **PlantUML (domain view)** | [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml) | Human-readable UML-style class diagram for reporting |
 | **Sirius copy / tooling** | [`part1/tool3-sirius/model/enorm.ecore`](tool3-sirius/model/enorm.ecore) | Used by the Sirius viewpoint (aligned with the shared design) |
 | **Xtext inferred model** | [`part1/tool2-xtext/pt.isep.enorm.refdsl/model/generated/RefDsl.ecore`](tool2-xtext/pt.isep.enorm.refdsl/model/generated/RefDsl.ecore) | Grammar-aligned Ecore (generated from the DSL workflow) |
 
@@ -211,7 +211,7 @@ This complements **Xtext**: both describe REF, but MPS emphasizes **custom notat
 
 - **Sirius:** The Viewpoint Specification Model is [`part1/tool3-sirius/2nd eclipse instance/enorm.design/description/enorm.odesign`](tool3-sirius/2nd%20eclipse%20instance/enorm.design/description/enorm.odesign). It **projects** EMF resources into diagrams and other representations, driven by the **VSM** (mappings, layers, tools, styles). Sample instances include [`part1/tool3-sirius/model/RefModel.xmi`](tool3-sirius/model/RefModel.xmi), [`Amazon.xmi`](tool3-sirius/model/Amazon.xmi), [`YouTube.xmi`](tool3-sirius/model/YouTube.xmi), and [`Reddit.xmi`](tool3-sirius/model/Reddit.xmi).  
 - **Auxiliary textual views for diagrams:** [`part1/tool3-sirius/projections/RefModel_textual_projection.txt`](tool3-sirius/projections/RefModel_textual_projection.txt) and scenario files such as [`Amazon_textual_projection.txt`](tool3-sirius/projections/Amazon_textual_projection.txt), [`YouTube_textual_projection.txt`](tool3-sirius/projections/YouTube_textual_projection.txt), [`Reddit_textual_projection.txt`](tool3-sirius/projections/Reddit_textual_projection.txt) document **diagram-oriented** textual summaries.  
-- **PlantUML (reports / metamodel):** static UML-style views such as [`diagrams/metamodel/ref-metamodel-v2.puml`](../diagrams/metamodel/ref-metamodel-v2.puml); scenario **object-style** diagrams are listed under §8. Further **behaviour** and **structure** `.puml` files under [`part1/tool3-sirius/projections/`](tool3-sirius/projections/) complement Sirius for submission and slides.
+- **PlantUML (reports / metamodel):** static UML-style views such as [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml); scenario **object-style** diagrams are listed under §8. Further **behaviour** and **structure** `.puml` files under [`part1/tool3-sirius/projections/`](tool3-sirius/projections/) complement Sirius for submission and slides.
 
 ---
 

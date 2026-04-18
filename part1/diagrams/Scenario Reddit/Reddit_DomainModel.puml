@@ -1,0 +1,165 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 80
+skinparam roundCorner 5
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+' Neutral and professional style
+skinparam class {
+    BackgroundColor White
+    BorderColor #2D3E50
+    ArrowColor #2D3E50
+    FontSize 12
+}
+
+title Domain Model – Reddit Scenario with Moderation Checks
+
+package "Identity & Users" {
+    class User {
+        id: String
+        username: String
+        registrationDate: Date
+    }
+    class Moderator
+}
+
+package "Communities & Content" {
+    class Subreddit {
+        id: String
+        name: String
+        description: String
+    }
+
+    class Content {
+        id: String
+        creationDate: Date
+    }
+
+    class Post {
+        title: String
+        body: String
+        type: TEXT | LINK | MEDIA
+        supportsVote: Boolean = true
+        supportsReport: Boolean = true
+    }
+
+    class Comment {
+        body: String
+        supportsVote: Boolean = true
+        supportsReport: Boolean = true
+    }
+
+    class MediaAttachment {
+        id: String
+        type: PHOTO | GIF | VIDEO | LINK
+        url: String
+    }
+
+    class AutomationRule {
+        id: String
+        trigger: String
+        condition: String
+        actionDescription: String
+    }
+
+    class CommunityRule {
+        id: String
+        title: String
+        description: String
+    }
+
+    class ParticipationPolicy {
+        id: String
+        action: POST | COMMENT | VOTE | REPORT
+        allowedWhen: EVERYONE | MEMBER_ONLY | MIN_KARMA | ACCOUNT_AGE
+    }
+
+    class SortingPolicy {
+        id: String
+        criterion: DATE | VALUE | RELEVANCE
+        direction: ASC | DESC
+    }
+
+    class ContentValidationRule {
+        id: String
+        target: POST | COMMENT
+        severity: WARNING | REMOVE
+        condition: String
+    }
+
+    ' Moderation checks
+    class PostModerationCheck {
+        id: String
+        type: SPAM | OFFENSIVE | OTHER
+        result: APPROVED | FLAGGED | REMOVED
+        timestamp: Date
+    }
+
+    class CommentModerationCheck {
+        id: String
+        type: SPAM | OFFENSIVE | OTHER
+        result: APPROVED | FLAGGED | HIDDEN
+        timestamp: Date
+    }
+}
+
+package "Feedback & Moderation" {
+    class Vote {
+        id: String
+        value: UPVOTE | DOWNVOTE
+        timestamp: Date
+    }
+
+    class Report {
+        id: String
+        reason: String
+        status: PENDING | REVIEWED | DISMISSED
+        timestamp: Date
+    }
+}
+
+' --- Positioning and Hierarchy ---
+
+' Inheritance
+User <|-- Moderator
+Content <|-- Post
+Content <|-- Comment
+
+' Community structure
+Subreddit "1" -down-> "*" Post : contains >
+Subreddit "1" -left-> "*" AutomationRule : has >
+Subreddit "1" -left-> "*" CommunityRule : has >
+Subreddit "1" -left-> "*" ParticipationPolicy : enforces >
+Subreddit "1" -left-> "*" SortingPolicy : sorts >
+Subreddit "1" -left-> "*" ContentValidationRule : validates >
+SortingPolicy "*" -up-> "1" Content : orders >
+Subreddit "*" -right- "*" Moderator : moderated by
+Moderator "1" --> "*" ParticipationPolicy : manages
+
+' Authorship
+Post "*" -right-> "1" User : author
+Comment "*" -right-> "1" User : author
+Comment "*" -up-> "1" Post : on
+Comment "0..1" -left-> "*" Comment : replies to
+
+' Media in comments
+Comment "1" -down-> "*" MediaAttachment : attachments
+
+' Feedback actions
+User "1" -- "*" Vote : casts >
+Vote "*" -up-> "1" Content : on (Post or Comment)
+
+User "1" -- "*" Report : submits >
+Report "*" -up-> "1" Content : targets (Post or Comment)
+Report "0..1" -left-> "1" Moderator : reviewed by
+
+' Moderation checks
+Post "1" -right-> "*" PostModerationCheck : checked by >
+Comment "1" -right-> "*" CommentModerationCheck : checked by >
+Moderator "0..1" --> "*" PostModerationCheck : reviewed by
+Moderator "0..1" --> "*" CommentModerationCheck : reviewed by
+AutomationRule "*" --> "*" ContentValidationRule : executes
+
+@enduml
