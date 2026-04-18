@@ -1,0 +1,327 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+title REF DSL - Core Metamodel (P1)
+
+package "Core" {
+  class RefModel {
+    name: String
+    version: String
+  }
+}
+
+package "Actors & Context" {
+  class UserType {
+    name: String
+    kind: UserKind
+  }
+
+  enum UserKind {
+    GENERIC
+    BUYER
+    SELLER
+    CREATOR
+    MODERATOR
+  }
+
+  class ContextType {
+    name: String
+    kind: ContextKind
+  }
+
+  enum ContextKind {
+    GLOBAL
+    COMMUNITY
+    CHANNEL
+    CATALOG
+  }
+}
+
+package "Structure" {
+  class ResourceType {
+    name: String
+    supportsMedia: boolean
+  }
+
+  class Attribute {
+    name: String
+    type: PrimitiveType
+    required: boolean
+    multiValued: boolean
+  }
+
+  enum PrimitiveType {
+    TEXT
+    NUMBER
+    BOOLEAN
+    DATE
+    DATETIME
+    IMAGE
+    VIDEO
+    URL
+  }
+
+  class ResourceRelation {
+    name: String
+    sourceCardinality: String
+    targetCardinality: String
+    containment: boolean
+    recursive: boolean
+  }
+}
+
+package "Feedback" {
+  class FeedbackType {
+    name: String
+    kind: FeedbackKind
+    subjectScope: FeedbackSubjectScope
+    hasRating: boolean
+    recursive: boolean
+    allowsText: boolean
+    allowsMedia: boolean
+    polarity: FeedbackPolarity
+  }
+
+  enum FeedbackKind {
+    COMMENT
+    REVIEW
+    REACTION
+    VOTE
+    REPORT
+    SUBSCRIPTION
+  }
+
+  enum FeedbackSubjectScope {
+    RESOURCE_ONLY
+    FEEDBACK_ONLY
+    RESOURCE_OR_FEEDBACK
+  }
+
+  enum FeedbackPolarity {
+    NONE
+    LIKE_DISLIKE
+    UP_DOWN
+  }
+
+  class FeedbackDefinition {
+    name: String
+    requiresVerifiedContext: boolean
+    verificationRequirement: VerificationRequirement
+    uniquePerAuthorTarget: boolean
+  }
+
+  class FeedbackPolicy {
+    status: FeedbackStatus
+  }
+
+  enum FeedbackStatus {
+    ENABLED
+    DISABLED
+  }
+
+  enum VerificationRequirement {
+    NONE
+    OPTIONAL
+    REQUIRED
+  }
+
+  class RatingPolicy {
+    minValue: Number
+    maxValue: Number
+    step: Number
+  }
+}
+
+package "Governance & Behavior" {
+  class ValidationRule {
+    name: String
+    kind: ValidationKind
+    severity: RuleSeverity
+    expression: String
+    implementationId: String
+  }
+
+  enum ValidationKind {
+    AUTOMATIC
+    MANUAL
+  }
+
+  enum RuleSeverity {
+    INFO
+    WARNING
+    ERROR
+  }
+
+  class ModerationPolicy {
+    name: String
+    mode: ModerationMode
+    trigger: TriggerEvent
+    decision: ModerationDecision
+  }
+
+  enum ModerationMode {
+    AUTOMATIC
+    MANUAL
+    HYBRID
+  }
+
+  enum ModerationDecision {
+    APPROVED
+    FLAGGED
+    HIDDEN
+    REMOVED
+    BLOCKED
+    REJECTED
+  }
+
+  class AuthorizationRule {
+    name: String
+    allowedAction: ActionKind
+  }
+
+  enum ActionKind {
+    READ
+    CREATE
+    UPDATE
+    DELETE
+    COMMENT
+    RATE
+    VOTE
+    REPORT
+    SUBSCRIBE
+    MODERATE
+    VALIDATE
+  }
+
+  class AutomationRule {
+    name: String
+    trigger: TriggerEvent
+  }
+
+  enum TriggerEvent {
+    ON_RESOURCE_CREATE
+    ON_RESOURCE_UPDATE
+    ON_RESOURCE_DELETE
+    ON_FEEDBACK_CREATE
+    ON_FEEDBACK_UPDATE
+    ON_FEEDBACK_DELETE
+    ON_REPORT_SUBMITTED
+    ON_REPORT_THRESHOLD
+    ON_MANUAL_REQUEST
+  }
+
+  class Condition {
+    name: String
+    field: String
+    operator: ConditionOperator
+    value: String
+  }
+
+  enum ConditionOperator {
+    CONTAINS_KEYWORDS
+    NOT_CONTAINS_KEYWORDS
+    MATCH_REGEX
+    NOT_MATCH_REGEX
+    HAS_PROPERTY
+    NOT_HAS_PROPERTY
+    HAS_SPECIFIC_PROPERTY
+    NOT_HAS_SPECIFIC_PROPERTY
+  }
+
+  class Action {
+    name: String
+    kind: ActionResultKind
+    message: String
+  }
+
+  enum ActionResultKind {
+    DISPLAY_MESSAGE
+    FLAG_CONTENT
+    HIDE_CONTENT
+    REMOVE_CONTENT
+    BLOCK_SUBMISSION
+    NOTIFY_MODERATOR
+    AUTO_APPROVE
+    AUTO_REJECT
+  }
+
+  class VerificationPolicy {
+    name: String
+    mode: ValidationKind
+    appliesWhen: TriggerEvent
+  }
+
+  class SortingPolicy {
+    name: String
+    criterion: SortCriterion
+    direction: SortDirection
+  }
+
+  enum SortCriterion {
+    DATE
+    VALUE
+    RELEVANCE
+  }
+
+  enum SortDirection {
+    ASC
+    DESC
+  }
+}
+
+RefModel "1" o-- "*" UserType
+RefModel "1" o-- "*" ResourceType
+RefModel "1" o-- "*" ContextType
+RefModel "1" o-- "*" ResourceRelation
+RefModel "1" o-- "*" FeedbackType
+RefModel "1" o-- "*" FeedbackDefinition
+RefModel "1" o-- "*" AuthorizationRule
+RefModel "1" o-- "*" ValidationRule
+RefModel "1" o-- "*" ModerationPolicy
+RefModel "1" o-- "*" AutomationRule
+RefModel "1" o-- "*" VerificationPolicy
+RefModel "1" o-- "*" SortingPolicy
+
+UserType "0..*" -- "0..*" UserType : superTypes
+ResourceType "0..*" -- "0..*" ResourceType : superTypes
+
+ResourceType "1" o-- "*" Attribute
+ContextType "1" --> "*" ResourceType : contains
+ResourceRelation "1" --> "1" ResourceType : source
+ResourceRelation "1" --> "1" ResourceType : target
+
+FeedbackType "1" <-- "1" FeedbackDefinition : type
+ResourceType "0..1" <-- "1" FeedbackDefinition : subjectResource
+UserType "1" <-- "1" FeedbackDefinition : author
+FeedbackDefinition "0..1" <-- "1" FeedbackDefinition : subjectFeedback
+FeedbackDefinition "0..1" o-- "1" FeedbackPolicy : policy
+FeedbackDefinition "0..1" o-- "1" RatingPolicy : rating
+
+UserType "1" <-- "*" AuthorizationRule : actor
+AuthorizationRule "0..*" --> "0..1" ContextType : context
+AuthorizationRule "*" --> "1" ResourceType : resourceTarget
+AuthorizationRule "0..1" --> "1" FeedbackDefinition : feedbackTarget
+
+ValidationRule "0..*" --> "0..1" ResourceType : appliesToResource
+ValidationRule "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+ValidationRule "0..*" --> "1" AutomationRule : invokedBy
+
+ModerationPolicy "*" --> "1" ResourceType : monitorsResource
+ModerationPolicy "0..*" --> "1" FeedbackDefinition : monitorsFeedback
+ModerationPolicy "0..*" --> "1" UserType : executedBy
+ModerationPolicy "0..*" --> "0..1" ContextType : inContext
+
+AutomationRule "0..*" --> "0..1" ResourceType : context
+AutomationRule "0..*" --> "0..1" ContextType : inContext
+AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
+AutomationRule "0..*" --> "1" ValidationRule : uses
+AutomationRule "1" o-- "1..*" Condition : conditions
+AutomationRule "1" o-- "1..*" Action : actions
+
+VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
+
+SortingPolicy "0..*" --> "0..1" ResourceType : appliesToResource
+SortingPolicy "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+SortingPolicy "0..*" --> "0..1" ContextType : inContext
+
+@enduml
