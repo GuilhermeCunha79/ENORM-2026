@@ -1,0 +1,271 @@
+=== CORE ===
+Model: YoutubeRef
+  version: 1.0.0
+
+=== ACTORS & CONTEXT ===
+UserType: User
+  kind: GENERIC
+UserType: Creator
+  kind: CREATOR
+  extends: User
+  extends: Moderator
+UserType: Moderator
+  kind: MODERATOR
+  extends: User
+ContextType: ChannelContext
+  kind: CHANNEL
+  contains: Channel
+  contains: Video
+  contains: Comment
+ContextType: TrendingContext
+  kind: CHANNEL
+  contains: Video
+ContextType: RecommendationContext
+  kind: CHANNEL
+  contains: Video
+
+=== STRUCTURE ===
+ResourceType: Channel
+  supportsMedia: false
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Name
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Description
+    type: TEXT
+    required: false
+    multivalued: false
+  attribute: CreationDate
+    type: TEXT
+    required: true
+    multivalued: false
+ResourceType: Video
+  supportsMedia: true
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Title
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Video
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: UploadDate
+    type: DATE
+    required: true
+    multivalued: false
+  attribute: Duration
+    type: NUMBER
+    required: true
+    multivalued: false
+  attribute: CommentStatus
+    type: TEXT
+    required: true
+    multivalued: false
+ResourceType: Comment
+  supportsMedia: false
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Text
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: CreationDate
+    type: DATE
+    required: true
+    multivalued: false
+ResourceRelation: ChannelContainsVideo
+  source: Channel (1)
+  target: Video (2)
+ResourceRelation: VideoContainsComment
+  source: Video (1)
+  target: Comment (2)
+ResourceRelation: CommentRepliesComment
+  source: Comment (1)
+  target: Comment (2)
+
+=== FEEDBACK ===
+FeedbackType: ReactionType
+  kind: REACTION
+  hasRating: false
+FeedbackType: ReportType
+  kind: REPORT
+  hasRating: false
+FeedbackType: SubscriptionType
+  kind: SUBSCRIPTION
+  hasRating: false
+FeedbackDefinition: LikeOnVideo
+  type: ReactionType
+  author: User
+  subject: Video
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: LikeOnVideoPolicy
+    status: ENABLED
+FeedbackDefinition: LikeOnComment
+  type: ReactionType
+  author: User
+  subject: Comment
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: LikeOnCommentPolicy
+    status: ENABLED
+FeedbackDefinition: ReportOnVideo
+  type: ReportType
+  author: User
+  subject: Video
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: ReportOnVideoPolicy
+    status: ENABLED
+FeedbackDefinition: ReportOnComment
+  type: ReportType
+  author: User
+  subject: Comment
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: ReportOnCommentPolicy
+    status: ENABLED
+FeedbackDefinition: SubscriptionOnChannel
+  type: SubscriptionType
+  author: User
+  subject: Channel
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: SubscriptionPolicy
+    status: ENABLED
+
+=== GOVERNANCE & BEHAVIOR ===
+AutomationRule: AutoVideoModeration
+  trigger: ON_REPORT_SUBMITTED
+  onFeedback: ReportOnVideo
+  context: Video
+  inContext: ChannelContext
+  uses: VideoContentValidation
+  condition: RepeatedReportOrPolicyMatchCondition
+    field: legacyCondition
+    operator: CONTAINS_KEYWORDS
+    value: repeated_report_or_policy_match
+  action: FlagVideoForReviewAction
+    kind: FLAG_CONTENT
+    message: flag_video_for_review
+AutomationRule: AutoCommentModeration
+  trigger: ON_REPORT_SUBMITTED
+  onFeedback: ReportOnComment
+  context: Comment
+  inContext: ChannelContext
+  uses: CommentContentValidation
+  condition: RepeatedReportOrPolicyMatchCommentCondition
+    field: legacyCondition
+    operator: HAS_SPECIFIC_PROPERTY
+    value: repeated_report_or_policy_match
+  action: HideOrFlagCommentAction
+    kind: HIDE_CONTENT
+    message: hide_or_flag_comment
+SortingPolicy: VideoListingSort
+  criterion: DATE
+  direction: DESC
+  appliesToResource: Video
+  inContext: ChannelContext
+SortingPolicy: TrendingFeedSort
+  criterion: VALUE
+  direction: DESC
+  appliesToResource: Video
+  inContext: TrendingContext
+SortingPolicy: RecommendationSort
+  criterion: RELEVANCE
+  direction: DESC
+  appliesToResource: Video
+  inContext: RecommendationContext
+SortingPolicy: CommentSortByDate
+  criterion: DATE
+  direction: DESC
+  appliesToResource: Comment
+  inContext: ChannelContext
+SortingPolicy: CommentSortByValue
+  criterion: VALUE
+  direction: DESC
+  appliesToResource: Comment
+  inContext: ChannelContext
+ValidationRule: VideoContentValidation
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: regex(detect_policy_violation_or_spam)
+  appliesToFeedback: ReportOnVideo
+  appliesToResource: Video
+  appliesToUser: Moderator
+  invokedBy: AutoVideoModeration
+ValidationRule: CommentContentValidation
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: regex.contains(detect_toxicity_or_blocked_terms)
+  appliesToFeedback: ReportOnComment
+  appliesToResource: Comment
+  appliesToUser: Moderator
+  invokedBy: AutoCommentModeration
+ModerationPolicy: VideoModerationPolicy
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: FLAGGED
+  monitorsFeedback: ReportOnVideo
+  executedBy: Moderator
+  monitorsResource: Video
+  inContext: ChannelContext
+ModerationPolicy: CommentModerationPolicy
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: HIDDEN
+  monitorsFeedback: ReportOnComment
+  executedBy: Moderator
+  monitorsResource: Comment
+  inContext: ChannelContext
+AuthorizationRule: UserCanReactVideo
+  allowedAction: VOTE
+  actor: User
+  resourceTarget: Video
+  feedbackTarget: LikeOnVideo
+  context: ChannelContext
+AuthorizationRule: UserCanReactComment
+  allowedAction: VOTE
+  actor: User
+  resourceTarget: Video
+  feedbackTarget: LikeOnComment
+  context: ChannelContext
+AuthorizationRule: UserCanReportVideo
+  allowedAction: REPORT
+  actor: User
+  resourceTarget: Video
+  feedbackTarget: ReportOnVideo
+  context: ChannelContext
+AuthorizationRule: UserCanReportComment
+  allowedAction: REPORT
+  actor: User
+  resourceTarget: Comment
+  feedbackTarget: ReportOnComment
+  context: ChannelContext
+AuthorizationRule: UserCanSubscribeChannel
+  allowedAction: SUBSCRIBE
+  actor: User
+  resourceTarget: Channel
+  feedbackTarget: SubscriptionOnChannel
+  context: ChannelContext
+AuthorizationRule: ModeratorCanModerateVideo
+  allowedAction: MODERATE
+  actor: Moderator
+  resourceTarget: Video
+  feedbackTarget: ReportOnVideo
+  context: ChannelContext

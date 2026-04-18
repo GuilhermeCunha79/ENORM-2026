@@ -1,0 +1,289 @@
+@startuml
+skinparam classAttributeIconSize 0
+package "Core" {
+class RedditRef {
+  version:1.0.0
+}
+}
+package "Actors & Context" {
+class User {
+  kind: GENERIC
+}
+class Moderator {
+  kind: MODERATOR
+}
+class CommunityContext {
+  kind: COMMUNITY
+}
+}
+package "Structure" {
+class Subreddit {
+  supportsMedia: false
+}
+class Post {
+  supportsMedia: true
+}
+class Comment {
+  supportsMedia: true
+}
+class Subreddit_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Subreddit_Name {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Subreddit_Description {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Post_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Post_Title {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Post_Body {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Post_PostType {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Post_CreationDate {
+  type: DATE
+  required: true
+  multivalued: false
+}
+class Comment_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Comment_Body {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Comment_CreationDate {
+  type: DATE
+  required: true
+  multivalued: false
+}
+class SubredditContainsPost {
+  sourceCardinality: 1
+  targetCardinality: 2
+}
+class PostContainsComment {
+  sourceCardinality: 1
+  targetCardinality: 2
+}
+}
+package "Feedback" {
+class VoteType {
+  kind: VOTE
+  hasRating: false
+}
+class ReportType {
+  kind: VOTE
+  hasRating: false
+}
+class VoteOnPost {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class VoteOnPostPolicy {
+  status: ENABLED
+}
+class VoteOnComment {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class VoteOnCommentPolicy {
+  status: ENABLED
+}
+class ReportOnPost {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class ReportOnPostPolicy {
+  status: ENABLED
+}
+class ReportOnComment {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class ReportOnCommentPolicy {
+  status: ENABLED
+}
+}
+package "Governance & Behavior" {
+class AutoModerationRule {
+  trigger: ON_REPORT_SUBMITTED
+}
+class AutoModerationRule_ReportCountOverThresholdCondition {
+  field: legacyCondition
+  operator: HAS_SPECIFIC_PROPERTY
+  value: report_count_over_threshold
+}
+class AutoModerationRule_FlagOrHidePostAction {
+  kind: FLAG_CONTENT
+  message: flag_or_hide_post
+}
+class PostFeedSort {
+  criterion: DATE
+  direction: DESC
+}
+class SubredditListingSort {
+  criterion: VALUE
+  direction: DESC
+}
+class CommentSort {
+  criterion: RELEVANCE
+  direction: DESC
+}
+class ContentRuleValidation {
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: blocked_words_or_spam_signal
+}
+class PostModerationPolicy {
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: FLAGGED
+}
+class UserCanVotePost {
+  allowedAction: VOTE
+}
+class UserCanVoteComment {
+  allowedAction: VOTE
+}
+class UserCanReportPost {
+  allowedAction: REPORT
+}
+class UserCanReportComment {
+  allowedAction: REPORT
+}
+class ModeratorCanModerateContent {
+  allowedAction: MODERATE
+}
+}
+RedditRef *-- AutoModerationRule
+RedditRef *-- VoteOnPost
+RedditRef *-- VoteOnComment
+RedditRef *-- ReportOnPost
+RedditRef *-- ReportOnComment
+RedditRef *-- VoteType
+RedditRef *-- ReportType
+RedditRef *-- User
+RedditRef *-- Moderator
+RedditRef *-- PostFeedSort
+RedditRef *-- SubredditListingSort
+RedditRef *-- CommentSort
+RedditRef *-- Subreddit
+RedditRef *-- Post
+RedditRef *-- Comment
+RedditRef *-- CommunityContext
+RedditRef *-- SubredditContainsPost
+RedditRef *-- PostContainsComment
+RedditRef *-- PostModerationPolicy
+RedditRef *-- UserCanVotePost
+RedditRef *-- UserCanVoteComment
+RedditRef *-- UserCanReportPost
+RedditRef *-- UserCanReportComment
+RedditRef *-- ModeratorCanModerateContent
+RedditRef *-- ContentRuleValidation
+Subreddit *-- Subreddit_Id : attribute
+Subreddit *-- Subreddit_Name : attribute
+Subreddit *-- Subreddit_Description : attribute
+Post *-- Post_Id : attribute
+Post *-- Post_Title : attribute
+Post *-- Post_Body : attribute
+Post *-- Post_PostType : attribute
+Post *-- Post_CreationDate : attribute
+Comment *-- Comment_Id : attribute
+Comment *-- Comment_Body : attribute
+Comment *-- Comment_CreationDate : attribute
+AutoModerationRule --> ReportOnPost : onFeedback
+AutoModerationRule --> CommunityContext : inContext
+AutoModerationRule --> ContentRuleValidation : uses
+AutoModerationRule --> ReportOnPost : onFeedback
+AutoModerationRule --> Post : context
+AutoModerationRule --> CommunityContext : inContext
+AutoModerationRule --> ContentRuleValidation : uses
+AutoModerationRule *-- AutoModerationRule_ReportCountOverThresholdCondition : condition
+AutoModerationRule *-- AutoModerationRule_FlagOrHidePostAction : action
+VoteOnPost --> VoteType : type
+VoteOnPost --> User : author
+VoteOnPost --> Post : subject
+VoteOnPost *-- VoteOnPostPolicy : policy
+VoteOnComment --> VoteType : type
+VoteOnComment --> User : author
+VoteOnComment --> Comment : subject
+VoteOnComment *-- VoteOnCommentPolicy : policy
+ReportOnPost --> ReportType : type
+ReportOnPost --> User : author
+ReportOnPost --> Post : subject
+ReportOnPost *-- ReportOnPostPolicy : policy
+ReportOnComment --> ReportType : type
+ReportOnComment --> User : author
+ReportOnComment --> Comment : subject
+ReportOnComment *-- ReportOnCommentPolicy : policy
+ContentRuleValidation --> ReportOnPost : appliesToFeedback
+ContentRuleValidation --> Post : appliesToResource
+ContentRuleValidation --> Moderator : appliesToUser
+ContentRuleValidation --> AutoModerationRule : invokedBy
+PostModerationPolicy --> ReportOnPost : monitorsFeedback
+PostModerationPolicy --> Moderator : executedBy
+PostModerationPolicy --> Post : monitorsResource
+PostModerationPolicy --> CommunityContext : inContext
+UserCanVotePost --> User : actor
+UserCanVotePost --> Post : resourceTarget
+UserCanVotePost --> VoteOnPost : feedbackTarget
+UserCanVotePost --> CommunityContext : context
+UserCanVoteComment --> User : actor
+UserCanVoteComment --> Comment : resourceTarget
+UserCanVoteComment --> VoteOnComment : feedbackTarget
+UserCanVoteComment --> CommunityContext : context
+UserCanReportPost --> User : actor
+UserCanReportPost --> Post : resourceTarget
+UserCanReportPost --> ReportOnPost : feedbackTarget
+UserCanReportPost --> CommunityContext : context
+UserCanReportComment --> User : actor
+UserCanReportComment --> Comment : resourceTarget
+UserCanReportComment --> ReportOnComment : feedbackTarget
+UserCanReportComment --> CommunityContext : context
+ModeratorCanModerateContent --> Moderator : actor
+ModeratorCanModerateContent --> Post : resourceTarget
+ModeratorCanModerateContent --> ReportOnPost : feedbackTarget
+ModeratorCanModerateContent --> CommunityContext : context
+SubredditContainsPost --> Subreddit : source
+SubredditContainsPost --> Post : target
+PostContainsComment --> Post : source
+PostContainsComment --> Comment : target
+CommunityContext --> Subreddit : contains
+CommunityContext --> Post : contains
+CommunityContext --> Comment : contains
+PostFeedSort --> Post : appliesToResource
+PostFeedSort --> CommunityContext : inContext
+SubredditListingSort --> Subreddit : appliesToResource
+SubredditListingSort --> CommunityContext : inContext
+CommentSort --> Comment : appliesToResource
+CommentSort --> CommunityContext : inContext
+Moderator --|> User
+@enduml

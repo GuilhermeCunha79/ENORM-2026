@@ -1,0 +1,196 @@
+=== CORE ===
+Model: AmazonRef
+  version: 1.0.0
+
+=== ACTORS & CONTEXT ===
+UserType: Reviewer
+  kind: GENERIC
+UserType: Buyer
+  kind: BUYER
+  extends: Reviewer
+UserType: Seller
+  kind: SELLER
+UserType: Moderator
+  kind: MODERATOR
+ContextType: CatalogContext
+  kind: CATALOG
+  contains: Product
+  contains: Order
+  contains: OrderItem
+  contains: CommentReview
+ContextType: ModerationContext
+  kind: CATALOG
+  contains: Product
+ContextType: SearchContext
+  kind: CATALOG
+  contains: Product
+ContextType: RecommendationContext
+  kind: CATALOG
+  contains: Product
+
+=== STRUCTURE ===
+ResourceType: Product
+  supportsMedia: false
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Name
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Description
+    type: TEXT
+    required: true
+    multivalued: false
+ResourceType: Order
+  supportsMedia: false
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Date
+    type: DATE
+    required: true
+    multivalued: false
+ResourceType: OrderItem
+  supportsMedia: false
+  attribute: Quantity
+    type: NUMBER
+    required: true
+    multivalued: false
+ResourceType: CommentReview
+  supportsMedia: true
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Text
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: CreatedAt
+    type: DATE
+    required: true
+    multivalued: false
+ResourceRelation: OrderContainsOrderItem
+  source: Order (1)
+  target: OrderItem (2)
+ResourceRelation: OrderItemTargetsProduct
+  source: OrderItem (2)
+  target: Product (1)
+ResourceRelation: ProductContainsComment
+  source: Product (1)
+  target: CommentReview (2)
+
+=== FEEDBACK ===
+FeedbackType: ReviewType
+  kind: REVIEW
+  hasRating: true
+FeedbackType: HelpfulVoteType
+  kind: VOTE
+  hasRating: false
+FeedbackDefinition: ProductReview
+  type: ReviewType
+  author: Reviewer
+  subject: Product
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: true
+  feedbackPolicy: ProductReviewPolicy
+    status: ENABLED
+  ratingPolicy: ProductReviewRating
+    min: 1
+    max: 5
+    step: 1
+FeedbackDefinition: HelpfulVoteOnComment
+  type: HelpfulVoteType
+  author: Buyer
+  subject: CommentReview
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: HelpfulVotePolicy
+    status: ENABLED
+
+=== GOVERNANCE & BEHAVIOR ===
+AutomationRule: ReviewGuardAutomation
+  trigger: ON_FEEDBACK_CREATE
+  onFeedback: ProductReview
+  context: Product
+  inContext: ModerationContext
+  uses: ReviewValidationRule
+  condition: CheckReviewContent
+    field: body
+    operator: CONTAINS_KEYWORDS
+    value: spam,fake,scam
+  action: FlagReview
+    kind: FLAG_CONTENT
+    message: Content Restricted
+SortingPolicy: ProductListingSort
+  criterion: VALUE
+  direction: DESC
+  appliesToResource: Product
+  inContext: CatalogContext
+SortingPolicy: ProductSearchSort
+  criterion: RELEVANCE
+  direction: DESC
+  appliesToResource: Product
+SortingPolicy: CommentSortByDate
+  criterion: DATE
+  direction: DESC
+  appliesToResource: CommentReview
+  inContext: CatalogContext
+SortingPolicy: CommentSortByRating
+  criterion: RELEVANCE
+  direction: DESC
+  appliesToResource: CommentReview
+  inContext: CatalogContext
+ValidationRule: ReviewValidationRule
+  kind: AUTOMATIC
+  severity: ERROR
+  expression: rating_in_range_and_non_empty_text
+  appliesToFeedback: ProductReview
+  appliesToResource: Product
+  appliesToUser: Reviewer
+  invokedBy: ReviewGuardAutomation
+ModerationPolicy: ReviewModerationPolicy 
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: FLAGGED
+  monitorsFeedback: ProductReview
+  executedBy: Moderator
+  monitorsResource: Product
+  inContext: ModerationContext
+VerificationPolicy: ProductReviewVerificationAuto
+  mode: AUTOMATIC
+  appliesWhen: ON_FEEDBACK_CREATE
+  verifies: ProductReview
+VerificationPolicy: ProductReviewVerificationManual 
+  mode: MANUAL
+  appliesWhen: ON_MANUAL_REQUEST
+  verifies: ProductReview
+AuthorizationRule: BuyerCanCreateReview
+  allowedAction: CREATE
+  actor: Reviewer
+  resourceTarget: Product
+  feedbackTarget: ProductReview
+  context: CatalogContext
+AuthorizationRule: ReviewerCanCreateReview
+  allowedAction: CREATE
+  actor: Reviewer
+  resourceTarget: Product
+  feedbackTarget: ProductReview
+  context: CatalogContext
+AuthorizationRule: ModeratorCanModerateReviews
+  allowedAction: MODERATE
+  actor: Moderator
+  resourceTarget: Product
+  feedbackTarget: ProductReview
+  context: ModerationContext
+AuthorizationRule: BuyerCanVoteHelpful
+  allowedAction: VOTE
+  actor: Buyer
+  resourceTarget: CommentReview
+  feedbackTarget: HelpfulVoteOnComment
+  context: CatalogContext
