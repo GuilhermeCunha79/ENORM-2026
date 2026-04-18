@@ -4,6 +4,7 @@ package enorm.impl;
 
 import enorm.EnormPackage;
 import enorm.FeedbackDefinition;
+import enorm.TriggerEvent;
 import enorm.ValidationKind;
 import enorm.VerificationPolicy;
 
@@ -80,7 +81,7 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String APPLIES_WHEN_EDEFAULT = null;
+	protected static final TriggerEvent APPLIES_WHEN_EDEFAULT = TriggerEvent.ON_RESOURCE_CREATE;
 
 	/**
 	 * The cached value of the '{@link #getAppliesWhen() <em>Applies When</em>}' attribute.
@@ -90,7 +91,7 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 * @ordered
 	 */
-	protected String appliesWhen = APPLIES_WHEN_EDEFAULT;
+	protected TriggerEvent appliesWhen = APPLIES_WHEN_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getVerifies() <em>Verifies</em>}' reference.
@@ -175,7 +176,7 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public String getAppliesWhen() {
+	public TriggerEvent getAppliesWhen() {
 		return appliesWhen;
 	}
 
@@ -185,9 +186,9 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public void setAppliesWhen(String newAppliesWhen) {
-		String oldAppliesWhen = appliesWhen;
-		appliesWhen = newAppliesWhen;
+	public void setAppliesWhen(TriggerEvent newAppliesWhen) {
+		TriggerEvent oldAppliesWhen = appliesWhen;
+		appliesWhen = newAppliesWhen == null ? APPLIES_WHEN_EDEFAULT : newAppliesWhen;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.VERIFICATION_POLICY__APPLIES_WHEN,
 					oldAppliesWhen, appliesWhen));
@@ -272,7 +273,7 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 			setMode((ValidationKind) newValue);
 			return;
 		case EnormPackage.VERIFICATION_POLICY__APPLIES_WHEN:
-			setAppliesWhen((String) newValue);
+			setAppliesWhen((TriggerEvent) newValue);
 			return;
 		case EnormPackage.VERIFICATION_POLICY__VERIFIES:
 			setVerifies((FeedbackDefinition) newValue);
@@ -318,7 +319,7 @@ public class VerificationPolicyImpl extends MinimalEObjectImpl.Container impleme
 		case EnormPackage.VERIFICATION_POLICY__MODE:
 			return mode != MODE_EDEFAULT;
 		case EnormPackage.VERIFICATION_POLICY__APPLIES_WHEN:
-			return APPLIES_WHEN_EDEFAULT == null ? appliesWhen != null : !APPLIES_WHEN_EDEFAULT.equals(appliesWhen);
+			return appliesWhen != APPLIES_WHEN_EDEFAULT;
 		case EnormPackage.VERIFICATION_POLICY__VERIFIES:
 			return verifies != null;
 		}

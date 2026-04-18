@@ -2,6 +2,7 @@
  */
 package enorm;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -15,12 +16,12 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link enorm.AutomationRule#getName <em>Name</em>}</li>
  *   <li>{@link enorm.AutomationRule#getTrigger <em>Trigger</em>}</li>
- *   <li>{@link enorm.AutomationRule#getCondition <em>Condition</em>}</li>
- *   <li>{@link enorm.AutomationRule#getActionDescription <em>Action Description</em>}</li>
  *   <li>{@link enorm.AutomationRule#getContext <em>Context</em>}</li>
  *   <li>{@link enorm.AutomationRule#getInContext <em>In Context</em>}</li>
  *   <li>{@link enorm.AutomationRule#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link enorm.AutomationRule#getUses <em>Uses</em>}</li>
+ *   <li>{@link enorm.AutomationRule#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link enorm.AutomationRule#getActions <em>Actions</em>}</li>
  * </ul>
  *
  * @see enorm.EnormPackage#getAutomationRule()
@@ -52,69 +53,28 @@ public interface AutomationRule extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Trigger</b></em>' attribute.
+	 * The literals are from the enumeration {@link enorm.TriggerEvent}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Trigger</em>' attribute.
-	 * @see #setTrigger(String)
+	 * @see enorm.TriggerEvent
+	 * @see #setTrigger(TriggerEvent)
 	 * @see enorm.EnormPackage#getAutomationRule_Trigger()
 	 * @model
 	 * @generated
 	 */
-	String getTrigger();
+	TriggerEvent getTrigger();
 
 	/**
 	 * Sets the value of the '{@link enorm.AutomationRule#getTrigger <em>Trigger</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Trigger</em>' attribute.
+	 * @see enorm.TriggerEvent
 	 * @see #getTrigger()
 	 * @generated
 	 */
-	void setTrigger(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Condition</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Condition</em>' attribute.
-	 * @see #setCondition(String)
-	 * @see enorm.EnormPackage#getAutomationRule_Condition()
-	 * @model
-	 * @generated
-	 */
-	String getCondition();
-
-	/**
-	 * Sets the value of the '{@link enorm.AutomationRule#getCondition <em>Condition</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Condition</em>' attribute.
-	 * @see #getCondition()
-	 * @generated
-	 */
-	void setCondition(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Action Description</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Action Description</em>' attribute.
-	 * @see #setActionDescription(String)
-	 * @see enorm.EnormPackage#getAutomationRule_ActionDescription()
-	 * @model
-	 * @generated
-	 */
-	String getActionDescription();
-
-	/**
-	 * Sets the value of the '{@link enorm.AutomationRule#getActionDescription <em>Action Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Action Description</em>' attribute.
-	 * @see #getActionDescription()
-	 * @generated
-	 */
-	void setActionDescription(String value);
+	void setTrigger(TriggerEvent value);
 
 	/**
 	 * Returns the value of the '<em><b>Context</b></em>' reference.
@@ -167,7 +127,7 @@ public interface AutomationRule extends EObject {
 	 * @return the value of the '<em>On Feedback</em>' reference.
 	 * @see #setOnFeedback(FeedbackDefinition)
 	 * @see enorm.EnormPackage#getAutomationRule_OnFeedback()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
 	FeedbackDefinition getOnFeedback();
@@ -183,25 +143,39 @@ public interface AutomationRule extends EObject {
 	void setOnFeedback(FeedbackDefinition value);
 
 	/**
-	 * Returns the value of the '<em><b>Uses</b></em>' reference.
+	 * Returns the value of the '<em><b>Uses</b></em>' reference list.
+	 * The list contents are of type {@link enorm.ValidationRule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Uses</em>' reference.
-	 * @see #setUses(ValidationRule)
+	 * @return the value of the '<em>Uses</em>' reference list.
 	 * @see enorm.EnormPackage#getAutomationRule_Uses()
-	 * @model required="true"
+	 * @model
 	 * @generated
 	 */
-	ValidationRule getUses();
+	EList<ValidationRule> getUses();
 
 	/**
-	 * Sets the value of the '{@link enorm.AutomationRule#getUses <em>Uses</em>}' reference.
+	 * Returns the value of the '<em><b>Conditions</b></em>' containment reference list.
+	 * The list contents are of type {@link enorm.Condition}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Uses</em>' reference.
-	 * @see #getUses()
+	 * @return the value of the '<em>Conditions</em>' containment reference list.
+	 * @see enorm.EnormPackage#getAutomationRule_Conditions()
+	 * @model containment="true" required="true"
 	 * @generated
 	 */
-	void setUses(ValidationRule value);
+	EList<Condition> getConditions();
+
+	/**
+	 * Returns the value of the '<em><b>Actions</b></em>' containment reference list.
+	 * The list contents are of type {@link enorm.Action}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Actions</em>' containment reference list.
+	 * @see enorm.EnormPackage#getAutomationRule_Actions()
+	 * @model containment="true" required="true"
+	 * @generated
+	 */
+	EList<Action> getActions();
 
 } // AutomationRule

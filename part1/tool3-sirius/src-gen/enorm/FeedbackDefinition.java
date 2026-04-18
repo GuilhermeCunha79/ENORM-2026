@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link enorm.FeedbackDefinition#getName <em>Name</em>}</li>
  *   <li>{@link enorm.FeedbackDefinition#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link enorm.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}</li>
  *   <li>{@link enorm.FeedbackDefinition#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
  *   <li>{@link enorm.FeedbackDefinition#getType <em>Type</em>}</li>
  *   <li>{@link enorm.FeedbackDefinition#getSubjectResource <em>Subject Resource</em>}</li>
@@ -72,6 +73,31 @@ public interface FeedbackDefinition extends EObject {
 	 * @generated
 	 */
 	void setRequiresVerifiedContext(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Verification Requirement</b></em>' attribute.
+	 * The literals are from the enumeration {@link enorm.VerificationRequirement}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Verification Requirement</em>' attribute.
+	 * @see enorm.VerificationRequirement
+	 * @see #setVerificationRequirement(VerificationRequirement)
+	 * @see enorm.EnormPackage#getFeedbackDefinition_VerificationRequirement()
+	 * @model
+	 * @generated
+	 */
+	VerificationRequirement getVerificationRequirement();
+
+	/**
+	 * Sets the value of the '{@link enorm.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Verification Requirement</em>' attribute.
+	 * @see enorm.VerificationRequirement
+	 * @see #getVerificationRequirement()
+	 * @generated
+	 */
+	void setVerificationRequirement(VerificationRequirement value);
 
 	/**
 	 * Returns the value of the '<em><b>Unique Per Author Target</b></em>' attribute.

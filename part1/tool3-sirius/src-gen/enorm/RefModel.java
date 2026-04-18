@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link enorm.RefModel#getModerationPolicies <em>Moderation Policies</em>}</li>
  *   <li>{@link enorm.RefModel#getAutomationRules <em>Automation Rules</em>}</li>
  *   <li>{@link enorm.RefModel#getVerificationPolicies <em>Verification Policies</em>}</li>
+ *   <li>{@link enorm.RefModel#getSortingPolicies <em>Sorting Policies</em>}</li>
  * </ul>
  *
  * @see enorm.EnormPackage#getRefModel()
@@ -210,5 +211,17 @@ public interface RefModel extends EObject {
 	 * @generated
 	 */
 	EList<VerificationPolicy> getVerificationPolicies();
+
+	/**
+	 * Returns the value of the '<em><b>Sorting Policies</b></em>' containment reference list.
+	 * The list contents are of type {@link enorm.SortingPolicy}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Sorting Policies</em>' containment reference list.
+	 * @see enorm.EnormPackage#getRefModel_SortingPolicies()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<SortingPolicy> getSortingPolicies();
 
 } // RefModel

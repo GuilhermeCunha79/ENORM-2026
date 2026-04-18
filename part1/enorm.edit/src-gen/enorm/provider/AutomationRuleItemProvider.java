@@ -3,6 +3,7 @@
 package enorm.provider;
 
 import enorm.AutomationRule;
+import enorm.EnormFactory;
 import enorm.EnormPackage;
 
 import java.util.Collection;
@@ -12,6 +13,8 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
+
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
@@ -55,8 +58,6 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 
 			addNamePropertyDescriptor(object);
 			addTriggerPropertyDescriptor(object);
-			addConditionPropertyDescriptor(object);
-			addActionDescriptionPropertyDescriptor(object);
 			addContextPropertyDescriptor(object);
 			addInContextPropertyDescriptor(object);
 			addOnFeedbackPropertyDescriptor(object);
@@ -94,38 +95,6 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 						getString("_UI_PropertyDescriptor_description", "_UI_AutomationRule_trigger_feature",
 								"_UI_AutomationRule_type"),
 						EnormPackage.Literals.AUTOMATION_RULE__TRIGGER, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Condition feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addConditionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_AutomationRule_condition_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_AutomationRule_condition_feature",
-								"_UI_AutomationRule_type"),
-						EnormPackage.Literals.AUTOMATION_RULE__CONDITION, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Action Description feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addActionDescriptionPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_AutomationRule_actionDescription_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_AutomationRule_actionDescription_feature",
-								"_UI_AutomationRule_type"),
-						EnormPackage.Literals.AUTOMATION_RULE__ACTION_DESCRIPTION, true, false, false,
 						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -190,6 +159,37 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(EnormPackage.Literals.AUTOMATION_RULE__CONDITIONS);
+			childrenFeatures.add(EnormPackage.Literals.AUTOMATION_RULE__ACTIONS);
+		}
+		return childrenFeatures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
+	}
+
+	/**
 	 * This returns AutomationRule.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -237,9 +237,11 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 		switch (notification.getFeatureID(AutomationRule.class)) {
 		case EnormPackage.AUTOMATION_RULE__NAME:
 		case EnormPackage.AUTOMATION_RULE__TRIGGER:
-		case EnormPackage.AUTOMATION_RULE__CONDITION:
-		case EnormPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			return;
+		case EnormPackage.AUTOMATION_RULE__CONDITIONS:
+		case EnormPackage.AUTOMATION_RULE__ACTIONS:
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
 		super.notifyChanged(notification);
@@ -255,6 +257,12 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add(createChildParameter(EnormPackage.Literals.AUTOMATION_RULE__CONDITIONS,
+				EnormFactory.eINSTANCE.createCondition()));
+
+		newChildDescriptors.add(createChildParameter(EnormPackage.Literals.AUTOMATION_RULE__ACTIONS,
+				EnormFactory.eINSTANCE.createAction()));
 	}
 
 	/**

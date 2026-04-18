@@ -1,0 +1,20 @@
+@startuml
+title HelpfulVoteConsistencyValidation Validation Process
+Mode: AUTOMATIC\nDecision/Condition: helpful_vote_not_duplicate_and_target_is_review\n
+state "Validation Triggered" as trigger
+state "Collect Input Data" as collect
+state "Check Expression" as check
+state "Expression Valid?" as decision <<choice>>
+state "Validation Passed" as pass
+state "Validation Failed (WARNING)" as fail
+state "Report Result" as report
+[*] --> trigger
+trigger --> collect
+collect --> check
+check --> decision
+decision --> pass : true
+decision --> fail : false
+pass --> report
+fail --> report
+report --> [*]
+@enduml

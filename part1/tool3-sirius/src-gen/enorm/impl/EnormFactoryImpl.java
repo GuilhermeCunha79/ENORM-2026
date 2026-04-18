@@ -84,8 +84,14 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 			return createAuthorizationRule();
 		case EnormPackage.AUTOMATION_RULE:
 			return createAutomationRule();
+		case EnormPackage.CONDITION:
+			return createCondition();
+		case EnormPackage.ACTION:
+			return createAction();
 		case EnormPackage.VERIFICATION_POLICY:
 			return createVerificationPolicy();
+		case EnormPackage.SORTING_POLICY:
+			return createSortingPolicy();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -109,18 +115,32 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 			return createFeedbackKindFromString(eDataType, initialValue);
 		case EnormPackage.FEEDBACK_SUBJECT_SCOPE:
 			return createFeedbackSubjectScopeFromString(eDataType, initialValue);
+		case EnormPackage.FEEDBACK_POLARITY:
+			return createFeedbackPolarityFromString(eDataType, initialValue);
 		case EnormPackage.FEEDBACK_STATUS:
 			return createFeedbackStatusFromString(eDataType, initialValue);
+		case EnormPackage.VERIFICATION_REQUIREMENT:
+			return createVerificationRequirementFromString(eDataType, initialValue);
 		case EnormPackage.VALIDATION_KIND:
 			return createValidationKindFromString(eDataType, initialValue);
 		case EnormPackage.RULE_SEVERITY:
 			return createRuleSeverityFromString(eDataType, initialValue);
 		case EnormPackage.MODERATION_MODE:
 			return createModerationModeFromString(eDataType, initialValue);
+		case EnormPackage.TRIGGER_EVENT:
+			return createTriggerEventFromString(eDataType, initialValue);
 		case EnormPackage.MODERATION_DECISION:
 			return createModerationDecisionFromString(eDataType, initialValue);
 		case EnormPackage.ACTION_KIND:
 			return createActionKindFromString(eDataType, initialValue);
+		case EnormPackage.CONDITION_OPERATOR:
+			return createConditionOperatorFromString(eDataType, initialValue);
+		case EnormPackage.ACTION_RESULT_KIND:
+			return createActionResultKindFromString(eDataType, initialValue);
+		case EnormPackage.SORT_CRITERION:
+			return createSortCriterionFromString(eDataType, initialValue);
+		case EnormPackage.SORT_DIRECTION:
+			return createSortDirectionFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -144,18 +164,32 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 			return convertFeedbackKindToString(eDataType, instanceValue);
 		case EnormPackage.FEEDBACK_SUBJECT_SCOPE:
 			return convertFeedbackSubjectScopeToString(eDataType, instanceValue);
+		case EnormPackage.FEEDBACK_POLARITY:
+			return convertFeedbackPolarityToString(eDataType, instanceValue);
 		case EnormPackage.FEEDBACK_STATUS:
 			return convertFeedbackStatusToString(eDataType, instanceValue);
+		case EnormPackage.VERIFICATION_REQUIREMENT:
+			return convertVerificationRequirementToString(eDataType, instanceValue);
 		case EnormPackage.VALIDATION_KIND:
 			return convertValidationKindToString(eDataType, instanceValue);
 		case EnormPackage.RULE_SEVERITY:
 			return convertRuleSeverityToString(eDataType, instanceValue);
 		case EnormPackage.MODERATION_MODE:
 			return convertModerationModeToString(eDataType, instanceValue);
+		case EnormPackage.TRIGGER_EVENT:
+			return convertTriggerEventToString(eDataType, instanceValue);
 		case EnormPackage.MODERATION_DECISION:
 			return convertModerationDecisionToString(eDataType, instanceValue);
 		case EnormPackage.ACTION_KIND:
 			return convertActionKindToString(eDataType, instanceValue);
+		case EnormPackage.CONDITION_OPERATOR:
+			return convertConditionOperatorToString(eDataType, instanceValue);
+		case EnormPackage.ACTION_RESULT_KIND:
+			return convertActionResultKindToString(eDataType, instanceValue);
+		case EnormPackage.SORT_CRITERION:
+			return convertSortCriterionToString(eDataType, instanceValue);
+		case EnormPackage.SORT_DIRECTION:
+			return convertSortDirectionToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -321,9 +355,42 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 	 * @generated
 	 */
 	@Override
+	public Condition createCondition() {
+		ConditionImpl condition = new ConditionImpl();
+		return condition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Action createAction() {
+		ActionImpl action = new ActionImpl();
+		return action;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public VerificationPolicy createVerificationPolicy() {
 		VerificationPolicyImpl verificationPolicy = new VerificationPolicyImpl();
 		return verificationPolicy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public SortingPolicy createSortingPolicy() {
+		SortingPolicyImpl sortingPolicy = new SortingPolicyImpl();
+		return sortingPolicy;
 	}
 
 	/**
@@ -441,6 +508,28 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public FeedbackPolarity createFeedbackPolarityFromString(EDataType eDataType, String initialValue) {
+		FeedbackPolarity result = FeedbackPolarity.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertFeedbackPolarityToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public FeedbackStatus createFeedbackStatusFromString(EDataType eDataType, String initialValue) {
 		FeedbackStatus result = FeedbackStatus.get(initialValue);
 		if (result == null)
@@ -455,6 +544,28 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 	 * @generated
 	 */
 	public String convertFeedbackStatusToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VerificationRequirement createVerificationRequirementFromString(EDataType eDataType, String initialValue) {
+		VerificationRequirement result = VerificationRequirement.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertVerificationRequirementToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 
@@ -529,6 +640,28 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public TriggerEvent createTriggerEventFromString(EDataType eDataType, String initialValue) {
+		TriggerEvent result = TriggerEvent.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertTriggerEventToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ModerationDecision createModerationDecisionFromString(EDataType eDataType, String initialValue) {
 		ModerationDecision result = ModerationDecision.get(initialValue);
 		if (result == null)
@@ -565,6 +698,94 @@ public class EnormFactoryImpl extends EFactoryImpl implements EnormFactory {
 	 * @generated
 	 */
 	public String convertActionKindToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ConditionOperator createConditionOperatorFromString(EDataType eDataType, String initialValue) {
+		ConditionOperator result = ConditionOperator.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertConditionOperatorToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ActionResultKind createActionResultKindFromString(EDataType eDataType, String initialValue) {
+		ActionResultKind result = ActionResultKind.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertActionResultKindToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SortCriterion createSortCriterionFromString(EDataType eDataType, String initialValue) {
+		SortCriterion result = SortCriterion.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertSortCriterionToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public SortDirection createSortDirectionFromString(EDataType eDataType, String initialValue) {
+		SortDirection result = SortDirection.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertSortDirectionToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

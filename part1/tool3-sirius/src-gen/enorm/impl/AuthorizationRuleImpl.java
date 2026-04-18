@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link enorm.impl.AuthorizationRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link enorm.impl.AuthorizationRuleImpl#getAllowedAction <em>Allowed Action</em>}</li>
  *   <li>{@link enorm.impl.AuthorizationRuleImpl#getActor <em>Actor</em>}</li>
  *   <li>{@link enorm.impl.AuthorizationRuleImpl#getContext <em>Context</em>}</li>
@@ -36,6 +37,26 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * @generated
  */
 public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implements AuthorizationRule {
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getAllowedAction() <em>Allowed Action</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -113,6 +134,30 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	protected EClass eStaticClass() {
 		return EnormPackage.Literals.AUTHORIZATION_RULE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.AUTHORIZATION_RULE__NAME, oldName,
+					name));
 	}
 
 	/**
@@ -315,6 +360,8 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+		case EnormPackage.AUTHORIZATION_RULE__NAME:
+			return getName();
 		case EnormPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
 			return getAllowedAction();
 		case EnormPackage.AUTHORIZATION_RULE__ACTOR:
@@ -345,6 +392,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+		case EnormPackage.AUTHORIZATION_RULE__NAME:
+			setName((String) newValue);
+			return;
 		case EnormPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
 			setAllowedAction((ActionKind) newValue);
 			return;
@@ -372,6 +422,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+		case EnormPackage.AUTHORIZATION_RULE__NAME:
+			setName(NAME_EDEFAULT);
+			return;
 		case EnormPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
 			setAllowedAction(ALLOWED_ACTION_EDEFAULT);
 			return;
@@ -399,6 +452,8 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+		case EnormPackage.AUTHORIZATION_RULE__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case EnormPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
 			return allowedAction != ALLOWED_ACTION_EDEFAULT;
 		case EnormPackage.AUTHORIZATION_RULE__ACTOR:
@@ -424,7 +479,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
 			return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (allowedAction: ");
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", allowedAction: ");
 		result.append(allowedAction);
 		result.append(')');
 		return result.toString();

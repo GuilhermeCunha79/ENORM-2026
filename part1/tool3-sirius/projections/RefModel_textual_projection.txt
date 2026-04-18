@@ -121,17 +121,17 @@ MODERATION POLICIES:
 Moderation policy SpamDetectionPolicy
   Mode: AUTOMATIC
   Decision: FLAGGED
-  Trigger: spam_keywords
+  Trigger: ON_FEEDBACK_CREATE
 
 Moderation policy OffensiveContentPolicy
   Mode: HYBRID
   Decision: HIDDEN
-  Trigger: offensive_language
+  Trigger: ON_FEEDBACK_CREATE
 
 Moderation policy FakeReviewPolicy
   Mode: MANUAL
   Decision: REMOVED
-  Trigger: suspicious_pattern
+  Trigger: ON_REPORT_SUBMITTED
 
 
 VALIDATION RULES:
@@ -164,28 +164,18 @@ Validation rule ShopNameRequired
 AUTOMATION RULES:
 -----------------
 Automation rule LowRatingNotification
-  Trigger: rating_below_2
-  Condition: self.rating < 2
-  Action: Send notification to seller
+  Trigger: ON_FEEDBACK_CREATE
 
 Automation rule HighRatingBadge
-  Trigger: rating_above_4.5
-  Condition: self.rating > 4.5
-  Action: Award seller badge
+  Trigger: ON_FEEDBACK_CREATE
 
 Automation rule ReviewLengthEscalation
-  Trigger: review_too_short
-  Condition: self.content.size() < 10
-  Action: Flag short review for moderation
+  Trigger: ON_FEEDBACK_CREATE
 
 Automation rule CommentQualityCheck
-  Trigger: comment_empty_text
-  Condition: self.text.size() = 0
-  Action: Flag empty comment
+  Trigger: ON_FEEDBACK_CREATE
 
 Automation rule ShopProfileCheck
-  Trigger: shop_name_missing
-  Condition: self.name = null or self.name.size() = 0
-  Action: Request shop profile completion
+  Trigger: ON_RESOURCE_CREATE
 
 

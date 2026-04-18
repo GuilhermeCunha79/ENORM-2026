@@ -10,6 +10,7 @@ import enorm.RatingPolicy;
 import enorm.ResourceType;
 import enorm.UserType;
 
+import enorm.VerificationRequirement;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <ul>
  *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getName <em>Name</em>}</li>
  *   <li>{@link enorm.impl.FeedbackDefinitionImpl#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getVerificationRequirement <em>Verification Requirement</em>}</li>
  *   <li>{@link enorm.impl.FeedbackDefinitionImpl#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
  *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getType <em>Type</em>}</li>
  *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getSubjectResource <em>Subject Resource</em>}</li>
@@ -80,6 +82,26 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected boolean requiresVerifiedContext = REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVerificationRequirement()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final VerificationRequirement VERIFICATION_REQUIREMENT_EDEFAULT = VerificationRequirement.NONE;
+
+	/**
+	 * The cached value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVerificationRequirement()
+	 * @generated
+	 * @ordered
+	 */
+	protected VerificationRequirement verificationRequirement = VERIFICATION_REQUIREMENT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
@@ -227,6 +249,32 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			eNotify(new ENotificationImpl(this, Notification.SET,
 					EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT, oldRequiresVerifiedContext,
 					requiresVerifiedContext));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public VerificationRequirement getVerificationRequirement() {
+		return verificationRequirement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setVerificationRequirement(VerificationRequirement newVerificationRequirement) {
+		VerificationRequirement oldVerificationRequirement = verificationRequirement;
+		verificationRequirement = newVerificationRequirement == null ? VERIFICATION_REQUIREMENT_EDEFAULT
+				: newVerificationRequirement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT, oldVerificationRequirement,
+					verificationRequirement));
 	}
 
 	/**
@@ -554,6 +602,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			return getName();
 		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
 			return isRequiresVerifiedContext();
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			return getVerificationRequirement();
 		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
 			return isUniquePerAuthorTarget();
 		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
@@ -594,6 +644,9 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
 			setRequiresVerifiedContext((Boolean) newValue);
 			return;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			setVerificationRequirement((VerificationRequirement) newValue);
+			return;
 		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
 			setUniquePerAuthorTarget((Boolean) newValue);
 			return;
@@ -633,6 +686,9 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
 			setRequiresVerifiedContext(REQUIRES_VERIFIED_CONTEXT_EDEFAULT);
 			return;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			setVerificationRequirement(VERIFICATION_REQUIREMENT_EDEFAULT);
+			return;
 		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
 			setUniquePerAuthorTarget(UNIQUE_PER_AUTHOR_TARGET_EDEFAULT);
 			return;
@@ -670,6 +726,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
 			return requiresVerifiedContext != REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			return verificationRequirement != VERIFICATION_REQUIREMENT_EDEFAULT;
 		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
 			return uniquePerAuthorTarget != UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
 		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
@@ -703,6 +761,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 		result.append(name);
 		result.append(", requiresVerifiedContext: ");
 		result.append(requiresVerifiedContext);
+		result.append(", verificationRequirement: ");
+		result.append(verificationRequirement);
 		result.append(", uniquePerAuthorTarget: ");
 		result.append(uniquePerAuthorTarget);
 		result.append(')');

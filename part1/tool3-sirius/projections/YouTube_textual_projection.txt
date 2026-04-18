@@ -136,12 +136,12 @@ MODERATION POLICIES:
 Moderation policy VideoModerationPolicy
   Mode: HYBRID
   Decision: FLAGGED
-  Trigger: COPYRIGHT_OR_CONTENT_OR_SPAM
+  Trigger: ON_REPORT_SUBMITTED
 
 Moderation policy CommentModerationPolicy
   Mode: HYBRID
   Decision: HIDDEN
-  Trigger: SPAM_OR_TOXICITY_OR_BLOCKED_WORD
+  Trigger: ON_FEEDBACK_CREATE
 
 
 VALIDATION RULES:
@@ -160,13 +160,9 @@ Validation rule CommentPolicyValidation
 AUTOMATION RULES:
 -----------------
 Automation rule VideoValidationAutomation
-  Trigger: video_uploaded
-  Condition: content_status_active
-  Action: run validation and create moderation check
+  Trigger: ON_RESOURCE_CREATE
 
 Automation rule CommentValidationAutomation
-  Trigger: comment_created
-  Condition: commenting_enabled_on_video
-  Action: run validation and create moderation check
+  Trigger: ON_RESOURCE_CREATE
 
 

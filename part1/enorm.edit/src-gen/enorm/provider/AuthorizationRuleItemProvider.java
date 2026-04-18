@@ -2,7 +2,6 @@
  */
 package enorm.provider;
 
-import enorm.ActionKind;
 import enorm.AuthorizationRule;
 import enorm.EnormPackage;
 
@@ -54,6 +53,7 @@ public class AuthorizationRuleItemProvider extends ItemProviderAdapter implement
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addNamePropertyDescriptor(object);
 			addAllowedActionPropertyDescriptor(object);
 			addActorPropertyDescriptor(object);
 			addContextPropertyDescriptor(object);
@@ -61,6 +61,22 @@ public class AuthorizationRuleItemProvider extends ItemProviderAdapter implement
 			addFeedbackTargetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_AuthorizationRule_name_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_AuthorizationRule_name_feature",
+								"_UI_AuthorizationRule_type"),
+						EnormPackage.Literals.AUTHORIZATION_RULE__NAME, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -168,8 +184,7 @@ public class AuthorizationRuleItemProvider extends ItemProviderAdapter implement
 	 */
 	@Override
 	public String getText(Object object) {
-		ActionKind labelValue = ((AuthorizationRule) object).getAllowedAction();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((AuthorizationRule) object).getName();
 		return label == null || label.length() == 0 ? getString("_UI_AuthorizationRule_type")
 				: getString("_UI_AuthorizationRule_type") + " " + label;
 	}
@@ -186,6 +201,7 @@ public class AuthorizationRuleItemProvider extends ItemProviderAdapter implement
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(AuthorizationRule.class)) {
+		case EnormPackage.AUTHORIZATION_RULE__NAME:
 		case EnormPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;

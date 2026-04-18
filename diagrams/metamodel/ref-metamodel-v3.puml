@@ -1,7 +1,7 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-title REF DSL - Core Metamodel (P1) - v3
+title REF DSL - Core Metamodel (P1)
 
 package "Core" {
   class RefModel {
@@ -63,17 +63,10 @@ package "Structure" {
 
   class ResourceRelation {
     name: String
-    sourceCardinality: CardinalityKind
-    targetCardinality: CardinalityKind
+    sourceCardinality: String
+    targetCardinality: String
     containment: boolean
     recursive: boolean
-  }
-
-  enum CardinalityKind {
-    ZERO_ONE
-    ONE
-    ZERO_MANY
-    ONE_MANY
   }
 }
 
@@ -84,7 +77,9 @@ package "Feedback" {
     subjectScope: FeedbackSubjectScope
     hasRating: boolean
     recursive: boolean
+    allowsText: boolean
     allowsMedia: boolean
+    polarity: FeedbackPolarity
   }
 
   enum FeedbackKind {
@@ -102,9 +97,16 @@ package "Feedback" {
     RESOURCE_OR_FEEDBACK
   }
 
+  enum FeedbackPolarity {
+    NONE
+    LIKE_DISLIKE
+    UP_DOWN
+  }
+
   class FeedbackDefinition {
     name: String
     requiresVerifiedContext: boolean
+    verificationRequirement: VerificationRequirement
     uniquePerAuthorTarget: boolean
   }
 
@@ -117,17 +119,16 @@ package "Feedback" {
     DISABLED
   }
 
+  enum VerificationRequirement {
+    NONE
+    OPTIONAL
+    REQUIRED
+  }
+
   class RatingPolicy {
     minValue: Number
     maxValue: Number
     step: Number
-    scaleKind: RatingScaleKind
-  }
-
-  enum RatingScaleKind {
-    NUMERIC
-    ORDINAL
-    PERCENTAGE
   }
 }
 
@@ -135,7 +136,6 @@ package "Governance & Behavior" {
   class ValidationRule {
     name: String
     kind: ValidationKind
-    targetScope: TargetScope
     severity: RuleSeverity
     expression: String
     implementationId: String
@@ -144,12 +144,6 @@ package "Governance & Behavior" {
   enum ValidationKind {
     AUTOMATIC
     MANUAL
-  }
-
-  enum TargetScope {
-    RESOURCE_ONLY
-    FEEDBACK_ONLY
-    RESOURCE_OR_FEEDBACK
   }
 
   enum RuleSeverity {
@@ -161,7 +155,7 @@ package "Governance & Behavior" {
   class ModerationPolicy {
     name: String
     mode: ModerationMode
-    trigger: String
+    trigger: TriggerEvent
     decision: ModerationDecision
   }
 
@@ -181,6 +175,7 @@ package "Governance & Behavior" {
   }
 
   class AuthorizationRule {
+    name: String
     allowedAction: ActionKind
   }
 
@@ -200,44 +195,77 @@ package "Governance & Behavior" {
 
   class AutomationRule {
     name: String
-    trigger: String
-    condition: String
-    actionDescription: String
+    trigger: TriggerEvent
+  }
+
+  enum TriggerEvent {
+    ON_RESOURCE_CREATE
+    ON_RESOURCE_UPDATE
+    ON_RESOURCE_DELETE
+    ON_FEEDBACK_CREATE
+    ON_FEEDBACK_UPDATE
+    ON_FEEDBACK_DELETE
+    ON_REPORT_SUBMITTED
+    ON_REPORT_THRESHOLD
+    ON_MANUAL_REQUEST
+  }
+
+  class Condition {
+    name: String
+    field: String
+    operator: ConditionOperator
+    value: String
+  }
+
+  enum ConditionOperator {
+    CONTAINS_KEYWORDS
+    NOT_CONTAINS_KEYWORDS
+    MATCH_REGEX
+    NOT_MATCH_REGEX
+    HAS_PROPERTY
+    NOT_HAS_PROPERTY
+    HAS_SPECIFIC_PROPERTY
+    NOT_HAS_SPECIFIC_PROPERTY
+  }
+
+  class Action {
+    name: String
+    kind: ActionResultKind
+    message: String
+  }
+
+  enum ActionResultKind {
+    DISPLAY_MESSAGE
+    FLAG_CONTENT
+    HIDE_CONTENT
+    REMOVE_CONTENT
+    BLOCK_SUBMISSION
+    NOTIFY_MODERATOR
+    AUTO_APPROVE
+    AUTO_REJECT
   }
 
   class VerificationPolicy {
     name: String
-    mode: VerificationMode
-    appliesWhen: String
+    mode: ValidationKind
+    appliesWhen: TriggerEvent
   }
 
-  enum VerificationMode {
-    AUTOMATIC
-    MANUAL
-    HYBRID
-  }
-}
-
-package "Evolution" {
-  class EvolutionRule {
+  class SortingPolicy {
     name: String
-    fromVersion: String
-    toVersion: String
-    transformationId: String
+    criterion: SortCriterion
+    direction: SortDirection
   }
 
-  class RefactoringOperation {
-    name: String
-    kind: RefactoringKind
-    scriptId: String
+  enum SortCriterion {
+    DATE
+    VALUE
+    RELEVANCE
   }
 
-  enum RefactoringKind {
-    RENAME_ELEMENT
-    MOVE_ELEMENT
-    SPLIT_ELEMENT
-    MERGE_ELEMENT
-    CHANGE_TYPE
+  enum SortDirection {
+    ASC
+    DESC
   }
 }
 
@@ -247,19 +275,18 @@ RefModel "1" o-- "*" ContextType
 RefModel "1" o-- "*" ResourceRelation
 RefModel "1" o-- "*" FeedbackType
 RefModel "1" o-- "*" FeedbackDefinition
+RefModel "1" o-- "*" AuthorizationRule
 RefModel "1" o-- "*" ValidationRule
 RefModel "1" o-- "*" ModerationPolicy
 RefModel "1" o-- "*" AutomationRule
 RefModel "1" o-- "*" VerificationPolicy
-RefModel "1" o-- "*" EvolutionRule
-RefModel "1" o-- "*" RefactoringOperation
-RefModel "1" o-- "*" AuthorizationRule
+RefModel "1" o-- "*" SortingPolicy
 
 UserType "0..*" -- "0..*" UserType : superTypes
 ResourceType "0..*" -- "0..*" ResourceType : superTypes
 
 ResourceType "1" o-- "*" Attribute
-ContextType "1" o-- "*" ResourceType : contains
+ContextType "1" --> "*" ResourceType : contains
 ResourceRelation "1" --> "1" ResourceType : source
 ResourceRelation "1" --> "1" ResourceType : target
 
@@ -267,9 +294,8 @@ FeedbackType "1" <-- "1" FeedbackDefinition : type
 ResourceType "0..1" <-- "1" FeedbackDefinition : subjectResource
 UserType "1" <-- "1" FeedbackDefinition : author
 FeedbackDefinition "0..1" <-- "1" FeedbackDefinition : subjectFeedback
-FeedbackDefinition "0..1" --> "1" FeedbackDefinition : parent
-FeedbackDefinition "1" *-- "0..1" FeedbackPolicy : policy
-FeedbackDefinition "1" *-- "0..1" RatingPolicy : rating
+FeedbackDefinition "0..1" o-- "1" FeedbackPolicy : policy
+FeedbackDefinition "0..1" o-- "1" RatingPolicy : rating
 
 UserType "1" <-- "*" AuthorizationRule : actor
 AuthorizationRule "0..*" --> "0..1" ContextType : context
@@ -289,33 +315,13 @@ AutomationRule "0..*" --> "0..1" ResourceType : context
 AutomationRule "0..*" --> "0..1" ContextType : inContext
 AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
 AutomationRule "0..*" --> "1" ValidationRule : uses
+AutomationRule "1" o-- "1..*" Condition : conditions
+AutomationRule "1" o-- "1..*" Action : actions
 
 VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
 
-EvolutionRule "1" o-- "1..*" RefactoringOperation : applies
-
-note bottom of ValidationRule
-  Constraint:
-  each ValidationRule must target at least one element
-  (ResourceType or FeedbackDefinition), matching targetScope.
-end note
-
-note bottom of FeedbackPolicy
-  Constraint:
-  If status = DISABLED, creation of new instances
-  for the associated FeedbackDefinition is not allowed.
-end note
-
-note bottom of RatingPolicy
-  Constraint:
-  RatingPolicy can only be set when FeedbackType.hasRating = true.
-end note
-
-note bottom of FeedbackDefinition
-  Constraint:
-  according to FeedbackType.subjectScope,
-  each FeedbackDefinition targets resource, feedback,
-  or either one (but at least one target must exist).
-end note
+SortingPolicy "0..*" --> "0..1" ResourceType : appliesToResource
+SortingPolicy "0..*" --> "0..1" FeedbackDefinition : appliesToFeedback
+SortingPolicy "0..*" --> "0..1" ContextType : inContext
 
 @enduml

@@ -395,6 +395,52 @@ public class EnormItemProviderAdapterFactory extends EnormAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link enorm.Condition} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConditionItemProvider conditionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link enorm.Condition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createConditionAdapter() {
+		if (conditionItemProvider == null) {
+			conditionItemProvider = new ConditionItemProvider(this);
+		}
+
+		return conditionItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link enorm.Action} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ActionItemProvider actionItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link enorm.Action}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createActionAdapter() {
+		if (actionItemProvider == null) {
+			actionItemProvider = new ActionItemProvider(this);
+		}
+
+		return actionItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link enorm.VerificationPolicy} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -415,6 +461,29 @@ public class EnormItemProviderAdapterFactory extends EnormAdapterFactory
 		}
 
 		return verificationPolicyItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all {@link enorm.SortingPolicy} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected SortingPolicyItemProvider sortingPolicyItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link enorm.SortingPolicy}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createSortingPolicyAdapter() {
+		if (sortingPolicyItemProvider == null) {
+			sortingPolicyItemProvider = new SortingPolicyItemProvider(this);
+		}
+
+		return sortingPolicyItemProvider;
 	}
 
 	/**
@@ -550,8 +619,14 @@ public class EnormItemProviderAdapterFactory extends EnormAdapterFactory
 			authorizationRuleItemProvider.dispose();
 		if (automationRuleItemProvider != null)
 			automationRuleItemProvider.dispose();
+		if (conditionItemProvider != null)
+			conditionItemProvider.dispose();
+		if (actionItemProvider != null)
+			actionItemProvider.dispose();
 		if (verificationPolicyItemProvider != null)
 			verificationPolicyItemProvider.dispose();
+		if (sortingPolicyItemProvider != null)
+			sortingPolicyItemProvider.dispose();
 	}
 
 }

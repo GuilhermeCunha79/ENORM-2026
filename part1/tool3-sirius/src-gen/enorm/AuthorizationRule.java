@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link enorm.AuthorizationRule#getName <em>Name</em>}</li>
  *   <li>{@link enorm.AuthorizationRule#getAllowedAction <em>Allowed Action</em>}</li>
  *   <li>{@link enorm.AuthorizationRule#getActor <em>Actor</em>}</li>
  *   <li>{@link enorm.AuthorizationRule#getContext <em>Context</em>}</li>
@@ -25,6 +26,28 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface AuthorizationRule extends EObject {
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see enorm.EnormPackage#getAuthorizationRule_Name()
+	 * @model
+	 * @generated
+	 */
+	String getName();
+
+	/**
+	 * Sets the value of the '{@link enorm.AuthorizationRule#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Allowed Action</b></em>' attribute.
 	 * The literals are from the enumeration {@link enorm.ActionKind}.
