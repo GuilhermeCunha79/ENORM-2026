@@ -336,7 +336,13 @@ The visualization strategy implements two complementary projection types:
 Three types of graphical projections are generated for each model:
 
 ##### 6.2.1.1 Structure Diagram (Class Diagram)
-**Files**: `part1/tool3-sirius/projections/structure_diagram_*.puml` (Base + three scenarios)
+**Files**: `part1/tool3-sirius/projections/{Scenario}_structure_diagram.puml`
+
+**Actual files:**
+- `RefModel_structure_diagram.puml`
+- `YouTube_structure_diagram.puml`
+- `Amazon_structure_diagram.puml`
+- `Reddit_structure_diagram.puml`
 
 **Purpose**: Visualizes the static structure and relationships of metamodel elements
 
@@ -357,26 +363,47 @@ Three types of graphical projections are generated for each model:
 **Use Case**: Understanding the complete metamodel structure and element relationships
 
 ##### 6.2.1.2 Behavior/Validation Diagram (State Diagram)
-**Files**: `part1/tool3-sirius/projections/behavior_validation_*.puml` (Base + three scenarios)
+**Files**: `part1/tool3-sirius/projections/{Scenario}_{ValidationRuleName}-behavior.puml`
 
-**Purpose**: Shows how validation rules and constraints flow through model processing
+**Actual files by scenario:**
+
+*RefModel:*
+- `RefModel_CommentNotEmpty-behavior.puml`
+- `RefModel_ProductPriceValidation-behavior.puml`
+- `RefModel_ReviewMinLength-behavior.puml`
+- `RefModel_ReviewRatingRange-behavior.puml`
+- `RefModel_ShopNameRequired-behavior.puml`
+
+*YouTube:*
+- `YouTube_CommentPolicyValidation-behavior.puml`
+- `YouTube_VideoPolicyValidation-behavior.puml`
+
+*Amazon:*
+- `Amazon_HelpfulVoteConsistencyValidation-behavior.puml`
+- `Amazon_ReviewVerifiedPurchaseValidation-behavior.puml`
+
+*Reddit:*
+- `Reddit_CommentContentValidation-behavior.puml`
+- `Reddit_PostContentValidation-behavior.puml`
+
+**Purpose**: Shows how specific validation rules and constraints flow through model processing
 
 **Key Elements:**
 - States for each validation checkpoint
 - Transitions based on validation outcomes
 - Error detection and recovery branches
 - Quick fix availability indicators
-- Parallel validation workflows
+- Validation rule-specific workflows
 - Entry/exit points for validation sequences
 
 **Represents:**
-- Validation process flow
-- Constraint checking sequence
+- Individual validation rule process flow
+- Constraint checking sequence for each rule
 - Error handling paths
 - Recovery mechanisms
 - State transitions during editing
 
-**Use Case**: Understanding how models are validated and corrected
+**Use Case**: Understanding how specific validation rules are applied and how models are validated and corrected
 
 ##### 6.2.1.3 Scenario-Specific Diagrams
 **Generated for each scenario**: YouTube, Amazon, Reddit, RefModel
@@ -390,10 +417,17 @@ Three types of graphical projections are generated for each model:
 - YouTube: Video resources, comment threads, rating systems, moderation rules
 - Amazon: Product resources, buyer/seller roles, review verification, rating scales
 - Reddit: Posts/discussions, upvote/downvote mechanisms, automations, community rules
+- RefModel: Reference implementation with base constraints and rules
 
 ### 6.3 Textual Visualization Architecture
 #### 6.3.1 Textual Projection Format
-**Files**: `part1/tool3-sirius/projections/textual_projection_*.txt` (Base + three scenarios)
+**Files**: `part1/tool3-sirius/projections/{Scenario}_textual_projection.txt`
+
+**Actual files:**
+- `RefModel_textual_projection.txt`
+- `YouTube_textual_projection.txt`
+- `Amazon_textual_projection.txt`
+- `Reddit_textual_projection.txt`
 
 **Purpose**: Generate readable textual specification of models
 
@@ -508,55 +542,80 @@ The `EnormProjectionGenerator` class provides three main static methods for gene
 
 #### 6.4.3 Projection Outputs
 
+To run the projection generator:
 1. In Eclipse IDE, open the `part1/tool3-sirius/src/enorm/design` folder
-2. Locate and select the projection generator class `Main.java`
+2. Locate and select the generator class `Main.java`
 3. Right-click and select "Run As" → "Java Application"
 4. Projections are generated in `part1/tool3-sirius/projections/` folder
 
 **Generated Output Files**
 
-For each scenario, three files are generated:
+The projection generation creates files for each scenario (RefModel, YouTube, Amazon, Reddit):
+
 1. **Structure Diagrams** (`.puml` files)
-   - Show complete metamodel structure as UML class diagrams
-   - Include all classes with attributes and types
-   - Display relationships with cardinality notation
-   - Filename: `structure_diagram_{Scenario}.puml`
+    - Show complete metamodel structure as UML class diagrams
+    - Include all classes with attributes and types
+    - Display relationships with cardinality notation
+    - Filename pattern: `{Scenario}_structure_diagram.puml`
+    - Example: `YouTube_structure_diagram.puml`
 
 2. **Behavior/Validation Diagrams** (`.puml` files)
-   - Show validation and process flows as state diagrams
-   - Include decision points and state transitions
-   - Display validation rules as separate state nodes
-   - Filename: `behavior_validation_{Scenario}.puml`
+    - Show validation rule-specific process flows as state diagrams
+    - Include decision points and state transitions
+    - Display each validation rule as separate state nodes
+    - Filename pattern: `{Scenario}_{ValidationRuleName}-behavior.puml`
+    - Examples: 
+      - `YouTube_CommentPolicyValidation-behavior.puml`
+      - `YouTube_VideoPolicyValidation-behavior.puml`
+      - `Amazon_HelpfulVoteConsistencyValidation-behavior.puml`
+      - `Amazon_ReviewVerifiedPurchaseValidation-behavior.puml`
+      - `Reddit_CommentContentValidation-behavior.puml`
+      - `Reddit_PostContentValidation-behavior.puml`
+      - `RefModel_CommentNotEmpty-behavior.puml`
+      - `RefModel_ProductPriceValidation-behavior.puml`
+      - `RefModel_ReviewMinLength-behavior.puml`
+      - `RefModel_ReviewRatingRange-behavior.puml`
+      - `RefModel_ShopNameRequired-behavior.puml`
 
 3. **Textual Projections** (`.txt` files)
-   - Provide readable specifications in structured text format
-   - Organized into logical sections (Resources, Users, Rules, Policies)
-   - Include element attributes, constraints, and relationships
-   - Designed for documentation and domain expert validation
-   - Filename: `textual_projection_{Scenario}.txt`
+    - Provide readable specifications in structured text format
+    - Organized into logical sections (Resources, Users, Rules, Policies)
+    - Include element attributes, constraints, and relationships
+    - Designed for documentation and domain expert validation
+    - Filename pattern: `{Scenario}_textual_projection.txt`
+    - Examples: `YouTube_textual_projection.txt`, `Amazon_textual_projection.txt`
 
 ### 6.5 Summary
 **Projection Files:**
 
-For Reference Model:
-- `projections/structure_diagram_RefModel.puml`
-- `projections/behavior_validation_RefModel.puml`
-- `projections/textual_projection_RefModel.txt`
+**Location:** `part1/tool3-sirius/projections/`
 
-For YouTube Scenario:
-- `projections/structure_diagram_YouTube.puml`
-- `projections/behavior_validation_YouTube.puml`
-- `projections/textual_projection_YouTube.txt`
+**For Reference Model:**
+- `RefModel_structure_diagram.puml`
+- `RefModel_CommentNotEmpty-behavior.puml`
+- `RefModel_ProductPriceValidation-behavior.puml`
+- `RefModel_ReviewMinLength-behavior.puml`
+- `RefModel_ReviewRatingRange-behavior.puml`
+- `RefModel_ShopNameRequired-behavior.puml`
+- `RefModel_textual_projection.txt`
 
-For Amazon Scenario:
-- `projections/structure_diagram_Amazon.puml`
-- `projections/behavior_validation_Amazon.puml`
-- `projections/textual_projection_Amazon.txt`
+**For YouTube Scenario:**
+- `YouTube_structure_diagram.puml`
+- `YouTube_CommentPolicyValidation-behavior.puml`
+- `YouTube_VideoPolicyValidation-behavior.puml`
+- `YouTube_textual_projection.txt`
 
-For Reddit Scenario:
-- `projections/structure_diagram_Reddit.puml`
-- `projections/behavior_validation_Reddit.puml`
-- `projections/textual_projection_Reddit.txt`
+**For Amazon Scenario:**
+- `Amazon_structure_diagram.puml`
+- `Amazon_HelpfulVoteConsistencyValidation-behavior.puml`
+- `Amazon_ReviewVerifiedPurchaseValidation-behavior.puml`
+- `Amazon_textual_projection.txt`
+
+**For Reddit Scenario:**
+- `Reddit_structure_diagram.puml`
+- `Reddit_CommentContentValidation-behavior.puml`
+- `Reddit_PostContentValidation-behavior.puml`
+- `Reddit_textual_projection.txt`
 
 ---
 
@@ -567,10 +626,11 @@ reference scenarios: YouTube, Amazon, and Reddit.
 ### Model creation
 For each scenario a .xmi model was created accordingly, with constraint validation.
 These models can be found in `part1/tool3-sirius/model`, with the following naming convention:
-- `YouTube.xmi`
-- `Amazon.xmi`
-- `Reddit.xmi`
+- `RefModel.xmi` - Reference model with base metamodel implementation
+- `YouTube.xmi` - YouTube scenario instance
+- `Amazon.xmi` - Amazon scenario instance
+- `Reddit.xmi` - Reddit scenario instance
 
 ### Generated Visualizations and Projections for All Models
 After their creation, and validation/refactoring, projections were generated for each scenario model in all required
-formats, as specified in `Chapter 6.` The location of the generated files can be found in `6.6 Summary`.
+formats, as specified in `Chapter 6.` The location of the generated files can be found in `6.5 Summary`.
