@@ -342,6 +342,10 @@
         <property role="TrG5h" value="Description" />
         <property role="2IgU2Y" value="true" />
       </node>
+      <node concept="2IgU2X" id="1rkHUYT3wR7" role="2In6HR">
+        <property role="TrG5h" value="CreatedAt" />
+        <property role="2IgU2Z" value="7vG6G7pFVDP/DATE" />
+      </node>
     </node>
     <node concept="3$Wff$" id="47EFX_nz$Pu" role="2IgU2D">
       <property role="TrG5h" value="Order" />
@@ -481,8 +485,8 @@
       <ref role="1LQjoC" node="77Q8YzlE6It" resolve="User" />
     </node>
     <node concept="2IgU2F" id="77Q8YzlE7hR" role="2IgU2C">
-      <property role="TrG5h" value="ModeratorCanModerateContent" />
       <property role="2InxW_" value="7vG6G7pGwnt/MODERATE" />
+      <property role="TrG5h" value="ModeratorCanModerateContent" />
       <ref role="28hnIK" node="77Q8YzlE6IR" resolve="ReportOnPost" />
       <ref role="28hnIo" node="77Q8YzlE6Ip" resolve="CommunityContext" />
       <ref role="28hnIv" node="77Q8YzlE6I$" resolve="Post" />
@@ -509,6 +513,10 @@
         <property role="2xtiKz" value="legacyCondition" />
         <property role="2xtiK$" value="77Q8YzgwKZr/HAS_SPECIFIC_PROPERTY" />
         <property role="2xtiKR" value="report_count_over_threshold" />
+      </node>
+      <node concept="2xtiKx" id="1rkHUYT3y46" role="2xtiKm">
+        <property role="TrG5h" value="ReportOffensiveComment" />
+        <property role="2xtiKz" value="body" />
       </node>
       <node concept="2xtiK9" id="77Q8YzlE6J1" role="2xtiKn">
         <property role="TrG5h" value="FlagOrHidePostAction" />
@@ -868,8 +876,8 @@
       <property role="TrG5h" value="LikeOnVideo" />
       <property role="l6me5" value="47EFX_kWWLq/OPTIONAL" />
       <ref role="28hnIs" node="77Q8YzlE7ie" resolve="Video" />
-      <ref role="28hnIj" node="77Q8YzlPhy9" resolve="ReactionType" />
       <ref role="3UnFHb" node="77Q8YzlE7i2" resolve="User" />
+      <ref role="28hnIj" node="77Q8YzlPhy9" resolve="ReactionType" />
       <node concept="3$Wfe6" id="77Q8YzlPhyd" role="28hnIE">
         <property role="TrG5h" value="LikeOnVideoPolicy" />
       </node>
@@ -991,8 +999,8 @@
       </node>
       <node concept="2IgU2X" id="77Q8YzlJGRl" role="2In6HR">
         <property role="TrG5h" value="UploadDate" />
-        <property role="2IgU2Z" value="7vG6G7pFVDP/DATE" />
         <property role="2IgU2Y" value="true" />
+        <property role="2IgU2Z" value="7vG6G7pFVDP/DATE" />
       </node>
       <node concept="2IgU2X" id="77Q8YzlJGRm" role="2In6HR">
         <property role="TrG5h" value="Duration" />
