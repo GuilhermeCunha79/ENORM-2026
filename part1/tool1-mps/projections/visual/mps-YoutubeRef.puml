@@ -1,0 +1,406 @@
+@startuml
+skinparam classAttributeIconSize 0
+package "Core" {
+class YoutubeRef {
+  version:1.0.0
+}
+}
+package "Actors & Context" {
+class User {
+  kind: GENERIC
+}
+class Creator {
+  kind: CREATOR
+}
+class Moderator {
+  kind: MODERATOR
+}
+class ChannelContext {
+  kind: CHANNEL
+}
+class TrendingContext {
+  kind: CHANNEL
+}
+class RecommendationContext {
+  kind: CHANNEL
+}
+}
+package "Structure" {
+class Channel {
+  supportsMedia: false
+}
+class Video {
+  supportsMedia: true
+}
+class Comment {
+  supportsMedia: false
+}
+class Channel_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Channel_Name {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Channel_Description {
+  type: TEXT
+  required: false
+  multivalued: false
+}
+class Channel_CreationDate {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Video_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Video_Title {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Video_Video {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Video_UploadDate {
+  type: DATE
+  required: true
+  multivalued: false
+}
+class Video_Duration {
+  type: NUMBER
+  required: true
+  multivalued: false
+}
+class Video_CommentStatus {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Comment_Id {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Comment_Text {
+  type: TEXT
+  required: true
+  multivalued: false
+}
+class Comment_CreationDate {
+  type: DATE
+  required: true
+  multivalued: false
+}
+class ChannelContainsVideo {
+  sourceCardinality: 1
+  targetCardinality: 2
+}
+class VideoContainsComment {
+  sourceCardinality: 1
+  targetCardinality: 2
+}
+class CommentRepliesComment {
+  sourceCardinality: 1
+  targetCardinality: 2
+}
+}
+package "Feedback" {
+class ReactionType {
+  kind: REACTION
+  hasRating: false
+}
+class ReportType {
+  kind: REPORT
+  hasRating: false
+}
+class SubscriptionType {
+  kind: SUBSCRIPTION
+  hasRating: false
+}
+class LikeOnVideo {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class LikeOnVideoPolicy {
+  status: ENABLED
+}
+class LikeOnComment {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class LikeOnCommentPolicy {
+  status: ENABLED
+}
+class ReportOnVideo {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class ReportOnVideoPolicy {
+  status: ENABLED
+}
+class ReportOnComment {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class ReportOnCommentPolicy {
+  status: ENABLED
+}
+class SubscriptionOnChannel {
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarge: false
+}
+class SubscriptionPolicy {
+  status: ENABLED
+}
+}
+package "Governance & Behavior" {
+class AutoVideoModeration {
+  trigger: ON_REPORT_SUBMITTED
+}
+class AutoCommentModeration {
+  trigger: ON_REPORT_SUBMITTED
+}
+class AutoVideoModeration_RepeatedReportOrPolicyMatchCondition {
+  field: legacyCondition
+  operator: CONTAINS_KEYWORDS
+  value: repeated_report_or_policy_match
+}
+class AutoVideoModeration_FlagVideoForReviewAction {
+  kind: FLAG_CONTENT
+  message: flag_video_for_review
+}
+class AutoCommentModeration_RepeatedReportOrPolicyMatchCommentCondition {
+  field: legacyCondition
+  operator: HAS_SPECIFIC_PROPERTY
+  value: repeated_report_or_policy_match
+}
+class AutoCommentModeration_HideOrFlagCommentAction {
+  kind: HIDE_CONTENT
+  message: hide_or_flag_comment
+}
+class VideoListingSort {
+  criterion: DATE
+  direction: DESC
+}
+class TrendingFeedSort {
+  criterion: VALUE
+  direction: DESC
+}
+class RecommendationSort {
+  criterion: RELEVANCE
+  direction: DESC
+}
+class CommentSortByDate {
+  criterion: DATE
+  direction: DESC
+}
+class CommentSortByValue {
+  criterion: VALUE
+  direction: DESC
+}
+class VideoContentValidation {
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: regex(detect_policy_violation_or_spam)
+}
+class CommentContentValidation {
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: regex.contains(detect_toxicity_or_blocked_terms)
+}
+class VideoModerationPolicy {
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: FLAGGED
+}
+class CommentModerationPolicy {
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: HIDDEN
+}
+class UserCanReactVideo {
+  allowedAction: VOTE
+}
+class UserCanReactComment {
+  allowedAction: VOTE
+}
+class UserCanReportVideo {
+  allowedAction: REPORT
+}
+class UserCanReportComment {
+  allowedAction: REPORT
+}
+class UserCanSubscribeChannel {
+  allowedAction: SUBSCRIBE
+}
+class ModeratorCanModerateVideo {
+  allowedAction: MODERATE
+}
+}
+YoutubeRef *-- AutoVideoModeration
+YoutubeRef *-- AutoCommentModeration
+YoutubeRef *-- LikeOnVideo
+YoutubeRef *-- LikeOnComment
+YoutubeRef *-- ReportOnVideo
+YoutubeRef *-- ReportOnComment
+YoutubeRef *-- SubscriptionOnChannel
+YoutubeRef *-- ReactionType
+YoutubeRef *-- ReportType
+YoutubeRef *-- SubscriptionType
+YoutubeRef *-- User
+YoutubeRef *-- Creator
+YoutubeRef *-- Moderator
+YoutubeRef *-- VideoListingSort
+YoutubeRef *-- TrendingFeedSort
+YoutubeRef *-- RecommendationSort
+YoutubeRef *-- CommentSortByDate
+YoutubeRef *-- CommentSortByValue
+YoutubeRef *-- Channel
+YoutubeRef *-- Video
+YoutubeRef *-- Comment
+YoutubeRef *-- ChannelContext
+YoutubeRef *-- TrendingContext
+YoutubeRef *-- RecommendationContext
+YoutubeRef *-- ChannelContainsVideo
+YoutubeRef *-- VideoContainsComment
+YoutubeRef *-- CommentRepliesComment
+YoutubeRef *-- VideoModerationPolicy
+YoutubeRef *-- CommentModerationPolicy
+YoutubeRef *-- UserCanReactVideo
+YoutubeRef *-- UserCanReactComment
+YoutubeRef *-- UserCanReportVideo
+YoutubeRef *-- UserCanReportComment
+YoutubeRef *-- UserCanSubscribeChannel
+YoutubeRef *-- ModeratorCanModerateVideo
+YoutubeRef *-- VideoContentValidation
+YoutubeRef *-- CommentContentValidation
+Channel *-- Channel_Id : attribute
+Channel *-- Channel_Name : attribute
+Channel *-- Channel_Description : attribute
+Channel *-- Channel_CreationDate : attribute
+Video *-- Video_Id : attribute
+Video *-- Video_Title : attribute
+Video *-- Video_Video : attribute
+Video *-- Video_UploadDate : attribute
+Video *-- Video_Duration : attribute
+Video *-- Video_CommentStatus : attribute
+Comment *-- Comment_Id : attribute
+Comment *-- Comment_Text : attribute
+Comment *-- Comment_CreationDate : attribute
+AutoVideoModeration --> ReportOnVideo : onFeedback
+AutoVideoModeration --> ChannelContext : inContext
+AutoVideoModeration --> VideoContentValidation : uses
+AutoCommentModeration --> ReportOnComment : onFeedback
+AutoCommentModeration --> ChannelContext : inContext
+AutoCommentModeration --> CommentContentValidation : uses
+AutoVideoModeration --> ReportOnVideo : onFeedback
+AutoVideoModeration --> Video : context
+AutoVideoModeration --> ChannelContext : inContext
+AutoVideoModeration --> VideoContentValidation : uses
+AutoVideoModeration *-- AutoVideoModeration_RepeatedReportOrPolicyMatchCondition : condition
+AutoVideoModeration *-- AutoVideoModeration_FlagVideoForReviewAction : action
+AutoCommentModeration --> ReportOnComment : onFeedback
+AutoCommentModeration --> Comment : context
+AutoCommentModeration --> ChannelContext : inContext
+AutoCommentModeration --> CommentContentValidation : uses
+AutoCommentModeration *-- AutoCommentModeration_RepeatedReportOrPolicyMatchCommentCondition : condition
+AutoCommentModeration *-- AutoCommentModeration_HideOrFlagCommentAction : action
+LikeOnVideo --> ReactionType : type
+LikeOnVideo --> User : author
+LikeOnVideo --> Video : subject
+LikeOnVideo *-- LikeOnVideoPolicy : policy
+LikeOnComment --> ReactionType : type
+LikeOnComment --> User : author
+LikeOnComment --> Comment : subject
+LikeOnComment *-- LikeOnCommentPolicy : policy
+ReportOnVideo --> ReportType : type
+ReportOnVideo --> User : author
+ReportOnVideo --> Video : subject
+ReportOnVideo *-- ReportOnVideoPolicy : policy
+ReportOnComment --> ReportType : type
+ReportOnComment --> User : author
+ReportOnComment --> Comment : subject
+ReportOnComment *-- ReportOnCommentPolicy : policy
+SubscriptionOnChannel --> SubscriptionType : type
+SubscriptionOnChannel --> User : author
+SubscriptionOnChannel --> Channel : subject
+SubscriptionOnChannel *-- SubscriptionPolicy : policy
+VideoContentValidation --> ReportOnVideo : appliesToFeedback
+VideoContentValidation --> Video : appliesToResource
+VideoContentValidation --> Moderator : appliesToUser
+VideoContentValidation --> AutoVideoModeration : invokedBy
+CommentContentValidation --> ReportOnComment : appliesToFeedback
+CommentContentValidation --> Comment : appliesToResource
+CommentContentValidation --> Moderator : appliesToUser
+CommentContentValidation --> AutoCommentModeration : invokedBy
+VideoModerationPolicy --> ReportOnVideo : monitorsFeedback
+VideoModerationPolicy --> Moderator : executedBy
+VideoModerationPolicy --> Video : monitorsResource
+VideoModerationPolicy --> ChannelContext : inContext
+CommentModerationPolicy --> ReportOnComment : monitorsFeedback
+CommentModerationPolicy --> Moderator : executedBy
+CommentModerationPolicy --> Comment : monitorsResource
+CommentModerationPolicy --> ChannelContext : inContext
+UserCanReactVideo --> User : actor
+UserCanReactVideo --> Video : resourceTarget
+UserCanReactVideo --> LikeOnVideo : feedbackTarget
+UserCanReactVideo --> ChannelContext : context
+UserCanReactComment --> User : actor
+UserCanReactComment --> Video : resourceTarget
+UserCanReactComment --> LikeOnComment : feedbackTarget
+UserCanReactComment --> ChannelContext : context
+UserCanReportVideo --> User : actor
+UserCanReportVideo --> Video : resourceTarget
+UserCanReportVideo --> ReportOnVideo : feedbackTarget
+UserCanReportVideo --> ChannelContext : context
+UserCanReportComment --> User : actor
+UserCanReportComment --> Comment : resourceTarget
+UserCanReportComment --> ReportOnComment : feedbackTarget
+UserCanReportComment --> ChannelContext : context
+UserCanSubscribeChannel --> User : actor
+UserCanSubscribeChannel --> Channel : resourceTarget
+UserCanSubscribeChannel --> SubscriptionOnChannel : feedbackTarget
+UserCanSubscribeChannel --> ChannelContext : context
+ModeratorCanModerateVideo --> Moderator : actor
+ModeratorCanModerateVideo --> Video : resourceTarget
+ModeratorCanModerateVideo --> ReportOnVideo : feedbackTarget
+ModeratorCanModerateVideo --> ChannelContext : context
+ChannelContainsVideo --> Channel : source
+ChannelContainsVideo --> Video : target
+VideoContainsComment --> Video : source
+VideoContainsComment --> Comment : target
+CommentRepliesComment --> Comment : source
+CommentRepliesComment --> Comment : target
+ChannelContext --> Channel : contains
+ChannelContext --> Video : contains
+ChannelContext --> Comment : contains
+TrendingContext --> Video : contains
+RecommendationContext --> Video : contains
+VideoListingSort --> Video : appliesToResource
+VideoListingSort --> ChannelContext : inContext
+TrendingFeedSort --> Video : appliesToResource
+TrendingFeedSort --> TrendingContext : inContext
+RecommendationSort --> Video : appliesToResource
+RecommendationSort --> RecommendationContext : inContext
+CommentSortByDate --> Comment : appliesToResource
+CommentSortByDate --> ChannelContext : inContext
+CommentSortByValue --> Comment : appliesToResource
+CommentSortByValue --> ChannelContext : inContext
+Creator --|> User
+Creator --|> Moderator
+Moderator --|> User
+@enduml

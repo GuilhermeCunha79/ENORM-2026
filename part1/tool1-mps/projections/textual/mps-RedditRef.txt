@@ -1,0 +1,193 @@
+=== CORE ===
+Model: RedditRef
+  version: 1.0.0
+
+=== ACTORS & CONTEXT ===
+UserType: User
+  kind: GENERIC
+UserType: Moderator
+  kind: MODERATOR
+  extends: User
+ContextType: CommunityContext
+  kind: COMMUNITY
+  contains: Subreddit
+  contains: Post
+  contains: Comment
+
+=== STRUCTURE ===
+ResourceType: Subreddit
+  supportsMedia: false
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Name
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Description
+    type: TEXT
+    required: true
+    multivalued: false
+ResourceType: Post
+  supportsMedia: true
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Title
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Body
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: PostType
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: CreationDate
+    type: DATE
+    required: true
+    multivalued: false
+ResourceType: Comment
+  supportsMedia: true
+  attribute: Id
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: Body
+    type: TEXT
+    required: true
+    multivalued: false
+  attribute: CreationDate
+    type: DATE
+    required: true
+    multivalued: false
+ResourceRelation: SubredditContainsPost
+  source: Subreddit (1)
+  target: Post (2)
+ResourceRelation: PostContainsComment
+  source: Post (1)
+  target: Comment (2)
+
+=== FEEDBACK ===
+FeedbackType: VoteType
+  kind: VOTE
+  hasRating: false
+FeedbackType: ReportType
+  kind: VOTE
+  hasRating: false
+FeedbackDefinition: VoteOnPost
+  type: VoteType
+  author: User
+  subject: Post
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: VoteOnPostPolicy
+    status: ENABLED
+FeedbackDefinition: VoteOnComment
+  type: VoteType
+  author: User
+  subject: Comment
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: VoteOnCommentPolicy
+    status: ENABLED
+FeedbackDefinition: ReportOnPost
+  type: ReportType
+  author: User
+  subject: Post
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: ReportOnPostPolicy
+    status: ENABLED
+FeedbackDefinition: ReportOnComment
+  type: ReportType
+  author: User
+  subject: Comment
+  requiresVerifiedContext: false
+  verificationRequirement: OPTIONAL
+  uniquePerAuthorTarget: false
+  feedbackPolicy: ReportOnCommentPolicy
+    status: ENABLED
+
+=== GOVERNANCE & BEHAVIOR ===
+AutomationRule: AutoModerationRule
+  trigger: ON_REPORT_SUBMITTED
+  onFeedback: ReportOnPost
+  context: Post
+  inContext: CommunityContext
+  uses: ContentRuleValidation
+  condition: ReportCountOverThresholdCondition
+    field: legacyCondition
+    operator: HAS_SPECIFIC_PROPERTY
+    value: report_count_over_threshold
+  action: FlagOrHidePostAction
+    kind: FLAG_CONTENT
+    message: flag_or_hide_post
+SortingPolicy: PostFeedSort
+  criterion: DATE
+  direction: DESC
+  appliesToResource: Post
+  inContext: CommunityContext
+SortingPolicy: SubredditListingSort
+  criterion: VALUE
+  direction: DESC
+  appliesToResource: Subreddit
+  inContext: CommunityContext
+SortingPolicy: CommentSort
+  criterion: RELEVANCE
+  direction: DESC
+  appliesToResource: Comment
+  inContext: CommunityContext
+ValidationRule: ContentRuleValidation
+  kind: AUTOMATIC
+  severity: WARNING
+  expression: blocked_words_or_spam_signal
+  appliesToFeedback: ReportOnPost
+  appliesToResource: Post
+  appliesToUser: Moderator
+  invokedBy: AutoModerationRule
+ModerationPolicy: PostModerationPolicy
+  mode: HYBRID
+  trigger: ON_REPORT_THRESHOLD
+  decision: FLAGGED
+  monitorsFeedback: ReportOnPost
+  executedBy: Moderator
+  monitorsResource: Post
+  inContext: CommunityContext
+AuthorizationRule: UserCanVotePost
+  allowedAction: VOTE
+  actor: User
+  resourceTarget: Post
+  feedbackTarget: VoteOnPost
+  context: CommunityContext
+AuthorizationRule: UserCanVoteComment
+  allowedAction: VOTE
+  actor: User
+  resourceTarget: Comment
+  feedbackTarget: VoteOnComment
+  context: CommunityContext
+AuthorizationRule: UserCanReportPost
+  allowedAction: REPORT
+  actor: User
+  resourceTarget: Post
+  feedbackTarget: ReportOnPost
+  context: CommunityContext
+AuthorizationRule: UserCanReportComment
+  allowedAction: REPORT
+  actor: User
+  resourceTarget: Comment
+  feedbackTarget: ReportOnComment
+  context: CommunityContext
+AuthorizationRule: ModeratorCanModerateContent
+  allowedAction: MODERATE
+  actor: Moderator
+  resourceTarget: Post
+  feedbackTarget: ReportOnPost
+  context: CommunityContext

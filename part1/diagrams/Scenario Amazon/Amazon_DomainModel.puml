@@ -1,0 +1,126 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 60
+skinparam roundCorner 10
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+skinparam class {
+    BackgroundColor White
+    BorderColor #2D3E50
+    ArrowColor #5D6D7E
+    FontSize 12
+}
+
+title Domain Model – Amazon Scenario\nProduct Evaluation and User Feedback
+
+package "Identity & Users" {
+
+    class User {
+        id: String
+        name: String
+        email: String
+    }
+
+    class Buyer
+    class Seller
+    class Moderator
+
+    class VerificationProcess {
+        id: String
+        type: AUTOMATIC | MANUAL
+        status: PENDING | APPROVED | REJECTED
+        timestamp: Date
+    }
+}
+
+package "Catalog & Sales" {
+
+    class Product {
+        id: String
+        name: String
+        description: String
+    }
+
+    class Order {
+        id: String
+        date: Date
+    }
+
+    class OrderItem {
+        quantity: Integer
+    }
+}
+
+package "Feedback System" {
+
+    class ProductReview {
+        id: String
+        rating: Integer
+        text: String
+        creationDate: Date
+        verifiedPurchase: Boolean
+    }
+
+    class MediaAttachment {
+        id: String
+        type: PHOTO | VIDEO
+        url: String
+    }
+
+    class HelpfulVote {
+        id: String
+        value: UPVOTE | DOWNVOTE
+        timestamp: Date
+    }
+
+    class RatingPolicy {
+        minValue: Integer = 1
+        maxValue: Integer = 5
+        step: Integer = 1
+    }
+
+    class ReviewPolicy {
+        id: String
+        requiresVerifiedPurchase: Boolean = false
+        verificationRequirement: REQUIRED | OPTIONAL | NONE = OPTIONAL
+        oneReviewPerOrderItem: Boolean = true
+    }
+
+    class ReviewModerationCheck {
+        id: String
+        reason: SPAM | ABUSE | OFF_TOPIC | INCENTIVIZED
+        result: APPROVED | HIDDEN | REMOVED
+        timestamp: Date
+    }
+}
+
+User <|-- Buyer
+User <|-- Seller
+User <|-- Moderator
+
+Buyer "1" -- "*" Order : places >
+Order "1" -- "*" OrderItem : contains >
+OrderItem "*" -- "1" Product : product >
+Seller "1" -- "*" Product : sells >
+
+User "1" -right-> "*" ProductReview : author
+Product "1" -right-> "*" ProductReview : receives
+
+ProductReview "1" -down-> "*" MediaAttachment : attachments
+
+ProductReview "0..1" -down-> "1" VerificationProcess : verification
+VerificationProcess "0..1" -up-> "1" Moderator : moderator
+
+Product "1" -down-> "1" ReviewPolicy : review policy
+ProductReview "*" -left-> "1" RatingPolicy : uses scale
+ProductReview "*" -left-> "1" ReviewPolicy : constrained by
+ProductReview "1" -right-> "*" ReviewModerationCheck : moderation
+ReviewModerationCheck "*" -up-> "0..1" Moderator : reviewed by
+
+' Helpful votes
+User "1" -right-> "*" HelpfulVote : gives >
+HelpfulVote "*" -left-> "1" ProductReview : on >
+
+@enduml
