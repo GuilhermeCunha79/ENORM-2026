@@ -260,7 +260,6 @@ package "Governance & Behavior" {
   enum SortCriterion {
     DATE
     VALUE
-    RELEVANCE
   }
 
   enum SortDirection {

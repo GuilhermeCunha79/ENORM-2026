@@ -1150,6 +1150,58 @@ feedbackDefinition.rating.step = 1
 
 ---
 
+### G15 `SortingPolicy` with `criterion=DATE` requires a date attribute on target `ResourceType`
+
+This constraint ensures date-based sorting is only configured for resources that expose date data.
+
+**Pseudo-code:**
+```
+for sortingPolicy in refModel.sortingPolicies:
+  if sortingPolicy.criterion == DATE:
+    if sortingPolicy.appliesToResource is null:
+      error("SortingPolicy with criterion=DATE must define appliesToResource")
+    else:
+      hasDate = exists(attr in sortingPolicy.appliesToResource.attributes where attr.type == DATE)
+      if hasDate == false:
+        error("SortingPolicy with criterion=DATE requires appliesToResource to have at least one DATE attribute")
+```
+
+**Refactoring:**
+```
+if sortingPolicy.appliesToResource is not null:
+  dateAttr = new Attribute()
+  dateAttr.name = "createdAt"
+  dateAttr.type = DATE
+  dateAttr.required = false
+  dateAttr.multiValued = false
+  sortingPolicy.appliesToResource.attributes.add(dateAttr)
+```
+
+---
+
+### G16 `Condition.attribute` must belong to `AutomationRule.context`
+
+This constraint guarantees that automation conditions only reference attributes defined in the rule target resource type.
+
+**Pseudo-code:**
+```
+for automationRule in refModel.automationRules:
+  if automationRule.context is null:
+    continue
+
+  allowedAttributes = automationRule.context.attributes
+
+  for condition in automationRule.conditions:
+    if condition.attribute is null:
+      error("Condition must reference an attribute")
+    elif condition.attribute not in allowedAttributes:
+      error("Condition.attribute must belong to AutomationRule.context")
+```
+
+**Refactoring:** None. User should select an attribute from the rule context resource type.
+
+---
+
 ## 8. Summary Table
 
 | ID | Element | Constraint | Severity | Refactoring |
@@ -1221,6 +1273,8 @@ feedbackDefinition.rating.step = 1
 | G12 | AutomationRule/ContextType | inContext must include context resource | ERROR | Add context resource to inContext |
 | G13 | FeedbackDefinition/FeedbackType | Product review must be rating-based and have RatingPolicy | ERROR | Set hasRating=true and create default 1..5 policy |
 | G14 | RatingPolicy | Product review must use integer star scale 1..5 | ERROR | Normalize min/max/step to 1/5/1 |
+| G15 | SortingPolicy/ResourceType | criterion=DATE requires a DATE attribute on appliesToResource | ERROR | Add DATE attribute (e.g., createdAt) |
+| G16 | AutomationRule/Condition/Attribute | Condition.attribute must belong to AutomationRule.context | ERROR | — |
 
 ---
 

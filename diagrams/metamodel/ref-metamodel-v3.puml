@@ -212,7 +212,6 @@ package "Governance & Behavior" {
 
   class Condition {
     name: String
-    field: String
     operator: ConditionOperator
     value: String
   }
@@ -317,6 +316,7 @@ AutomationRule "0..*" --> "1" FeedbackDefinition : onFeedback
 AutomationRule "0..*" --> "1" ValidationRule : uses
 AutomationRule "1" o-- "1..*" Condition : conditions
 AutomationRule "1" o-- "1..*" Action : actions
+Condition "0..*" --> "1" Attribute : attribute
 
 VerificationPolicy "*" --> "1" FeedbackDefinition : verifies
 
