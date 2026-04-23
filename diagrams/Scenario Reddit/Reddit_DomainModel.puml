@@ -60,8 +60,14 @@ package "Communities & Content" {
     class AutomationRule {
         id: String
         trigger: String
-        condition: String
         actionDescription: String
+    }
+
+    class Condition {
+        id: String
+        targetField: String
+        operator: CONTAINS_KEYWORDS | NOT_CONTAINS_KEYWORDS | MATCH_REGEX | NOT_MATCH_REGEX | HAS_PROPERTY | NOT_HAS_PROPERTY | HAS_SPECIFIC_PROPERTY | NOT_HAS_SPECIFIC_PROPERTY
+        expectedValue: String
     }
 
     class CommunityRule {
@@ -130,11 +136,13 @@ Content <|-- Comment
 ' Community structure
 Subreddit "1" -down-> "*" Post : contains >
 Subreddit "1" -left-> "*" AutomationRule : has >
+AutomationRule "1" -left-> "1..*" Condition : conditions >
 Subreddit "1" -left-> "*" CommunityRule : has >
 Subreddit "1" -left-> "*" ParticipationPolicy : enforces >
 Subreddit "1" -left-> "*" SortingPolicy : sorts >
 Subreddit "1" -left-> "*" ContentValidationRule : validates >
 SortingPolicy "*" -up-> "1" Content : orders >
+Condition "*" -up-> "1" Content : evaluates on >
 Subreddit "*" -right- "*" Moderator : moderated by
 Moderator "1" --> "*" ParticipationPolicy : manages
 
