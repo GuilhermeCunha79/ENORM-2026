@@ -962,7 +962,7 @@
   <node concept="25R3W" id="47EFX_kWWL3">
     <property role="3F6X1D" value="4749802104983637059" />
     <property role="TrG5h" value="SortCriterion" />
-    <ref role="1H5jkz" node="47EFX_kWWL6" resolve="RELEVANCE" />
+    <ref role="1H5jkz" node="47EFX_kWWL4" resolve="DATE" />
     <node concept="25R33" id="47EFX_kWWL4" role="25R1y">
       <property role="3tVfz5" value="4749802104983637060" />
       <property role="TrG5h" value="DATE" />
@@ -970,10 +970,6 @@
     <node concept="25R33" id="47EFX_kWWL5" role="25R1y">
       <property role="3tVfz5" value="4749802104983637061" />
       <property role="TrG5h" value="VALUE" />
-    </node>
-    <node concept="25R33" id="47EFX_kWWL6" role="25R1y">
-      <property role="3tVfz5" value="4749802104983637062" />
-      <property role="TrG5h" value="RELEVANCE" />
     </node>
   </node>
   <node concept="25R3W" id="47EFX_kWWL7">
@@ -1068,11 +1064,6 @@
     <node concept="PrWs8" id="77Q8YzgwKZa" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
-    <node concept="1TJgyi" id="77Q8YzgwKZb" role="1TKVEl">
-      <property role="IQ2nx" value="8211790453394313163" />
-      <property role="TrG5h" value="field" />
-      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
-    </node>
     <node concept="1TJgyi" id="77Q8YzgwKZc" role="1TKVEl">
       <property role="IQ2nx" value="8211790453394313164" />
       <property role="TrG5h" value="operator" />
@@ -1082,6 +1073,12 @@
       <property role="IQ2nx" value="8211790453394313183" />
       <property role="TrG5h" value="value" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyj" id="1bC37d4A6C6" role="1TKVEi">
+      <property role="IQ2ns" value="1362352576491186694" />
+      <property role="20kJfa" value="field" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="7vG6G7pFVDW" resolve="Attribute" />
     </node>
   </node>
   <node concept="25R3W" id="77Q8YzgwKZg">
