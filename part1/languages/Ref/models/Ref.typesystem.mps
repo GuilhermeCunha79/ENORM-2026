@@ -5732,5 +5732,121 @@
       <ref role="1YaFvo" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
     </node>
   </node>
+  <node concept="18kY7G" id="1bC37d4ZRLm">
+    <property role="TrG5h" value="checkConditionAttributeBelongsToAutomationRuleContext" />
+    <node concept="3clFbS" id="1bC37d4ZRLn" role="18ibNy">
+      <node concept="2Gpval" id="1bC37d4ZRPY" role="3cqZAp">
+        <node concept="2GrKxI" id="1bC37d4ZRPZ" role="2Gsz3X">
+          <property role="TrG5h" value="automationRule" />
+        </node>
+        <node concept="2OqwBi" id="1bC37d4ZS1w" role="2GsD0m">
+          <node concept="1YBJjd" id="1bC37d4ZRRd" role="2Oq$k0">
+            <ref role="1YBMHb" node="1bC37d4ZRLq" resolve="refModel" />
+          </node>
+          <node concept="3Tsc0h" id="1bC37d4ZSnV" role="2OqNvi">
+            <ref role="3TtcxE" to="2rvu:3nWBi3h36UY" resolve="automationRule" />
+          </node>
+        </node>
+        <node concept="3clFbS" id="1bC37d4ZRQ1" role="2LFqv$">
+          <node concept="3clFbJ" id="1bC37d4ZSvo" role="3cqZAp">
+            <node concept="3y3z36" id="1bC37d4ZTR4" role="3clFbw">
+              <node concept="10Nm6u" id="1bC37d4ZU3g" role="3uHU7w" />
+              <node concept="2OqwBi" id="1bC37d4ZSDD" role="3uHU7B">
+                <node concept="2GrUjf" id="1bC37d4ZSvx" role="2Oq$k0">
+                  <ref role="2Gs0qQ" node="1bC37d4ZRPZ" resolve="automationRule" />
+                </node>
+                <node concept="3TrEf2" id="1bC37d4ZToK" role="2OqNvi">
+                  <ref role="3Tt5mk" to="2rvu:5fnjbJr$zss" resolve="context" />
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbS" id="1bC37d4ZSvq" role="3clFbx">
+              <node concept="2Gpval" id="1bC37d4ZVYW" role="3cqZAp">
+                <node concept="2GrKxI" id="1bC37d4ZVYX" role="2Gsz3X">
+                  <property role="TrG5h" value="condition" />
+                </node>
+                <node concept="2OqwBi" id="1bC37d4ZWa5" role="2GsD0m">
+                  <node concept="2GrUjf" id="1bC37d4ZVZM" role="2Oq$k0">
+                    <ref role="2Gs0qQ" node="1bC37d4ZRPZ" resolve="automationRule" />
+                  </node>
+                  <node concept="3Tsc0h" id="1bC37d4ZX5_" role="2OqNvi">
+                    <ref role="3TtcxE" to="2rvu:77Q8YzgwKZY" resolve="conditions" />
+                  </node>
+                </node>
+                <node concept="3clFbS" id="1bC37d4ZVYZ" role="2LFqv$">
+                  <node concept="3clFbJ" id="1bC37d4ZXd3" role="3cqZAp">
+                    <node concept="3clFbC" id="1bC37d500BX" role="3clFbw">
+                      <node concept="10Nm6u" id="1bC37d500M4" role="3uHU7w" />
+                      <node concept="2OqwBi" id="1bC37d4ZXnk" role="3uHU7B">
+                        <node concept="2GrUjf" id="1bC37d4ZXdc" role="2Oq$k0">
+                          <ref role="2Gs0qQ" node="1bC37d4ZVYX" resolve="condition" />
+                        </node>
+                        <node concept="3TrEf2" id="1bC37d4ZZVY" role="2OqNvi">
+                          <ref role="3Tt5mk" to="2rvu:1bC37d4A6C6" resolve="field" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="3clFbS" id="1bC37d4ZXd5" role="3clFbx">
+                      <node concept="2MkqsV" id="1bC37d500VZ" role="3cqZAp">
+                        <node concept="Xl_RD" id="1bC37d500W8" role="2MkJ7o">
+                          <property role="Xl_RC" value="Condition must reference an Attribute" />
+                        </node>
+                        <node concept="2GrUjf" id="1bC37d500Ws" role="1urrMF">
+                          <ref role="2Gs0qQ" node="1bC37d4ZVYX" resolve="condition" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="3eNFk2" id="1bC37d502SC" role="3eNLev">
+                      <node concept="3clFbS" id="1bC37d502SE" role="3eOfB_">
+                        <node concept="2MkqsV" id="1bC37d50jmb" role="3cqZAp">
+                          <node concept="Xl_RD" id="1bC37d50jmk" role="2MkJ7o">
+                            <property role="Xl_RC" value="Condition Attribute must belong to AutomationRule Context" />
+                          </node>
+                          <node concept="2GrUjf" id="1bC37d50jnl" role="1urrMF">
+                            <ref role="2Gs0qQ" node="1bC37d4ZVYX" resolve="condition" />
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="3fqX7Q" id="1bC37d50jaa" role="3eO9$A">
+                        <node concept="2OqwBi" id="1bC37d50jac" role="3fr31v">
+                          <node concept="2OqwBi" id="1bC37d50jad" role="2Oq$k0">
+                            <node concept="2OqwBi" id="1bC37d50jae" role="2Oq$k0">
+                              <node concept="2GrUjf" id="1bC37d50jaf" role="2Oq$k0">
+                                <ref role="2Gs0qQ" node="1bC37d4ZRPZ" resolve="automationRule" />
+                              </node>
+                              <node concept="3TrEf2" id="1bC37d50jag" role="2OqNvi">
+                                <ref role="3Tt5mk" to="2rvu:5fnjbJr$zss" resolve="context" />
+                              </node>
+                            </node>
+                            <node concept="3Tsc0h" id="1bC37d50jah" role="2OqNvi">
+                              <ref role="3TtcxE" to="2rvu:7vG6G7pG76Q" resolve="attribute" />
+                            </node>
+                          </node>
+                          <node concept="3JPx81" id="1bC37d50jai" role="2OqNvi">
+                            <node concept="2OqwBi" id="1bC37d50jaj" role="25WWJ7">
+                              <node concept="2GrUjf" id="1bC37d50jak" role="2Oq$k0">
+                                <ref role="2Gs0qQ" node="1bC37d4ZVYX" resolve="condition" />
+                              </node>
+                              <node concept="3TrEf2" id="1bC37d50jal" role="2OqNvi">
+                                <ref role="3Tt5mk" to="2rvu:1bC37d4A6C6" resolve="field" />
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="1bC37d4ZRLq" role="1YuTPh">
+      <property role="TrG5h" value="refModel" />
+      <ref role="1YaFvo" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
+    </node>
+  </node>
 </model>
 

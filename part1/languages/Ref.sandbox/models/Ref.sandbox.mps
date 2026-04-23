@@ -43,9 +43,8 @@
         <property id="8211790453394313210" name="message" index="2xtiKi" />
       </concept>
       <concept id="8211790453394313161" name="Ref.structure.Condition" flags="ng" index="2xtiKx">
-        <property id="8211790453394313163" name="field" index="2xtiKz" />
-        <property id="8211790453394313164" name="operator" index="2xtiK$" />
         <property id="8211790453394313183" name="value" index="2xtiKR" />
+        <reference id="1362352576491186694" name="field" index="1ms6pP" />
       </concept>
       <concept id="8641311204900321898" name="Ref.structure.AuthorizationRule" flags="ng" index="2IgU2F">
         <property id="8641311204900472292" name="allowedAction" index="2InxW_" />
@@ -174,10 +173,10 @@
       <ref role="28hnIB" node="47EFX_nz$Pq" resolve="Product" />
       <ref role="28hnI_" node="47EFX_nz$Pf" resolve="ModerationContext" />
       <ref role="28hnI$" node="47EFX_nz$PR" resolve="ReviewValidationRule" />
-      <node concept="2xtiKx" id="77Q8YzluUbV" role="2xtiKm">
-        <property role="TrG5h" value="CheckReviewContent" />
-        <property role="2xtiKz" value="body" />
-        <property role="2xtiKR" value="spam,fake,scam" />
+      <node concept="2xtiKx" id="1bC37d4ZRLk" role="2xtiKm">
+        <property role="2xtiKR" value="g" />
+        <property role="TrG5h" value="LOl" />
+        <ref role="1ms6pP" node="47EFX_nz$Pt" resolve="Description" />
       </node>
       <node concept="2xtiK9" id="77Q8YzluUbW" role="2xtiKn">
         <property role="TrG5h" value="FlagReview" />
@@ -508,15 +507,10 @@
       <ref role="28hnIB" node="77Q8YzlE6I$" resolve="Post" />
       <ref role="28hnI_" node="77Q8YzlE6Ip" resolve="CommunityContext" />
       <ref role="28hnI$" node="77Q8YzlE6IY" resolve="ContentRuleValidation" />
-      <node concept="2xtiKx" id="77Q8YzlE6J0" role="2xtiKm">
+      <node concept="2xtiKx" id="1bC37d5mSlZ" role="2xtiKm">
         <property role="TrG5h" value="ReportCountOverThresholdCondition" />
-        <property role="2xtiKz" value="legacyCondition" />
-        <property role="2xtiK$" value="77Q8YzgwKZr/HAS_SPECIFIC_PROPERTY" />
         <property role="2xtiKR" value="report_count_over_threshold" />
-      </node>
-      <node concept="2xtiKx" id="1rkHUYT3y46" role="2xtiKm">
-        <property role="TrG5h" value="ReportOffensiveComment" />
-        <property role="2xtiKz" value="body" />
+        <ref role="1ms6pP" node="1bC37d5mSlY" resolve="ReportNumber" />
       </node>
       <node concept="2xtiK9" id="77Q8YzlE6J1" role="2xtiKn">
         <property role="TrG5h" value="FlagOrHidePostAction" />
@@ -662,6 +656,11 @@
         <property role="2IgU2Z" value="7vG6G7pFVDP/DATE" />
         <property role="2IgU2Y" value="true" />
       </node>
+      <node concept="2IgU2X" id="1bC37d5mSlY" role="2In6HR">
+        <property role="TrG5h" value="ReportNumber" />
+        <property role="2IgU2Z" value="7vG6G7pFVDN/NUMBER" />
+        <property role="2IgU2Y" value="true" />
+      </node>
     </node>
     <node concept="3$Wff$" id="77Q8YzlE6IE" role="2IgU2D">
       <property role="TrG5h" value="Comment" />
@@ -786,10 +785,10 @@
       <ref role="28hnIB" node="77Q8YzlE7ie" resolve="Video" />
       <ref role="28hnI_" node="77Q8YzlE7hT" resolve="ChannelContext" />
       <ref role="28hnI$" node="77Q8YzlUPUr" resolve="VideoContentValidation" />
-      <node concept="2xtiKx" id="77Q8YzlUPUu" role="2xtiKm">
-        <property role="TrG5h" value="RepeatedReportOrPolicyMatchCondition" />
-        <property role="2xtiKz" value="legacyCondition" />
-        <property role="2xtiKR" value="repeated_report_or_policy_match" />
+      <node concept="2xtiKx" id="1bC37d5mSm0" role="2xtiKm">
+        <property role="TrG5h" value="TitleRestrictedWords" />
+        <property role="2xtiKR" value="war, crime" />
+        <ref role="1ms6pP" node="77Q8YzlE7ig" resolve="Title" />
       </node>
       <node concept="2xtiK9" id="77Q8YzlUPUv" role="2xtiKn">
         <property role="TrG5h" value="FlagVideoForReviewAction" />
@@ -804,11 +803,10 @@
       <ref role="28hnIB" node="77Q8YzlJGRo" resolve="Comment" />
       <ref role="28hnI_" node="77Q8YzlE7hT" resolve="ChannelContext" />
       <ref role="28hnI$" node="77Q8YzlUPUs" resolve="CommentContentValidation" />
-      <node concept="2xtiKx" id="77Q8YzlUPUx" role="2xtiKm">
-        <property role="TrG5h" value="RepeatedReportOrPolicyMatchCommentCondition" />
-        <property role="2xtiKz" value="legacyCondition" />
-        <property role="2xtiK$" value="77Q8YzgwKZr/HAS_SPECIFIC_PROPERTY" />
-        <property role="2xtiKR" value="repeated_report_or_policy_match" />
+      <node concept="2xtiKx" id="1bC37d5mSm1" role="2xtiKm">
+        <property role="TrG5h" value="CommentRestrictedWords" />
+        <property role="2xtiKR" value="knife, blood" />
+        <ref role="1ms6pP" node="77Q8YzlJGRq" resolve="Text" />
       </node>
       <node concept="2xtiK9" id="77Q8YzlUPUy" role="2xtiKn">
         <property role="TrG5h" value="HideOrFlagCommentAction" />
