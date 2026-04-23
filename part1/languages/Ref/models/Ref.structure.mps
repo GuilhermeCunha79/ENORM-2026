@@ -962,7 +962,7 @@
   <node concept="25R3W" id="47EFX_kWWL3">
     <property role="3F6X1D" value="4749802104983637059" />
     <property role="TrG5h" value="SortCriterion" />
-    <ref role="1H5jkz" node="47EFX_kWWL6" resolve="RELEVANCE" />
+    <ref role="1H5jkz" node="47EFX_kWWL4" resolve="DATE" />
     <node concept="25R33" id="47EFX_kWWL4" role="25R1y">
       <property role="3tVfz5" value="4749802104983637060" />
       <property role="TrG5h" value="DATE" />
@@ -970,10 +970,6 @@
     <node concept="25R33" id="47EFX_kWWL5" role="25R1y">
       <property role="3tVfz5" value="4749802104983637061" />
       <property role="TrG5h" value="VALUE" />
-    </node>
-    <node concept="25R33" id="47EFX_kWWL6" role="25R1y">
-      <property role="3tVfz5" value="4749802104983637062" />
-      <property role="TrG5h" value="RELEVANCE" />
     </node>
   </node>
   <node concept="25R3W" id="47EFX_kWWL7">

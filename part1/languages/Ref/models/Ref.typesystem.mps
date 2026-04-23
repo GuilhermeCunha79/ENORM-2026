@@ -3544,6 +3544,9 @@
             <node concept="1YBJjd" id="1AYOqaFZNim" role="1urrMF">
               <ref role="1YBMHb" node="1AYOqaFZG10" resolve="feedbackDefinition" />
             </node>
+            <node concept="3Cnw8n" id="1rkHUYSVXMi" role="1urrFz">
+              <ref role="QpYPw" node="583Ws_2Q5RD" resolve="fixFeedbackDefinitionRatingPolicyWithHasRatingTrue" />
+            </node>
           </node>
         </node>
       </node>
@@ -5506,6 +5509,227 @@
       <node concept="3Tqbb2" id="1AYOqaGhq28" role="3Oc7vh">
         <ref role="ehGHo" to="2rvu:5fnjbJr$zvM" resolve="ContextResourceTypeLink" />
       </node>
+    </node>
+  </node>
+  <node concept="Q5z_Y" id="583Ws_2Q5RD">
+    <property role="TrG5h" value="fixFeedbackDefinitionRatingPolicyWithHasRatingTrue" />
+    <node concept="Q5ZZ6" id="583Ws_2Q5RE" role="Q6x$H">
+      <node concept="3clFbS" id="583Ws_2Q5RF" role="2VODD2">
+        <node concept="3cpWs8" id="1rkHUYSVTBa" role="3cqZAp">
+          <node concept="3cpWsn" id="1rkHUYSVTBd" role="3cpWs9">
+            <property role="TrG5h" value="rating" />
+            <node concept="3Tqbb2" id="1rkHUYSVTB8" role="1tU5fm">
+              <ref role="ehGHo" to="2rvu:3nWBi3h36UJ" resolve="RatingPolicy" />
+            </node>
+            <node concept="2ShNRf" id="1rkHUYSVTEi" role="33vP2m">
+              <node concept="3zrR0B" id="1rkHUYSVTEg" role="2ShVmc">
+                <node concept="3Tqbb2" id="1rkHUYSVTEh" role="3zrR0E">
+                  <ref role="ehGHo" to="2rvu:3nWBi3h36UJ" resolve="RatingPolicy" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="1rkHUYSVTL5" role="3cqZAp">
+          <node concept="37vLTI" id="1rkHUYSVUGO" role="3clFbG">
+            <node concept="37vLTw" id="1rkHUYSVUJB" role="37vLTx">
+              <ref role="3cqZAo" node="1rkHUYSVTBd" resolve="rating" />
+            </node>
+            <node concept="2OqwBi" id="1rkHUYSVTX_" role="37vLTJ">
+              <node concept="QwW4i" id="1rkHUYSVTL3" role="2Oq$k0">
+                <ref role="QwW4h" node="583Ws_2Q5S4" resolve="feedbackDefinition" />
+              </node>
+              <node concept="3TrEf2" id="1rkHUYSVUkL" role="2OqNvi">
+                <ref role="3Tt5mk" to="2rvu:5fnjbJr$zsi" resolve="ratingPolicy" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="Q6JDH" id="583Ws_2Q5S4" role="Q6Id_">
+      <property role="TrG5h" value="feedbackDefinition" />
+      <node concept="3Tqbb2" id="583Ws_2Q5Xx" role="Q6QK4">
+        <ref role="ehGHo" to="2rvu:3nWBi3h36UG" resolve="FeedbackDefinition" />
+      </node>
+    </node>
+    <node concept="QznSV" id="583Ws_2Q5XH" role="QzAvj">
+      <node concept="3clFbS" id="583Ws_2Q5XI" role="2VODD2">
+        <node concept="3clFbF" id="583Ws_2Q6cB" role="3cqZAp">
+          <node concept="Xl_RD" id="583Ws_2Q6cA" role="3clFbG">
+            <property role="Xl_RC" value="Add RatingPolicy" />
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="18kY7G" id="1rkHUYSE9NX">
+    <property role="TrG5h" value="checkSortingPolicyDateCriterionRequiresResourceTypeWithDataAttribute" />
+    <node concept="3clFbS" id="1rkHUYSE9NY" role="18ibNy">
+      <node concept="2Gpval" id="1rkHUYSEqyn" role="3cqZAp">
+        <node concept="2GrKxI" id="1rkHUYSEqyo" role="2Gsz3X">
+          <property role="TrG5h" value="sortingPolicy" />
+        </node>
+        <node concept="2OqwBi" id="1rkHUYSEqI$" role="2GsD0m">
+          <node concept="1YBJjd" id="1rkHUYSEq$h" role="2Oq$k0">
+            <ref role="1YBMHb" node="1rkHUYSE9O0" resolve="refModel" />
+          </node>
+          <node concept="3Tsc0h" id="1rkHUYSEr5C" role="2OqNvi">
+            <ref role="3TtcxE" to="2rvu:47EFX_njBjf" resolve="sortingPolicy" />
+          </node>
+        </node>
+        <node concept="3clFbS" id="1rkHUYSEqyq" role="2LFqv$">
+          <node concept="3clFbJ" id="1rkHUYSErcU" role="3cqZAp">
+            <node concept="3clFbC" id="1rkHUYSEs_v" role="3clFbw">
+              <node concept="2OqwBi" id="1rkHUYSErnb" role="3uHU7B">
+                <node concept="2GrUjf" id="1rkHUYSErd3" role="2Oq$k0">
+                  <ref role="2Gs0qQ" node="1rkHUYSEqyo" resolve="sortingPolicy" />
+                </node>
+                <node concept="3TrcHB" id="1rkHUYSEsgh" role="2OqNvi">
+                  <ref role="3TsBF5" to="2rvu:47EFX_kWWLa" resolve="criterion" />
+                </node>
+              </node>
+              <node concept="2OqwBi" id="1rkHUYSEtJY" role="3uHU7w">
+                <node concept="1XH99k" id="1rkHUYSEsXL" role="2Oq$k0">
+                  <ref role="1XH99l" to="2rvu:47EFX_kWWL3" resolve="SortCriterion" />
+                </node>
+                <node concept="2ViDtV" id="1rkHUYSEucq" role="2OqNvi">
+                  <ref role="2ViDtZ" to="2rvu:47EFX_kWWL4" resolve="DATE" />
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbS" id="1rkHUYSErcW" role="3clFbx">
+              <node concept="3clFbJ" id="1rkHUYSEuls" role="3cqZAp">
+                <node concept="3clFbC" id="1rkHUYSEw7p" role="3clFbw">
+                  <node concept="10Nm6u" id="1rkHUYSEwfR" role="3uHU7w" />
+                  <node concept="2OqwBi" id="1rkHUYSEuvH" role="3uHU7B">
+                    <node concept="2GrUjf" id="1rkHUYSEul_" role="2Oq$k0">
+                      <ref role="2Gs0qQ" node="1rkHUYSEqyo" resolve="sortingPolicy" />
+                    </node>
+                    <node concept="3TrEf2" id="1rkHUYSEvvA" role="2OqNvi">
+                      <ref role="3Tt5mk" to="2rvu:47EFX_kWWLw" resolve="appliesToResource" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="3clFbS" id="1rkHUYSEulu" role="3clFbx">
+                  <node concept="2MkqsV" id="1rkHUYSEwkM" role="3cqZAp">
+                    <node concept="Xl_RD" id="1rkHUYSEwkV" role="2MkJ7o">
+                      <property role="Xl_RC" value="SortingPolicy with criterion=DATE must define appliesToResource" />
+                    </node>
+                    <node concept="2GrUjf" id="1rkHUYSEwlf" role="1urrMF">
+                      <ref role="2Gs0qQ" node="1rkHUYSEqyo" resolve="sortingPolicy" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="9aQIb" id="1rkHUYSEwlA" role="9aQIa">
+                  <node concept="3clFbS" id="1rkHUYSEwlB" role="9aQI4">
+                    <node concept="3cpWs8" id="1rkHUYSMfWc" role="3cqZAp">
+                      <node concept="3cpWsn" id="1rkHUYSMfWf" role="3cpWs9">
+                        <property role="TrG5h" value="hasDate" />
+                        <node concept="10P_77" id="1rkHUYSMfWb" role="1tU5fm" />
+                        <node concept="3clFbT" id="1rkHUYSMfZq" role="33vP2m" />
+                      </node>
+                    </node>
+                    <node concept="2Gpval" id="1rkHUYSMgfh" role="3cqZAp">
+                      <node concept="2GrKxI" id="1rkHUYSMgfj" role="2Gsz3X">
+                        <property role="TrG5h" value="attr" />
+                      </node>
+                      <node concept="2OqwBi" id="1rkHUYSMku2" role="2GsD0m">
+                        <node concept="2OqwBi" id="1rkHUYSMgsX" role="2Oq$k0">
+                          <node concept="2GrUjf" id="1rkHUYSMgiE" role="2Oq$k0">
+                            <ref role="2Gs0qQ" node="1rkHUYSEqyo" resolve="sortingPolicy" />
+                          </node>
+                          <node concept="3TrEf2" id="1rkHUYSMhtr" role="2OqNvi">
+                            <ref role="3Tt5mk" to="2rvu:47EFX_kWWLw" resolve="appliesToResource" />
+                          </node>
+                        </node>
+                        <node concept="3Tsc0h" id="1rkHUYSMl4N" role="2OqNvi">
+                          <ref role="3TtcxE" to="2rvu:7vG6G7pG76Q" resolve="attribute" />
+                        </node>
+                      </node>
+                      <node concept="3clFbS" id="1rkHUYSMgfn" role="2LFqv$">
+                        <node concept="3clFbJ" id="1rkHUYSMiFX" role="3cqZAp">
+                          <node concept="22lmx$" id="1rkHUYSMotF" role="3clFbw">
+                            <node concept="3clFbC" id="1rkHUYSMqGP" role="3uHU7w">
+                              <node concept="2OqwBi" id="1rkHUYSMrWm" role="3uHU7w">
+                                <node concept="1XH99k" id="1rkHUYSMr3q" role="2Oq$k0">
+                                  <ref role="1XH99l" to="2rvu:7vG6G7pFVDL" resolve="PrimitiveType" />
+                                </node>
+                                <node concept="2ViDtV" id="1rkHUYSMsBm" role="2OqNvi">
+                                  <ref role="2ViDtZ" to="2rvu:7vG6G7pFVDQ" resolve="DATETIME" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="1rkHUYSMp3_" role="3uHU7B">
+                                <node concept="2GrUjf" id="1rkHUYSMoO1" role="2Oq$k0">
+                                  <ref role="2Gs0qQ" node="1rkHUYSMgfj" resolve="attr" />
+                                </node>
+                                <node concept="3TrcHB" id="1rkHUYSMqd2" role="2OqNvi">
+                                  <ref role="3TsBF5" to="2rvu:7vG6G7pFVDY" resolve="type" />
+                                </node>
+                              </node>
+                            </node>
+                            <node concept="3clFbC" id="1rkHUYSMmpv" role="3uHU7B">
+                              <node concept="2OqwBi" id="1rkHUYSMlqW" role="3uHU7B">
+                                <node concept="2GrUjf" id="1rkHUYSMiG6" role="2Oq$k0">
+                                  <ref role="2Gs0qQ" node="1rkHUYSMgfj" resolve="attr" />
+                                </node>
+                                <node concept="3TrcHB" id="1rkHUYSMlTJ" role="2OqNvi">
+                                  <ref role="3TsBF5" to="2rvu:7vG6G7pFVDY" resolve="type" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="1rkHUYSMnBs" role="3uHU7w">
+                                <node concept="1XH99k" id="1rkHUYSMmJw" role="2Oq$k0">
+                                  <ref role="1XH99l" to="2rvu:7vG6G7pFVDL" resolve="PrimitiveType" />
+                                </node>
+                                <node concept="2ViDtV" id="1rkHUYSMog9" role="2OqNvi">
+                                  <ref role="2ViDtZ" to="2rvu:7vG6G7pFVDP" resolve="DATE" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbS" id="1rkHUYSMiFZ" role="3clFbx">
+                            <node concept="3clFbF" id="1rkHUYSMt2w" role="3cqZAp">
+                              <node concept="37vLTI" id="1rkHUYSMttb" role="3clFbG">
+                                <node concept="3clFbT" id="1rkHUYSMtto" role="37vLTx">
+                                  <property role="3clFbU" value="true" />
+                                </node>
+                                <node concept="37vLTw" id="1rkHUYSMt2v" role="37vLTJ">
+                                  <ref role="3cqZAo" node="1rkHUYSMfWf" resolve="hasDate" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="3clFbJ" id="1rkHUYSMtRy" role="3cqZAp">
+                      <node concept="3clFbS" id="1rkHUYSMtR$" role="3clFbx">
+                        <node concept="2MkqsV" id="1rkHUYSMu2p" role="3cqZAp">
+                          <node concept="Xl_RD" id="1rkHUYSMu2A" role="2MkJ7o">
+                            <property role="Xl_RC" value="SortingPolicy with criterion=DATE requires a DATE or DATETIME attribute" />
+                          </node>
+                          <node concept="2GrUjf" id="1rkHUYSMu2T" role="1urrMF">
+                            <ref role="2Gs0qQ" node="1rkHUYSEqyo" resolve="sortingPolicy" />
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="3fqX7Q" id="1rkHUYSMtXA" role="3clFbw">
+                        <node concept="37vLTw" id="1rkHUYSMtXO" role="3fr31v">
+                          <ref role="3cqZAo" node="1rkHUYSMfWf" resolve="hasDate" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="1rkHUYSE9O0" role="1YuTPh">
+      <property role="TrG5h" value="refModel" />
+      <ref role="1YaFvo" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
     </node>
   </node>
 </model>
