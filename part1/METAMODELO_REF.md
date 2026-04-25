@@ -1,6 +1,6 @@
-# Metamodelo REF v2 (Resource Evaluation and Feedback)
+# Metamodelo REF v3 (Resource Evaluation and Feedback)
 
-Este documento descreve o [metamodelo REF](../diagrams/metamodel/ref-metamodel-v2.png), construído a partir dos modelos de domínio dos contextos considerados (Amazon, Reddit e YouTube).
+Este documento descreve o [metamodelo REF](../diagrams/metamodel/ref-metamodel-v3.puml), construído a partir dos modelos de domínio dos contextos considerados (Amazon, Reddit e YouTube).
 
 Os modelos de domínio específicos desses contextos podem ser encontrados em:
 
@@ -10,13 +10,13 @@ Os modelos de domínio específicos desses contextos podem ser encontrados em:
 
 ## 1. Objetivo
 
-O REF v2 foi desenhado para manter a ideia de união e generalização dos cenários Amazon, YouTube e Reddit, mas com maior capacidade para:
+O REF v3 foi desenhado para manter a ideia de união e generalização dos cenários Amazon, YouTube e Reddit, mas com maior capacidade para:
 
 - modelar contexto (global, comunidade, canal, catálogo)
 - separar tipo de feedback de definição de feedback
 - representar políticas de moderação e verificação explicitamente
 
-## 2. Visão global do REF v2
+## 2. Visão global do REF v3
 
 O elemento raiz `RefModel` agrega blocos conceptuais organizados em cinco áreas:
 
@@ -243,7 +243,7 @@ Representa explicitamente políticas de verificação do contexto do feedback (e
 
 ## 5. Relações estruturais principais
 
-As relações mais relevantes do v2 são:
+As relações mais relevantes do v3 são:
 
 - `RefModel` contém as definições centrais top-level (`UserType`, `ResourceType`, `ContextType`, `ResourceRelation`, `FeedbackType`, `FeedbackDefinition`, `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, `AutomationRule`, `VerificationPolicy`).
 - `FeedbackPolicy` e `RatingPolicy` são compostas localmente por `FeedbackDefinition`.
@@ -252,9 +252,9 @@ As relações mais relevantes do v2 são:
 - `ValidationRule` concentra restrições formais reutilizáveis por feedback e automação.
 - `VerificationPolicy` separa a verificação de contexto do resto das regras de validação.
 
-## 6. Restrições explícitas no diagrama v2
+## 6. Restrições explícitas no diagrama v3
 
-As restrições do metamodelo v2 estão centralizadas em [diagrams/metamodel/Metamodel_Constraints.md](../diagrams/metamodel/Metamodel_Constraints.md). As principais incluem:
+As restrições do metamodelo v3 estão centralizadas em [diagrams/metamodel/Metamodel_Constraints.md](../diagrams/metamodel/Metamodel_Constraints.md). As principais incluem:
 
 1. `ValidationRule` deve ter pelo menos um alvo (`ResourceType` ou `FeedbackDefinition`).
 2. Se `FeedbackPolicy.status = DISABLED`, não é permitida criação de novas instâncias para a `FeedbackDefinition` associada.
@@ -263,7 +263,7 @@ As restrições do metamodelo v2 estão centralizadas em [diagrams/metamodel/Met
 
 ## 7. Justificação das principais evoluções face ao modelo anterior
 
-As mudanças do v2 respondem diretamente a necessidades que ficaram mais claras nos novos cenários:
+As mudanças do v3 respondem diretamente a necessidades que ficaram mais claras nos novos cenários:
 
 - Introdução de `ContextType` para distinguir regras globais, por comunidade, por canal e por catálogo.
 - Introdução de `FeedbackKind` e `FeedbackSubjectScope` para tipar melhor variações de feedback.

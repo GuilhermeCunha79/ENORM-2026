@@ -1,4 +1,4 @@
-# EDOM Project, Part 1, Tool 1 - MPS (Meta Programming System)
+# ENORM Project, Part 1, Tool 1 - MPS (Meta Programming System)
 
 ## Description of the Tool
 

@@ -1,8 +1,28 @@
-# ENORM Project, Part 2 - Team Report
+# ENORM Part 2 - Team Report (DSL and Code Generation)
 
-This document summarizes the team work for Part 2 of the ENORM project in the REF domain.
- 
-## Graphical Representation
+**Course:** MEI - ENORM (2025/26)  
+**Deliverable:** Team report for the team tasks of Part 2 (Activities 1, 2, 4, 5 and team integration tasks of Activity 6) defined in the assignment ([diagrams/enunciado/part2/enunciado-p2.md](../diagrams/enunciado/part2/enunciado-p2.md)).  
+**Repository root:** project root containing `part2/`, `diagrams/`, and tool-specific subprojects.
+
+---
+
+## 1. Team composition and tool assignment
+
+| Member            | Primary tool (individual implementation)                                                              | Tool report (.md) |
+|-------------------|-------------------------------------------------------------------------------------------------------|-------------------|
+| Guilherme Cunha   | **JetBrains MPS** - projectional/textual DSL and generator implementation (`part2/tool1-mps/`, `part2/tool1-mps/languages/`) | [tool1-mps/readme.md](tool1-mps/readme.md) |
+| Pedro Vilarinho   | **Eclipse Xtext** - textual DSL, validation, generator (`part2/tool2-xtext/`)                         | [tool2-xtext/readme.md](tool2-xtext/readme.md) |
+| Francisco Peixoto | **Eclipse Sirius** - graphical views / Viewpoint Specification (`part2/tool3-sirius/`)                | [tool3-sirius/readme.md](tool3-sirius/readme.md) |
+
+The team works with a **single domain metamodel (REF)** and three **reference scenarios** (YouTube, Amazon, Reddit). Each member implements the required artifacts in the assigned tool. **This document** focuses on **team-level** Part 2 decisions: concrete syntax design, common backend features, commonality/variability analysis, code generation design, and cross-tool compatibility of generated applications.
+
+Tool-specific implementation details remain in each individual tool report.
+
+---
+
+## 2. Activity 1 - Design Concrete Syntax for the DSL
+
+### 2.1 Graphical notation
 
 TODO
 
@@ -212,4 +232,99 @@ The metamodel itself is preserved. The adaptations are concrete syntax decisions
 4. `SortingPolicy` is first-class in the syntax as a named `sorting-policies` section. This captures ordering behavior that is central to Amazon, Reddit, and YouTube-like scenarios.
 5. Feedback semantics include `allowsText`, `polarity`, and `verificationRequirement` as explicit optional tokens. This supports vote and reaction differences and verification strictness without workarounds.
 6. Projection helper concepts (`ContextResourceTypeLink`, `UserTypeSuperType`) are rendered as inline modifiers (`contains`, `extends`) instead of named declarations. This hides implementation details from the surface notation and keeps the abstract syntax tree traceable.
- 
+
+### 2.3 Adaptations from P1 metamodel and justification
+
+TODO
+
+---
+
+## 3. Activity 2 - Specify Common Features for Applications of the Domain
+
+### 3.1 Target language, frameworks, and platform
+
+TODO
+
+### 3.2 Architecture of generated backend applications
+
+TODO
+
+### 3.3 Common code/artifacts to be generated
+
+TODO
+
+### 3.4 Extensibility points for manual code
+
+TODO
+
+---
+
+## 4. Activity 3 - Implement Prototypes of Applications of the Domain
+
+### 4.1 Prototype goals and scope
+
+TODO
+
+### 4.2 Prototype summary by tool
+
+TODO
+
+### 4.3 Inputs for code generation design
+
+TODO
+
+---
+
+## 5. Activity 4 - Identify Commonality and Variability in the Code
+
+### 5.1 Common parts in the prototypes
+
+TODO
+
+### 5.2 Variable parts in the prototypes
+
+TODO
+
+### 5.3 Mapping of variability to metamodel elements
+
+TODO
+
+---
+
+## 6. Activity 5 - Design and Implement Code Generation
+
+### 6.1 Generation rules and templates
+
+TODO
+
+### 6.2 Common parts generation
+
+TODO
+
+### 6.3 Variable parts generation
+
+TODO
+
+### 6.4 Notes per implementation tool
+
+TODO
+
+---
+
+## 7. Activity 6 - Generate Applications
+
+### 7.1 Generation of the three REF scenarios
+
+TODO
+
+### 7.2 Manual extension integration
+
+TODO
+
+### 7.3 Cross-tool compatibility tests
+
+TODO
+
+### 7.4 Model evolution and migration proposal
+
+TODO

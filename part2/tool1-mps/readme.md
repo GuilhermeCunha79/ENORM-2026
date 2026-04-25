@@ -1,4 +1,4 @@
-# EDOM Project, Part 2, Tool 1
+# ENORM Project, Part 2, Tool 1 - MPS (Meta Programming System)
 
 In this folder you should add **all** artifacts developed for part 2 of the ENORM Project, related to tool 1.
 
