@@ -66,6 +66,11 @@ class Post_CreationDate {
   required: true
   multivalued: false
 }
+class Post_ReportNumber {
+  type: NUMBER
+  required: true
+  multivalued: false
+}
 class Comment_Id {
   type: TEXT
   required: true
@@ -84,20 +89,32 @@ class Comment_CreationDate {
 class SubredditContainsPost {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: true
+  recursive: false
 }
 class PostContainsComment {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: false
+  recursive: true
 }
 }
 package "Feedback" {
 class VoteType {
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_OR_FEEDBACK  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: UP_DOWN
 }
 class ReportType {
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 }
 class VoteOnPost {
   requiresVerifiedContext: false
@@ -137,8 +154,8 @@ class AutoModerationRule {
   trigger: ON_REPORT_SUBMITTED
 }
 class AutoModerationRule_ReportCountOverThresholdCondition {
-  field: legacyCondition
-  operator: HAS_SPECIFIC_PROPERTY
+  field: ReportNumber
+  operator: CONTAINS_KEYWORDS
   value: report_count_over_threshold
 }
 class AutoModerationRule_FlagOrHidePostAction {
@@ -154,7 +171,7 @@ class SubredditListingSort {
   direction: DESC
 }
 class CommentSort {
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
 }
 class ContentRuleValidation {
@@ -216,6 +233,7 @@ Post *-- Post_Title : attribute
 Post *-- Post_Body : attribute
 Post *-- Post_PostType : attribute
 Post *-- Post_CreationDate : attribute
+Post *-- Post_ReportNumber : attribute
 Comment *-- Comment_Id : attribute
 Comment *-- Comment_Body : attribute
 Comment *-- Comment_CreationDate : attribute

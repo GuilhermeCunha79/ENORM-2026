@@ -43,6 +43,10 @@ ResourceType: Product
     type: TEXT
     required: true
     multivalued: false
+  attribute: CreatedAt
+    type: DATE
+    required: false
+    multivalued: false
 ResourceType: Order
   supportsMedia: false
   attribute: Id
@@ -76,20 +80,36 @@ ResourceType: CommentReview
 ResourceRelation: OrderContainsOrderItem
   source: Order (1)
   target: OrderItem (2)
+  containment: false
+  recursive: false
 ResourceRelation: OrderItemTargetsProduct
   source: OrderItem (2)
   target: Product (1)
+  containment: false
+  recursive: false
 ResourceRelation: ProductContainsComment
   source: Product (1)
   target: CommentReview (2)
+  containment: true
+  recursive: false
 
 === FEEDBACK ===
 FeedbackType: ReviewType
   kind: REVIEW
   hasRating: true
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: true
+  allowsText: true
+  polarity: NONE
 FeedbackType: HelpfulVoteType
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: UP_DOWN
 FeedbackDefinition: ProductReview
   type: ReviewType
   author: Reviewer
@@ -120,10 +140,10 @@ AutomationRule: ReviewGuardAutomation
   context: Product
   inContext: ModerationContext
   uses: ReviewValidationRule
-  condition: CheckReviewContent
-    field: body
+  condition: LOl
+    field: Description
     operator: CONTAINS_KEYWORDS
-    value: spam,fake,scam
+    value: g
   action: FlagReview
     kind: FLAG_CONTENT
     message: Content Restricted
@@ -133,7 +153,7 @@ SortingPolicy: ProductListingSort
   appliesToResource: Product
   inContext: CatalogContext
 SortingPolicy: ProductSearchSort
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
   appliesToResource: Product
 SortingPolicy: CommentSortByDate
@@ -142,7 +162,7 @@ SortingPolicy: CommentSortByDate
   appliesToResource: CommentReview
   inContext: CatalogContext
 SortingPolicy: CommentSortByRating
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
   appliesToResource: CommentReview
   inContext: CatalogContext

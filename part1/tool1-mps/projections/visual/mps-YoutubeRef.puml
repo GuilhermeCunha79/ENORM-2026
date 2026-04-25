@@ -103,28 +103,46 @@ class Comment_CreationDate {
 class ChannelContainsVideo {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: true
+  recursive: false
 }
 class VideoContainsComment {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: true
+  recursive: false
 }
 class CommentRepliesComment {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: false
+  recursive: true
 }
 }
 package "Feedback" {
 class ReactionType {
   kind: REACTION
   hasRating: false
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: LIKE_DISLIKE
 }
 class ReportType {
   kind: REPORT
   hasRating: false
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 }
 class SubscriptionType {
   kind: SUBSCRIPTION
   hasRating: false
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 }
 class LikeOnVideo {
   requiresVerifiedContext: false
@@ -174,19 +192,19 @@ class AutoVideoModeration {
 class AutoCommentModeration {
   trigger: ON_REPORT_SUBMITTED
 }
-class AutoVideoModeration_RepeatedReportOrPolicyMatchCondition {
-  field: legacyCondition
+class AutoVideoModeration_TitleRestrictedWords {
+  field: Title
   operator: CONTAINS_KEYWORDS
-  value: repeated_report_or_policy_match
+  value: war, crime
 }
 class AutoVideoModeration_FlagVideoForReviewAction {
   kind: FLAG_CONTENT
   message: flag_video_for_review
 }
-class AutoCommentModeration_RepeatedReportOrPolicyMatchCommentCondition {
-  field: legacyCondition
-  operator: HAS_SPECIFIC_PROPERTY
-  value: repeated_report_or_policy_match
+class AutoCommentModeration_CommentRestrictedWords {
+  field: Text
+  operator: CONTAINS_KEYWORDS
+  value: knife, blood
 }
 class AutoCommentModeration_HideOrFlagCommentAction {
   kind: HIDE_CONTENT
@@ -201,7 +219,7 @@ class TrendingFeedSort {
   direction: DESC
 }
 class RecommendationSort {
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
 }
 class CommentSortByDate {
@@ -311,13 +329,13 @@ AutoVideoModeration --> ReportOnVideo : onFeedback
 AutoVideoModeration --> Video : context
 AutoVideoModeration --> ChannelContext : inContext
 AutoVideoModeration --> VideoContentValidation : uses
-AutoVideoModeration *-- AutoVideoModeration_RepeatedReportOrPolicyMatchCondition : condition
+AutoVideoModeration *-- AutoVideoModeration_TitleRestrictedWords : condition
 AutoVideoModeration *-- AutoVideoModeration_FlagVideoForReviewAction : action
 AutoCommentModeration --> ReportOnComment : onFeedback
 AutoCommentModeration --> Comment : context
 AutoCommentModeration --> ChannelContext : inContext
 AutoCommentModeration --> CommentContentValidation : uses
-AutoCommentModeration *-- AutoCommentModeration_RepeatedReportOrPolicyMatchCommentCondition : condition
+AutoCommentModeration *-- AutoCommentModeration_CommentRestrictedWords : condition
 AutoCommentModeration *-- AutoCommentModeration_HideOrFlagCommentAction : action
 LikeOnVideo --> ReactionType : type
 LikeOnVideo --> User : author

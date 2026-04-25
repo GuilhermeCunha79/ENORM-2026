@@ -51,6 +51,10 @@ ResourceType: Post
     type: DATE
     required: true
     multivalued: false
+  attribute: ReportNumber
+    type: NUMBER
+    required: true
+    multivalued: false
 ResourceType: Comment
   supportsMedia: true
   attribute: Id
@@ -68,17 +72,31 @@ ResourceType: Comment
 ResourceRelation: SubredditContainsPost
   source: Subreddit (1)
   target: Post (2)
+  containment: true
+  recursive: false
 ResourceRelation: PostContainsComment
   source: Post (1)
   target: Comment (2)
+  containment: false
+  recursive: true
 
 === FEEDBACK ===
 FeedbackType: VoteType
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_OR_FEEDBACK
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: UP_DOWN
 FeedbackType: ReportType
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 FeedbackDefinition: VoteOnPost
   type: VoteType
   author: User
@@ -124,8 +142,8 @@ AutomationRule: AutoModerationRule
   inContext: CommunityContext
   uses: ContentRuleValidation
   condition: ReportCountOverThresholdCondition
-    field: legacyCondition
-    operator: HAS_SPECIFIC_PROPERTY
+    field: ReportNumber
+    operator: CONTAINS_KEYWORDS
     value: report_count_over_threshold
   action: FlagOrHidePostAction
     kind: FLAG_CONTENT
@@ -141,7 +159,7 @@ SortingPolicy: SubredditListingSort
   appliesToResource: Subreddit
   inContext: CommunityContext
 SortingPolicy: CommentSort
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
   appliesToResource: Comment
   inContext: CommunityContext

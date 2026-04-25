@@ -86,23 +86,44 @@ ResourceType: Comment
 ResourceRelation: ChannelContainsVideo
   source: Channel (1)
   target: Video (2)
+  containment: true
+  recursive: false
 ResourceRelation: VideoContainsComment
   source: Video (1)
   target: Comment (2)
+  containment: true
+  recursive: false
 ResourceRelation: CommentRepliesComment
   source: Comment (1)
   target: Comment (2)
+  containment: false
+  recursive: true
 
 === FEEDBACK ===
 FeedbackType: ReactionType
   kind: REACTION
   hasRating: false
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: LIKE_DISLIKE
 FeedbackType: ReportType
   kind: REPORT
   hasRating: false
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 FeedbackType: SubscriptionType
   kind: SUBSCRIPTION
   hasRating: false
+  subjectScope: RESOURCE_ONLY
+  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: NONE
 FeedbackDefinition: LikeOnVideo
   type: ReactionType
   author: User
@@ -156,10 +177,10 @@ AutomationRule: AutoVideoModeration
   context: Video
   inContext: ChannelContext
   uses: VideoContentValidation
-  condition: RepeatedReportOrPolicyMatchCondition
-    field: legacyCondition
+  condition: TitleRestrictedWords
+    field: Title
     operator: CONTAINS_KEYWORDS
-    value: repeated_report_or_policy_match
+    value: war, crime
   action: FlagVideoForReviewAction
     kind: FLAG_CONTENT
     message: flag_video_for_review
@@ -169,10 +190,10 @@ AutomationRule: AutoCommentModeration
   context: Comment
   inContext: ChannelContext
   uses: CommentContentValidation
-  condition: RepeatedReportOrPolicyMatchCommentCondition
-    field: legacyCondition
-    operator: HAS_SPECIFIC_PROPERTY
-    value: repeated_report_or_policy_match
+  condition: CommentRestrictedWords
+    field: Text
+    operator: CONTAINS_KEYWORDS
+    value: knife, blood
   action: HideOrFlagCommentAction
     kind: HIDE_CONTENT
     message: hide_or_flag_comment
@@ -187,7 +208,7 @@ SortingPolicy: TrendingFeedSort
   appliesToResource: Video
   inContext: TrendingContext
 SortingPolicy: RecommendationSort
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
   appliesToResource: Video
   inContext: RecommendationContext

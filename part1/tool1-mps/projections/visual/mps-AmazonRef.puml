@@ -59,6 +59,11 @@ class Product_Description {
   required: true
   multivalued: false
 }
+class Product_CreatedAt {
+  type: DATE
+  required: false
+  multivalued: false
+}
 class Order_Id {
   type: TEXT
   required: true
@@ -92,24 +97,38 @@ class CommentReview_CreatedAt {
 class OrderContainsOrderItem {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: false
+  recursive: false
 }
 class OrderItemTargetsProduct {
   sourceCardinality: 2
   targetCardinality: 1
+  containment: false
+  recursive: false
 }
 class ProductContainsComment {
   sourceCardinality: 1
   targetCardinality: 2
+  containment: true
+  recursive: false
 }
 }
 package "Feedback" {
 class ReviewType {
   kind: REVIEW
   hasRating: true
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: true
+  allowsText: true
+  polarity: NONE
 }
 class HelpfulVoteType {
   kind: VOTE
   hasRating: false
+  subjectScope: RESOURCE_ONLY  recursive: false
+  allowsMedia: false
+  allowsText: false
+  polarity: UP_DOWN
 }
 class ProductReview {
   requiresVerifiedContext: false
@@ -137,10 +156,10 @@ package "Governance & Behavior" {
 class ReviewGuardAutomation {
   trigger: ON_FEEDBACK_CREATE
 }
-class ReviewGuardAutomation_CheckReviewContent {
-  field: body
+class ReviewGuardAutomation_LOl {
+  field: Description
   operator: CONTAINS_KEYWORDS
-  value: spam,fake,scam
+  value: g
 }
 class ReviewGuardAutomation_FlagReview {
   kind: FLAG_CONTENT
@@ -151,7 +170,7 @@ class ProductListingSort {
   direction: DESC
 }
 class ProductSearchSort {
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
 }
 class CommentSortByDate {
@@ -159,7 +178,7 @@ class CommentSortByDate {
   direction: DESC
 }
 class CommentSortByRating {
-  criterion: RELEVANCE
+  criterion: DATE
   direction: DESC
 }
 class ReviewValidationRule {
@@ -228,6 +247,7 @@ AmazonRef *-- ReviewValidationRule
 Product *-- Product_Id : attribute
 Product *-- Product_Name : attribute
 Product *-- Product_Description : attribute
+Product *-- Product_CreatedAt : attribute
 Order *-- Order_Id : attribute
 Order *-- Order_Date : attribute
 OrderItem *-- OrderItem_Quantity : attribute
@@ -241,7 +261,7 @@ ReviewGuardAutomation --> ProductReview : onFeedback
 ReviewGuardAutomation --> Product : context
 ReviewGuardAutomation --> ModerationContext : inContext
 ReviewGuardAutomation --> ReviewValidationRule : uses
-ReviewGuardAutomation *-- ReviewGuardAutomation_CheckReviewContent : condition
+ReviewGuardAutomation *-- ReviewGuardAutomation_LOl : condition
 ReviewGuardAutomation *-- ReviewGuardAutomation_FlagReview : action
 ProductReview --> ReviewType : type
 ProductReview --> Reviewer : author
