@@ -26,7 +26,7 @@ Tool-specific implementation details remain in each individual tool report.
 
 TODO
 
-## Textual Representation
+### 2.2 Textual notation
 
 ### Scope and Intent
  
@@ -59,7 +59,7 @@ The following principles were adopted:
 The full model is organized in named blocks so users can navigate by domain concern.
  
 ```refdsl
-ref "ModelName" version "1.0.0" {
+Ref "ModelName" version "1.0.0" {
 	users { ... }
 	resources { ... }
 	contexts { ... }
