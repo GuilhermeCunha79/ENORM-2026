@@ -1,0 +1,10 @@
+package pt.isep.enorm.ref.amazon.domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import pt.isep.enorm.ref.amazon.domain.generated.GeneratedAutomationCondition;
+
+@Entity(name = "AutomationCondition")
+@Table(name = "automation_conditions")
+public class AutomationCondition extends GeneratedAutomationCondition {
+}

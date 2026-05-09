@@ -243,19 +243,88 @@ TODO
 
 ### 3.1 Target language, frameworks, and platform
 
-TODO
+The reference backend platform for generated REF applications is Java 21 with Spring Boot 3. The stack was selected because it supports a direct implementation of the REF concepts as layered, strongly typed application artifacts:
+
+- Spring Web for JSON REST APIs and controller generation.
+- Spring Data JPA with Hibernate for generated repositories and persistence mappings.
+- H2 for lightweight prototype execution and repeatable tests.
+- Jakarta Bean Validation for request-level constraints derived from resource attributes, rating policies, and required fields.
+- Spring Security with JWT for prototype-level authentication and authorization checks derived from REF user types and authorization rules.
+- Maven as the build tool for standalone backend prototypes.
+
+Generated applications should be normal Spring Boot applications so that generated code can be compiled, tested, and executed without depending on the modeling tools at runtime. Scenario-specific prototypes can then instantiate this common platform with the concrete resources, feedback definitions, rules, and authorization policies of each REF model.
 
 ### 3.2 Architecture of generated backend applications
 
-TODO
+Generated backend applications follow a layered architecture:
+
+- **Domain layer:** JPA entities for REF `ResourceType`, feedback instances, context/policy concepts, and user types.
+- **Repository layer:** Spring Data repositories for generated CRUD access and query methods.
+- **Service layer:** application use cases, validation, verification, moderation, and business rules.
+- **Web layer:** REST controllers and DTOs for external API contracts.
+- **Security layer:** authentication and role-based authorization based on REF `UserType` and `AuthorizationRule`.
+
+The implementation applies the Generation Gap pattern. Generated/common artifacts are placed under `generated` packages, while handwritten extension points use the same package level without the `generated` segment. For example, `GeneratedProductReview` contains the common JPA mapping and `ProductReview` is the manual extension class. The same split is used for repositories, services, and controllers.
+
+The common feedback flow is:
+
+1. An authorized actor submits feedback for a resource or for another feedback item.
+2. The service validates the feedback payload against the relevant `FeedbackDefinition`, `RatingPolicy`, and `ValidationRule`.
+3. The verification policy decides whether validation is automatic, manual, optional, or required.
+4. Moderation and automation rules may update the feedback status or trigger additional actions.
+5. Read endpoints expose the resulting feedback, resource summaries, and sorted/aggregated views where the REF model requires them.
 
 ### 3.3 Common code/artifacts to be generated
 
-TODO
+The common generator output should include:
+
+- JPA entity base classes for resources, feedback, contexts, policies, automation rules, validation rules, and verification rules.
+- Spring Data repository interfaces with scenario-specific query methods where the REF model implies them.
+- DTOs for create/update/read operations, including nested references for target resources and media attachments.
+- Command objects used by services to decouple controllers from business logic.
+- Services implementing common submission, validation, sorting, verification, and aggregation behavior.
+- REST controllers exposing resource, feedback, and policy endpoints.
+- Security configuration mapping user types and authorization rules to endpoint access.
+- Consistent API error handling.
+- Integration tests for the generated use cases.
+
+For each concrete scenario, these generated artifacts are instantiated from the REF model. A marketplace scenario may generate products, orders, reviews, verified purchase checks, and star averages. A community scenario may generate posts, comments, votes, reports, and moderation actions. A media platform scenario may generate channels, videos, comments, reactions, subscriptions, and content moderation rules. The generator should therefore treat these as variations of the same REF concepts rather than as unrelated applications.
 
 ### 3.4 Extensibility points for manual code
 
-TODO
+Manual code is expected for scenario-specific behavior that cannot be safely inferred from the metamodel alone. The main extension points are:
+
+- Manual entity subclasses for domain-specific helper methods or invariants.
+- Manual repository interfaces for additional derived queries.
+- Service hooks for scenario-specific rules, such as context verification, duplicate vote prevention, reputation checks, ownership checks, or platform-specific moderation decisions.
+- Manual controller subclasses or extra endpoints when a scenario needs a more ergonomic REST shape.
+- Security and authorization refinements when generated rules need to be adapted to framework-level route matching.
+
+This pattern keeps the generated layer reusable while allowing each scenario to implement rules that depend on external state or domain-specific interpretation. The generated service should define common algorithms and protected hooks; the manual service should override only the parts that are genuinely scenario-specific.
+
+### 3.5 Prompts for backend generation
+
+Use this prompt as a scenario-independent template for backend generation. The placeholders are filled from the REF model being processed.
+
+```
+Generate a complete backend for the <SCENARIO_NAME> scenario of the ENORM/REF DSL.
+Stack: Java 21, Spring Boot 3, Maven, JPA/Hibernate, H2 file-backed DB.
+Architecture: Generation Gap (Generated* base classes + manual subclasses).
+Requirements: REST API, JWT authentication, role-based authorization, validation, consistent API error responses, and basic integration tests.
+Domain model:
+- User types: <USER_TYPES>
+- Resource types and attributes: <RESOURCE_TYPES>
+- Context types and relations: <CONTEXTS_AND_RELATIONS>
+- Feedback types and feedback definitions: <FEEDBACK_DEFINITIONS>
+- Rating, verification, sorting, validation, moderation, authorization, and automation policies: <POLICIES>
+Endpoints:
+- Authentication endpoints when the scenario has user-based actions.
+- Resource CRUD/read endpoints derived from `ResourceType`.
+- Feedback submission/read endpoints derived from `FeedbackDefinition`.
+- Aggregation endpoints derived from `RatingPolicy` or `SortingPolicy`.
+- Policy/administration endpoints where the prototype needs runtime inspection or configuration.
+Deliverables: entities, DTOs, repositories, services, controllers, security config, sample data seeding, and tests. Ensure extensibility with manual override points.
+```
 
 ---
 

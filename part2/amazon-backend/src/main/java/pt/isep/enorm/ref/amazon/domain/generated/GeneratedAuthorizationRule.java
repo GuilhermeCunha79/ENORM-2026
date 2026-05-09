@@ -1,0 +1,100 @@
+package pt.isep.enorm.ref.amazon.domain.generated;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import pt.isep.enorm.ref.amazon.domain.ContextType;
+import pt.isep.enorm.ref.amazon.domain.enums.ActionKind;
+import pt.isep.enorm.ref.amazon.domain.enums.Role;
+
+@MappedSuperclass
+public abstract class GeneratedAuthorizationRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
+    private ActionKind allowedAction;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "actor_role", nullable = false, length = 20)
+    private Role actorRole;
+
+    @Column(name = "resource_target", length = 120)
+    private String resourceTarget;
+
+    @Column(name = "feedback_target", length = 120)
+    private String feedbackTarget;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "context_id")
+    private ContextType context;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ActionKind getAllowedAction() {
+        return allowedAction;
+    }
+
+    public void setAllowedAction(ActionKind allowedAction) {
+        this.allowedAction = allowedAction;
+    }
+
+    public Role getActorRole() {
+        return actorRole;
+    }
+
+    public void setActorRole(Role actorRole) {
+        this.actorRole = actorRole;
+    }
+
+    public String getResourceTarget() {
+        return resourceTarget;
+    }
+
+    public void setResourceTarget(String resourceTarget) {
+        this.resourceTarget = resourceTarget;
+    }
+
+    public String getFeedbackTarget() {
+        return feedbackTarget;
+    }
+
+    public void setFeedbackTarget(String feedbackTarget) {
+        this.feedbackTarget = feedbackTarget;
+    }
+
+    public ContextType getContext() {
+        return context;
+    }
+
+    public void setContext(ContextType context) {
+        this.context = context;
+    }
+}
