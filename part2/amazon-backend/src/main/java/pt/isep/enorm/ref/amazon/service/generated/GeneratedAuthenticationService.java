@@ -12,7 +12,6 @@ import pt.isep.enorm.ref.amazon.domain.enums.Role;
 import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import pt.isep.enorm.ref.amazon.security.JwtService;
 import pt.isep.enorm.ref.amazon.service.projection.AuthenticationResult;
-import pt.isep.enorm.ref.amazon.web.dto.AuthRequest;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -36,16 +35,16 @@ public abstract class GeneratedAuthenticationService {
     }
 
     @Transactional
-    public AuthenticationResult register(AuthRequest request) {
-        validateRequest(request);
+    public AuthenticationResult register(AmazonUser request) {
+        Credentials credentials = validateRequest(request);
 
-        if (amazonUserRepository.existsByUsername(request.username())) {
+        if (amazonUserRepository.existsByUsername(credentials.username())) {
             throw new IllegalStateException("Username already exists.");
         }
 
         AmazonUser user = new AmazonUser();
-        user.setUsername(request.username());
-        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setUsername(credentials.username());
+        user.setPassword(passwordEncoder.encode(credentials.password()));
         user.setRole(Role.BUYER);
         user.setVerifiedBuyer(false);
 
@@ -54,15 +53,15 @@ public abstract class GeneratedAuthenticationService {
         return toAuthenticationResult(savedUser);
     }
 
-    public AuthenticationResult login(AuthRequest request) {
-        validateRequest(request);
+    public AuthenticationResult login(AmazonUser request) {
+        Credentials credentials = validateRequest(request);
 
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.username(), request.password())
+            new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password())
         );
 
-        AmazonUser user = amazonUserRepository.findByUsername(request.username())
-            .orElseThrow(() -> new ResourceNotFoundException("User '%s' was not found.".formatted(request.username())));
+        AmazonUser user = amazonUserRepository.findByUsername(credentials.username())
+            .orElseThrow(() -> new ResourceNotFoundException("User '%s' was not found.".formatted(credentials.username())));
 
         return toAuthenticationResult(user);
     }
@@ -70,16 +69,24 @@ public abstract class GeneratedAuthenticationService {
     protected void afterRegister(AmazonUser savedUser) {
     }
 
-    private void validateRequest(AuthRequest request) {
+    private Credentials validateRequest(AmazonUser request) {
         Objects.requireNonNull(request, "request is required");
 
-        if (request.username().isBlank()) {
+        String username = request.getUsername();
+        String password = request.getPassword();
+
+        if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username is required.");
         }
 
-        if (request.password().isBlank()) {
+        if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password is required.");
         }
+
+        return new Credentials(username.trim(), password);
+    }
+
+    private record Credentials(String username, String password) {
     }
 
     private AuthenticationResult toAuthenticationResult(AmazonUser user) {

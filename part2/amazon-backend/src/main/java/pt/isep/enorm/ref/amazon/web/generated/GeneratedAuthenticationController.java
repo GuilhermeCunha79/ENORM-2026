@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.validation.Valid;
+import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.service.AuthenticationService;
 import pt.isep.enorm.ref.amazon.service.projection.AuthenticationResult;
-import pt.isep.enorm.ref.amazon.web.dto.AuthRequest;
-import pt.isep.enorm.ref.amazon.web.dto.AuthResponse;
 
 public abstract class GeneratedAuthenticationController {
 
@@ -20,16 +19,13 @@ public abstract class GeneratedAuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(authenticationService.register(request)));
+    public ResponseEntity<AuthenticationResult> register(@Valid @RequestBody AmazonUser request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authenticationService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
-        return ResponseEntity.ok(toResponse(authenticationService.login(request)));
+    public ResponseEntity<AuthenticationResult> login(@Valid @RequestBody AmazonUser request) {
+        return ResponseEntity.ok(authenticationService.login(request));
     }
 
-    protected AuthResponse toResponse(AuthenticationResult authenticationResult) {
-        return new AuthResponse(authenticationResult.token(), authenticationResult.username(), authenticationResult.role());
-    }
 }

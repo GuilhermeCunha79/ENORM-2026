@@ -3,6 +3,8 @@ package pt.isep.enorm.ref.amazon.domain.generated;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -37,6 +39,7 @@ public abstract class GeneratedAutomationCondition {
     @Column(nullable = false, length = 30)
     private ConditionOperator operator;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "automation_rule_id", nullable = false)
     private AutomationRule automationRule;

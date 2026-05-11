@@ -1,5 +1,7 @@
 package pt.isep.enorm.ref.amazon.domain.generated;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Embedded;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public abstract class GeneratedOrderItem {
     @Embedded
     private OrderItemQuantity quantity;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;

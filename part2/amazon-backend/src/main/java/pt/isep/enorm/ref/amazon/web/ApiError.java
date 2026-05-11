@@ -1,4 +1,4 @@
-package pt.isep.enorm.ref.amazon.web.dto;
+package pt.isep.enorm.ref.amazon.web;
 
 import java.time.Instant;
 

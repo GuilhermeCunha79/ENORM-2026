@@ -10,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import pt.isep.enorm.ref.amazon.web.dto.ApiError;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @RestControllerAdvice

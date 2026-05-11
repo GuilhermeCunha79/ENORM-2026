@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pt.isep.enorm.ref.amazon.domain.ContextResource;
 import pt.isep.enorm.ref.amazon.domain.ContextType;
 import pt.isep.enorm.ref.amazon.repository.ContextTypeRepository;
-import pt.isep.enorm.ref.amazon.service.command.CreateContextCommand;
-import pt.isep.enorm.ref.amazon.service.command.UpdateContextCommand;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -29,30 +27,26 @@ public abstract class GeneratedContextService {
     }
 
     @Transactional
-    public ContextType createContext(CreateContextCommand command) {
+    public ContextType createContext(ContextType request) {
         ContextType contextType = new ContextType();
-        contextType.setName(command.name());
-        contextType.setKind(command.kind());
-        for (String resource : command.resources()) {
-            contextType.addResource(toResource(resource));
-        }
+        contextType.setName(request.getName());
+        contextType.setKind(request.getKind());
+        applyResources(request.getResources(), contextType);
         return contextTypeRepository.save(contextType);
     }
 
     @Transactional
-    public ContextType updateContext(Long contextId, UpdateContextCommand command) {
+    public ContextType updateContext(Long contextId, ContextType request) {
         ContextType contextType = loadContext(contextId);
-        if (command.name() != null && !command.name().isBlank()) {
-            contextType.setName(command.name());
+        if (request.getName() != null && !request.getName().isBlank()) {
+            contextType.setName(request.getName());
         }
-        if (command.kind() != null) {
-            contextType.setKind(command.kind());
+        if (request.getKind() != null) {
+            contextType.setKind(request.getKind());
         }
-        if (command.resources() != null) {
+        if (request.getResources() != null) {
             contextType.getResources().clear();
-            for (String resource : command.resources()) {
-                contextType.addResource(toResource(resource));
-            }
+            applyResources(request.getResources(), contextType);
         }
         return contextTypeRepository.save(contextType);
     }
@@ -68,12 +62,20 @@ public abstract class GeneratedContextService {
             .orElseThrow(() -> new ResourceNotFoundException("Context '%s' was not found.".formatted(contextId)));
     }
 
-    private ContextResource toResource(String resourceName) {
-        if (resourceName == null || resourceName.isBlank()) {
-            throw new IllegalArgumentException("Resource name is required.");
+    private void applyResources(List<ContextResource> resources, ContextType contextType) {
+        if (resources == null) {
+            return;
         }
-        ContextResource resource = new ContextResource();
-        resource.setResourceName(resourceName.trim());
-        return resource;
+
+        for (ContextResource resourceRequest : resources) {
+            String resourceName = resourceRequest.getResourceName();
+            if (resourceName == null || resourceName.isBlank()) {
+                throw new IllegalArgumentException("Resource name is required.");
+            }
+
+            ContextResource resource = new ContextResource();
+            resource.setResourceName(resourceName.trim());
+            contextType.addResource(resource);
+        }
     }
 }

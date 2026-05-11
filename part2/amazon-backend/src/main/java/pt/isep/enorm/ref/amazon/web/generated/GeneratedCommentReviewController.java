@@ -13,17 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
-import pt.isep.enorm.ref.amazon.domain.CommentMediaReference;
 import pt.isep.enorm.ref.amazon.domain.CommentReview;
 import pt.isep.enorm.ref.amazon.service.CommentReviewService;
-import pt.isep.enorm.ref.amazon.service.command.CreateCommentReviewCommand;
-import pt.isep.enorm.ref.amazon.service.command.MediaReferenceCommand;
-import pt.isep.enorm.ref.amazon.service.command.UpdateCommentReviewCommand;
-import pt.isep.enorm.ref.amazon.web.dto.CommentReviewResponse;
-import pt.isep.enorm.ref.amazon.web.dto.CreateCommentReviewRequest;
-import pt.isep.enorm.ref.amazon.web.dto.MediaReferenceRequest;
-import pt.isep.enorm.ref.amazon.web.dto.MediaReferenceResponse;
-import pt.isep.enorm.ref.amazon.web.dto.UpdateCommentReviewRequest;
 
 public abstract class GeneratedCommentReviewController {
 
@@ -34,30 +25,30 @@ public abstract class GeneratedCommentReviewController {
     }
 
     @GetMapping
-    public List<CommentReviewResponse> listComments(@RequestParam Long productId) {
-        return commentReviewService.listCommentsForProduct(productId).stream()
-            .map(this::toResponse)
-            .toList();
+    public List<CommentReview> listComments(@RequestParam Long productId) {
+        return commentReviewService.listCommentsForProduct(productId);
     }
 
     @GetMapping("/{commentId}")
-    public CommentReviewResponse getComment(@PathVariable Long commentId) {
-        return toResponse(commentReviewService.getComment(commentId));
+    public CommentReview getComment(@PathVariable Long commentId) {
+        return commentReviewService.getComment(commentId);
     }
 
     @PostMapping
-    public ResponseEntity<CommentReviewResponse> createComment(@Valid @RequestBody CreateCommentReviewRequest request) {
-        CommentReview comment = commentReviewService.createComment(toCreateCommand(request));
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(comment));
+    public ResponseEntity<CommentReview> createComment(
+        @RequestParam Long productId,
+        @Valid @RequestBody CommentReview request
+    ) {
+        CommentReview comment = commentReviewService.createComment(productId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
 
     @PutMapping("/{commentId}")
-    public CommentReviewResponse updateComment(
+    public CommentReview updateComment(
         @PathVariable Long commentId,
-        @Valid @RequestBody UpdateCommentReviewRequest request
+        @Valid @RequestBody CommentReview request
     ) {
-        CommentReview comment = commentReviewService.updateComment(commentId, toUpdateCommand(request));
-        return toResponse(comment);
+        return commentReviewService.updateComment(commentId, request);
     }
 
     @DeleteMapping("/{commentId}")
@@ -66,48 +57,4 @@ public abstract class GeneratedCommentReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    protected CreateCommentReviewCommand toCreateCommand(CreateCommentReviewRequest request) {
-        List<MediaReferenceCommand> mediaReferences = request.mediaReferences().stream()
-            .map(this::toCommand)
-            .toList();
-
-        return new CreateCommentReviewCommand(
-            request.commentCode(),
-            request.text(),
-            request.createdAt(),
-            request.productId(),
-            mediaReferences
-        );
-    }
-
-    protected UpdateCommentReviewCommand toUpdateCommand(UpdateCommentReviewRequest request) {
-        List<MediaReferenceCommand> mediaReferences = request.mediaReferences().stream()
-            .map(this::toCommand)
-            .toList();
-
-        return new UpdateCommentReviewCommand(request.text(), request.createdAt(), mediaReferences);
-    }
-
-    protected MediaReferenceCommand toCommand(MediaReferenceRequest request) {
-        return new MediaReferenceCommand(request.mediaType(), request.url());
-    }
-
-    protected CommentReviewResponse toResponse(CommentReview comment) {
-        List<MediaReferenceResponse> mediaReferences = comment.getMediaReferences().stream()
-            .map(this::toMediaReferenceResponse)
-            .toList();
-
-        return new CommentReviewResponse(
-            comment.getId(),
-            comment.getCommentCode(),
-            comment.getText(),
-            comment.getCreatedAt(),
-            comment.getProduct().getId(),
-            mediaReferences
-        );
-    }
-
-    protected MediaReferenceResponse toMediaReferenceResponse(CommentMediaReference mediaReference) {
-        return new MediaReferenceResponse(mediaReference.getId(), mediaReference.getMediaType(), mediaReference.getUrl());
-    }
 }

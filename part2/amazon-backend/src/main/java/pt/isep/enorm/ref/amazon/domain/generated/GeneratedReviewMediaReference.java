@@ -1,5 +1,7 @@
 package pt.isep.enorm.ref.amazon.domain.generated;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,6 +29,7 @@ public abstract class GeneratedReviewMediaReference {
     @Column(nullable = false, length = 1000)
     private String url;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "review_id", nullable = false)
     private ProductReview review;

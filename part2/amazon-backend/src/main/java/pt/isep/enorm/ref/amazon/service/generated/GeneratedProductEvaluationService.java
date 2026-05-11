@@ -17,9 +17,6 @@ import pt.isep.enorm.ref.amazon.domain.enums.VerificationType;
 import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import pt.isep.enorm.ref.amazon.repository.ProductRepository;
 import pt.isep.enorm.ref.amazon.repository.ProductReviewRepository;
-import pt.isep.enorm.ref.amazon.service.command.CreateProductCommand;
-import pt.isep.enorm.ref.amazon.service.command.MediaReferenceCommand;
-import pt.isep.enorm.ref.amazon.service.command.SubmitProductReviewCommand;
 import pt.isep.enorm.ref.amazon.service.projection.ProductRatingSummary;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
@@ -45,41 +42,48 @@ public abstract class GeneratedProductEvaluationService {
     }
 
     @Transactional
-    public Product createProduct(CreateProductCommand command) {
-        validateCreateProductRequest(command);
+    public Product createProduct(Product request) {
+        validateCreateProductRequest(request);
 
         Product product = new Product();
-        product.setName(command.name());
-        product.setDescription(command.description());
-        product.setPrice(command.price());
-        product.setCreatedAt(command.createdAt() == null ? LocalDate.now() : command.createdAt());
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setCreatedAt(request.getCreatedAt() == null ? LocalDate.now() : request.getCreatedAt());
 
         return productRepository.save(product);
     }
 
     @Transactional
-    public ProductReview submitReview(String username, SubmitProductReviewCommand command) {
-        AmazonUser user = loadUserByUsername(username);
-        Product product = loadProduct(command.productId());
+    public ProductReview submitReview(String username, ProductReview request) {
+        if (request.getProduct() == null || request.getProduct().getId() == null) {
+            throw new IllegalArgumentException("Product id is required.");
+        }
 
-        validateReviewRequest(user, product, command);
-        validateBusinessRules(product, user, command);
+        return submitReview(username, request.getProduct().getId(), request);
+    }
+
+    @Transactional
+    public ProductReview submitReview(String username, Long productId, ProductReview request) {
+        AmazonUser user = loadUserByUsername(username);
+        Product product = loadProduct(productId);
+
+        validateReviewRequest(user, product, request);
+        validateBusinessRules(product, user, request);
 
         ProductReview review = new ProductReview();
         boolean verifiedBuyer = isVerifiedBuyerForProduct(user, product);
 
         review.setProduct(product);
         review.setAuthor(user);
-        review.setComment(command.comment());
-        review.setGrade(command.grade());
+        review.setComment(request.getComment());
+        review.setGrade(request.getGrade());
         review.setVerificationType(resolveVerificationType(user, product, verifiedBuyer));
         review.setStatus(resolveReviewStatus(user, product, verifiedBuyer));
         review.setVerifiedBuyerAtSubmission(verifiedBuyer);
         review.setSubmittedAt(Instant.now());
 
-        for (MediaReferenceCommand mediaReferenceCommand : command.mediaReferences()) {
-            review.addMediaReference(toMediaReference(mediaReferenceCommand));
-        }
+        applyMediaReferences(request.getMediaReferences(), review);
 
         ProductReview savedReview = productReviewRepository.save(review);
         afterReviewSubmitted(savedReview);
@@ -95,7 +99,7 @@ public abstract class GeneratedProductEvaluationService {
         return new ProductRatingSummary(productId, roundAverage(average), totalReviews);
     }
 
-    protected void validateBusinessRules(Product product, AmazonUser user, SubmitProductReviewCommand command) {
+    protected void validateBusinessRules(Product product, AmazonUser user, ProductReview request) {
         if (productReviewRepository.existsByProductIdAndAuthorId(product.getId(), user.getId())) {
             throw new IllegalStateException("Each user can only submit one review per product.");
         }
@@ -126,45 +130,53 @@ public abstract class GeneratedProductEvaluationService {
             .orElseThrow(() -> new ResourceNotFoundException("User '%s' was not found.".formatted(username)));
     }
 
-    private void validateCreateProductRequest(CreateProductCommand command) {
-        if (command.name().isBlank()) {
+    private void validateCreateProductRequest(Product request) {
+        if (request.getName() == null || request.getName().isBlank()) {
             throw new IllegalArgumentException("Product name is required.");
         }
 
-        if (command.description().isBlank()) {
+        if (request.getDescription() == null || request.getDescription().isBlank()) {
             throw new IllegalArgumentException("Product description is required.");
         }
 
-        if (command.price().compareTo(BigDecimal.ZERO) <= 0) {
+        if (request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Product price must be greater than zero.");
         }
     }
 
-    private void validateReviewRequest(AmazonUser user, Product product, SubmitProductReviewCommand command) {
-        if (user == null || product == null) {
+    private void validateReviewRequest(AmazonUser user, Product product, ProductReview request) {
+        if (user == null || product == null || request == null) {
             throw new IllegalArgumentException("User and product are required.");
         }
 
-        if (command.grade() < 1 || command.grade() > 5) {
+        if (request.getGrade() < 1 || request.getGrade() > 5) {
             throw new IllegalArgumentException("Grade must be between 1 and 5.");
         }
 
-        if (command.comment().isBlank()) {
+        if (request.getComment() == null || request.getComment().isBlank()) {
             throw new IllegalArgumentException("Comment is required.");
         }
 
-        for (MediaReferenceCommand mediaReferenceCommand : command.mediaReferences()) {
-            if (mediaReferenceCommand.url().isBlank()) {
-                throw new IllegalArgumentException("Media reference URL is required.");
+        if (request.getMediaReferences() != null) {
+            for (ReviewMediaReference mediaReference : request.getMediaReferences()) {
+                if (mediaReference.getUrl() == null || mediaReference.getUrl().isBlank()) {
+                    throw new IllegalArgumentException("Media reference URL is required.");
+                }
             }
         }
     }
 
-    private ReviewMediaReference toMediaReference(MediaReferenceCommand mediaReferenceCommand) {
-        ReviewMediaReference mediaReference = new ReviewMediaReference();
-        mediaReference.setMediaType(mediaReferenceCommand.mediaType());
-        mediaReference.setUrl(mediaReferenceCommand.url());
-        return mediaReference;
+    private void applyMediaReferences(List<ReviewMediaReference> mediaReferences, ProductReview review) {
+        if (mediaReferences == null) {
+            return;
+        }
+
+        for (ReviewMediaReference mediaReferenceRequest : mediaReferences) {
+            ReviewMediaReference mediaReference = new ReviewMediaReference();
+            mediaReference.setMediaType(mediaReferenceRequest.getMediaType());
+            mediaReference.setUrl(mediaReferenceRequest.getUrl());
+            review.addMediaReference(mediaReference);
+        }
     }
 
     private double roundAverage(Double average) {

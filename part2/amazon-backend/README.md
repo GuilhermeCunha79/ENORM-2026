@@ -41,6 +41,8 @@ The application also starts the H2 TCP server on port `9092`.
 
 ## Authentication flow
 
+Requests accept domain entities directly. Only the fields shown below are required.
+
 Register:
 
 ```http
@@ -121,7 +123,7 @@ Content-Type: application/json
 }
 ```
 
-Equivalent product-scoped endpoint:
+Equivalent product-scoped endpoint (product id comes from the path):
 
 ```http
 POST /api/products/14/reviews

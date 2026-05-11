@@ -11,7 +11,6 @@ import pt.isep.enorm.ref.amazon.domain.HelpfulVote;
 import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import pt.isep.enorm.ref.amazon.repository.CommentReviewRepository;
 import pt.isep.enorm.ref.amazon.repository.HelpfulVoteRepository;
-import pt.isep.enorm.ref.amazon.service.command.CreateHelpfulVoteCommand;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -37,14 +36,18 @@ public abstract class GeneratedHelpfulVoteService {
     }
 
     @Transactional
-    public HelpfulVote createVote(String username, CreateHelpfulVoteCommand command) {
+    public HelpfulVote createVote(String username, Long commentId, HelpfulVote request) {
         AmazonUser voter = loadUserByUsername(username);
-        CommentReview comment = loadComment(command.commentId());
+        CommentReview comment = loadComment(commentId);
+
+        if (request.getValue() == null) {
+            throw new IllegalArgumentException("Vote value is required.");
+        }
 
         HelpfulVote vote = new HelpfulVote();
         vote.setVoter(voter);
         vote.setComment(comment);
-        vote.setValue(command.value());
+        vote.setValue(request.getValue());
         vote.setCreatedAt(Instant.now());
 
         return helpfulVoteRepository.save(vote);

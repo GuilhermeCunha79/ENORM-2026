@@ -11,9 +11,6 @@ import pt.isep.enorm.ref.amazon.domain.CommentReview;
 import pt.isep.enorm.ref.amazon.domain.Product;
 import pt.isep.enorm.ref.amazon.repository.CommentReviewRepository;
 import pt.isep.enorm.ref.amazon.repository.ProductRepository;
-import pt.isep.enorm.ref.amazon.service.command.CreateCommentReviewCommand;
-import pt.isep.enorm.ref.amazon.service.command.MediaReferenceCommand;
-import pt.isep.enorm.ref.amazon.service.command.UpdateCommentReviewCommand;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -40,39 +37,34 @@ public abstract class GeneratedCommentReviewService {
     }
 
     @Transactional
-    public CommentReview createComment(CreateCommentReviewCommand command) {
-        Product product = loadProduct(command.productId());
+    public CommentReview createComment(Long productId, CommentReview request) {
+        Product product = loadProduct(productId);
 
         CommentReview comment = new CommentReview();
         comment.setProduct(product);
-        comment.setCommentCode(resolveCommentCode(command.commentCode()));
-        comment.setText(command.text());
-        comment.setCreatedAt(resolveCommentCreatedAt(command.createdAt()));
-
-        for (MediaReferenceCommand mediaReferenceCommand : command.mediaReferences()) {
-            comment.addMediaReference(toMediaReference(mediaReferenceCommand));
-        }
+        comment.setCommentCode(resolveCommentCode(request.getCommentCode()));
+        comment.setText(request.getText());
+        comment.setCreatedAt(resolveCommentCreatedAt(request.getCreatedAt()));
+        applyMediaReferences(request.getMediaReferences(), comment);
 
         return commentReviewRepository.save(comment);
     }
 
     @Transactional
-    public CommentReview updateComment(Long commentId, UpdateCommentReviewCommand command) {
+    public CommentReview updateComment(Long commentId, CommentReview request) {
         CommentReview comment = loadComment(commentId);
 
-        if (command.text() != null && !command.text().isBlank()) {
-            comment.setText(command.text().trim());
+        if (request.getText() != null && !request.getText().isBlank()) {
+            comment.setText(request.getText().trim());
         }
 
-        if (command.createdAt() != null) {
-            comment.setCreatedAt(command.createdAt());
+        if (request.getCreatedAt() != null) {
+            comment.setCreatedAt(request.getCreatedAt());
         }
 
-        if (command.mediaReferences() != null) {
+        if (request.getMediaReferences() != null) {
             comment.getMediaReferences().clear();
-            for (MediaReferenceCommand mediaReferenceCommand : command.mediaReferences()) {
-                comment.addMediaReference(toMediaReference(mediaReferenceCommand));
-            }
+            applyMediaReferences(request.getMediaReferences(), comment);
         }
 
         return commentReviewRepository.save(comment);
@@ -105,10 +97,16 @@ public abstract class GeneratedCommentReviewService {
         return createdAt == null ? LocalDate.now() : createdAt;
     }
 
-    private CommentMediaReference toMediaReference(MediaReferenceCommand mediaReferenceCommand) {
-        CommentMediaReference mediaReference = new CommentMediaReference();
-        mediaReference.setMediaType(mediaReferenceCommand.mediaType());
-        mediaReference.setUrl(mediaReferenceCommand.url());
-        return mediaReference;
+    private void applyMediaReferences(List<CommentMediaReference> mediaReferences, CommentReview comment) {
+        if (mediaReferences == null) {
+            return;
+        }
+
+        for (CommentMediaReference mediaReferenceRequest : mediaReferences) {
+            CommentMediaReference mediaReference = new CommentMediaReference();
+            mediaReference.setMediaType(mediaReferenceRequest.getMediaType());
+            mediaReference.setUrl(mediaReferenceRequest.getUrl());
+            comment.addMediaReference(mediaReference);
+        }
     }
 }

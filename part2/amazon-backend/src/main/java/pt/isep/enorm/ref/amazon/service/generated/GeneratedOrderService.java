@@ -13,9 +13,6 @@ import pt.isep.enorm.ref.amazon.domain.Product;
 import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import pt.isep.enorm.ref.amazon.repository.OrderRepository;
 import pt.isep.enorm.ref.amazon.repository.ProductRepository;
-import pt.isep.enorm.ref.amazon.service.command.CreateOrderCommand;
-import pt.isep.enorm.ref.amazon.service.command.OrderItemCommand;
-import pt.isep.enorm.ref.amazon.service.command.UpdateOrderCommand;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -47,38 +44,42 @@ public abstract class GeneratedOrderService {
     }
 
     @Transactional
-    public Order createOrder(String username, CreateOrderCommand command) {
+    public Order createOrder(String username, Order request) {
         AmazonUser buyer = loadUserByUsername(username);
 
         Order order = new Order();
         order.setBuyer(buyer);
-        order.setOrderCode(resolveOrderCode(command.orderCode()));
-        order.setOrderDate(resolveOrderDate(command.orderDate()));
+        order.setOrderCode(resolveOrderCode(request.getOrderCode()));
+        order.setOrderDate(resolveOrderDate(request.getOrderDate()));
 
-        for (OrderItemCommand itemCommand : command.items()) {
-            order.addItem(toOrderItem(itemCommand));
+        if (request.getItems() == null || request.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Order items are required.");
+        }
+
+        for (OrderItem itemRequest : request.getItems()) {
+            order.addItem(toOrderItem(itemRequest));
         }
 
         return orderRepository.save(order);
     }
 
     @Transactional
-    public Order updateOrder(Long orderId, String username, UpdateOrderCommand command) {
+    public Order updateOrder(Long orderId, String username, Order request) {
         Order order = loadOrder(orderId);
         ensureOwner(order, username);
 
-        if (command.orderCode() != null && !command.orderCode().isBlank()) {
-            order.setOrderCode(command.orderCode().trim());
+        if (request.getOrderCode() != null && !request.getOrderCode().isBlank()) {
+            order.setOrderCode(request.getOrderCode().trim());
         }
 
-        if (command.orderDate() != null) {
-            order.setOrderDate(command.orderDate());
+        if (request.getOrderDate() != null) {
+            order.setOrderDate(request.getOrderDate());
         }
 
-        if (command.items() != null && !command.items().isEmpty()) {
+        if (request.getItems() != null && !request.getItems().isEmpty()) {
             order.getItems().clear();
-            for (OrderItemCommand itemCommand : command.items()) {
-                order.addItem(toOrderItem(itemCommand));
+            for (OrderItem itemRequest : request.getItems()) {
+                order.addItem(toOrderItem(itemRequest));
             }
         }
 
@@ -92,15 +93,19 @@ public abstract class GeneratedOrderService {
         orderRepository.delete(order);
     }
 
-    private OrderItem toOrderItem(OrderItemCommand itemCommand) {
-        Product product = loadProduct(itemCommand.productId());
-        if (itemCommand.quantity() <= 0) {
+    private OrderItem toOrderItem(OrderItem itemRequest) {
+        if (itemRequest.getProduct() == null || itemRequest.getProduct().getId() == null) {
+            throw new IllegalArgumentException("Order item product is required.");
+        }
+
+        Product product = loadProduct(itemRequest.getProduct().getId());
+        if (itemRequest.getQuantity() == null || itemRequest.getQuantity() <= 0) {
             throw new IllegalArgumentException("Order item quantity must be positive.");
         }
 
         OrderItem item = new OrderItem();
         item.setProduct(product);
-        item.setQuantity(itemCommand.quantity());
+        item.setQuantity(itemRequest.getQuantity());
         return item;
     }
 

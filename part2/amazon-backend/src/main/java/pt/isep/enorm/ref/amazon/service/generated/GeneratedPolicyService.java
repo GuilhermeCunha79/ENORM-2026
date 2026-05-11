@@ -21,14 +21,6 @@ import pt.isep.enorm.ref.amazon.repository.ModerationPolicyRepository;
 import pt.isep.enorm.ref.amazon.repository.SortingPolicyRepository;
 import pt.isep.enorm.ref.amazon.repository.ValidationRuleRepository;
 import pt.isep.enorm.ref.amazon.repository.VerificationPolicyRepository;
-import pt.isep.enorm.ref.amazon.service.command.AutomationActionCommand;
-import pt.isep.enorm.ref.amazon.service.command.AutomationConditionCommand;
-import pt.isep.enorm.ref.amazon.service.command.AutomationRuleCommand;
-import pt.isep.enorm.ref.amazon.service.command.AuthorizationRuleCommand;
-import pt.isep.enorm.ref.amazon.service.command.ModerationPolicyCommand;
-import pt.isep.enorm.ref.amazon.service.command.SortingPolicyCommand;
-import pt.isep.enorm.ref.amazon.service.command.ValidationRuleCommand;
-import pt.isep.enorm.ref.amazon.service.command.VerificationPolicyCommand;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -69,16 +61,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public SortingPolicy createSortingPolicy(SortingPolicyCommand command) {
+    public SortingPolicy createSortingPolicy(SortingPolicy request) {
         SortingPolicy policy = new SortingPolicy();
-        applySortingPolicy(policy, command);
+        applySortingPolicy(policy, request);
         return sortingPolicyRepository.save(policy);
     }
 
     @Transactional
-    public SortingPolicy updateSortingPolicy(Long policyId, SortingPolicyCommand command) {
+    public SortingPolicy updateSortingPolicy(Long policyId, SortingPolicy request) {
         SortingPolicy policy = loadSortingPolicy(policyId);
-        applySortingPolicy(policy, command);
+        applySortingPolicy(policy, request);
         return sortingPolicyRepository.save(policy);
     }
 
@@ -96,16 +88,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public ValidationRule createValidationRule(ValidationRuleCommand command) {
+    public ValidationRule createValidationRule(ValidationRule request) {
         ValidationRule rule = new ValidationRule();
-        applyValidationRule(rule, command);
+        applyValidationRule(rule, request);
         return validationRuleRepository.save(rule);
     }
 
     @Transactional
-    public ValidationRule updateValidationRule(Long ruleId, ValidationRuleCommand command) {
+    public ValidationRule updateValidationRule(Long ruleId, ValidationRule request) {
         ValidationRule rule = loadValidationRule(ruleId);
-        applyValidationRule(rule, command);
+        applyValidationRule(rule, request);
         return validationRuleRepository.save(rule);
     }
 
@@ -123,16 +115,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public ModerationPolicy createModerationPolicy(ModerationPolicyCommand command) {
+    public ModerationPolicy createModerationPolicy(ModerationPolicy request) {
         ModerationPolicy policy = new ModerationPolicy();
-        applyModerationPolicy(policy, command);
+        applyModerationPolicy(policy, request);
         return moderationPolicyRepository.save(policy);
     }
 
     @Transactional
-    public ModerationPolicy updateModerationPolicy(Long policyId, ModerationPolicyCommand command) {
+    public ModerationPolicy updateModerationPolicy(Long policyId, ModerationPolicy request) {
         ModerationPolicy policy = loadModerationPolicy(policyId);
-        applyModerationPolicy(policy, command);
+        applyModerationPolicy(policy, request);
         return moderationPolicyRepository.save(policy);
     }
 
@@ -150,16 +142,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public VerificationPolicy createVerificationPolicy(VerificationPolicyCommand command) {
+    public VerificationPolicy createVerificationPolicy(VerificationPolicy request) {
         VerificationPolicy policy = new VerificationPolicy();
-        applyVerificationPolicy(policy, command);
+        applyVerificationPolicy(policy, request);
         return verificationPolicyRepository.save(policy);
     }
 
     @Transactional
-    public VerificationPolicy updateVerificationPolicy(Long policyId, VerificationPolicyCommand command) {
+    public VerificationPolicy updateVerificationPolicy(Long policyId, VerificationPolicy request) {
         VerificationPolicy policy = loadVerificationPolicy(policyId);
-        applyVerificationPolicy(policy, command);
+        applyVerificationPolicy(policy, request);
         return verificationPolicyRepository.save(policy);
     }
 
@@ -177,16 +169,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public AuthorizationRule createAuthorizationRule(AuthorizationRuleCommand command) {
+    public AuthorizationRule createAuthorizationRule(AuthorizationRule request) {
         AuthorizationRule rule = new AuthorizationRule();
-        applyAuthorizationRule(rule, command);
+        applyAuthorizationRule(rule, request);
         return authorizationRuleRepository.save(rule);
     }
 
     @Transactional
-    public AuthorizationRule updateAuthorizationRule(Long ruleId, AuthorizationRuleCommand command) {
+    public AuthorizationRule updateAuthorizationRule(Long ruleId, AuthorizationRule request) {
         AuthorizationRule rule = loadAuthorizationRule(ruleId);
-        applyAuthorizationRule(rule, command);
+        applyAuthorizationRule(rule, request);
         return authorizationRuleRepository.save(rule);
     }
 
@@ -204,16 +196,16 @@ public abstract class GeneratedPolicyService {
     }
 
     @Transactional
-    public AutomationRule createAutomationRule(AutomationRuleCommand command) {
+    public AutomationRule createAutomationRule(AutomationRule request) {
         AutomationRule rule = new AutomationRule();
-        applyAutomationRule(rule, command);
+        applyAutomationRule(rule, request);
         return automationRuleRepository.save(rule);
     }
 
     @Transactional
-    public AutomationRule updateAutomationRule(Long ruleId, AutomationRuleCommand command) {
+    public AutomationRule updateAutomationRule(Long ruleId, AutomationRule request) {
         AutomationRule rule = loadAutomationRule(ruleId);
-        applyAutomationRule(rule, command);
+        applyAutomationRule(rule, request);
         return automationRuleRepository.save(rule);
     }
 
@@ -222,109 +214,120 @@ public abstract class GeneratedPolicyService {
         automationRuleRepository.delete(loadAutomationRule(ruleId));
     }
 
-    private void applySortingPolicy(SortingPolicy policy, SortingPolicyCommand command) {
-        policy.setName(command.name());
-        policy.setCriterion(command.criterion());
-        policy.setDirection(command.direction());
-        policy.setAppliesToResource(command.appliesToResource());
-        policy.setAppliesToFeedback(command.appliesToFeedback());
-        policy.setContext(resolveContext(command.contextId()));
+    private void applySortingPolicy(SortingPolicy policy, SortingPolicy request) {
+        policy.setName(request.getName());
+        policy.setCriterion(request.getCriterion());
+        policy.setDirection(request.getDirection());
+        policy.setAppliesToResource(request.getAppliesToResource());
+        policy.setAppliesToFeedback(request.getAppliesToFeedback());
+        policy.setContext(resolveContext(request.getContext()));
     }
 
-    private void applyValidationRule(ValidationRule rule, ValidationRuleCommand command) {
-        rule.setName(command.name());
-        rule.setKind(command.kind());
-        rule.setSeverity(command.severity());
-        rule.setExpression(command.expression());
-        rule.setImplementationId(command.implementationId());
-        rule.setAppliesToResource(command.appliesToResource());
-        rule.setAppliesToFeedback(command.appliesToFeedback());
-        rule.setAppliesToRole(command.appliesToRole());
-        if (command.invokedByRuleId() != null) {
-            rule.setInvokedBy(loadAutomationRule(command.invokedByRuleId()));
-        }
+    private void applyValidationRule(ValidationRule rule, ValidationRule request) {
+        rule.setName(request.getName());
+        rule.setKind(request.getKind());
+        rule.setSeverity(request.getSeverity());
+        rule.setExpression(request.getExpression());
+        rule.setImplementationId(request.getImplementationId());
+        rule.setAppliesToResource(request.getAppliesToResource());
+        rule.setAppliesToFeedback(request.getAppliesToFeedback());
+        rule.setAppliesToRole(request.getAppliesToRole());
+        rule.setInvokedBy(resolveAutomationRule(request.getInvokedBy()));
     }
 
-    private void applyModerationPolicy(ModerationPolicy policy, ModerationPolicyCommand command) {
-        policy.setName(command.name());
-        policy.setMode(command.mode());
-        policy.setTrigger(command.trigger());
-        policy.setDecision(command.decision());
-        policy.setMonitorsResource(command.monitorsResource());
-        policy.setMonitorsFeedback(command.monitorsFeedback());
-        policy.setExecutedByRole(command.executedByRole());
-        policy.setContext(resolveContext(command.contextId()));
+    private void applyModerationPolicy(ModerationPolicy policy, ModerationPolicy request) {
+        policy.setName(request.getName());
+        policy.setMode(request.getMode());
+        policy.setTrigger(request.getTrigger());
+        policy.setDecision(request.getDecision());
+        policy.setMonitorsResource(request.getMonitorsResource());
+        policy.setMonitorsFeedback(request.getMonitorsFeedback());
+        policy.setExecutedByRole(request.getExecutedByRole());
+        policy.setContext(resolveContext(request.getContext()));
     }
 
-    private void applyVerificationPolicy(VerificationPolicy policy, VerificationPolicyCommand command) {
-        policy.setName(command.name());
-        policy.setMode(command.mode());
-        policy.setAppliesWhen(command.appliesWhen());
-        policy.setVerifiesFeedback(command.verifiesFeedback());
+    private void applyVerificationPolicy(VerificationPolicy policy, VerificationPolicy request) {
+        policy.setName(request.getName());
+        policy.setMode(request.getMode());
+        policy.setAppliesWhen(request.getAppliesWhen());
+        policy.setVerifiesFeedback(request.getVerifiesFeedback());
     }
 
-    private void applyAuthorizationRule(AuthorizationRule rule, AuthorizationRuleCommand command) {
-        rule.setName(command.name());
-        rule.setAllowedAction(command.allowedAction());
-        rule.setActorRole(command.actorRole());
-        rule.setResourceTarget(command.resourceTarget());
-        rule.setFeedbackTarget(command.feedbackTarget());
-        rule.setContext(resolveContext(command.contextId()));
+    private void applyAuthorizationRule(AuthorizationRule rule, AuthorizationRule request) {
+        rule.setName(request.getName());
+        rule.setAllowedAction(request.getAllowedAction());
+        rule.setActorRole(request.getActorRole());
+        rule.setResourceTarget(request.getResourceTarget());
+        rule.setFeedbackTarget(request.getFeedbackTarget());
+        rule.setContext(resolveContext(request.getContext()));
     }
 
-    private void applyAutomationRule(AutomationRule rule, AutomationRuleCommand command) {
-        rule.setName(command.name());
-        rule.setTrigger(command.trigger());
-        rule.setContextResource(command.contextResource());
-        rule.setOnFeedback(command.onFeedback());
-        rule.setContext(resolveContext(command.contextId()));
-        rule.setUsesValidation(resolveValidation(command.usesValidationId()));
+    private void applyAutomationRule(AutomationRule rule, AutomationRule request) {
+        rule.setName(request.getName());
+        rule.setTrigger(request.getTrigger());
+        rule.setContextResource(request.getContextResource());
+        rule.setOnFeedback(request.getOnFeedback());
+        rule.setContext(resolveContext(request.getContext()));
+        rule.setUsesValidation(resolveValidation(request.getUsesValidation()));
 
         rule.getConditions().clear();
-        for (AutomationConditionCommand conditionCommand : command.conditions()) {
-            rule.addCondition(toCondition(conditionCommand));
+        if (request.getConditions() != null) {
+            for (AutomationCondition conditionRequest : request.getConditions()) {
+                rule.addCondition(toCondition(conditionRequest));
+            }
         }
 
         rule.getActions().clear();
-        for (AutomationActionCommand actionCommand : command.actions()) {
-            rule.addAction(toAction(actionCommand));
+        if (request.getActions() != null) {
+            for (AutomationAction actionRequest : request.getActions()) {
+                rule.addAction(toAction(actionRequest));
+            }
         }
     }
 
-    private AutomationCondition toCondition(AutomationConditionCommand command) {
+    private AutomationCondition toCondition(AutomationCondition request) {
         AutomationCondition condition = new AutomationCondition();
-        condition.setName(command.name());
-        condition.setAttributeName(command.attributeName());
-        condition.setOperator(command.operator());
-        for (String value : command.values()) {
-            ConditionValue conditionValue = new ConditionValue();
-            conditionValue.setValue(value);
-            condition.addValue(conditionValue);
+        condition.setName(request.getName());
+        condition.setAttributeName(request.getAttributeName());
+        condition.setOperator(request.getOperator());
+        if (request.getValues() != null) {
+            for (ConditionValue valueRequest : request.getValues()) {
+                ConditionValue conditionValue = new ConditionValue();
+                conditionValue.setValue(valueRequest.getValue());
+                condition.addValue(conditionValue);
+            }
         }
         return condition;
     }
 
-    private AutomationAction toAction(AutomationActionCommand command) {
+    private AutomationAction toAction(AutomationAction request) {
         AutomationAction action = new AutomationAction();
-        action.setName(command.name());
-        action.setKind(command.kind());
-        action.setMessage(command.message());
+        action.setName(request.getName());
+        action.setKind(request.getKind());
+        action.setMessage(request.getMessage());
         return action;
     }
 
-    private ContextType resolveContext(Long contextId) {
-        if (contextId == null) {
+    private ContextType resolveContext(ContextType requestContext) {
+        if (requestContext == null || requestContext.getId() == null) {
             return null;
         }
-        return contextTypeRepository.findById(contextId)
-            .orElseThrow(() -> new ResourceNotFoundException("Context '%s' was not found.".formatted(contextId)));
+        return contextTypeRepository.findById(requestContext.getId())
+            .orElseThrow(() -> new ResourceNotFoundException("Context '%s' was not found.".formatted(requestContext.getId())));
     }
 
-    private ValidationRule resolveValidation(Long validationId) {
-        if (validationId == null) {
+    private ValidationRule resolveValidation(ValidationRule requestValidation) {
+        if (requestValidation == null || requestValidation.getId() == null) {
             return null;
         }
-        return loadValidationRule(validationId);
+        return loadValidationRule(requestValidation.getId());
+    }
+
+    private AutomationRule resolveAutomationRule(AutomationRule requestRule) {
+        if (requestRule == null || requestRule.getId() == null) {
+            return null;
+        }
+        return loadAutomationRule(requestRule.getId());
     }
 
     private SortingPolicy loadSortingPolicy(Long policyId) {

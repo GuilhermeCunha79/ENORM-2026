@@ -1,5 +1,7 @@
 package pt.isep.enorm.ref.amazon.domain.generated;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,6 +21,7 @@ public abstract class GeneratedAmazonUser {
     @Column(nullable = false, unique = true, length = 80)
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 200)
     private String password;
 

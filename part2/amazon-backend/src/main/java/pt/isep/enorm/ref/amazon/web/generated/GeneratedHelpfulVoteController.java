@@ -15,9 +15,6 @@ import jakarta.validation.Valid;
 import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.domain.HelpfulVote;
 import pt.isep.enorm.ref.amazon.service.HelpfulVoteService;
-import pt.isep.enorm.ref.amazon.service.command.CreateHelpfulVoteCommand;
-import pt.isep.enorm.ref.amazon.web.dto.CreateHelpfulVoteRequest;
-import pt.isep.enorm.ref.amazon.web.dto.HelpfulVoteResponse;
 
 public abstract class GeneratedHelpfulVoteController {
 
@@ -28,20 +25,18 @@ public abstract class GeneratedHelpfulVoteController {
     }
 
     @GetMapping
-    public List<HelpfulVoteResponse> listVotes(@PathVariable Long commentId) {
-        return helpfulVoteService.listVotesForComment(commentId).stream()
-            .map(this::toResponse)
-            .toList();
+    public List<HelpfulVote> listVotes(@PathVariable Long commentId) {
+        return helpfulVoteService.listVotesForComment(commentId);
     }
 
     @PostMapping
-    public ResponseEntity<HelpfulVoteResponse> createVote(
+    public ResponseEntity<HelpfulVote> createVote(
         @AuthenticationPrincipal AmazonUser currentUser,
         @PathVariable Long commentId,
-        @Valid @RequestBody CreateHelpfulVoteRequest request
+        @Valid @RequestBody HelpfulVote request
     ) {
-        HelpfulVote vote = helpfulVoteService.createVote(currentUser.getUsername(), new CreateHelpfulVoteCommand(commentId, request.value()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(vote));
+        HelpfulVote vote = helpfulVoteService.createVote(currentUser.getUsername(), commentId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vote);
     }
 
     @DeleteMapping("/{voteId}")
@@ -50,13 +45,4 @@ public abstract class GeneratedHelpfulVoteController {
         return ResponseEntity.noContent().build();
     }
 
-    protected HelpfulVoteResponse toResponse(HelpfulVote vote) {
-        return new HelpfulVoteResponse(
-            vote.getId(),
-            vote.getComment().getId(),
-            vote.getValue(),
-            vote.getVoter().getUsername(),
-            vote.getCreatedAt()
-        );
-    }
 }
