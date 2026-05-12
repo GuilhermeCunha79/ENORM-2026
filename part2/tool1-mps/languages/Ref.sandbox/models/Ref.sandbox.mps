@@ -148,9 +148,13 @@
       <concept id="3890156942413033156" name="Ref.structure.ResourceType" flags="ng" index="3$Wff$">
         <property id="4020620510182583082" name="supportsMedia" index="1LQjoB" />
         <child id="8641311204900368822" name="attribute" index="2In6HR" />
+        <child id="746375748528706428" name="superType" index="3UnFIP" />
       </concept>
       <concept id="746375748528706429" name="Ref.structure.UserTypeSuperType" flags="ng" index="3UnFIO">
         <reference id="746375748528706430" name="superType" index="3UnFIR" />
+      </concept>
+      <concept id="746375748528706422" name="Ref.structure.ResourceTypeSuperType" flags="ng" index="3UnFIZ">
+        <reference id="746375748528706424" name="superType" index="3UnFIL" />
       </concept>
     </language>
   </registry>
@@ -329,6 +333,9 @@
     </node>
     <node concept="3$Wff$" id="47EFX_nz$Pq" role="2IgU2D">
       <property role="TrG5h" value="Product" />
+      <node concept="3UnFIZ" id="12pq0dfEGg5" role="3UnFIP">
+        <ref role="3UnFIL" node="47EFX_nz$Pu" resolve="Order" />
+      </node>
       <node concept="2IgU2X" id="47EFX_nz$Pr" role="2In6HR">
         <property role="TrG5h" value="Id" />
         <property role="2IgU2Y" value="true" />
@@ -386,12 +393,14 @@
     <node concept="3$Wfe3" id="47EFX_nz$Pl" role="nroh4">
       <property role="TrG5h" value="Reviewer" />
       <property role="2InxW3" value="7vG6G7pGwmX/GENERIC" />
+      <node concept="3UnFIO" id="12pq0dfDu5C" role="3UnFH9">
+        <ref role="3UnFIR" node="47EFX_nz$Pm" resolve="Buyer" />
+      </node>
     </node>
     <node concept="3$Wfe3" id="47EFX_nz$Pm" role="nroh4">
       <property role="TrG5h" value="Buyer" />
       <property role="2InxW3" value="7vG6G7pGwmY/BUYER" />
-      <node concept="3UnFIO" id="47EFX_nz$Pn" role="3UnFH9">
-        <property role="TrG5h" value="BuyerIsReviewer" />
+      <node concept="3UnFIO" id="12pq0dfDZEA" role="3UnFH9">
         <ref role="3UnFIR" node="47EFX_nz$Pl" resolve="Reviewer" />
       </node>
     </node>
@@ -403,23 +412,26 @@
       <property role="TrG5h" value="Moderator" />
       <property role="2InxW3" value="7vG6G7pGwn1/MODERATOR" />
     </node>
+    <node concept="3$Wfe3" id="12pq0df$1oU" role="nroh4">
+      <property role="TrG5h" value="Lol" />
+      <property role="2InxW3" value="7vG6G7pGwmZ/SELLER" />
+      <node concept="3UnFIO" id="12pq0dfDZE_" role="3UnFH9">
+        <ref role="3UnFIR" node="47EFX_nz$Pl" resolve="Reviewer" />
+      </node>
+    </node>
     <node concept="3$WfeV" id="47EFX_nz$Pa" role="3$WffE">
       <property role="TrG5h" value="CatalogContext" />
       <property role="2InxXR" value="7vG6G7pGwmP/CATALOG" />
       <node concept="28hnH9" id="47EFX_nz$Pb" role="28hnHc">
-        <property role="TrG5h" value="CatalogProductLink" />
         <ref role="28hnH2" node="47EFX_nz$Pq" resolve="Product" />
       </node>
       <node concept="28hnH9" id="47EFX_nz$Pd" role="28hnHc">
-        <property role="TrG5h" value="CatalogOrderLink" />
         <ref role="28hnH2" node="47EFX_nz$Pu" resolve="Order" />
       </node>
       <node concept="28hnH9" id="47EFX_nz$Pe" role="28hnHc">
-        <property role="TrG5h" value="CatalogOrderItemLink" />
         <ref role="28hnH2" node="47EFX_nz$Px" resolve="OrderItem" />
       </node>
       <node concept="28hnH9" id="47EFX_nz$PQ" role="28hnHc">
-        <property role="TrG5h" value="CatalogCommentLink" />
         <ref role="28hnH2" node="47EFX_nz$PF" resolve="CommentReview" />
       </node>
     </node>
@@ -427,7 +439,6 @@
       <property role="TrG5h" value="ModerationContext" />
       <property role="2InxXR" value="7vG6G7pGwmP/CATALOG" />
       <node concept="28hnH9" id="47EFX_nz$Pg" role="28hnHc">
-        <property role="TrG5h" value="ModerationProductLink" />
         <ref role="28hnH2" node="47EFX_nz$Pq" resolve="Product" />
       </node>
     </node>
@@ -435,7 +446,6 @@
       <property role="TrG5h" value="SearchContext" />
       <property role="2InxXR" value="7vG6G7pGwmP/CATALOG" />
       <node concept="28hnH9" id="47EFX_nz$Pi" role="28hnHc">
-        <property role="TrG5h" value="SearchProductLink" />
         <ref role="28hnH2" node="47EFX_nz$Pq" resolve="Product" />
       </node>
     </node>
@@ -443,7 +453,6 @@
       <property role="TrG5h" value="RecommendationContext" />
       <property role="2InxXR" value="7vG6G7pGwmP/CATALOG" />
       <node concept="28hnH9" id="47EFX_nz$Pk" role="28hnHc">
-        <property role="TrG5h" value="RecommendationProductLink" />
         <ref role="28hnH2" node="47EFX_nz$Pq" resolve="Product" />
       </node>
     </node>
@@ -686,8 +695,7 @@
     <node concept="3$Wfe3" id="77Q8YzlE6Iu" role="nroh4">
       <property role="TrG5h" value="Moderator" />
       <property role="2InxW3" value="7vG6G7pGwn1/MODERATOR" />
-      <node concept="3UnFIO" id="77Q8YzlE6Iv" role="3UnFH9">
-        <property role="TrG5h" value="ModeratorIsUser" />
+      <node concept="3UnFIO" id="12pq0dfRn7Z" role="3UnFH9">
         <ref role="3UnFIR" node="77Q8YzlE6It" resolve="User" />
       </node>
     </node>
@@ -695,15 +703,12 @@
       <property role="TrG5h" value="CommunityContext" />
       <property role="2InxXR" value="7vG6G7pGwmN/COMMUNITY" />
       <node concept="28hnH9" id="77Q8YzlE6Iq" role="28hnHc">
-        <property role="TrG5h" value="CommunitySubredditLink" />
         <ref role="28hnH2" node="77Q8YzlE6Iw" resolve="Subreddit" />
       </node>
       <node concept="28hnH9" id="77Q8YzlE6Ir" role="28hnHc">
-        <property role="TrG5h" value="CommunityPostLink" />
         <ref role="28hnH2" node="77Q8YzlE6I$" resolve="Post" />
       </node>
       <node concept="28hnH9" id="77Q8YzlE6Is" role="28hnHc">
-        <property role="TrG5h" value="CommunityCommentLink" />
         <ref role="28hnH2" node="77Q8YzlE6IE" resolve="Comment" />
       </node>
     </node>
