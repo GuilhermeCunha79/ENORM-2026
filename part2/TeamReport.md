@@ -23,8 +23,53 @@ Tool-specific implementation details remain in each individual tool report.
 ## 2. Activity 1 - Design Concrete Syntax for the DSL
 
 ### 2.1 Graphical notation
+The Sirius editor is used to provide a single overview diagram for each REF model instance. The diagram is centered on 
+the `RefModel` root and shows the model as a navigable canvas with typed nodes, labeled connectors, and visual grouping by concern.
+The goal is to make the model readable for a domain expert without exposing implementation details. Each metamodel element
+is represented with a compact shape, a clear label, and a small set of visual cues for type and relationship semantics.
 
-TODO
+#### Diagram structure
+- The root element is `RefModel`, shown as a large container node with the model name and version in its title.
+- The remaining elements are displayed as typed nodes placed around the root and organized by functional area: actors, structure, feedback, and governance/behavior.
+- Relationships are drawn as directed edges between typed nodes. Containment and optional references use different line styles so the meaning is visible at a glance.
+- Enumerated properties are rendered inside the node label or as a short secondary line, instead of creating separate nodes.
+
+#### Visual mapping by metamodel element
+| Metamodel element | Graphical representation in Sirius |
+|---|---|
+| `RefModel` | Large root container / overview frame titled with `<name> (v<version>)`. It acts as the diagram entry point and groups all other elements. |
+| `UserType` | Square node with a blue actor-style accent. Label shows the user type name; `kind` is shown as a short property line when needed. |
+| `ContextType` | Square node used as a context container, with a neutral gray fill. Label shows the context name and `kind`. |
+| `ResourceType` | Square node with orange accent to represent domain entities. Attributes are displayed inside the same node as a compartment-style list. |
+| `Attribute` | Small row/line inside the owning `ResourceType` node using `name : type` plus markers such as `required` and `multiValued`. |
+| `ResourceRelation` | Directed edge between two `ResourceType` nodes. The edge label shows the relation name and cardinalities; containment and recursion are rendered with edge decoration or line style. |
+| `FeedbackType` | Square node with green accent to identify feedback families such as comments, reviews, votes, or reports. |
+| `FeedbackDefinition` | Distinct node linked to its `FeedbackType`, author, and subject. The label shows the feedback name; policy and rating data are shown as short inline details. |
+| `FeedbackPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node. The status is shown directly as `enabled` or `disabled`. |
+| `RatingPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node, showing the rating range as `min..max`. |
+| `AuthorizationRule` | Square node with a blue governance accent. The label includes the allowed action, and edges connect it to the actor, context, resource, and optional feedback target. |
+| `ValidationRule` | Square node with a green validation accent. The label shows the rule name and severity; optional links indicate the affected resource, feedback, and invoking automation. |
+| `ModerationPolicy` | Square node with a yellow moderation accent. The node label shows the policy name, and edges connect the monitored resource, monitored feedback, executor, and optional context. |
+| `AutomationRule` | Square node with a light-purple behavior accent. The label includes the rule name and trigger event; nested `Condition` and `Action` nodes are shown as owned children. |
+| `Condition` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the condition name and operator. |
+| `ConditionValue` | Leaf child node under `Condition`, used when a condition has nested values or a value tree. |
+| `Action` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the action name and result kind. |
+| `VerificationPolicy` | Square node with a cyan verification accent. The label shows the policy name and the verification mode. |
+| `SortingPolicy` | Square node with a light-blue sorting accent. The label shows the policy name together with the criterion and direction. |
+
+#### Relationship notation
+- Solid arrows represent mandatory typed references, such as a feedback definition pointing to its type or author.
+- Dashed arrows represent optional references, such as optional context, optional feedback targets, or optional subject links.
+- Containment uses a stronger composite visual treatment, especially for owned `Attribute`, `Condition`, and `Action` elements.
+- Self-relations and recursive relations are drawn with explicit labels so the reader can distinguish hierarchy from recursion.
+- Edges are color-coded by concern: actor/security links, structure links, feedback links, moderation/validation links, and automation/sorting links.
+
+#### How this supports the domain expert
+The editor keeps the same vocabulary as the metamodel, but the diagram removes most technical noise. A domain expert can 
+scan the model by reading the main nodes first, then inspect the connectors to understand who can act, what is being 
+described, and which rules govern the scenario. This makes the Sirius diagram suitable both for validation sessions and 
+for scenario comparison across YouTube, Amazon, and Reddit models.
+
 
 ### 2.2 Textual notation
 
