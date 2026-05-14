@@ -55,8 +55,9 @@ Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio
 - PrimitiveType: tipos primitivos de dados.
 - FeedbackKind: categorias de feedback.
 - FeedbackSubjectScope: define se o alvo do feedback é recurso, feedback ou ambos.
+- FeedbackPolarity: polaridade do feedback (ex. gosto/não gosto).
 - FeedbackStatus: estado operacional do feedback.
-- RatingScaleKind: formato da escala de rating.
+- VerificationRequirement: requisito de verificação do feedback.
 - ValidationKind: validação automática ou manual.
 - RuleSeverity: impacto da regra de validação.
 - ModerationMode: modo de moderação.
@@ -69,7 +70,7 @@ Isto permite cobrir, no mesmo metamodelo, estrutura de dados, regras de negócio
 
 - `Product`, `Order`, `OrderItem` e `ProductReview` mapeiam para `ResourceType` e `FeedbackDefinition`.
 - Regras de compra verificada e unicidade de review por autor/alvo mapeiam para `FeedbackDefinition.requiresVerifiedContext` e `FeedbackDefinition.uniquePerAuthorTarget`.
-- Escala 1..5 mapeia para `RatingPolicy` (`minValue`, `maxValue`, `step`, `scaleKind`).
+- Escala 1..5 mapeia para `RatingPolicy` (`minValue`, `maxValue`, `step`).
 - Moderação de reviews mapeia para `ModerationPolicy` e `ValidationRule`.
 
 ### 3.2 YouTube
@@ -151,16 +152,21 @@ Permite representar associações entre recursos (incluindo hierarquias e auto-r
 - `subjectScope: FeedbackSubjectScope`
 - `hasRating: boolean`
 - `recursive: boolean`
+- `allowsText: boolean`
 - `allowsMedia: boolean`
+- `polarity: FeedbackPolarity`
 
 `FeedbackKind`: `COMMENT`, `REVIEW`, `REACTION`, `VOTE`, `REPORT`, `SUBSCRIPTION`.
 
 `FeedbackSubjectScope`: `RESOURCE_ONLY`, `FEEDBACK_ONLY`, `RESOURCE_OR_FEEDBACK`.
 
+`FeedbackPolarity`: `NONE`, `LIKE_DISLIKE`, `UP_DOWN`.
+
 #### FeedbackDefinition
 
 - `name: String`
 - `requiresVerifiedContext: boolean`
+- `verificationRequirement: VerificationRequirement`
 - `uniquePerAuthorTarget: boolean`
 - referência para `FeedbackType` (`type`)
 - referência para `ResourceType` (`subjectResource`, opcional)
@@ -174,14 +180,13 @@ Permite representar associações entre recursos (incluindo hierarquias e auto-r
 
 `FeedbackStatus`: `ENABLED`, `DISABLED`.
 
+`VerificationRequirement`: `NONE`, `OPTIONAL`, `REQUIRED`.
+
 #### RatingPolicy
 
 - `minValue: Number`
 - `maxValue: Number`
 - `step: Number`
-- `scaleKind: RatingScaleKind`
-
-`RatingScaleKind`: `NUMERIC`, `ORDINAL`, `PERCENTAGE`.
 
 ### 4.5 Governance & Behavior
 

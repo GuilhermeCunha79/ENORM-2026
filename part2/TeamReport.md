@@ -147,26 +147,28 @@ In the automation section, behavior detail is represented with nested conditions
 
 ### Textual Representation for Each Metamodel Element
  
+### Textual Representation for Each Metamodel Element
+ 
 | Metamodel element | Textual representation in editor |
 |---|---|
-| RefModel | `ref "<name>" version "<semver>"` followed by section headers `<section>:` |
-| UserType | In `users:` section: `<Name> kind <UserKind> [extends <UserTypeName>(, ...)]` |
-| ContextType | In `contexts:` section: `<Name> kind <ContextKind> [contains <ResourceTypeName>(, ...)]` |
-| ResourceType | In `resources:` section: `<Name> [media] [extends <ResourceTypeName>(, ...)] fields <attr>(, ...)` |
-| Attribute | In `fields` list: `<name>: <PrimitiveType> [required] [list]` |
-| ResourceRelation | In `relations:` section: `<Name> from <ResourceType> [<sourceCard>] to <ResourceType> [<targetCard>] [containment] [recursive]` |
-| FeedbackType | In `feedback-types:` section: `<Name> kind <FeedbackKind> [scope <FeedbackSubjectScope>] [rating] [recursive] [media] [text] [polarity <FeedbackPolarity>]` |
-| FeedbackDefinition | In `feedback-definitions:` section: `<Name> type <FeedbackType> author <UserType> [on resource <ResourceType> \| on feedback <FeedbackDefinition>] [parent <FeedbackDefinition>] [verified-context] [verification <VerificationRequirement>] [unique-per-author-target]` |
-| FeedbackPolicy | Under a feedback definition: `policy status <FeedbackStatus>` |
-| RatingPolicy | Under a feedback definition: `rating min <number> max <number> [step <number>] [scale <RatingScaleKind>]` |
-| ValidationRule | In `validations:` section: `<Name> kind <ValidationKind> [severity <RuleSeverity>] [expr "<expression>"] [impl "<id>"] [applies-resource <ResourceType>] [applies-feedback <FeedbackDefinition>] [applies-user <UserType>] invoked-by <AutomationRule>` |
-| ModerationPolicy | In `moderations:` section: `<Name> mode <ModerationMode> [trigger <TriggerEvent>] [decision <ModerationDecision>] monitors resource <ResourceType> feedback <FeedbackDefinition> executed-by <UserType> [context <ContextType>]` |
-| AuthorizationRule | In `authorizations:` section: `<ActionKind> actor <UserType> [context <ContextType>] resource <ResourceType> [feedback <FeedbackDefinition>]` |
-| AutomationRule | In `automations:` section: `<Name> trigger <TriggerEvent> on feedback <FeedbackDefinition> [resource <ResourceType>] [context <ContextType>] uses <ValidationRule>` with nested `conditions:` and `actions:` blocks |
-| Condition | In `conditions:` block: `<Name> field <AttributeName> op <ConditionOperator> value "<value>"` |
-| Action | In `actions:` block: `<Name> kind <ActionResultKind> [message "<message>"]` |
-| VerificationPolicy | In `verifications:` section: `<Name> mode <ValidationKind> when <TriggerEvent> verifies <FeedbackDefinition>` |
-| SortingPolicy | In `sorting-policies:` section: `<Name> criterion <SortCriterion> direction <SortDirection> [applies-resource <ResourceType>] [applies-feedback <FeedbackDefinition>] [context <ContextType>]` |
+| RefModel | `ref [name] version [semver]` followed by section headers `[section]:` |
+| UserType | In `users:` section: `user [Name] kind: [UserKind] extends [UserTypeName], ...` |
+| ContextType | In `contexts:` section: `[Name] with [ContextKind] kind, contains [ResourceTypeName], ...` |
+| ResourceType | In `resources:` section: `[Name] [ supports media [bool] ], extends [ResourceTypeName], ... with fields: [Attribute], ...` |
+| Attribute | In `fields` list: `- [name] is a required: [bool] and multi valued [bool] [PrimitiveType]` |
+| ResourceRelation | In `relations:` section: `[Name] from [ResourceType] [[srcCard]] to [ResourceType] [[tgtCard]], containment: [bool], recursive: [bool]` |
+| FeedbackType | In `feedback-types:` section: `[Name] kind: [FeedbackKind] applies on [FeedbackSubjectScope] , has rating: [bool], recursive: [bool], allows media: [bool], allows text: [bool], with polarity: [FeedbackPolarity])` |
+| FeedbackDefinition | In `feedback-definitions:` section: `[Name] authored by [UserType] [ on resource [ResourceType] or feedback [FeedbackDefinition] ] requires a verified context: [bool], verification requirement: [VerificationRequirement], unique per author target: [bool], feedback policy: [FeedbackPolicyName] policy status [FeedbackStatus], [ rated between [min] and [max] with [step] step ]` |
+| FeedbackPolicy | Named policy under a feedback definition: `[Name] policy status [FeedbackStatus]` (inline with FeedbackDefinition) |
+| RatingPolicy | Inline under a feedback definition: `rated between [min] and [max] with [step] step` |
+| ValidationRule | In `validations:` section: `[Name] kind [ValidationKind] severity [RuleSeverity] expr "[expression]" impl [implementationId] appliesToResource [ResourceType] appliesToFeedback [FeedbackDefinition] invokedBy [AutomationRule]` |
+| ModerationPolicy | In `moderations:` section: `[Name] mode [ModerationMode] trigger [TriggerEvent] decision [ModerationDecision] monitors resource [ResourceType] on feedback [FeedbackDefinition] executed by [UserType] in context [ContextType]` |
+| AuthorizationRule | In `authorizations:` section: `[AuthName] for [ActionKind] performed by [UserType] in context of [ContextType] on resource [ResourceType] \| on feedback ( [FeedbackDefinition]` |
+| AutomationRule | In `automations:` section: `[Name] trigger [TriggerEvent] on feedback [FeedbackDefinition] on resource [ResourceType] in context [ContextType] uses [ValidationRule]` with nested `conditions:` and `actions:` blocks |
+| Condition | In `conditions:` block: `[Name] field [AttributeName] op [ConditionOperator] value "[value]"` |
+| Action | In `actions:` block: `[Name] kind [ActionResultKind] message "[message]"` |
+| VerificationPolicy | In `verifications:` section: `[Name] mode [ValidationKind] when [TriggerEvent] verifies [FeedbackDefinition]` |
+| SortingPolicy | In `sorting-policies:` section: `[Name] applies to resource [ResourceType] and/or applies to feedback [FeedbackDefinition] in context of [ContextType] sorted by [SortCriterion] with direction [SortDirection]` |
  
 ## Enum Token Notation
  
@@ -180,7 +182,6 @@ All enum literals are written as uppercase keywords to preserve type safety and 
 - FeedbackPolarity: `NONE`, `LIKE_DISLIKE`, `UP_DOWN`
 - FeedbackStatus: `ENABLED`, `DISABLED`
 - VerificationRequirement: `NONE`, `OPTIONAL`, `REQUIRED`
-- RatingScaleKind: `NUMERIC`, `ORDINAL`, `PERCENTAGE`
 - ValidationKind: `AUTOMATIC`, `MANUAL`
 - RuleSeverity: `INFO`, `WARNING`, `ERROR`
 - ModerationMode: `AUTOMATIC`, `MANUAL`, `HYBRID`
@@ -197,64 +198,72 @@ All enum literals are written as uppercase keywords to preserve type safety and 
 ### End-to-End Textual Example
  
 ```refdsl
-ref "AmazonRef" version "1.0.0"
+ref AmazonRef version 1.0.0
 
 users:
-  Reviewer kind GENERIC
-  Buyer kind BUYER extends Reviewer
-  Seller kind SELLER
-  Moderator kind MODERATOR
+  user Reviewer kind: GENERIC
+  user Buyer kind: BUYER extends Reviewer
+  user Seller kind: SELLER
+  user Moderator kind: MODERATOR
 
 resources:
-  Product fields Id:TEXT required, Name:TEXT required, Description:TEXT required, CreatedAt:DATE
-  Order fields Id:TEXT required, Date:DATE required
-  OrderItem fields Quantity:NUMBER required
-  CommentReview media fields Id:TEXT required, Text:TEXT required, CreatedAt:DATE required
+  Product [ supports media false ], extends << ... >> with fields:
+    - Id is a required: true and multi valued false TEXT
+    - Name is a required: true and multi valued false TEXT
+    - Description is a required: true and multi valued false TEXT
+    - CreatedAt is a required: false and multi valued false DATE
+  Order [ supports media false ], extends << ... >> with fields:
+    - Id is a required: true and multi valued false TEXT
+    - Date is a required: true and multi valued false DATE
+  OrderItem [ supports media false ], extends << ... >> with fields:
+    - Quantity is a required: true and multi valued false NUMBER
+  CommentReview [ supports media true ], extends << ... >> with fields:
+    - Id is a required: true and multi valued false TEXT
+    - Text is a required: true and multi valued false TEXT
+    - CreatedAt is a required: true and multi valued false DATE
 
 contexts:
-  CatalogContext kind CATALOG contains Product, Order, OrderItem, CommentReview
-  ModerationContext kind CATALOG contains Product
-  SearchContext kind CATALOG contains Product
+  CatalogContext with CATALOG kind, contains Product, Order, OrderItem, CommentReview
+  ModerationContext with CATALOG kind, contains Product
+  SearchContext with CATALOG kind, contains Product
 
 relations:
-  OrderContainsOrderItem from Order [1] to OrderItem [2]
-  OrderItemTargetsProduct from OrderItem [2] to Product [1]
-  ProductContainsComment from Product [1] to CommentReview [2] containment
+  OrderContainsOrderItem from Order [1] to OrderItem [2], containment: false, recursive: false
+  OrderItemTargetsProduct from OrderItem [2] to Product [1], containment: false, recursive: false
+  ProductContainsComment from Product [1] to CommentReview [2], containment: true, recursive: false
 
 feedback-types:
-  ReviewType kind REVIEW scope RESOURCE_ONLY rating media text polarity NONE
-  HelpfulVoteType kind VOTE scope RESOURCE_ONLY polarity UP_DOWN
+  ReviewType kind: REVIEW applies on RESOURCE_ONLY , has rating: true, recursive: false, allows media: true, allows text: true, with polarity: NONE)
+  HelpfulVoteType kind: VOTE applies on RESOURCE_ONLY , has rating: false, recursive: false, allows media: false, allows text: false, with polarity: UP_DOWN)
 
 feedback-definitions:
-  ProductReview type ReviewType author Reviewer on resource Product verification OPTIONAL unique-per-author-target
-    policy status ENABLED
-    rating min 1 max 5 step 1 scale NUMERIC
-  HelpfulVoteOnComment type HelpfulVoteType author Buyer on resource CommentReview verification OPTIONAL
-    policy status ENABLED
+  ProductReview authored by Reviewer [ on resource Product or feedback <no subjectFeedback> ] requires a verified context: false, verification requirement: OPTIONAL, unique per author target: true, feedback policy: ProductReviewPolicy policy status ENABLED, rated between 1 and 5 with 1 step
+  HelpfulVoteOnComment authored by Buyer [ on resource CommentReview or feedback <no subjectFeedback> ] requires a verified context: false, verification requirement: OPTIONAL, unique per author target: false, feedback policy: HelpfulVotePolicy policy status ENABLED, <no ratingPolicy>
 
 sorting-policies:
-  ProductListingSort criterion VALUE direction DESC applies-resource Product context CatalogContext
-  ProductSearchSort criterion DATE direction DESC applies-resource Product
-  CommentSortByDate criterion DATE direction DESC applies-resource CommentReview context CatalogContext
-  CommentSortByRating criterion DATE direction DESC applies-resource CommentReview context CatalogContext
+  ProductListingSort applies to resource Product and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by VALUE with direction DESC
+  ProductSearchSort applies to resource Product and/or applies to feedback <no appliesToFeedback> in context of <no inContext> sorted by DATE with direction DESC
+  CommentSortByDate applies to resource CommentReview and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by DATE with direction DESC
+  CommentSortByRating applies to resource CommentReview and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by DATE with direction DESC
 
 validations:
-  ReviewValidationRule kind AUTOMATIC severity ERROR expr "rating_in_range_and_non_empty_text" impl "amazon_review_validation" applies-resource Product applies-feedback ProductReview applies-user Reviewer invoked-by ReviewGuardAutomation
+  ReviewValidationRule kind AUTOMATIC severity ERROR expr "rating_in_range_and_non_empty_text" impl "amazon_review_validation" appliesToResource Product appliesToFeedback ProductReview invokedBy ReviewGuardAutomation
 
 automations:
-  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE on feedback ProductReview resource Product context ModerationContext uses ReviewValidationRule
+  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE on feedback ProductReview on resource Product in context ModerationContext uses ReviewValidationRule
     conditions:
       LOl field Description op CONTAINS_KEYWORDS value "g"
     actions:
       FlagReview kind FLAG_CONTENT message "Content Restricted"
 
 moderations:
-  ReviewModerationPolicy mode HYBRID trigger ON_REPORT_THRESHOLD decision FLAGGED monitors resource Product feedback ProductReview executed-by Moderator context ModerationContext
+  ReviewModerationPolicy mode HYBRID trigger ON_REPORT_THRESHOLD decision FLAGGED monitors resource Product on feedback ProductReview executed by Moderator in context ModerationContext
 
 authorizations:
-  CREATE actor Reviewer context CatalogContext resource Product feedback ProductReview
-  MODERATE actor Moderator context ModerationContext resource Product feedback ProductReview
-  VOTE actor Buyer context CatalogContext resource CommentReview feedback HelpfulVoteOnComment
+  BuyerCanCreateReview for CREATE performed by Reviewer in context of CatalogContext on resource Product | on feedback ( ProductReview
+  ReviewerCanCreateReview for CREATE performed by Reviewer in context of CatalogContext on resource Product | on feedback ( ProductReview
+  ModeratorCanModerateReviews for MODERATE performed by Moderator in context of ModerationContext on resource Product | on feedback ( ProductReview
+  BuyerCanVoteHelpful for VOTE performed by Buyer in context of CatalogContext on resource CommentReview | on feedback ( HelpfulVoteOnComment
 
 verifications:
   ProductReviewVerificationAuto mode AUTOMATIC when ON_FEEDBACK_CREATE verifies ProductReview

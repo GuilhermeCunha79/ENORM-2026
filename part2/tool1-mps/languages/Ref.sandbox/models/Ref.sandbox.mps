@@ -277,8 +277,7 @@
       <node concept="3$Wfe6" id="47EFX_nz$PC" role="28hnIE">
         <property role="TrG5h" value="ProductReviewPolicy" />
       </node>
-      <node concept="3$Wfef" id="47EFX_nz$PD" role="28hnID">
-        <property role="TrG5h" value="ProductReviewRating" />
+      <node concept="3$Wfef" id="4b31TA56IB3" role="28hnID">
         <property role="3UnM3a" value="1" />
         <property role="3UnM3c" value="5" />
         <property role="3UnM3f" value="1" />
@@ -1038,52 +1037,44 @@
     <node concept="3$Wfe3" id="77Q8YzlE7i3" role="nroh4">
       <property role="TrG5h" value="Creator" />
       <property role="2InxW3" value="7vG6G7pGwn0/CREATOR" />
-      <node concept="3UnFIO" id="77Q8YzlE7i4" role="3UnFH9">
-        <property role="TrG5h" value="CreatorIsUser" />
-        <ref role="3UnFIR" node="77Q8YzlE7i2" resolve="User" />
+      <node concept="3UnFIO" id="4b31TA4ZheL" role="3UnFH9">
+        <ref role="3UnFIR" node="77Q8YzlE6It" resolve="User" />
       </node>
-      <node concept="3UnFIO" id="77Q8YzlE7i8" role="3UnFH9">
-        <property role="TrG5h" value="CreatorIsModerator" />
-        <ref role="3UnFIR" node="77Q8YzlE7i5" resolve="Moderator" />
+      <node concept="3UnFIO" id="4b31TA4ZheM" role="3UnFH9">
+        <ref role="3UnFIR" node="47EFX_nz$Pp" resolve="Moderator" />
       </node>
     </node>
     <node concept="3$Wfe3" id="77Q8YzlE7i5" role="nroh4">
       <property role="TrG5h" value="Moderator" />
       <property role="2InxW3" value="7vG6G7pGwn1/MODERATOR" />
-      <node concept="3UnFIO" id="77Q8YzlE7i6" role="3UnFH9">
-        <property role="TrG5h" value="ModeratorIsUser" />
+      <node concept="3UnFIO" id="4b31TA52y4K" role="3UnFH9">
         <ref role="3UnFIR" node="77Q8YzlE7i2" resolve="User" />
       </node>
     </node>
     <node concept="3$WfeV" id="77Q8YzlE7hT" role="3$WffE">
       <property role="TrG5h" value="ChannelContext" />
       <property role="2InxXR" value="7vG6G7pGwmO/CHANNEL" />
-      <node concept="28hnH9" id="77Q8YzlE7hU" role="28hnHc">
-        <property role="TrG5h" value="ChannelResourceLink" />
+      <node concept="28hnH9" id="4b31TA54zzs" role="28hnHc">
         <ref role="28hnH2" node="77Q8YzlE7i9" resolve="Channel" />
       </node>
-      <node concept="28hnH9" id="77Q8YzlE7hW" role="28hnHc">
-        <property role="TrG5h" value="VideoResourceLink" />
+      <node concept="28hnH9" id="4b31TA54zzt" role="28hnHc">
         <ref role="28hnH2" node="77Q8YzlE7ie" resolve="Video" />
       </node>
-      <node concept="28hnH9" id="77Q8YzlE7hX" role="28hnHc">
-        <property role="TrG5h" value="CommentResourceLink" />
+      <node concept="28hnH9" id="4b31TA54zzu" role="28hnHc">
         <ref role="28hnH2" node="77Q8YzlJGRo" resolve="Comment" />
       </node>
     </node>
     <node concept="3$WfeV" id="77Q8YzlE7hY" role="3$WffE">
       <property role="TrG5h" value="TrendingContext" />
       <property role="2InxXR" value="7vG6G7pGwmO/CHANNEL" />
-      <node concept="28hnH9" id="77Q8YzlE7hZ" role="28hnHc">
-        <property role="TrG5h" value="TrendingVideoLink" />
+      <node concept="28hnH9" id="4b31TA54zzr" role="28hnHc">
         <ref role="28hnH2" node="77Q8YzlE7ie" resolve="Video" />
       </node>
     </node>
     <node concept="3$WfeV" id="77Q8YzlE7i0" role="3$WffE">
       <property role="TrG5h" value="RecommendationContext" />
       <property role="2InxXR" value="7vG6G7pGwmO/CHANNEL" />
-      <node concept="28hnH9" id="77Q8YzlE7i1" role="28hnHc">
-        <property role="TrG5h" value="RecommendationVideoLink" />
+      <node concept="28hnH9" id="4b31TA54zzq" role="28hnHc">
         <ref role="28hnH2" node="77Q8YzlE7ie" resolve="Video" />
       </node>
     </node>

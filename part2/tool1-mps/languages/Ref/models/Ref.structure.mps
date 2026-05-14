@@ -391,9 +391,6 @@
     <property role="EcuMT" value="3890156942413033135" />
     <property role="TrG5h" value="RatingPolicy" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
-    <node concept="PrWs8" id="3nWBi3h36UK" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
-    </node>
     <node concept="1TJgyi" id="DrEcBK18w3" role="1TKVEl">
       <property role="IQ2nx" value="746375748528670723" />
       <property role="TrG5h" value="minValue" />
