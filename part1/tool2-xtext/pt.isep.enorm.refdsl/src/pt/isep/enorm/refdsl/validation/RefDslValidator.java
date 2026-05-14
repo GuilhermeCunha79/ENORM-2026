@@ -109,6 +109,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— RefModel C1.x ———
 
+	// Rejects empty or whitespace-only RefModel name.
 	@Check
 	public void checkRefModelNameNotEmpty(RefModel model) {
 		if (model.getName() == null || model.getName().trim().isEmpty()) {
@@ -116,6 +117,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if RefModel name does not start with an uppercase letter.
 	@Check
 	public void checkRefModelNameStartsWithUppercase(RefModel model) {
 		String n = model.getName();
@@ -124,6 +126,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires RefModel name to be longer than 2 characters.
 	@Check
 	public void checkRefModelNameLength(RefModel model) {
 		String n = model.getName();
@@ -133,6 +136,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if version is set but not in MAJOR.MINOR.PATCH semantic form.
 	@Check
 	public void checkRefModelVersionSemver(RefModel model) {
 		String v = model.getVersion();
@@ -144,6 +148,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— UserType C2.x ———
 
+	// Warns if UserType name does not start with an uppercase letter.
 	@Check
 	public void checkUserTypeNameStartsWithUppercase(UserType userType) {
 		String n = userType.getName();
@@ -152,6 +157,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures UserType names are unique within the RefModel.
 	@Check
 	public void checkUserTypeNameUnique(UserType userType) {
 		String name = userType.getName();
@@ -169,6 +175,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Forbids UserType from listing itself in superTypes.
 	@Check
 	public void checkUserTypeSuperTypesNoSelf(UserType userType) {
 		if (userType.getSuperTypes() != null && userType.getSuperTypes().contains(userType)) {
@@ -177,6 +184,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Forbids cycles in UserType superTypes (inheritance must be acyclic).
 	@Check
 	public void checkUserTypeSuperTypesNoCycle(UserType userType) {
 		if (userType.getSuperTypes() == null || userType.getSuperTypes().isEmpty())
@@ -195,6 +203,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— ContextType C2.5–C2.6 ———
 
+	// Warns if ContextType name does not start with an uppercase letter.
 	@Check
 	public void checkContextTypeNameUppercase(ContextType ctx) {
 		String n = ctx.getName();
@@ -204,6 +213,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures ContextType names are unique within the RefModel.
 	@Check
 	public void checkContextTypeNameUnique(ContextType ctx) {
 		String name = ctx.getName();
@@ -223,6 +233,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— ResourceType C3.x ———
 
+	// Warns if ResourceType name does not start with an uppercase letter.
 	@Check
 	public void checkResourceTypeNameUppercase(ResourceType rt) {
 		String n = rt.getName();
@@ -232,6 +243,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires ResourceType name to be longer than 2 characters.
 	@Check
 	public void checkResourceTypeNameLength(ResourceType rt) {
 		String n = rt.getName();
@@ -241,6 +253,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures ResourceType names are unique within the RefModel.
 	@Check
 	public void checkResourceTypeNameUnique(ResourceType rt) {
 		String name = rt.getName();
@@ -258,6 +271,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Forbids ResourceType from listing itself in superTypes.
 	@Check
 	public void checkResourceTypeSuperTypesNoSelf(ResourceType rt) {
 		if (rt.getSuperTypes() != null && rt.getSuperTypes().contains(rt)) {
@@ -266,6 +280,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Forbids cycles in ResourceType superTypes.
 	@Check
 	public void checkResourceTypeSuperTypesNoCycle(ResourceType rt) {
 		if (rt.getSuperTypes() == null || rt.getSuperTypes().isEmpty())
@@ -284,6 +299,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— Attribute C3.6–C3.7 ———
 
+	// Ensures Attribute names are unique within the owning ResourceType.
 	@Check
 	public void checkAttributeNameUnique(Attribute attribute) {
 		String name = attribute.getName();
@@ -302,6 +318,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if Attribute name does not start with a lowercase letter.
 	@Check
 	public void checkAttributeNameLowercase(Attribute attribute) {
 		String n = attribute.getName();
@@ -313,6 +330,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— ResourceRelation C3.8–C3.9 ———
 
+	// Non-recursive relations must not have the same source and target ResourceType.
 	@Check
 	public void checkResourceRelationEnds(ResourceRelation rel) {
 		if (!rel.isRecursive() && rel.getSource() != null && rel.getTarget() != null && rel.getSource() == rel.getTarget()) {
@@ -321,6 +339,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures ResourceRelation names are unique within the RefModel.
 	@Check
 	public void checkResourceRelationNameUnique(ResourceRelation rel) {
 		String name = rel.getName();
@@ -340,6 +359,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— FeedbackType C4.1–C4.2 + G2–G5 ———
 
+	// Warns if FeedbackType name does not start with an uppercase letter.
 	@Check
 	public void checkFeedbackTypeNameUppercase(FeedbackType ft) {
 		String n = ft.getName();
@@ -349,6 +369,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures FeedbackType names are unique within the RefModel.
 	@Check
 	public void checkFeedbackTypeNameUnique(FeedbackType ft) {
 		String name = ft.getName();
@@ -366,6 +387,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G2: REVIEW must use subjectScope RESOURCE_ONLY.
 	@Check
 	public void checkFeedbackKindReviewScope(FeedbackType ft) {
 		if (ft.getKind() == FeedbackKind.REVIEW
@@ -375,6 +397,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G3: REACTION/VOTE must not have rating and must not be recursive.
 	@Check
 	public void checkFeedbackKindReactionVote(FeedbackType ft) {
 		if (ft.getKind() == FeedbackKind.REACTION || ft.getKind() == FeedbackKind.VOTE) {
@@ -385,6 +408,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G4: SUBSCRIPTION must be RESOURCE_ONLY and not recursive.
 	@Check
 	public void checkFeedbackKindSubscription(FeedbackType ft) {
 		if (ft.getKind() == FeedbackKind.SUBSCRIPTION) {
@@ -395,6 +419,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G5: recursive feedback cannot be limited to RESOURCE_ONLY.
 	@Check
 	public void checkRecursiveFeedbackScope(FeedbackType ft) {
 		if (ft.isRecursive() && ft.getSubjectScope() == FeedbackSubjectScope.RESOURCE_ONLY) {
@@ -405,6 +430,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— FeedbackDefinition C4.3–C4.7, C4.11–C4.12, G1, G6–G9 ———
 
+	// Warns if FeedbackDefinition name does not start with an uppercase letter.
 	@Check
 	public void checkFeedbackDefinitionNameUppercase(FeedbackDefinition fd) {
 		String n = fd.getName();
@@ -414,6 +440,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures FeedbackDefinition names are unique within the RefModel.
 	@Check
 	public void checkFeedbackDefinitionNameUnique(FeedbackDefinition fd) {
 		String name = fd.getName();
@@ -431,6 +458,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires a non-null author UserType on every FeedbackDefinition.
 	@Check
 	public void checkFeedbackDefinitionAuthor(FeedbackDefinition fd) {
 		if (fd.getAuthor() == null) {
@@ -439,6 +467,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Binds subjectResource / subjectFeedback to FeedbackType.subjectScope (RESOURCE / FEEDBACK / OR).
 	@Check
 	public void checkFeedbackDefinitionTargetsForScope(FeedbackDefinition fd) {
 		FeedbackType t = fd.getType();
@@ -480,6 +509,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// RatingPolicy is only allowed when the FeedbackType has hasRating true.
 	@Check
 	public void checkRatingOnlyWhenHasRating(FeedbackDefinition fd) {
 		if (fd.getRating() != null && fd.getType() != null && !fd.getType().isHasRating()) {
@@ -488,6 +518,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G1: if hasRating, FeedbackDefinition must define a RatingPolicy.
 	@Check
 	public void checkRatingRequiredWhenHasRating(FeedbackDefinition fd) {
 		if (fd.getType() != null && fd.getType().isHasRating() && fd.getRating() == null) {
@@ -496,6 +527,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G3: REACTION/VOTE definitions must not attach a RatingPolicy.
 	@Check
 	public void checkReactionVoteNoRatingOnDefinition(FeedbackDefinition fd) {
 		if (fd.getType() != null && (fd.getType().getKind() == FeedbackKind.REACTION || fd.getType().getKind() == FeedbackKind.VOTE)
@@ -505,6 +537,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns when subjectFeedback points to a different FeedbackType than the definition.
 	@Check
 	public void checkSubjectFeedbackSameType(FeedbackDefinition fd) {
 		if (fd.getSubjectFeedback() != null && fd.getType() != null && fd.getSubjectFeedback().getType() != null
@@ -514,6 +547,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Forbids a FeedbackDefinition from using itself as subjectFeedback.
 	@Check
 	public void checkSubjectFeedbackNotSelf(FeedbackDefinition fd) {
 		if (fd.getSubjectFeedback() == fd) {
@@ -522,6 +556,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G8: requiresVerifiedContext implies a VerificationPolicy with verifies=this definition.
 	@Check
 	public void checkG8VerifiedContext(FeedbackDefinition fd) {
 		if (!fd.isRequiresVerifiedContext())
@@ -542,6 +577,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G9: uniquePerAuthorTarget cannot target both a resource and nested feedback.
 	@Check
 	public void checkG9UniquePerAuthor(FeedbackDefinition fd) {
 		if (fd.isUniquePerAuthorTarget() && fd.getSubjectResource() != null && fd.getSubjectFeedback() != null) {
@@ -552,6 +588,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— RatingPolicy C4.8–C4.9 ———
 
+	// minValue must be strictly less than maxValue.
 	@Check
 	public void checkRatingMinMax(RatingPolicy rp) {
 		if (rp.getMinValue() >= rp.getMaxValue()) {
@@ -560,6 +597,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// step must be positive; warns if (max-min) is not an integer multiple of step.
 	@Check
 	public void checkRatingStep(RatingPolicy rp) {
 		double step = rp.getStep();
@@ -577,6 +615,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— ValidationRule C5.1–C5.5 ———
 
+	// Each rule must apply to at least one of appliesToResource or appliesToFeedback.
 	@Check
 	public void checkValidationRuleTargets(ValidationRule rule) {
 		if (rule.getAppliesToResource() == null && rule.getAppliesToFeedback() == null) {
@@ -585,6 +624,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Ensures non-empty ValidationRule names are unique within the RefModel.
 	@Check
 	public void checkValidationRuleNameUnique(ValidationRule rule) {
 		String name = rule.getName();
@@ -602,6 +642,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if ValidationRule name does not start with an uppercase letter.
 	@Check
 	public void checkValidationRuleNameUppercase(ValidationRule rule) {
 		String n = rule.getName();
@@ -611,6 +652,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if implementationId is set but shorter than 3 characters.
 	@Check
 	public void checkValidationRuleImplIdLength(ValidationRule rule) {
 		String id = rule.getImplementationId();
@@ -620,6 +662,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// AUTOMATIC rules must have a non-empty expression string.
 	@Check
 	public void checkValidationRuleExpressionForAutomatic(ValidationRule rule) {
 		if (rule.getKind() == ValidationKind.AUTOMATIC) {
@@ -633,6 +676,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— ModerationPolicy C5.6–C5.8 + G11 ———
 
+	// Ensures non-empty ModerationPolicy names are unique within the RefModel.
 	@Check
 	public void checkModerationPolicyNameUnique(ModerationPolicy mp) {
 		String name = mp.getName();
@@ -650,6 +694,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires executedBy (UserType) on every ModerationPolicy.
 	@Check
 	public void checkModerationPolicyExecutedBy(ModerationPolicy mp) {
 		if (mp.getExecutedBy() == null) {
@@ -658,6 +703,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// AUTOMATIC mode requires a non-empty trigger string.
 	@Check
 	public void checkModerationPolicyTriggerForAuto(ModerationPolicy mp) {
 		if (mp.getMode() == ModerationMode.AUTOMATIC) {
@@ -669,6 +715,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G11: monitorsResource must be listed in inContext.contains when inContext is set.
 	@Check
 	public void checkG11ModerationContext(ModerationPolicy mp) {
 		if (mp.getInContext() == null || mp.getMonitorsResource() == null)
@@ -681,6 +728,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— AuthorizationRule C5.9–C5.10 + G10 ———
 
+	// Requires a non-null actor UserType.
 	@Check
 	public void checkAuthorizationActor(AuthorizationRule ar) {
 		if (ar.getActor() == null) {
@@ -688,6 +736,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires both resourceTarget and feedbackTarget to be set.
 	@Check
 	public void checkAuthorizationTargets(AuthorizationRule ar) {
 		if (ar.getResourceTarget() == null || ar.getFeedbackTarget() == null) {
@@ -696,6 +745,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G10: when context is set, resourceTarget must be in context.contains.
 	@Check
 	public void checkG10AuthorizationContext(AuthorizationRule ar) {
 		if (ar.getContext() == null || ar.getResourceTarget() == null)
@@ -708,6 +758,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— AutomationRule C5.11–C5.14 + G12 ———
 
+	// Ensures AutomationRule names are unique within the RefModel.
 	@Check
 	public void checkAutomationRuleNameUnique(AutomationRule rule) {
 		String name = rule.getName();
@@ -725,6 +776,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Warns if AutomationRule name does not start with an uppercase letter.
 	@Check
 	public void checkAutomationRuleNameUppercase(AutomationRule rule) {
 		String n = rule.getName();
@@ -734,6 +786,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// trigger must be non-empty.
 	@Check
 	public void checkAutomationRuleTrigger(AutomationRule rule) {
 		if (rule.getTrigger() == null || rule.getTrigger().trim().isEmpty()) {
@@ -742,6 +795,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// actionDescription must be non-empty.
 	@Check
 	public void checkAutomationRuleAction(AutomationRule rule) {
 		if (rule.getActionDescription() == null || rule.getActionDescription().trim().isEmpty()) {
@@ -750,6 +804,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// MC_G12: context resource (AutomationRule.context) must be in inContext.contains.
 	@Check
 	public void checkG12AutomationContext(AutomationRule rule) {
 		if (rule.getInContext() == null || rule.getContext() == null)
@@ -762,6 +817,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— VerificationPolicy C5.15–C5.16 ———
 
+	// Ensures non-empty VerificationPolicy names are unique within the RefModel.
 	@Check
 	public void checkVerificationPolicyNameUnique(VerificationPolicy vp) {
 		String name = vp.getName();
@@ -779,6 +835,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// requires verifies to reference a FeedbackDefinition.
 	@Check
 	public void checkVerificationPolicyVerifies(VerificationPolicy vp) {
 		if (vp.getVerifies() == null) {
@@ -789,6 +846,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 
 	// ——— helpers ———
 
+	// Walks eContainer links up to the enclosing RefModel.
 	private RefModel root(EObject o) {
 		while (o != null) {
 			if (o instanceof RefModel)
@@ -798,6 +856,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		return null;
 	}
 
+	// DFS on UserType.superTypes to detect a path from parent back to a given node (cycle test).
 	private boolean hasUserCycle(UserType current, UserType target, Set<UserType> visited) {
 		if (!visited.add(current))
 			return false;
@@ -812,6 +871,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		return false;
 	}
 
+	// Same as hasUserCycle but for ResourceType.superTypes.
 	private boolean hasResourceCycle(ResourceType current, ResourceType target, Set<ResourceType> visited) {
 		if (!visited.add(current))
 			return false;

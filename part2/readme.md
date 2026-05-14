@@ -4,12 +4,82 @@ This document summarizes the team work for Part 2 of the ENORM project in the RE
  
 ## Graphical Representation
 
-TODO
+### Scope and Intent
+
+This section documents the Activity 1 graphical syntax and its Sirius implementation, based on the existing Sirius project in `part1/tool3-sirius`. The graphical editor uses the REF Ecore metamodel and provides a concrete diagram notation for all metamodel concepts required by P2.
+
+### Metamodel Basis (Sirius/EMF)
+
+The graphical notation is grounded on the Ecore metamodel in `part1/tool3-sirius/model/enorm.ecore` and the generated EMF model in `part1/tool3-sirius/src-gen/enorm`. This metamodel includes the P1 REF v3 concepts required by P2:
+
+- Structure: `RefModel`, `ResourceType`, `Attribute`, `ResourceRelation`, `ContextType`, `UserType`
+- Authorization and behavior: `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, `AutomationRule`, `Condition`, `Action`, `VerificationPolicy`, `SortingPolicy`
+- Feedback: `FeedbackType`, `FeedbackDefinition`, `FeedbackPolicy`, `RatingPolicy`
+
+### Diagram Types and Usage
+
+The Sirius viewpoint provides a core diagram where users can build complete REF models graphically. The representation is configured in the Sirius Viewpoint Specification Model (`2nd eclipse instance/enorm.design/description/enorm.odesign`) and uses the Ecore types as the semantic model.
+
+The diagram supports:
+
+- Create and edit a `RefModel` root, with containment of all major model elements.
+- Add resources with attributes and inheritance, define users and contexts, and connect resource relations.
+- Define feedback types/definitions with policies and ratings.
+- Define authorization, validation, moderation, automation, verification, and sorting rules, connected to their targets.
+
+### Notation Mapping (Nodes, Containers, Edges)
+
+The graphical syntax follows a simple, readable mapping to avoid clutter while exposing all required concepts.
+
+**Containers / Top-level groups**
+
+- `RefModel` is the diagram root and contains all elements.
+- Logical groupings are shown as container nodes or compartments for readability (e.g., Resources, Users, Rules, Policies).
+
+**Nodes (primary concepts)**
+
+- Structure: `ResourceType`, `UserType`, `ContextType`, `FeedbackType`, `FeedbackDefinition`, `SortingPolicy`.
+- Rules and policies: `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, `AutomationRule`, `VerificationPolicy`.
+- Behavior detail: `Condition`, `Action`, `FeedbackPolicy`, `RatingPolicy` appear as child nodes/compartments of their parent rules or definitions.
+
+**Edges (non-containment references)**
+
+- `ResourceRelation` is shown as a labeled link between `ResourceType` nodes, with source/target cardinalities.
+- Rule-to-target links show the domain targets:
+  - `AuthorizationRule` -> `ResourceType` and optional `FeedbackDefinition`
+  - `ValidationRule` -> `ResourceType` and/or `FeedbackDefinition`, and linked to `AutomationRule` (invocation)
+  - `ModerationPolicy` -> monitored `ResourceType` and `FeedbackDefinition`
+  - `AutomationRule` -> `FeedbackDefinition` and optionally `ContextType`
+  - `VerificationPolicy` -> `FeedbackDefinition`
+  - `SortingPolicy` -> `ResourceType` or `FeedbackDefinition` and optional `ContextType`
+
+### Labels and Properties
+
+- Node labels show the element `name` and key enum values (e.g., `kind`, `mode`, `trigger`, `decision`, `direction`).
+- Detailed attributes (e.g., `Attribute.type`, `RatingPolicy` bounds, `Condition.operator`) are edited in the Properties view to keep diagrams readable.
+- Optional features (e.g., `supportsMedia`, `polarity`, `verificationRequirement`) are visible through properties and label badges where space allows.
+
+### Example Models and Coverage
+
+The Sirius project already contains sample models for the three required scenarios and a reference model:
+
+- `part1/tool3-sirius/model/YouTube.xmi`
+- `part1/tool3-sirius/model/Amazon.xmi`
+- `part1/tool3-sirius/model/Reddit.xmi`
+- `part1/tool3-sirius/model/RefModel.xmi`
+
+These were created with the graphical editor and validate that the notation can express the full REF domain (structure, authorization, behavior, feedback, moderation, and verification).
+
+### Tooling Notes
+
+- Graphical representation is implemented in Sirius with the Viewpoint Specification Model at `part1/tool3-sirius/2nd eclipse instance/enorm.design/description/enorm.odesign`.
+- The Sirius modeling project is rooted at `part1/tool3-sirius`, with `enorm.aird` as the representation file.
+- The notation relies on the EMF metamodel and does not require manual code for basic diagram editing.
 
 ## Textual Representation
 
 ### Scope and Intent
- 
+
 This section specifies the proposed textual concrete syntax for REF in Part 2.
 The design is aligned with the REF metamodel v3 used in the project and explicitly includes the concepts shown in the MPS model instances (for example: `SortingPolicy`, `Condition`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`).
  
@@ -19,7 +89,7 @@ Two equivalent textual views are supported in the report:
 - A projection-compatible syntax (properties/children/references) matching MPS exports.
 
 ### Design Principles
- 
+
 The goal is simple. A domain expert should read and validate a model without developer help.
 
 "Close to natural language" here means familiar keywords and clear structure. It does not mean full prose sentences.
@@ -35,7 +105,7 @@ The following principles were adopted:
 - Keep models readable in code review and version control.
 
 ### Global Document Structure
- 
+
 The full model is organized in named sections so users can navigate by domain concern.
  
 ```refdsl
@@ -81,7 +151,7 @@ verifications:
 In the automation section, behavior detail is represented with nested conditions and actions.
 
 ### Textual Representation for Each Metamodel Element
- 
+
 | Metamodel element | Textual representation in editor |
 |---|---|
 | RefModel | `ref [name] version [semver]` followed by section headers `[section]:` |
@@ -104,7 +174,7 @@ In the automation section, behavior detail is represented with nested conditions
 | SortingPolicy | In `sorting-policies:` section: `[Name] applies to resource [ResourceType] and/or applies to feedback [FeedbackDefinition] in context of [ContextType] sorted by [SortCriterion] with direction [SortDirection]` |
  
 ## Enum Token Notation
- 
+
 All enum literals are written as uppercase keywords to preserve type safety and align with the existing P1 model vocabulary.
  
 - UserKind: `GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`
@@ -129,7 +199,7 @@ All enum literals are written as uppercase keywords to preserve type safety and 
 
 
 ### End-to-End Textual Example
- 
+
 ```refdsl
 ref AmazonRef version 1.0.0
 
@@ -204,7 +274,7 @@ verifications:
 ```
  
 ### Adaptations Relative to P1 and Justification
- 
+
 The metamodel itself is preserved. The adaptations are concrete syntax decisions to improve usability for SMEs.
  
 1. Section headers remove repeated concept keywords (for example, under `users:` the entry is just `Buyer kind BUYER`, not `user Buyer ...`). Indentation replaces braces in the SME view.
@@ -213,4 +283,4 @@ The metamodel itself is preserved. The adaptations are concrete syntax decisions
 4. `SortingPolicy` is first-class in the syntax as a named `sorting-policies` section. This captures ordering behavior that is central to Amazon, Reddit, and YouTube-like scenarios.
 5. Feedback semantics include `allowsText`, `polarity`, and `verificationRequirement` as explicit optional tokens. This supports vote and reaction differences and verification strictness without workarounds.
 6. Projection helper concepts (`ContextResourceTypeLink`, `UserTypeSuperType`) are rendered as inline modifiers (`contains`, `extends`) instead of named declarations. This hides implementation details from the surface notation and keeps the abstract syntax tree traceable.
- 
+

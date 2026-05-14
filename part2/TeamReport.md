@@ -394,17 +394,94 @@ TODO
 
 ## 5. Activity 4 - Identify Commonality and Variability in the Code
 
+This section compares the three Spring Boot prototypes (`part2/amazon-backend`, `part2/reddit-backend`, `part2/youtube-backend`) against the REF metamodel in [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml). The analysis assumes the prototypes are intended to be **instances** of the same generation architecture described in Section 3 (Generation Gap, layered backend).
+
 ### 5.1 Common parts in the prototypes
 
-TODO
+The following parts are **shared in structure and technology** across Amazon, Reddit, and YouTube backends, even when class names differ.
+
+- **Platform and build:** Java 21, Spring Boot 3, Maven, JPA/Hibernate, H2 (including console-friendly security headers where applicable), consistent package layering (`domain`, `repository`, `service`, `web`, `security`, `config`).
+- **Generation Gap pattern:** For each major persistent concept there is a `generated.Generated*` mapped superclass or base type and a thin manual subtype (`Product`, `Post`, `Video`, …) that exists primarily as an **extension point** (often empty today, but reserved for scenario-specific logic).
+- **Security baseline:** Password hashing, JWT issuance/filtering, stateless sessions, role literals carried on the user entity and mirrored in Spring Security (`Role` enum aligned with `UserKind` values used in each scenario).
+- **Cross-cutting web concerns:** Shared patterns for REST controllers, JSON bodies bound directly to JPA-backed types or DTOs in the same shape, and centralized API error handling (`ApiExceptionHandler`, `ApiError`).
+- **Governance primitives present in all three:** Persistent `SortingPolicy`, `ValidationRule` (or a renamed variant with the same responsibility), and moderation-related types (either a reusable `ModerationPolicy` entity as in Amazon, or **moderation check** records attached to posts/videos/comments in Reddit/YouTube that materialize moderation outcomes).
+- **Feedback-shaped domain services:** Dedicated services for primary feedback flows (comments, votes/likes, reports, subscriptions) following the same use-case style: load actor, authorize, validate, persist, expose.
+- **Policy administration surface:** A `PolicyService` / `PolicyController` pair (manually or generated) listing and mutating policy-like aggregates scoped to a **context root** (catalog/subreddit/channel), even when the underlying tables differ.
+
+These commonalities match the team decision in Activity 2: one reference generator target (Spring/JPA/JWT) with scenario-specific **slots** filled from the REF model.
 
 ### 5.2 Variable parts in the prototypes
 
-TODO
+Variability appears at three levels: **domain vocabulary**, **persistence shape of the same REF concept**, and **behavior encoded outside generated entities**.
+
+| Variability area | Amazon | Reddit | YouTube |
+|---|---|---|---|
+| **Core resources** | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Subreddit`, `Post`, `Comment`, … | `Channel`, `Video`, `Comment`, … |
+| **Context (`ContextType`)** | Explicit `ContextType` + `ContextResource` linking resources to catalog/search/moderation contexts | `Subreddit` as the community container; policies scoped to it | `Channel` as the channel container; channel-scoped permission rows |
+| **Authorization (`AuthorizationRule`)** | First-class `AuthorizationRule` JPA aggregate with `ActionKind`, actor role, optional `ContextType`, string targets for resource/feedback | No `AuthorizationRule` entity; **participation** modeled as `ParticipationPolicy` (`PermissionAction`, `PermissionAudience`) + **hard-coded** HTTP method/path rules in `SecurityConfiguration` | Same split as Reddit using `ChannelPermissionPolicy` + `SecurityConfiguration` |
+| **Automation (`AutomationRule`, `Condition`, `Action`)** | Full persistent automation model (`AutomationRule`, `AutomationCondition`, `AutomationAction`) close to the metamodel | No automation tables; rule-like behavior is distributed in services or omitted | No automation tables |
+| **Verification (`VerificationPolicy`)** | Persistent `VerificationPolicy` CRUD via policy service | Not modeled as the same entity; verification flavor appears in service logic (if at all) | Same as Reddit |
+| **Votes vs reactions** | `HelpfulVote` on comments (up/down style) | `Vote` + `VoteHistory` on posts | `Like` + `LikeHistory` on videos (like/dislike style enums) |
+| **Extra domain concepts** | Order-based “verified buyer” checks, review media references | `CommunityRule`, `ParticipationPolicy`, post/comment moderation check entities | `ChannelPermissionPolicy`, `ContentValidationRule` naming, `CommentSettingsChange` |
+| **Manual extensions (Activity 2)** | Example: `ProductEvaluationService` overrides generated verification to combine **role flag** and **order history** (`OrderItemRepository`) | Overrides expected in vote/report services for thresholds, duplicate votes, subreddit membership | Overrides expected for like toggling, channel ownership, video publication rules |
+
+In short, **structural governance** (automation + declarative authorization + verification policies) is **richest in Amazon** and **thinner in Reddit/YouTube**, where equivalent concerns are split between **smaller policy tables** and **imperative security/service code**. That is an important variability axis for the generator: not every REF construct is always emitted as the same kind of artifact (entity vs configuration vs Java code).
 
 ### 5.3 Mapping of variability to metamodel elements
 
-TODO
+The tables below map **every metamodel type and enumeration** from REF v3 to **variable or fixed parts** of the three codebases (Java packages, artifacts, or non-code artifacts). “Manual” indicates places the team expects handwritten completion per Activity 2.
+
+#### 5.3.1 Metamodel classes and relationships
+
+| Metamodel element | Amazon (`amazon-backend`) | Reddit (`reddit-backend`) | YouTube (`youtube-backend`) | Notes / manual completion |
+|---|---|---|---|---|
+| `RefModel` | Scenario identity implied by package `...ref.amazon`, `pom.xml` artifactId, and seed data | Same pattern for `...ref.reddit` | Same pattern for `...ref.youtube` | No single `RefModel` entity; could be generated as metadata or documentation |
+| `UserType` | `AmazonUser` + `Role` enum | `RedditUser` + `Role` | `YoutubeUser` + `Role` | Subtype is manual extension point on `Generated*` user |
+| `ContextType` | `ContextType`, `ContextResource` | `Subreddit` (community container) | `Channel` | Different REF `ContextKind` realizations |
+| `ResourceType` | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Post`, `Comment`, … | `Video`, `Comment`, … | Each scenario’s resource set |
+| `Attribute` | Fields inside each `Generated*` mapped superclass | Same | Same | Types map from `PrimitiveType` to Java/Hibernate types |
+| `ResourceRelation` | JPA associations on generated entities (e.g., order lines, product containment) | Associations on `Post`, `Comment`, `Vote`, … | Associations on `Video`, `Like`, … | Cardinality/containment in annotations |
+| `FeedbackType` | Implicit in distinct entities/services (`ProductReview`, `HelpfulVote`) | Implicit (`Comment`, `Vote`, `Report`, `Subscription`) | Implicit (`Comment`, `Like`, `Report`, `Subscription`) | Could be generated as type codes or separate metadata tables |
+| `FeedbackDefinition` | Composite of review + rating + verification hooks in services | Composite of comment/vote/report models + policies | Same as Reddit | Much behavior in **service overrides** (manual) |
+| `FeedbackPolicy` | Carried on review/feedback entities and service checks | Status enums on entities (`CommentStatus`, `ContentStatus`, …) | Same style | Often **manual** if not extracted to entities |
+| `RatingPolicy` | Star ratings on reviews (fields + validation) | N/A for core Reddit prototype focus | N/A for likes | Variable: only some scenarios use numeric ratings |
+| `FeedbackDefinition.uniquePerAuthorTarget` | Enforced in `ProductEvaluationService` / review repository constraints | Enforced in vote/comment services | Enforced in like/comment services | **Manual** hook in generated service template |
+| `ValidationRule` | `ValidationRule` entity + `ValidationKind`, `RuleSeverity`, `expression`, `implementationId` | `ValidationRule` (+ Reddit-specific `CommunityRule` as extra domain) | `ContentValidationRule` (same role, different name) | `implementationId` → pluggable Java validators (**manual** classes) |
+| `ModerationPolicy` | `ModerationPolicy` entity | Moderation split into `PostModerationCheck`, `CommentModerationCheck` rows | `VideoModerationCheck`, `CommentModerationCheck` | Same REF concept, **different persistence projection** |
+| `AuthorizationRule` | `AuthorizationRule` entity + policy CRUD | **Not** a dedicated entity; approximated by `ParticipationPolicy` + `SecurityConfiguration` rules | `ChannelPermissionPolicy` + `SecurityConfiguration` | Reddit/YouTube variability: **rules split** between data and code |
+| `AutomationRule` | `AutomationRule` + nested conditions/actions | Absent as persisted model | Absent | Generator may omit or emit stubs; execution **manual** if present |
+| `Condition` | `AutomationCondition` | — (no direct type) | — | Amazon-only in current prototypes |
+| `ConditionValue` | `ConditionValue` | — | — | Amazon-only |
+| `Action` (governance action) | `AutomationAction` | — | — | Amazon-only |
+| `VerificationPolicy` | `VerificationPolicy` entity | Not as separate aggregate | Not as separate aggregate | Reddit/YouTube may need **manual** service/policy classes to reach parity |
+| `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | Good example of **identical** metamodel → entity mapping |
+
+#### 5.3.2 Metamodel enumerations
+
+| Metamodel enum | Code mapping (all backends unless noted) |
+|---|---|
+| `UserKind` | `Role` literals (`GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`, …) on the user entity; subset used per scenario |
+| `ContextKind` | `ContextKind` enum (Amazon) or implied by root entity (`Subreddit`, `Channel`) |
+| `PrimitiveType` | Field types in generated entities (`String`, `BigDecimal`, `boolean`, `Instant`, …) |
+| `FeedbackKind` | Packages/services: comment, vote/like, report, subscription class names |
+| `FeedbackSubjectScope` | Service methods that accept either resource id or parent feedback id |
+| `FeedbackPolarity` | `VoteValue`, `LikeValue`, or vote direction fields |
+| `FeedbackStatus` | Enabled/disabled gates in services or enums on feedback |
+| `VerificationRequirement` | Amazon: verification toggles on review flow; others: **manual** parity |
+| `ValidationKind`, `RuleSeverity` | `ValidationKind`, `ValidationSeverity` enums in domain |
+| `ModerationMode`, `ModerationDecision`, `TriggerEvent` | Present in Amazon; partial mirror in moderation check enums on Reddit/YouTube |
+| `ActionKind` | Amazon: `ActionKind`; Reddit/YouTube: `PermissionAction` + Spring Security `requestMatchers` |
+| `ConditionOperator` | Amazon: `ConditionOperator` on `AutomationCondition` |
+| `ActionResultKind` | Amazon: result kind on `AutomationAction` |
+| `SortCriterion`, `SortDirection` | Shared enums under `domain/enums` in each backend |
+
+#### 5.3.3 Coverage of “every metamodel part” and gaps
+
+- **Fully materialized in all three:** sorting, validation (under different names), core persistence of resources and feedback-shaped aggregates, JWT security shell, Generation Gap entity/repository/service/controller layout.
+- **Fully materialized only in Amazon today:** `AutomationRule` subtree (`Condition`, `ConditionValue`, `Action`), first-class `AuthorizationRule`, `VerificationPolicy`, richer `ContextType` linking.
+- **Metamodel concepts mainly realized as manual Java in Reddit/YouTube:** large parts of `AuthorizationRule` (HTTP-level authorization matrix), some `FeedbackPolicy` / `VerificationPolicy` semantics, and any future `AutomationRule` execution.
+
+This distribution supports the Activity 2 requirement: the generator should emit **stable generated bases** plus **narrow override points** (subclasses, `@Override` service methods, optional `implementationId` classes) so teams can extend behavior where the DSL cannot express fine details.
 
 ---
 
