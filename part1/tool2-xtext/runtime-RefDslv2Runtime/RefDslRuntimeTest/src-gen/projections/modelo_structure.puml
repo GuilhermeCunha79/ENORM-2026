@@ -1,4 +1,4 @@
-@startuml
+    @startuml
 title REF Model (structure) - Marketplace
 skinparam classAttributeIconSize 0
 

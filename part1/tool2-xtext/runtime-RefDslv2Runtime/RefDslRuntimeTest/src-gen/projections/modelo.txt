@@ -1,4 +1,4 @@
-REF MODEL: Marketplace (version="1.0.0")
+\REF MODEL: Marketplace (version="1.0.0")
 
 USER TYPES:
 - Buyer kind=BUYER superTypes=

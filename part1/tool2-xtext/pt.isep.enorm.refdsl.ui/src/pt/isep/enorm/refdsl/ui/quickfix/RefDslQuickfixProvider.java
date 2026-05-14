@@ -38,6 +38,7 @@ import pt.isep.enorm.refdsl.validation.RefDslValidator;
 
 public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 
+	// Capitalizes the first character of the RefModel name.
 	@Fix(RefDslValidator.INVALID_REF_MODEL_NAME)
 	public void fixRefModelNameCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize RefModel name", "Set the first letter to uppercase.", "upcase.png", sem(e -> {
@@ -50,6 +51,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Replaces an invalid version with the default semantic version 1.0.0.
 	@Fix(RefDslValidator.INVALID_REF_MODEL_VERSION_SEMVER)
 	public void fixRefModelVersionDefault(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set version to 1.0.0", "Use semantic version 1.0.0.", "add.png", sem(e -> {
@@ -59,6 +61,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the UserType name.
 	@Fix(RefDslValidator.INVALID_USER_TYPE_NAME)
 	public void fixUserTypeCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize UserType name", null, "upcase.png", sem(e -> {
@@ -71,6 +74,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Removes self-reference from UserType superTypes.
 	@Fix(RefDslValidator.INVALID_USER_TYPE_SUPERTYPES_SELF)
 	public void fixUserTypeRemoveSelfSuper(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Remove self from superTypes", null, "remove.png", sem(e -> {
@@ -80,6 +84,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Breaks inheritance cycles in UserType by removing one cyclic parent.
 	@Fix(RefDslValidator.INVALID_USER_TYPE_SUPERTYPES_CYCLE)
 	public void fixUserTypeBreakCycle(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Break superTypes cycle", "Remove one superType that closes the cycle.", "remove.png", sem(e -> {
@@ -96,6 +101,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the ContextType name.
 	@Fix(RefDslValidator.INVALID_CONTEXT_TYPE_NAME)
 	public void fixContextTypeCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize ContextType name", null, "upcase.png", sem(e -> {
@@ -108,6 +114,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the ResourceType name.
 	@Fix(RefDslValidator.INVALID_RESOURCE_TYPE_NAME)
 	public void fixResourceTypeCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize ResourceType name", null, "upcase.png", sem(e -> {
@@ -120,6 +127,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Removes self-reference from ResourceType superTypes.
 	@Fix(RefDslValidator.INVALID_RESOURCE_TYPE_SUPERTYPES_SELF)
 	public void fixResourceTypeRemoveSelfSuper(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Remove self from superTypes", null, "remove.png", sem(e -> {
@@ -129,6 +137,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Breaks inheritance cycles in ResourceType by removing one cyclic parent.
 	@Fix(RefDslValidator.INVALID_RESOURCE_TYPE_SUPERTYPES_CYCLE)
 	public void fixResourceTypeBreakCycle(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Break superTypes cycle", null, "remove.png", sem(e -> {
@@ -145,6 +154,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Forces Attribute names to start with a lowercase letter.
 	@Fix(RefDslValidator.INVALID_ATTRIBUTE_NAME_CASE)
 	public void fixAttributeLowercase(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Start name with lowercase", null, "upcase.png", sem(e -> {
@@ -157,6 +167,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Marks a relation as recursive when source and target are the same.
 	@Fix(RefDslValidator.INVALID_RESOURCE_RELATION_SAME_ENDS)
 	public void fixResourceRelationSetRecursive(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set recursive to true", "Allows source and target to be the same.", "add.png", sem(e -> {
@@ -166,6 +177,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the FeedbackType name.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_TYPE_NAME)
 	public void fixFeedbackTypeCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize FeedbackType name", null, "upcase.png", sem(e -> {
@@ -178,6 +190,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the FeedbackDefinition name.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_NAME)
 	public void fixFeedbackDefinitionCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize FeedbackDefinition name", null, "upcase.png", sem(e -> {
@@ -190,6 +203,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Assigns the first available UserType as FeedbackDefinition author.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_AUTHOR)
 	public void fixFeedbackDefinitionAuthor(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set first UserType as author", null, "add.png", sem(e -> {
@@ -202,6 +216,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Enables hasRating on FeedbackType when the definition requires rating.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_RATING)
 	public void fixSetHasRatingTrue(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set FeedbackType.hasRating to true", null, "add.png", sem(e -> {
@@ -213,6 +228,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Clears invalid self-referential subjectFeedback in FeedbackDefinition.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_SUBJECT_FEEDBACK_SELF)
 	public void fixClearSubjectFeedback(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Clear subjectFeedback", null, "remove.png", sem(e -> {
@@ -222,6 +238,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Swaps min and max values when the rating interval is inverted.
 	@Fix(RefDslValidator.INVALID_RATING_MIN_MAX)
 	public void fixSwapMinMax(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Swap min and max", null, "add.png", sem(e -> {
@@ -234,6 +251,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Normalizes invalid rating step values by setting step to 1.0.
 	@Fix(RefDslValidator.INVALID_RATING_STEP_POSITIVE)
 	@Fix(RefDslValidator.INVALID_RATING_STEP_DIVIDES)
 	public void fixRatingStepOne(final Issue issue, IssueResolutionAcceptor acceptor) {
@@ -244,6 +262,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the ValidationRule name.
 	@Fix(RefDslValidator.INVALID_VALIDATION_RULE_NAME)
 	public void fixValidationRuleCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize ValidationRule name", null, "upcase.png", sem(e -> {
@@ -256,6 +275,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Pads implementationId to satisfy the minimum length constraint.
 	@Fix(RefDslValidator.INVALID_VALIDATION_RULE_IMPL_ID)
 	public void fixValidationRulePadId(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Pad implementationId", null, "pad.png", sem(e -> {
@@ -272,6 +292,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Assigns a MODERATOR user (or fallback first user) as executedBy.
 	@Fix(RefDslValidator.INVALID_MODERATION_POLICY_EXECUTED_BY)
 	public void fixModerationExecutedByModerator(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Assign first MODERATOR UserType", null, "add.png", sem(e -> {
@@ -292,6 +313,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Sets a default trigger for automatic moderation policies.
 	@Fix(RefDslValidator.INVALID_MODERATION_POLICY_TRIGGER_AUTO)
 	public void fixModerationDefaultTrigger(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set default trigger", null, "add.png", sem(e -> {
@@ -303,6 +325,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Assigns the first available UserType as AuthorizationRule actor.
 	@Fix(RefDslValidator.INVALID_AUTHORIZATION_ACTOR)
 	public void fixAuthorizationActor(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set first UserType as actor", null, "add.png", sem(e -> {
@@ -315,6 +338,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Capitalizes the first character of the AutomationRule name.
 	@Fix(RefDslValidator.INVALID_AUTOMATION_RULE_NAME)
 	public void fixAutomationRuleCapitalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Capitalize AutomationRule name", null, "upcase.png", sem(e -> {
@@ -327,6 +351,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Sets a default trigger for AutomationRule when missing.
 	@Fix(RefDslValidator.INVALID_AUTOMATION_RULE_TRIGGER)
 	public void fixAutomationTrigger(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set default trigger", null, "add.png", sem(e -> {
@@ -338,6 +363,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Sets a default action description for AutomationRule when missing.
 	@Fix(RefDslValidator.INVALID_AUTOMATION_RULE_ACTION)
 	public void fixAutomationAction(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set default actionDescription", null, "add.png", sem(e -> {
@@ -349,6 +375,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Creates a default numeric 1..5 RatingPolicy for FeedbackDefinition.
 	@Fix(RefDslValidator.MC_G1_RATING_REQUIRED)
 	public void fixCreateDefaultRating(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Create default RatingPolicy (1–5, step 1)", null, "add.png", sem(e -> {
@@ -364,6 +391,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Restricts review FeedbackType scope to resources only.
 	@Fix(RefDslValidator.MC_G2_REVIEW_SCOPE)
 	public void fixReviewResourceOnly(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set subjectScope to RESOURCE_ONLY", null, "add.png", sem(e -> {
@@ -373,6 +401,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Normalizes REACTION/VOTE by removing rating and recursion settings.
 	@Fix(RefDslValidator.MC_G3_REACTION_VOTE)
 	public void fixReactionVoteNormalize(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Normalize REACTION/VOTE (no rating, not recursive)", null, "remove.png", sem(e -> {
@@ -386,6 +415,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Forces SUBSCRIPTION to be resource-only and non-recursive.
 	@Fix(RefDslValidator.MC_G4_SUBSCRIPTION)
 	public void fixSubscriptionScope(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set RESOURCE_ONLY and non-recursive", null, "add.png", sem(e -> {
@@ -397,6 +427,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Expands recursive feedback scope to allow feedback targets.
 	@Fix(RefDslValidator.MC_G5_RECURSIVE_SCOPE)
 	public void fixRecursiveAllowFeedback(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Set subjectScope to RESOURCE_OR_FEEDBACK", null, "add.png", sem(e -> {
@@ -406,6 +437,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Creates and attaches a VerificationPolicy for verified-context feedback.
 	@Fix(RefDslValidator.MC_G8_VERIFIED_CONTEXT)
 	public void fixCreateVerificationPolicy(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Create VerificationPolicy for this definition", null, "add.png", sem(e -> {
@@ -425,6 +457,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Enforces unique-per-author target by clearing subjectFeedback.
 	@Fix(RefDslValidator.MC_G9_UNIQUE_PER_AUTHOR)
 	public void fixUniquePerAuthorClearFeedbackSubject(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Remove subjectFeedback (keep resource)", null, "remove.png", sem(e -> {
@@ -434,6 +467,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Enforces unique-per-author target by clearing subjectResource.
 	@Fix(RefDslValidator.MC_G9_UNIQUE_PER_AUTHOR)
 	public void fixUniquePerAuthorClearResourceSubject(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Remove subjectResource (keep feedback)", null, "remove.png", sem(e -> {
@@ -443,6 +477,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Adds AuthorizationRule resourceTarget to the selected context contains list.
 	@Fix(RefDslValidator.MC_G10_AUTHZ_CONTEXT)
 	public void fixAuthzAddResourceToContext(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Add resourceTarget to context.contains", null, "add.png", sem(e -> {
@@ -456,6 +491,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Adds ModerationPolicy monitorsResource to inContext contains list.
 	@Fix(RefDslValidator.MC_G11_MOD_CONTEXT)
 	public void fixModAddResourceToContext(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Add monitorsResource to inContext.contains", null, "add.png", sem(e -> {
@@ -469,6 +505,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	// Adds AutomationRule context resource to inContext contains list.
 	@Fix(RefDslValidator.MC_G12_AUTO_CONTEXT)
 	public void fixAutoAddResourceToContext(final Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, "Add context resource to inContext.contains", null, "add.png", sem(e -> {
