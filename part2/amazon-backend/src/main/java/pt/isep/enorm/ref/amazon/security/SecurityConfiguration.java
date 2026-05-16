@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/**").hasAnyRole(Role.GENERIC.name(), Role.BUYER.name())
                 .requestMatchers(HttpMethod.POST, "/api/comments/*/votes").hasRole(Role.BUYER.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/comments/*/votes/**").hasRole(Role.BUYER.name())
+                .requestMatchers("/api/moderation/**").hasRole(Role.MODERATOR.name())
                 .anyRequest().authenticated()
             );
 

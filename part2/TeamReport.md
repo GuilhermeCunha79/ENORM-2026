@@ -52,7 +52,7 @@ is represented with a compact shape, a clear label, and a small set of visual cu
 | `ModerationPolicy` | Square node with a yellow moderation accent. The node label shows the policy name, and edges connect the monitored resource, monitored feedback, executor, and optional context. |
 | `AutomationRule` | Square node with a light-purple behavior accent. The label includes the rule name and trigger event; nested `Condition` and `Action` nodes are shown as owned children. |
 | `Condition` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the condition name and operator. |
-| `ConditionValue` | Leaf child node under `Condition`, used when a condition has nested values or a value tree. |
+| `ConditionKeywords` | Leaf child node under `Condition`, used to represent each keyword checked by keyword-based condition operators. |
 | `Action` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the action name and result kind. |
 | `VerificationPolicy` | Square node with a cyan verification accent. The label shows the policy name and the verification mode. |
 | `SortingPolicy` | Square node with a light-blue sorting accent. The label shows the policy name together with the criterion and direction. |
@@ -76,7 +76,7 @@ for scenario comparison across YouTube, Amazon, and Reddit models.
 ### Scope and Intent
  
 This section specifies the proposed textual concrete syntax for REF in Part 2.
-The design is aligned with the REF metamodel v3 used in the project and explicitly includes the concepts shown in the MPS model instances (for example: `SortingPolicy`, `Condition`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`).
+The design is aligned with the REF metamodel v3 used in the project and explicitly includes the concepts shown in the MPS model instances (for example: `SortingPolicy`, `Condition`, `ConditionKeywords`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`).
  
 Two equivalent textual views are supported in the report:
  
@@ -93,7 +93,7 @@ The notation uses one declaration per line, keyword-based properties, and indent
  
 The following principles were adopted:
  
-- Keep the metamodel semantics unchanged from REF v3.
+- Keep the syntax traceable to REF v3, including the `ConditionKeywords` child elements used by automation conditions.
 - Use domain words close to natural language (for example: `authorize`, `moderation`, `automation`, `verification`).
 - Keep strong typing through explicit enum tokens and typed references.
 - Reduce noise through optional defaults and keyword modifiers.
@@ -118,13 +118,13 @@ contexts:
 relations:
   ...
 
-feedback-types:
+feedback types:
   ...
 
-feedback-definitions:
+feedback definitions:
   ...
 
-sorting-policies:
+sorting policies:
   ...
 
 authorizations:
@@ -147,28 +147,27 @@ In the automation section, behavior detail is represented with nested conditions
 
 ### Textual Representation for Each Metamodel Element
  
-### Textual Representation for Each Metamodel Element
- 
 | Metamodel element | Textual representation in editor |
 |---|---|
 | RefModel | `ref [name] version [semver]` followed by section headers `[section]:` |
-| UserType | In `users:` section: `user [Name] kind: [UserKind] extends [UserTypeName], ...` |
+| UserType | In `users:` section: `user [Name] with [UserKind] kind extends [UserTypeName], ...` |
 | ContextType | In `contexts:` section: `[Name] with [ContextKind] kind, contains [ResourceTypeName], ...` |
-| ResourceType | In `resources:` section: `[Name] [ supports media [bool] ], extends [ResourceTypeName], ... with fields: [Attribute], ...` |
-| Attribute | In `fields` list: `- [name] is a required: [bool] and multi valued [bool] [PrimitiveType]` |
+| ResourceType | In `resources:` section: `[Name] [ supports media [bool] ] , extends [ResourceTypeName], ... with fields: [Attribute], ...` |
+| Attribute | In `fields` list: `- [name] is a required: [bool] and multi valued : [bool] , [PrimitiveType]` |
 | ResourceRelation | In `relations:` section: `[Name] from [ResourceType] [[srcCard]] to [ResourceType] [[tgtCard]], containment: [bool], recursive: [bool]` |
-| FeedbackType | In `feedback-types:` section: `[Name] kind: [FeedbackKind] applies on [FeedbackSubjectScope] , has rating: [bool], recursive: [bool], allows media: [bool], allows text: [bool], with polarity: [FeedbackPolarity])` |
-| FeedbackDefinition | In `feedback-definitions:` section: `[Name] authored by [UserType] [ on resource [ResourceType] or feedback [FeedbackDefinition] ] requires a verified context: [bool], verification requirement: [VerificationRequirement], unique per author target: [bool], feedback policy: [FeedbackPolicyName] policy status [FeedbackStatus], [ rated between [min] and [max] with [step] step ]` |
+| FeedbackType | In `feedback types:` section: `[Name] kind: [FeedbackKind] applies on [FeedbackSubjectScope] , has rating: [bool], recursive: [bool], allows media: [bool], allows text: [bool], with polarity: [FeedbackPolarity]` |
+| FeedbackDefinition | In `feedback definitions:` section: `[Name] authored by [UserType] on resource [ResourceType] or feedback [FeedbackDefinition] requires a verified context: [bool], verification requirement: [VerificationRequirement], unique per author target: [bool], feedback policy: [FeedbackPolicyName] policy status [FeedbackStatus], [ rated between [min] and [max] with [step] step ]` |
 | FeedbackPolicy | Named policy under a feedback definition: `[Name] policy status [FeedbackStatus]` (inline with FeedbackDefinition) |
 | RatingPolicy | Inline under a feedback definition: `rated between [min] and [max] with [step] step` |
-| ValidationRule | In `validations:` section: `[Name] kind [ValidationKind] severity [RuleSeverity] expr "[expression]" impl [implementationId] appliesToResource [ResourceType] appliesToFeedback [FeedbackDefinition] invokedBy [AutomationRule]` |
-| ModerationPolicy | In `moderations:` section: `[Name] mode [ModerationMode] trigger [TriggerEvent] decision [ModerationDecision] monitors resource [ResourceType] on feedback [FeedbackDefinition] executed by [UserType] in context [ContextType]` |
-| AuthorizationRule | In `authorizations:` section: `[AuthName] for [ActionKind] performed by [UserType] in context of [ContextType] on resource [ResourceType] \| on feedback ( [FeedbackDefinition]` |
-| AutomationRule | In `automations:` section: `[Name] trigger [TriggerEvent] on feedback [FeedbackDefinition] on resource [ResourceType] in context [ContextType] uses [ValidationRule]` with nested `conditions:` and `actions:` blocks |
-| Condition | In `conditions:` block: `[Name] field [AttributeName] op [ConditionOperator] value "[value]"` |
-| Action | In `actions:` block: `[Name] kind [ActionResultKind] message "[message]"` |
-| VerificationPolicy | In `verifications:` section: `[Name] mode [ValidationKind] when [TriggerEvent] verifies [FeedbackDefinition]` |
-| SortingPolicy | In `sorting-policies:` section: `[Name] applies to resource [ResourceType] and/or applies to feedback [FeedbackDefinition] in context of [ContextType] sorted by [SortCriterion] with direction [SortDirection]` |
+| ValidationRule | In `validations:` section: `[Name] with [ValidationKind] and severity [RuleSeverity] for expression [expression] , was invoked by [UserType] in context of [ContextType] with implementation id [implementationId] and applies to resource [ResourceType] \| applies to feedback [FeedbackDefinition]` |
+| ModerationPolicy | In `moderations:` section: `[Name] in [ModerationMode] mode set to [ModerationDecision] when trigger [TriggerEvent] on resource [ResourceType] \| feedback [FeedbackDefinition] executed by [UserType] in [ContextType] context` |
+| AuthorizationRule | In `authorizations:` section: `[AuthName] for [ActionKind] performed by [UserType] in [ContextType] context , on resource [ResourceType] \| on feedback [FeedbackDefinition]` |
+| AutomationRule | In `automations:` section: `[Name] trigger [TriggerEvent] in [ContextType] context on feedback [FeedbackDefinition] \| resource [ResourceType] using [ValidationRule] when condition(s) :` followed by nested conditions, `then :`, and nested actions |
+| Condition | In an automation condition list: `- [Name] should check if [AttributeName] field [ConditionOperator] as :` followed by nested `ConditionKeywords` entries |
+| ConditionKeywords | In a condition keyword list: `- [word]` |
+| Action | In an automation action list: `- [Name] should [ActionResultKind] with message [message]` |
+| VerificationPolicy | In `verifications:` section: `[Name] in [ValidationKind] mode is applied on [TriggerEvent]` |
+| SortingPolicy | In `sorting policies:` section: `[Name] applies to resource [ResourceType] \| applies to feedback [FeedbackDefinition] in [ContextType] context , sorted by [SortCriterion] with [SortDirection] direction` |
  
 ## Enum Token Notation
  
@@ -201,83 +200,84 @@ All enum literals are written as uppercase keywords to preserve type safety and 
 ref AmazonRef version 1.0.0
 
 users:
-  user Reviewer kind: GENERIC
-  user Buyer kind: BUYER extends Reviewer
-  user Seller kind: SELLER
-  user Moderator kind: MODERATOR
+  user Reviewer with GENERIC kind extends << ... >>
+  user Buyer with BUYER kind extends << ... >>
+  user Seller with SELLER kind extends << ... >>
+  user Moderator with MODERATOR kind extends << ... >>
 
 resources:
-  Product [ supports media false ], extends << ... >> with fields:
-    - Id is a required: true and multi valued false TEXT
-    - Name is a required: true and multi valued false TEXT
-    - Description is a required: true and multi valued false TEXT
-    - CreatedAt is a required: false and multi valued false DATE
-  Order [ supports media false ], extends << ... >> with fields:
-    - Id is a required: true and multi valued false TEXT
-    - Date is a required: true and multi valued false DATE
-  OrderItem [ supports media false ], extends << ... >> with fields:
-    - Quantity is a required: true and multi valued false NUMBER
-  CommentReview [ supports media true ], extends << ... >> with fields:
-    - Id is a required: true and multi valued false TEXT
-    - Text is a required: true and multi valued false TEXT
-    - CreatedAt is a required: true and multi valued false DATE
+  Product [ supports media false ] , extends Order with fields:
+    - Id is a required: true and multi valued : false , TEXT
+    - Name is a required: true and multi valued : false , TEXT
+    - Description is a required: true and multi valued : false , TEXT
+    - CreatedAt is a required: false and multi valued : false , DATE
+  Order [ supports media false ] , extends << ... >> with fields:
+    - Id is a required: true and multi valued : false , TEXT
+    - Date is a required: true and multi valued : false , DATE
+  OrderItem [ supports media false ] , extends << ... >> with fields:
+    - Quantity is a required: true and multi valued : false , NUMBER
+  CommentReview [ supports media true ] , extends << ... >> with fields:
+    - Id is a required: true and multi valued : false , TEXT
+    - Text is a required: true and multi valued : false , TEXT
+    - CreatedAt is a required: true and multi valued : false , DATE
 
 contexts:
   CatalogContext with CATALOG kind, contains Product, Order, OrderItem, CommentReview
   ModerationContext with CATALOG kind, contains Product
   SearchContext with CATALOG kind, contains Product
+  RecommendationContext with CATALOG kind, contains Product
 
 relations:
   OrderContainsOrderItem from Order [1] to OrderItem [2], containment: false, recursive: false
   OrderItemTargetsProduct from OrderItem [2] to Product [1], containment: false, recursive: false
   ProductContainsComment from Product [1] to CommentReview [2], containment: true, recursive: false
 
-feedback-types:
-  ReviewType kind: REVIEW applies on RESOURCE_ONLY , has rating: true, recursive: false, allows media: true, allows text: true, with polarity: NONE)
-  HelpfulVoteType kind: VOTE applies on RESOURCE_ONLY , has rating: false, recursive: false, allows media: false, allows text: false, with polarity: UP_DOWN)
+feedback types:
+  ReviewType kind: REVIEW applies on RESOURCE_ONLY , has rating: true, recursive: false, allows media: true, allows text: true, with polarity: NONE
+  HelpfulVoteType kind: VOTE applies on RESOURCE_ONLY , has rating: false, recursive: false, allows media: false, allows text: false, with polarity: UP_DOWN
 
-feedback-definitions:
-  ProductReview authored by Reviewer [ on resource Product or feedback <no subjectFeedback> ] requires a verified context: false, verification requirement: OPTIONAL, unique per author target: true, feedback policy: ProductReviewPolicy policy status ENABLED, rated between 1 and 5 with 1 step
-  HelpfulVoteOnComment authored by Buyer [ on resource CommentReview or feedback <no subjectFeedback> ] requires a verified context: false, verification requirement: OPTIONAL, unique per author target: false, feedback policy: HelpfulVotePolicy policy status ENABLED, <no ratingPolicy>
+feedback definitions:
+  ProductReview authored by Reviewer on resource Product or feedback <no subjectFeedback> requires a verified context: false, verification requirement: OPTIONAL, unique per author target: true, feedback policy: ProductReviewPolicy policy status ENABLED, rated between 1 and 5 with 1 step
+  HelpfulVoteOnComment authored by Buyer on resource CommentReview or feedback <no subjectFeedback> requires a verified context: false, verification requirement: OPTIONAL, unique per author target: false, feedback policy: HelpfulVotePolicy policy status ENABLED, <no ratingPolicy>
 
-sorting-policies:
-  ProductListingSort applies to resource Product and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by VALUE with direction DESC
-  ProductSearchSort applies to resource Product and/or applies to feedback <no appliesToFeedback> in context of <no inContext> sorted by DATE with direction DESC
-  CommentSortByDate applies to resource CommentReview and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by DATE with direction DESC
-  CommentSortByRating applies to resource CommentReview and/or applies to feedback <no appliesToFeedback> in context of CatalogContext sorted by DATE with direction DESC
-
-validations:
-  ReviewValidationRule kind AUTOMATIC severity ERROR expr "rating_in_range_and_non_empty_text" impl "amazon_review_validation" appliesToResource Product appliesToFeedback ProductReview invokedBy ReviewGuardAutomation
-
-automations:
-  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE on feedback ProductReview on resource Product in context ModerationContext uses ReviewValidationRule
-    conditions:
-      LOl field Description op CONTAINS_KEYWORDS value "g"
-    actions:
-      FlagReview kind FLAG_CONTENT message "Content Restricted"
-
-moderations:
-  ReviewModerationPolicy mode HYBRID trigger ON_REPORT_THRESHOLD decision FLAGGED monitors resource Product on feedback ProductReview executed by Moderator in context ModerationContext
+sorting policies:
+  ProductListingSort applies to resource Product | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by VALUE with DESC direction
+  ProductSearchSort applies to resource Product | applies to feedback <no appliesToFeedback> in <no inContext> context , sorted by DATE with DESC direction
+  CommentSortByDate applies to resource CommentReview | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by DATE with DESC direction
+  CommentSortByRating applies to resource CommentReview | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by VALUE with DESC direction
 
 authorizations:
-  BuyerCanCreateReview for CREATE performed by Reviewer in context of CatalogContext on resource Product | on feedback ( ProductReview
-  ReviewerCanCreateReview for CREATE performed by Reviewer in context of CatalogContext on resource Product | on feedback ( ProductReview
-  ModeratorCanModerateReviews for MODERATE performed by Moderator in context of ModerationContext on resource Product | on feedback ( ProductReview
-  BuyerCanVoteHelpful for VOTE performed by Buyer in context of CatalogContext on resource CommentReview | on feedback ( HelpfulVoteOnComment
+  BuyerCanCreateReview for CREATE performed by Reviewer in CatalogContext context , on resource Product | on feedback ProductReview
+  ReviewerCanCreateReview for CREATE performed by Reviewer in CatalogContext context , on resource Product | on feedback ProductReview
+  ModeratorCanModerateReviews for MODERATE performed by Moderator in ModerationContext context , on resource Product | on feedback ProductReview
+  BuyerCanVoteHelpful for VOTE performed by Buyer in CatalogContext context , on resource CommentReview | on feedback HelpfulVoteOnComment
+
+validations:
+  ReviewValidationRule with AUTOMATIC and severity ERROR for expression rating_in_range_and_non_empty_text , was invoked by Reviewer in context of CatalogContext with implementation id amazon_review_validation and applies to resource Product | applies to feedback ProductReview
+
+moderations:
+  ReviewModerationPolicy in HYBRID mode set to FLAGGED when trigger ON_REPORT_THRESHOLD on resource Product | feedback ProductReview executed by Moderator in ModerationContext context
+
+automations:
+  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE in ModerationContext context on feedback ProductReview | resource Product using ReviewValidationRule when condition(s) :
+    - DescriptionCheck should check if Description field CONTAINS_KEYWORDS as :
+      - WAR
+    then :
+      - FlagReview should FLAG_CONTENT with message Content Restricted
 
 verifications:
-  ProductReviewVerificationAuto mode AUTOMATIC when ON_FEEDBACK_CREATE verifies ProductReview
-  ProductReviewVerificationManual mode MANUAL when ON_MANUAL_REQUEST verifies ProductReview
+  ProductReviewVerificationAuto in AUTOMATIC mode is applied on ON_FEEDBACK_CREATE
+  ProductReviewVerificationManual in MANUAL mode is applied on ON_MANUAL_REQUEST
 ```
  
 ### Adaptations Relative to P1 and Justification
  
-The metamodel itself is preserved. The adaptations are concrete syntax decisions to improve usability for SMEs.
+The syntax is projection-compatible with REF v3 and documents the current `ConditionKeywords` structure used by automation conditions.
  
 1. Section headers remove repeated concept keywords (for example, under `users:` the entry is just `Buyer kind BUYER`, not `user Buyer ...`). Indentation replaces braces in the SME view.
 2. Trigger values are typed with `TriggerEvent` instead of free text. This prevents invalid event names at parse time.
-3. `AutomationRule` includes explicit `conditions` and `actions` blocks. This captures richer behavior needed in moderation workflows and keeps trigger and rule body clearly separated.
-4. `SortingPolicy` is first-class in the syntax as a named `sorting-policies` section. This captures ordering behavior that is central to Amazon, Reddit, and YouTube-like scenarios.
+3. `AutomationRule` includes explicit condition and action lists. A `Condition` owns one or more `ConditionKeywords` entries instead of a single free-text value.
+4. `SortingPolicy` is first-class in the syntax as a named `sorting policies` section. This captures ordering behavior that is central to Amazon, Reddit, and YouTube-like scenarios.
 5. Feedback semantics include `allowsText`, `polarity`, and `verificationRequirement` as explicit optional tokens. This supports vote and reaction differences and verification strictness without workarounds.
 6. Projection helper concepts (`ContextResourceTypeLink`, `UserTypeSuperType`) are rendered as inline modifiers (`contains`, `extends`) instead of named declarations. This hides implementation details from the surface notation and keeps the abstract syntax tree traceable.
 
@@ -451,7 +451,7 @@ The tables below map **every metamodel type and enumeration** from REF v3 to **v
 | `AuthorizationRule` | `AuthorizationRule` entity + policy CRUD | **Not** a dedicated entity; approximated by `ParticipationPolicy` + `SecurityConfiguration` rules | `ChannelPermissionPolicy` + `SecurityConfiguration` | Reddit/YouTube variability: **rules split** between data and code |
 | `AutomationRule` | `AutomationRule` + nested conditions/actions | Absent as persisted model | Absent | Generator may omit or emit stubs; execution **manual** if present |
 | `Condition` | `AutomationCondition` | — (no direct type) | — | Amazon-only in current prototypes |
-| `ConditionValue` | `ConditionValue` | — | — | Amazon-only |
+| `ConditionKeywords` | `ConditionKeyword` / keyword list owned by `AutomationCondition` | — | — | Amazon-only |
 | `Action` (governance action) | `AutomationAction` | — | — | Amazon-only |
 | `VerificationPolicy` | `VerificationPolicy` entity | Not as separate aggregate | Not as separate aggregate | Reddit/YouTube may need **manual** service/policy classes to reach parity |
 | `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | Good example of **identical** metamodel → entity mapping |
@@ -478,7 +478,7 @@ The tables below map **every metamodel type and enumeration** from REF v3 to **v
 #### 5.3.3 Coverage of “every metamodel part” and gaps
 
 - **Fully materialized in all three:** sorting, validation (under different names), core persistence of resources and feedback-shaped aggregates, JWT security shell, Generation Gap entity/repository/service/controller layout.
-- **Fully materialized only in Amazon today:** `AutomationRule` subtree (`Condition`, `ConditionValue`, `Action`), first-class `AuthorizationRule`, `VerificationPolicy`, richer `ContextType` linking.
+- **Fully materialized only in Amazon today:** `AutomationRule` subtree (`Condition`, `ConditionKeywords`, `Action`), first-class `AuthorizationRule`, `VerificationPolicy`, richer `ContextType` linking.
 - **Metamodel concepts mainly realized as manual Java in Reddit/YouTube:** large parts of `AuthorizationRule` (HTTP-level authorization matrix), some `FeedbackPolicy` / `VerificationPolicy` semantics, and any future `AutomationRule` execution.
 
 This distribution supports the Activity 2 requirement: the generator should emit **stable generated bases** plus **narrow override points** (subclasses, `@Override` service methods, optional `implementationId` classes) so teams can extend behavior where the DSL cannot express fine details.

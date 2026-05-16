@@ -7,5 +7,5 @@ import pt.isep.enorm.ref.amazon.repository.generated.GeneratedOrderItemRepositor
 @Repository
 public interface OrderItemRepository extends GeneratedOrderItemRepository {
 
-    boolean existsByOrderBuyerIdAndProductId(Long buyerId, Long productId);
+    boolean existsByOrderBuyerIdAndProduct_Id(Long buyerId, Long productId);
 }

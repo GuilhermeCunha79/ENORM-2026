@@ -25,7 +25,7 @@ public abstract class GeneratedLike {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 16)
+    @Column(name = "like_value", nullable = false, length = 16)
     private LikeValue value;
 
     @Column(nullable = false)

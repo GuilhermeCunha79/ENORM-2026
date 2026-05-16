@@ -195,6 +195,38 @@ class ProductEvaluationServiceIntegrationTest {
             .andExpect(jsonPath("$.totalReviews").value(1));
     }
 
+    @Test
+    void moderatorCanSimulatePendingReviewModeration() throws Exception {
+        String sellerToken = registerAndExtractToken("atb-moderation-seller", "atb");
+
+        AmazonUser seller = amazonUserRepository.findByUsername("atb-moderation-seller").orElseThrow();
+        seller.setRole(Role.SELLER);
+        amazonUserRepository.save(seller);
+
+        Long productId = createProductAndExtractId(sellerToken, "speaker", "portable speaker", new BigDecimal("59.99"));
+        String buyerToken = registerAndExtractToken("buyer-moderation-pending", "buyer");
+        Long reviewId = submitReviewAndExtractId(
+            buyerToken,
+            productId,
+            "Click here for free money.",
+            1
+        );
+
+        String moderatorToken = registerAndExtractToken("atb-moderator", "atb");
+        AmazonUser moderator = amazonUserRepository.findByUsername("atb-moderator").orElseThrow();
+        moderator.setRole(Role.MODERATOR);
+        amazonUserRepository.save(moderator);
+
+        mockMvc.perform(post("/api/moderation/reviews/{reviewId}/simulate", reviewId)
+                .header("Authorization", "Bearer " + moderatorToken))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.reviewId").value(reviewId.intValue()))
+            .andExpect(jsonPath("$.moderator").value("atb-moderator"))
+            .andExpect(jsonPath("$.previousStatus").value("PENDING"))
+            .andExpect(jsonPath("$.newStatus").value("REJECTED"))
+            .andExpect(jsonPath("$.decision").value("AUTO_REJECT"));
+    }
+
     private String registerAndExtractToken(String username, String password) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                 .contentType(APPLICATION_JSON)
@@ -222,6 +254,23 @@ class ProductEvaluationServiceIntegrationTest {
                       "price": %s
                     }
                     """.formatted(name, description, price.toPlainString())))
+            .andExpect(status().isCreated())
+            .andReturn();
+
+        JsonNode jsonNode = objectMapper.readTree(result.getResponse().getContentAsString());
+        return jsonNode.get("id").asLong();
+    }
+
+    private Long submitReviewAndExtractId(String token, Long productId, String comment, int grade) throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/products/{productId}/reviews", productId)
+                .header("Authorization", "Bearer " + token)
+                .contentType(APPLICATION_JSON)
+                .content("""
+                    {
+                      "comment": "%s",
+                      "grade": %d
+                    }
+                    """.formatted(comment, grade)))
             .andExpect(status().isCreated())
             .andReturn();
 

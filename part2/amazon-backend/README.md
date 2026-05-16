@@ -154,3 +154,44 @@ GET /api/products/14/average-rating
 ```
 
 Only approved reviews are counted in the average. Non-verified buyers create reviews with `status = PENDING` and `verificationType = MANUAL`. Buyers verified by user flag or by an order containing the reviewed product create reviews with `status = APPROVED`, `verificationType = AUTOMATIC`, and `verifiedBuyerAtSubmission = true`.
+
+## Moderation simulation
+
+Moderation endpoints require a `MODERATOR` token. For local testing, promote a user in H2:
+
+```sql
+UPDATE users SET role = 'MODERATOR' WHERE username = 'atb';
+```
+
+The backend simulates review moderation with deterministic keyword signals:
+
+- reviews containing blocked spam/toxicity signals are set to `REJECTED`;
+- verified-buyer reviews are approved automatically when no blocked signal is found;
+- pending manual reviews are approved by the simulated moderator when no blocked signal is found.
+
+Run moderation against one review:
+
+```http
+POST /api/moderation/reviews/1/simulate
+Authorization: Bearer MODERATOR_JWT_TOKEN
+```
+
+Process all pending reviews:
+
+```http
+POST /api/moderation/reviews/simulate
+Authorization: Bearer MODERATOR_JWT_TOKEN
+```
+
+Example response:
+
+```json
+{
+  "reviewId": 1,
+  "moderator": "atb",
+  "previousStatus": "PENDING",
+  "newStatus": "APPROVED",
+  "decision": "MANUAL_APPROVE_SIMULATED",
+  "explanation": "Approved by simulated manual moderation; no blocked signal was found."
+}
+```

@@ -28,6 +28,6 @@ public class ProductEvaluationService extends GeneratedProductEvaluationService 
     @Override
     protected boolean isVerifiedBuyerForProduct(AmazonUser user, Product product) {
         return user.isVerifiedBuyer()
-            || orderItemRepository.existsByOrderBuyerIdAndProductId(user.getId(), product.getId());
+            || orderItemRepository.existsByOrderBuyerIdAndProduct_Id(user.getId(), product.getId());
     }
 }

@@ -1057,16 +1057,18 @@
       <property role="TrG5h" value="operator" />
       <ref role="AX2Wp" node="77Q8YzgwKZg" resolve="ConditionOperator" />
     </node>
-    <node concept="1TJgyi" id="77Q8YzgwKZv" role="1TKVEl">
-      <property role="IQ2nx" value="8211790453394313183" />
-      <property role="TrG5h" value="value" />
-      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
-    </node>
     <node concept="1TJgyj" id="1bC37d4A6C6" role="1TKVEi">
       <property role="IQ2ns" value="1362352576491186694" />
       <property role="20kJfa" value="field" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="7vG6G7pFVDW" resolve="Attribute" />
+    </node>
+    <node concept="1TJgyj" id="1C9VCjyCBvX" role="1TKVEi">
+      <property role="IQ2ns" value="1876292974281914365" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="keywords" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="1C9VCjyCBvV" resolve="ConditionKeywords" />
     </node>
   </node>
   <node concept="25R3W" id="77Q8YzgwKZg">
@@ -1154,6 +1156,16 @@
     <node concept="25R33" id="77Q8YzgwKZR" role="25R1y">
       <property role="3tVfz5" value="8211790453394313207" />
       <property role="TrG5h" value="AUTO_REJECT" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="1C9VCjyCBvV">
+    <property role="EcuMT" value="1876292974281914363" />
+    <property role="TrG5h" value="ConditionKeywords" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyi" id="1C9VCjyCBvW" role="1TKVEl">
+      <property role="IQ2nx" value="1876292974281914364" />
+      <property role="TrG5h" value="word" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
   </node>
 </model>

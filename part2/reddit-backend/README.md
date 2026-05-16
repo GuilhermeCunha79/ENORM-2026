@@ -135,6 +135,55 @@ Content-Type: application/json
 }
 ```
 
+## Moderation simulation
+
+Moderation endpoints require a `MODERATOR` token. For local testing, promote a user in H2:
+
+```sql
+UPDATE users SET role = 'MODERATOR' WHERE username = 'viewer1';
+```
+
+The backend simulates moderation with deterministic keyword signals:
+
+- posts: copyright signals remove content, spam flags content, harmful-content signals move it to `UNDER_REVIEW`;
+- comments: blocked words and toxicity hide/remove comments, spam flags comments;
+- reports: pending reports are processed in batch and marked `REVIEWED` or `REMOVED`.
+
+Run moderation against a post:
+
+```http
+POST /api/moderation/posts/1/simulate
+Authorization: Bearer MODERATOR_JWT_TOKEN
+```
+
+Run moderation against a comment:
+
+```http
+POST /api/moderation/comments/1/simulate
+Authorization: Bearer MODERATOR_JWT_TOKEN
+```
+
+Process all pending reports:
+
+```http
+POST /api/moderation/reports/simulate
+Authorization: Bearer MODERATOR_JWT_TOKEN
+```
+
+Example response:
+
+```json
+{
+  "targetType": "POST",
+  "targetId": 1,
+  "moderationCheckId": 4,
+  "reportId": null,
+  "signal": "spam-risk",
+  "decision": "FLAGGED",
+  "status": "FLAGGED",
+  "explanation": "Spam-like signal found; simulated action flags the post."
+}
+```
 
 
 
