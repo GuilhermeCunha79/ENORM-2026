@@ -14,7 +14,7 @@
 | Pedro Vilarinho   | **Eclipse Xtext** - textual DSL, validation, generator (`part2/tool2-xtext/`)                         | [tool2-xtext/readme.md](tool2-xtext/readme.md) |
 | Francisco Peixoto | **Eclipse Sirius** - graphical views / Viewpoint Specification (`part2/tool3-sirius/`)                | [tool3-sirius/readme.md](tool3-sirius/readme.md) |
 
-The team works with a **single domain metamodel (REF)** and three **reference scenarios** (YouTube, Amazon, Reddit). Each member implements the required artifacts in the assigned tool. **This document** focuses on **team-level** Part 2 decisions: concrete syntax design, common backend features, commonality/variability analysis, code generation design, and cross-tool compatibility of generated applications.
+The team works with a **single domain metamodel (REF)** and three **reference scenarios** (YouTube, Amazon, Reddit). Each member implements the required artifacts in the assigned tool. This report covers the team-level Part 2 decisions: concrete syntax design, common backend features, commonality/variability analysis, code generation design, and cross-tool compatibility of generated applications.
 
 Tool-specific implementation details remain in each individual tool report.
 
@@ -25,8 +25,8 @@ Tool-specific implementation details remain in each individual tool report.
 ### 2.1 Graphical notation
 The Sirius editor is used to provide a single overview diagram for each REF model instance. The diagram is centered on 
 the `RefModel` root and shows the model as a navigable canvas with typed nodes, labeled connectors, and visual grouping by concern.
-The goal is to make the model readable for a domain expert without exposing implementation details. Each metamodel element
-is represented with a compact shape, a clear label, and a small set of visual cues for type and relationship semantics.
+The notation is meant to make the model readable for a domain expert without exposing implementation details. Each metamodel element
+uses a compact shape, a clear label, and a small set of visual cues for type and relationship semantics.
 
 #### Diagram structure
 - The root element is `RefModel`, shown as a large container node with the model name and version in its title.
@@ -38,19 +38,19 @@ is represented with a compact shape, a clear label, and a small set of visual cu
 | Metamodel element | Graphical representation in Sirius |
 |---|---|
 | `RefModel` | Large root container / overview frame titled with `<name> (v<version>)`. It acts as the diagram entry point and groups all other elements. |
-| `UserType` | Square node with a blue actor-style accent. Label shows the user type name; `kind` is shown as a short property line when needed. |
+| `UserType` | Square node with a blue actor-style accent. The label shows the user type name, with `kind` as a short property line when needed. |
 | `ContextType` | Square node used as a context container, with a neutral gray fill. Label shows the context name and `kind`. |
 | `ResourceType` | Square node with orange accent to represent domain entities. Attributes are displayed inside the same node as a compartment-style list. |
 | `Attribute` | Small row/line inside the owning `ResourceType` node using `name : type` plus markers such as `required` and `multiValued`. |
-| `ResourceRelation` | Directed edge between two `ResourceType` nodes. The edge label shows the relation name and cardinalities; containment and recursion are rendered with edge decoration or line style. |
+| `ResourceRelation` | Directed edge between two `ResourceType` nodes. The edge label shows the relation name and cardinalities. Containment and recursion use edge decoration or line style. |
 | `FeedbackType` | Square node with green accent to identify feedback families such as comments, reviews, votes, or reports. |
-| `FeedbackDefinition` | Distinct node linked to its `FeedbackType`, author, and subject. The label shows the feedback name; policy and rating data are shown as short inline details. |
+| `FeedbackDefinition` | Distinct node linked to its `FeedbackType`, author, and subject. The label shows the feedback name, with policy and rating data as short inline details. |
 | `FeedbackPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node. The status is shown directly as `enabled` or `disabled`. |
 | `RatingPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node, showing the rating range as `min..max`. |
 | `AuthorizationRule` | Square node with a blue governance accent. The label includes the allowed action, and edges connect it to the actor, context, resource, and optional feedback target. |
-| `ValidationRule` | Square node with a green validation accent. The label shows the rule name and severity; optional links indicate the affected resource, feedback, and invoking automation. |
+| `ValidationRule` | Square node with a green validation accent. The label shows the rule name and severity. Optional links indicate the affected resource, feedback, and invoking automation. |
 | `ModerationPolicy` | Square node with a yellow moderation accent. The node label shows the policy name, and edges connect the monitored resource, monitored feedback, executor, and optional context. |
-| `AutomationRule` | Square node with a light-purple behavior accent. The label includes the rule name and trigger event; nested `Condition` and `Action` nodes are shown as owned children. |
+| `AutomationRule` | Square node with a light-purple behavior accent. The label includes the rule name and trigger event. Nested `Condition` and `Action` nodes are shown as owned children. |
 | `Condition` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the condition name and operator. |
 | `ConditionKeywords` | Leaf child node under `Condition`, used to represent each keyword checked by keyword-based condition operators. |
 | `Action` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the action name and result kind. |
@@ -67,16 +67,16 @@ is represented with a compact shape, a clear label, and a small set of visual cu
 #### How this supports the domain expert
 The editor keeps the same vocabulary as the metamodel, but the diagram removes most technical noise. A domain expert can 
 scan the model by reading the main nodes first, then inspect the connectors to understand who can act, what is being 
-described, and which rules govern the scenario. This makes the Sirius diagram suitable both for validation sessions and 
-for scenario comparison across YouTube, Amazon, and Reddit models.
+described, and which rules govern the scenario. The Sirius diagram can be used in validation sessions and for scenario
+comparison across YouTube, Amazon, and Reddit models.
 
 
 ### 2.2 Textual notation
 
 ### Scope and Intent
  
-This section specifies the proposed textual concrete syntax for REF in Part 2.
-The design is aligned with the REF metamodel v3 used in the project and explicitly includes the concepts shown in the MPS model instances (for example: `SortingPolicy`, `Condition`, `ConditionKeywords`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`).
+This is the proposed textual concrete syntax for REF in Part 2.
+It follows the REF metamodel v3 used in the project and includes the concepts shown in the MPS model instances, such as `SortingPolicy`, `Condition`, `ConditionKeywords`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`.
  
 Two equivalent textual views are supported in the report:
  
@@ -85,13 +85,13 @@ Two equivalent textual views are supported in the report:
 
 ### Design Principles
  
-The goal is simple. A domain expert should read and validate a model without developer help.
+A domain expert should be able to read and validate a model without developer help.
 
 "Close to natural language" here means familiar keywords and clear structure. It does not mean full prose sentences.
 
 The notation uses one declaration per line, keyword-based properties, and indentation under section headers. Braces are optional and omitted in the SME view. This keeps models easy to read and review.
  
-The following principles were adopted:
+The syntax follows these principles:
  
 - Keep the syntax traceable to REF v3, including the `ConditionKeywords` child elements used by automation conditions.
 - Use domain words close to natural language (for example: `authorize`, `moderation`, `automation`, `verification`).
@@ -300,7 +300,7 @@ The reference backend platform for generated REF applications is Java 21 with Sp
 - Spring Security with JWT for prototype-level authentication and authorization checks derived from REF user types and authorization rules.
 - Maven as the build tool for standalone backend prototypes.
 
-Generated applications should be normal Spring Boot applications so that generated code can be compiled, tested, and executed without depending on the modeling tools at runtime. Scenario-specific prototypes can then instantiate this common platform with the concrete resources, feedback definitions, rules, and authorization policies of each REF model.
+Generated applications should behave like normal Spring Boot applications. The generated code is compiled, tested, and executed without depending on the modeling tools at runtime. Scenario-specific prototypes instantiate this common platform with the concrete resources, feedback definitions, rules, and authorization policies of each REF model.
 
 ### 3.2 Architecture of generated backend applications
 
@@ -336,7 +336,7 @@ The common generator output should include:
 - Consistent API error handling.
 - Integration tests for the generated use cases.
 
-For each concrete scenario, these generated artifacts are instantiated from the REF model. A marketplace scenario may generate products, orders, reviews, verified purchase checks, and star averages. A community scenario may generate posts, comments, votes, reports, and moderation actions. A media platform scenario may generate channels, videos, comments, reactions, subscriptions, and content moderation rules. The generator should therefore treat these as variations of the same REF concepts rather than as unrelated applications.
+For each concrete scenario, the generator instantiates these artifacts from the REF model. A marketplace scenario may generate products, orders, reviews, verified purchase checks, and star averages. A community scenario may generate posts, comments, votes, reports, and moderation actions. A media platform scenario may generate channels, videos, comments, reactions, subscriptions, and content moderation rules. The generator should treat these as variations of the same REF concepts rather than as unrelated applications.
 
 ### 3.4 Extensibility points for manual code
 
@@ -348,7 +348,7 @@ Manual code is expected for scenario-specific behavior that cannot be safely inf
 - Manual controller subclasses or extra endpoints when a scenario needs a more ergonomic REST shape.
 - Security and authorization refinements when generated rules need to be adapted to framework-level route matching.
 
-This pattern keeps the generated layer reusable while allowing each scenario to implement rules that depend on external state or domain-specific interpretation. The generated service should define common algorithms and protected hooks; the manual service should override only the parts that are genuinely scenario-specific.
+The Generation Gap keeps the generated layer reusable while allowing each scenario to implement rules that depend on external state or domain-specific interpretation. The generated service defines the common algorithms and protected hooks. The manual service only overrides the parts that are scenario-specific.
 
 ### 3.5 Prompts for backend generation
 
@@ -394,11 +394,11 @@ TODO
 
 ## 5. Activity 4 - Identify Commonality and Variability in the Code
 
-This section compares the three Spring Boot prototypes (`part2/amazon-backend`, `part2/reddit-backend`, `part2/youtube-backend`) against the REF metamodel in [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml). The analysis assumes the prototypes are intended to be **instances** of the same generation architecture described in Section 3 (Generation Gap, layered backend).
+This compares the three Spring Boot prototypes (`part2/amazon-backend`, `part2/reddit-backend`, `part2/youtube-backend`) against the REF metamodel in [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml). The comparison treats the prototypes as **instances** of the same generation architecture described in Section 3 (Generation Gap, layered backend).
 
 ### 5.1 Common parts in the prototypes
 
-The following parts are **shared in structure and technology** across Amazon, Reddit, and YouTube backends, even when class names differ.
+These parts are **shared in structure and technology** across Amazon, Reddit, and YouTube backends, even when class names differ.
 
 - **Platform and build:** Java 21, Spring Boot 3, Maven, JPA/Hibernate, H2 (including console-friendly security headers where applicable), consistent package layering (`domain`, `repository`, `service`, `web`, `security`, `config`).
 - **Generation Gap pattern:** For each major persistent concept there is a `generated.Generated*` mapped superclass or base type and a thin manual subtype (`Product`, `Post`, `Video`, …) that exists primarily as an **extension point** (often empty today, but reserved for scenario-specific logic).
@@ -417,25 +417,25 @@ Variability appears at three levels: **domain vocabulary**, **persistence shape 
 | Variability area | Amazon | Reddit | YouTube |
 |---|---|---|---|
 | **Core resources** | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Subreddit`, `Post`, `Comment`, … | `Channel`, `Video`, `Comment`, … |
-| **Context (`ContextType`)** | Explicit `ContextType` + `ContextResource` linking resources to catalog/search/moderation contexts | `Subreddit` as the community container; policies scoped to it | `Channel` as the channel container; channel-scoped permission rows |
-| **Authorization (`AuthorizationRule`)** | First-class `AuthorizationRule` JPA aggregate with `ActionKind`, actor role, optional `ContextType`, string targets for resource/feedback | No `AuthorizationRule` entity; **participation** modeled as `ParticipationPolicy` (`PermissionAction`, `PermissionAudience`) + **hard-coded** HTTP method/path rules in `SecurityConfiguration` | Same split as Reddit using `ChannelPermissionPolicy` + `SecurityConfiguration` |
-| **Automation (`AutomationRule`, `Condition`, `Action`)** | Full persistent automation model (`AutomationRule`, `AutomationCondition`, `AutomationAction`) close to the metamodel | No automation tables; rule-like behavior is distributed in services or omitted | No automation tables |
-| **Verification (`VerificationPolicy`)** | Persistent `VerificationPolicy` CRUD via policy service | Not modeled as the same entity; verification flavor appears in service logic (if at all) | Same as Reddit |
+| **Context (`ContextType`)** | Explicit `ContextType` + `ContextResource` linking resources to catalog/search/moderation contexts | `Subreddit` as the community container, with policies scoped to it | `Channel` as the channel container, with channel-scoped permission rows |
+| **Authorization (`AuthorizationRule`)** | First-class `AuthorizationRule` JPA aggregate with `ActionKind`, actor role, optional `ContextType`, string targets for resource/feedback | No `AuthorizationRule` entity. **Participation** is modeled as `ParticipationPolicy` (`PermissionAction`, `PermissionAudience`) + **hard-coded** HTTP method/path rules in `SecurityConfiguration` | Same split as Reddit using `ChannelPermissionPolicy` + `SecurityConfiguration` |
+| **Automation (`AutomationRule`, `Condition`, `Action`)** | Full persistent automation model (`AutomationRule`, `AutomationCondition`, `AutomationAction`) close to the metamodel | No automation tables. Rule-like behavior is distributed in services or omitted | No automation tables |
+| **Verification (`VerificationPolicy`)** | Persistent `VerificationPolicy` CRUD via policy service | Not modeled as the same entity. Verification behavior appears in service logic when needed | Same as Reddit |
 | **Votes vs reactions** | `HelpfulVote` on comments (up/down style) | `Vote` + `VoteHistory` on posts | `Like` + `LikeHistory` on videos (like/dislike style enums) |
 | **Extra domain concepts** | Order-based “verified buyer” checks, review media references | `CommunityRule`, `ParticipationPolicy`, post/comment moderation check entities | `ChannelPermissionPolicy`, `ContentValidationRule` naming, `CommentSettingsChange` |
 | **Manual extensions (Activity 2)** | Example: `ProductEvaluationService` overrides generated verification to combine **role flag** and **order history** (`OrderItemRepository`) | Overrides expected in vote/report services for thresholds, duplicate votes, subreddit membership | Overrides expected for like toggling, channel ownership, video publication rules |
 
-In short, **structural governance** (automation + declarative authorization + verification policies) is **richest in Amazon** and **thinner in Reddit/YouTube**, where equivalent concerns are split between **smaller policy tables** and **imperative security/service code**. That is an important variability axis for the generator: not every REF construct is always emitted as the same kind of artifact (entity vs configuration vs Java code).
+**Structural governance** (automation + declarative authorization + verification policies) is **richest in Amazon** and **thinner in Reddit/YouTube**, where equivalent concerns are split between **smaller policy tables** and **imperative security/service code**. This matters for the generator because not every REF construct is always emitted as the same kind of artifact (entity vs configuration vs Java code).
 
 ### 5.3 Mapping of variability to metamodel elements
 
-The tables below map **every metamodel type and enumeration** from REF v3 to **variable or fixed parts** of the three codebases (Java packages, artifacts, or non-code artifacts). “Manual” indicates places the team expects handwritten completion per Activity 2.
+The next tables map **every metamodel type and enumeration** from REF v3 to **variable or fixed parts** of the three codebases (Java packages, artifacts, or non-code artifacts). “Manual” marks places where the team expects handwritten completion per Activity 2.
 
 #### 5.3.1 Metamodel classes and relationships
 
 | Metamodel element | Amazon (`amazon-backend`) | Reddit (`reddit-backend`) | YouTube (`youtube-backend`) | Notes / manual completion |
 |---|---|---|---|---|
-| `RefModel` | Scenario identity implied by package `...ref.amazon`, `pom.xml` artifactId, and seed data | Same pattern for `...ref.reddit` | Same pattern for `...ref.youtube` | No single `RefModel` entity; could be generated as metadata or documentation |
+| `RefModel` | Scenario identity implied by package `...ref.amazon`, `pom.xml` artifactId, and seed data | Same pattern for `...ref.reddit` | Same pattern for `...ref.youtube` | No single `RefModel` entity. It could be generated as metadata or documentation |
 | `UserType` | `AmazonUser` + `Role` enum | `RedditUser` + `Role` | `YoutubeUser` + `Role` | Subtype is manual extension point on `Generated*` user |
 | `ContextType` | `ContextType`, `ContextResource` | `Subreddit` (community container) | `Channel` | Different REF `ContextKind` realizations |
 | `ResourceType` | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Post`, `Comment`, … | `Video`, `Comment`, … | Each scenario’s resource set |
@@ -448,8 +448,8 @@ The tables below map **every metamodel type and enumeration** from REF v3 to **v
 | `FeedbackDefinition.uniquePerAuthorTarget` | Enforced in `ProductEvaluationService` / review repository constraints | Enforced in vote/comment services | Enforced in like/comment services | **Manual** hook in generated service template |
 | `ValidationRule` | `ValidationRule` entity + `ValidationKind`, `RuleSeverity`, `expression`, `implementationId` | `ValidationRule` (+ Reddit-specific `CommunityRule` as extra domain) | `ContentValidationRule` (same role, different name) | `implementationId` → pluggable Java validators (**manual** classes) |
 | `ModerationPolicy` | `ModerationPolicy` entity | Moderation split into `PostModerationCheck`, `CommentModerationCheck` rows | `VideoModerationCheck`, `CommentModerationCheck` | Same REF concept, **different persistence projection** |
-| `AuthorizationRule` | `AuthorizationRule` entity + policy CRUD | **Not** a dedicated entity; approximated by `ParticipationPolicy` + `SecurityConfiguration` rules | `ChannelPermissionPolicy` + `SecurityConfiguration` | Reddit/YouTube variability: **rules split** between data and code |
-| `AutomationRule` | `AutomationRule` + nested conditions/actions | Absent as persisted model | Absent | Generator may omit or emit stubs; execution **manual** if present |
+| `AuthorizationRule` | `AuthorizationRule` entity + policy CRUD | **Not** a dedicated entity. Approximated by `ParticipationPolicy` + `SecurityConfiguration` rules | `ChannelPermissionPolicy` + `SecurityConfiguration` | Reddit/YouTube variability: **rules split** between data and code |
+| `AutomationRule` | `AutomationRule` + nested conditions/actions | Absent as persisted model | Absent | Generator may omit or emit stubs. Execution is **manual** if present |
 | `Condition` | `AutomationCondition` | — (no direct type) | — | Amazon-only in current prototypes |
 | `ConditionKeywords` | `ConditionKeyword` / keyword list owned by `AutomationCondition` | — | — | Amazon-only |
 | `Action` (governance action) | `AutomationAction` | — | — | Amazon-only |
@@ -460,17 +460,17 @@ The tables below map **every metamodel type and enumeration** from REF v3 to **v
 
 | Metamodel enum | Code mapping (all backends unless noted) |
 |---|---|
-| `UserKind` | `Role` literals (`GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`, …) on the user entity; subset used per scenario |
+| `UserKind` | `Role` literals (`GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`, …) on the user entity. Each scenario uses its own subset |
 | `ContextKind` | `ContextKind` enum (Amazon) or implied by root entity (`Subreddit`, `Channel`) |
 | `PrimitiveType` | Field types in generated entities (`String`, `BigDecimal`, `boolean`, `Instant`, …) |
 | `FeedbackKind` | Packages/services: comment, vote/like, report, subscription class names |
 | `FeedbackSubjectScope` | Service methods that accept either resource id or parent feedback id |
 | `FeedbackPolarity` | `VoteValue`, `LikeValue`, or vote direction fields |
 | `FeedbackStatus` | Enabled/disabled gates in services or enums on feedback |
-| `VerificationRequirement` | Amazon: verification toggles on review flow; others: **manual** parity |
+| `VerificationRequirement` | Amazon: verification toggles on review flow. Others: **manual** parity |
 | `ValidationKind`, `RuleSeverity` | `ValidationKind`, `ValidationSeverity` enums in domain |
-| `ModerationMode`, `ModerationDecision`, `TriggerEvent` | Present in Amazon; partial mirror in moderation check enums on Reddit/YouTube |
-| `ActionKind` | Amazon: `ActionKind`; Reddit/YouTube: `PermissionAction` + Spring Security `requestMatchers` |
+| `ModerationMode`, `ModerationDecision`, `TriggerEvent` | Present in Amazon. Reddit/YouTube include a partial mirror in moderation check enums |
+| `ActionKind` | Amazon: `ActionKind`. Reddit/YouTube: `PermissionAction` + Spring Security `requestMatchers` |
 | `ConditionOperator` | Amazon: `ConditionOperator` on `AutomationCondition` |
 | `ActionResultKind` | Amazon: result kind on `AutomationAction` |
 | `SortCriterion`, `SortDirection` | Shared enums under `domain/enums` in each backend |
@@ -481,7 +481,7 @@ The tables below map **every metamodel type and enumeration** from REF v3 to **v
 - **Fully materialized only in Amazon today:** `AutomationRule` subtree (`Condition`, `ConditionKeywords`, `Action`), first-class `AuthorizationRule`, `VerificationPolicy`, richer `ContextType` linking.
 - **Metamodel concepts mainly realized as manual Java in Reddit/YouTube:** large parts of `AuthorizationRule` (HTTP-level authorization matrix), some `FeedbackPolicy` / `VerificationPolicy` semantics, and any future `AutomationRule` execution.
 
-This distribution supports the Activity 2 requirement: the generator should emit **stable generated bases** plus **narrow override points** (subclasses, `@Override` service methods, optional `implementationId` classes) so teams can extend behavior where the DSL cannot express fine details.
+This matches the Activity 2 requirement: the generator should emit **stable generated bases** plus **narrow override points** (subclasses, `@Override` service methods, optional `implementationId` classes) so teams can extend behavior where the DSL cannot express fine details.
 
 ---
 
