@@ -4,7 +4,7 @@
 **Tool:** Eclipse Xtext  
 **Repository paths:** `part1/tool2-xtext/` (DSL plugins), `part2/tool2-xtext/` (P2 individual report)
 
-**Evidence (local, not in Git):** regenerate in Eclipse → `RefGenTest/src-gen/` (`generated-backend/` is gitignored — Windows path length). **In repo:** `part1/tool2-xtext/scenarios-a7/*.refdsl`, `part2/tool2-xtext/runtime-RefGen/RefGenTest/*.refdsl`, optional `src-gen/projections/`.
+**Evidence exports in repo:** `part2/tool2-xtext/runtime-RefGen/RefGenTest/` (or `part1/tool2-xtext/runtime-New_configuration/TestRef/`)
 
 ---
 

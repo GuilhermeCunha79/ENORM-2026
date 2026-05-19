@@ -1,0 +1,67 @@
+REF MODEL: Amazon (version="1.0.0")
+
+USER TYPES:
+- User kind=GENERIC superTypes=
+- Buyer kind=BUYER superTypes=
+- Seller kind=SELLER superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Product supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * description : TEXT required=true multi=false
+  * price : NUMBER required=true multi=false
+  * sku : TEXT required=false multi=false
+- Order supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * orderId : TEXT required=true multi=false
+  * total : NUMBER required=true multi=false
+
+CONTEXT TYPES:
+- AmazonCatalog kind=CATALOG contains=[Product, Order]
+
+RESOURCE RELATIONS:
+- OrderContainsProduct source=Order target=Product srcCard="1" tgtCard="0..1" containment=false recursive=false
+
+FEEDBACK TYPES:
+- ProductReviewType kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsText=true allowsMedia=false polarity=STARS
+- ThreadCommentType kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsText=true allowsMedia=false polarity=NONE
+
+FEEDBACK DEFINITIONS:
+- ProductReview type=ProductReviewType author=Buyer subjectResource=Product subjectFeedback=null
+  requiresVerifiedContext=true verificationRequirement=OPTIONAL uniquePerAuthorTarget=true
+  policy.status=ENABLED
+  rating=[min=1.0 max=5.0 step=1.0]
+- TopThreadComment type=ThreadCommentType author=Buyer subjectResource=Product subjectFeedback=null
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+- ReplyComment type=ThreadCommentType author=Seller subjectResource=null subjectFeedback=TopThreadComment
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- name=BuyerReadProduct action=READ actor=Buyer context=AmazonCatalog resourceTarget=Product feedbackTarget=ProductReview
+- name=BuyerThreadAuth action=COMMENT actor=Buyer context=AmazonCatalog resourceTarget=Product feedbackTarget=TopThreadComment
+- name=SellerReplyAuth action=COMMENT actor=Seller context=AmazonCatalog resourceTarget=Product feedbackTarget=ReplyComment
+
+VALIDATION RULES:
+- AmazonReviewValidation kind=AUTOMATIC severity=ERROR expr="rating_and_text_ok" impl=amazon_rev_001 appliesToResource=Product appliesToFeedback=ProductReview invokedBy=AmazonReviewAutomation
+
+MODERATION POLICIES:
+- AmazonReviewModeration mode=HYBRID trigger=ON_REPORT_THRESHOLD decision=FLAGGED executedBy=Moderator inContext=AmazonCatalog
+  monitorsResource=Product monitorsFeedback=ProductReview
+
+AUTOMATION RULES:
+- AmazonReviewAutomation trigger=ON_FEEDBACK_CREATE context=Product inContext=AmazonCatalog onFeedback=ProductReview uses=AmazonReviewValidation invokedValidationRules=[]
+  CONDITIONS:
+    * TitleNotEmpty operator=HAS_PROPERTY attribute=title values=[]
+  ACTIONS:
+    * LogReview kind=DISPLAY_MESSAGE message="Review accepted for validation pipeline"
+
+VERIFICATION POLICIES:
+- ProductReviewVerification mode=AUTOMATIC appliesWhen=ON_FEEDBACK_CREATE verifies=ProductReview
+
+SORTING POLICIES:
+- ProductByPrice criterion=VALUE direction=DESC appliesToResource=Product appliesToFeedback=null inContext=AmazonCatalog
+- ProductByDate criterion=DATE direction=DESC appliesToResource=Product appliesToFeedback=null inContext=AmazonCatalog

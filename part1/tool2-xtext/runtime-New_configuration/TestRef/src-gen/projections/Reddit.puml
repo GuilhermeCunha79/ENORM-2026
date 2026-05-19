@@ -1,0 +1,284 @@
+@startuml
+title REF Model - Reddit
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = Reddit
+  version = "1.0.0"
+}
+
+class UserType_User {
+  name = User
+  kind = GENERIC
+}
+RefModel --> UserType_User
+
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Subreddit {
+  name = Subreddit
+  supportsMedia = false
+}
+RefModel --> ResourceType_Subreddit
+class Attribute_Subreddit_subredditName {
+  name = subredditName
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Subreddit *-- Attribute_Subreddit_subredditName
+class Attribute_Subreddit_description {
+  name = description
+  type = TEXT
+  required = false
+  multiValued = false
+}
+ResourceType_Subreddit *-- Attribute_Subreddit_description
+
+class ResourceType_Post {
+  name = Post
+  supportsMedia = true
+}
+RefModel --> ResourceType_Post
+class Attribute_Post_postId {
+  name = postId
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Post *-- Attribute_Post_postId
+class Attribute_Post_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Post *-- Attribute_Post_title
+class Attribute_Post_body {
+  name = body
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Post *-- Attribute_Post_body
+
+class ResourceType_Comment {
+  name = Comment
+  supportsMedia = false
+}
+RefModel --> ResourceType_Comment
+class Attribute_Comment_commentId {
+  name = commentId
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Comment *-- Attribute_Comment_commentId
+class Attribute_Comment_text {
+  name = text
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Comment *-- Attribute_Comment_text
+
+class ContextType_RedditCommunity {
+  name = RedditCommunity
+  kind = COMMUNITY
+}
+RefModel --> ContextType_RedditCommunity
+ContextType_RedditCommunity --> ResourceType_Subreddit : contains
+ContextType_RedditCommunity --> ResourceType_Post : contains
+ContextType_RedditCommunity --> ResourceType_Comment : contains
+ResourceType_Subreddit --> ResourceType_Post : SubredditContainsPost ["1".."0..*"] recursive=false
+ResourceType_Post --> ResourceType_Comment : PostHasComment ["1".."0..*"] recursive=false
+
+class FeedbackType_PostVoteType {
+  name = PostVoteType
+  kind = VOTE
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+  recursive = false
+  allowsText = false
+  allowsMedia = false
+  polarity = UP_DOWN
+}
+RefModel --> FeedbackType_PostVoteType
+
+class FeedbackType_PostReportType {
+  name = PostReportType
+  kind = REPORT
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+  recursive = false
+  allowsText = true
+  allowsMedia = false
+  polarity = NONE
+}
+RefModel --> FeedbackType_PostReportType
+
+class FeedbackType_CommentVoteType {
+  name = CommentVoteType
+  kind = VOTE
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = false
+  allowsText = false
+  allowsMedia = false
+  polarity = UP_DOWN
+}
+RefModel --> FeedbackType_CommentVoteType
+
+class FeedbackDefinition_PostVote {
+  name = PostVote
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_PostVote
+FeedbackDefinition_PostVote --> FeedbackType_PostVoteType : type
+FeedbackDefinition_PostVote --> UserType_User : author
+FeedbackDefinition_PostVote --> ResourceType_Post : subjectResource
+class FeedbackPolicy_PostVote {
+  status = ENABLED
+}
+FeedbackDefinition_PostVote *-- FeedbackPolicy_PostVote
+
+class FeedbackDefinition_PostReport {
+  name = PostReport
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_PostReport
+FeedbackDefinition_PostReport --> FeedbackType_PostReportType : type
+FeedbackDefinition_PostReport --> UserType_User : author
+FeedbackDefinition_PostReport --> ResourceType_Post : subjectResource
+class FeedbackPolicy_PostReport {
+  status = ENABLED
+}
+FeedbackDefinition_PostReport *-- FeedbackPolicy_PostReport
+
+class FeedbackDefinition_CommentVote {
+  name = CommentVote
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_CommentVote
+FeedbackDefinition_CommentVote --> FeedbackType_CommentVoteType : type
+FeedbackDefinition_CommentVote --> UserType_User : author
+FeedbackDefinition_CommentVote --> ResourceType_Comment : subjectResource
+class FeedbackPolicy_CommentVote {
+  status = ENABLED
+}
+FeedbackDefinition_CommentVote *-- FeedbackPolicy_CommentVote
+
+class ValidationRule_RedditPostValidation {
+  name = RedditPostValidation
+  kind = AUTOMATIC
+  severity = ERROR
+  expression = "post_body_not_empty"
+  implementationId = rdt_post_001
+}
+RefModel --> ValidationRule_RedditPostValidation
+ValidationRule_RedditPostValidation --> ResourceType_Post : appliesToResource
+ValidationRule_RedditPostValidation --> FeedbackDefinition_PostReport : appliesToFeedback
+
+class AuthorizationRule_UserVotePost {
+  name = UserVotePost
+  allowedAction = VOTE
+}
+RefModel --> AuthorizationRule_UserVotePost
+AuthorizationRule_UserVotePost --> UserType_User : actor
+AuthorizationRule_UserVotePost --> ResourceType_Post : resourceTarget
+AuthorizationRule_UserVotePost --> FeedbackDefinition_PostVote : feedbackTarget
+AuthorizationRule_UserVotePost --> ContextType_RedditCommunity : context
+
+class AuthorizationRule_UserReportPost {
+  name = UserReportPost
+  allowedAction = REPORT
+}
+RefModel --> AuthorizationRule_UserReportPost
+AuthorizationRule_UserReportPost --> UserType_User : actor
+AuthorizationRule_UserReportPost --> ResourceType_Post : resourceTarget
+AuthorizationRule_UserReportPost --> FeedbackDefinition_PostReport : feedbackTarget
+AuthorizationRule_UserReportPost --> ContextType_RedditCommunity : context
+
+class AuthorizationRule_UserVoteComment {
+  name = UserVoteComment
+  allowedAction = VOTE
+}
+RefModel --> AuthorizationRule_UserVoteComment
+AuthorizationRule_UserVoteComment --> UserType_User : actor
+AuthorizationRule_UserVoteComment --> ResourceType_Comment : resourceTarget
+AuthorizationRule_UserVoteComment --> FeedbackDefinition_CommentVote : feedbackTarget
+AuthorizationRule_UserVoteComment --> ContextType_RedditCommunity : context
+
+class ModerationPolicy_PostReportModeration {
+  name = PostReportModeration
+  mode = HYBRID
+  trigger = ON_REPORT_THRESHOLD
+  decision = FLAGGED
+}
+RefModel --> ModerationPolicy_PostReportModeration
+ModerationPolicy_PostReportModeration --> ResourceType_Post : monitorsResource
+ModerationPolicy_PostReportModeration --> FeedbackDefinition_PostReport : monitorsFeedback
+ModerationPolicy_PostReportModeration --> UserType_Moderator : executedBy
+ModerationPolicy_PostReportModeration --> ContextType_RedditCommunity : inContext
+
+class AutomationRule_RedditAutoModRule {
+  name = RedditAutoModRule
+  trigger = ON_FEEDBACK_CREATE
+}
+RefModel --> AutomationRule_RedditAutoModRule
+AutomationRule_RedditAutoModRule --> ResourceType_Post : context
+AutomationRule_RedditAutoModRule --> ContextType_RedditCommunity : inContext
+AutomationRule_RedditAutoModRule --> FeedbackDefinition_PostReport : onFeedback
+AutomationRule_RedditAutoModRule --> ValidationRule_RedditPostValidation : uses
+AutomationRule_RedditAutoModRule --> Condition_RedditAutoModRule_BodyCheck : condition
+AutomationRule_RedditAutoModRule --> Action_RedditAutoModRule_FlagPost : action
+class Condition_RedditAutoModRule_BodyCheck {
+  name = BodyCheck
+  operator = HAS_PROPERTY
+  attribute = body
+}
+class Action_RedditAutoModRule_FlagPost {
+  name = FlagPost
+  kind = FLAG_CONTENT
+  message = "Post flagged for moderator review"
+}
+
+class VerificationPolicy_PostReportVerification {
+  name = PostReportVerification
+  mode = MANUAL
+  appliesWhen = ON_MANUAL_REQUEST
+}
+RefModel --> VerificationPolicy_PostReportVerification
+VerificationPolicy_PostReportVerification --> FeedbackDefinition_PostReport : verifies
+
+class SortingPolicy_HotPosts {
+  name = HotPosts
+  criterion = VALUE
+  direction = DESC
+}
+RefModel --> SortingPolicy_HotPosts
+SortingPolicy_HotPosts --> ResourceType_Post : appliesToResource
+SortingPolicy_HotPosts --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_HotPosts --> ContextType_RedditCommunity : inContext
+
+class SortingPolicy_NewPosts {
+  name = NewPosts
+  criterion = DATE
+  direction = DESC
+}
+RefModel --> SortingPolicy_NewPosts
+SortingPolicy_NewPosts --> ResourceType_Post : appliesToResource
+SortingPolicy_NewPosts --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_NewPosts --> ContextType_RedditCommunity : inContext
+
+@enduml

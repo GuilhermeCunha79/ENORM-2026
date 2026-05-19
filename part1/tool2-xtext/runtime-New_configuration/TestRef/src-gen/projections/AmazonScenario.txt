@@ -1,0 +1,59 @@
+REF MODEL: AmazonScenario (version="1.0.0")
+
+USER TYPES:
+- Buyer kind=BUYER superTypes=
+- Seller kind=SELLER superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Product supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * title : TEXT required=true multi=false
+  * price : NUMBER required=true multi=false
+  * sku : TEXT required=false multi=false
+- Order supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * orderId : TEXT required=true multi=false
+  * total : NUMBER required=true multi=false
+
+CONTEXT TYPES:
+- AmazonMarketplace kind=CATALOG contains=[Product, Order]
+
+RESOURCE RELATIONS:
+- OrderForProduct source=Order target=Product srcCard="1" tgtCard="0..*" containment=false recursive=false
+
+FEEDBACK TYPES:
+- Review kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsText=true allowsMedia=false polarity=NONE
+- Comment kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsText=true allowsMedia=false polarity=NONE
+
+FEEDBACK DEFINITIONS:
+- ProductReview type=Review author=Buyer subjectResource=Product subjectFeedback=null
+  requiresVerifiedContext=true verificationRequirement=OPTIONAL uniquePerAuthorTarget=true
+  policy.status=ENABLED
+  rating=[min=1.0 max=5.0 step=1.0]
+- ProductComment type=Comment author=Buyer subjectResource=null subjectFeedback=ProductReview
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- name=null action=READ actor=Buyer context=AmazonMarketplace resourceTarget=Product feedbackTarget=ProductReview
+
+VALIDATION RULES:
+- AmazonValidation kind=MANUAL severity=WARNING expr="payload != null" impl=val01 appliesToResource=Product appliesToFeedback=ProductReview invokedBy=AmazonAutoValidate
+
+MODERATION POLICIES:
+- ReviewModeration mode=MANUAL trigger=ON_REPORT_SUBMITTED decision=FLAGGED executedBy=Moderator inContext=AmazonMarketplace
+  monitorsResource=Product monitorsFeedback=ProductReview
+
+AUTOMATION RULES:
+- AmazonAutoValidate trigger=ON_FEEDBACK_CREATE context=Product inContext=AmazonMarketplace onFeedback=ProductReview uses=AmazonValidation invokedValidationRules=[]
+  CONDITIONS:
+    * CheckTitle operator=HAS_PROPERTY attribute=title values=[]
+  ACTIONS:
+    * RunValidation kind=DISPLAY_MESSAGE message="run validations"
+
+VERIFICATION POLICIES:
+- ProductReviewVerification mode=MANUAL appliesWhen=ON_FEEDBACK_CREATE verifies=ProductReview
+
+SORTING POLICIES:
+- ByPrice criterion=DATE direction=DESC appliesToResource=Product appliesToFeedback=null inContext=AmazonMarketplace

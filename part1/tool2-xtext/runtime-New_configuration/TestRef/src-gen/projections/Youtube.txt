@@ -1,0 +1,70 @@
+REF MODEL: Youtube (version="1.0.0")
+
+USER TYPES:
+- User kind=GENERIC superTypes=
+- Creator kind=CREATOR superTypes=
+- Moderator kind=MODERATOR superTypes=
+
+RESOURCE TYPES:
+- Channel supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * handle : TEXT required=true multi=false
+  * displayName : TEXT required=true multi=false
+- Video supportsMedia=true superTypes=
+  ATTRIBUTES:
+  * videoId : TEXT required=true multi=false
+  * title : TEXT required=true multi=false
+  * description : TEXT required=false multi=false
+  * durationSeconds : NUMBER required=true multi=false
+
+CONTEXT TYPES:
+- YoutubePlatform kind=CHANNEL contains=[Channel, Video]
+
+RESOURCE RELATIONS:
+- ChannelHostsVideo source=Channel target=Video srcCard="1" tgtCard="0..*" containment=false recursive=false
+
+FEEDBACK TYPES:
+- VideoReviewType kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsText=true allowsMedia=false polarity=STARS
+- VideoCommentType kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsText=true allowsMedia=false polarity=NONE
+- VideoLikeType kind=REACTION scope=RESOURCE_ONLY hasRating=false recursive=false allowsText=false allowsMedia=false polarity=LIKE_DISLIKE
+
+FEEDBACK DEFINITIONS:
+- VideoReview type=VideoReviewType author=User subjectResource=Video subjectFeedback=null
+  requiresVerifiedContext=true verificationRequirement=OPTIONAL uniquePerAuthorTarget=true
+  policy.status=ENABLED
+  rating=[min=1.0 max=5.0 step=1.0]
+- TopVideoComment type=VideoCommentType author=User subjectResource=Video subjectFeedback=null
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+- ReplyVideoComment type=VideoCommentType author=Creator subjectResource=null subjectFeedback=TopVideoComment
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+- VideoLike type=VideoLikeType author=User subjectResource=Video subjectFeedback=null
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=true
+  policy.status=ENABLED
+
+AUTHORIZATION RULES:
+- name=UserWatch action=READ actor=User context=YoutubePlatform resourceTarget=Video feedbackTarget=VideoReview
+- name=CreatorComment action=COMMENT actor=Creator context=YoutubePlatform resourceTarget=Video feedbackTarget=TopVideoComment
+- name=UserLike action=RATE actor=User context=YoutubePlatform resourceTarget=Video feedbackTarget=VideoLike
+
+VALIDATION RULES:
+- YoutubeCommentValidation kind=AUTOMATIC severity=WARNING expr="comment_length_ok" impl=yt_cmt_001 appliesToResource=Video appliesToFeedback=TopVideoComment invokedBy=YoutubeCommentAutomation
+
+MODERATION POLICIES:
+- VideoCommentModeration mode=MANUAL trigger=ON_REPORT_SUBMITTED decision=FLAGGED executedBy=Moderator inContext=YoutubePlatform
+  monitorsResource=Video monitorsFeedback=TopVideoComment
+
+AUTOMATION RULES:
+- YoutubeCommentAutomation trigger=ON_FEEDBACK_CREATE context=Video inContext=YoutubePlatform onFeedback=TopVideoComment uses=YoutubeCommentValidation invokedValidationRules=[]
+  CONDITIONS:
+    * TitlePresent operator=HAS_PROPERTY attribute=title values=[]
+  ACTIONS:
+    * AcceptComment kind=DISPLAY_MESSAGE message="Comment queued"
+
+VERIFICATION POLICIES:
+- VideoReviewVerification mode=AUTOMATIC appliesWhen=ON_FEEDBACK_CREATE verifies=VideoReview
+
+SORTING POLICIES:
+- VideoSortByDate criterion=DATE direction=DESC appliesToResource=Video appliesToFeedback=null inContext=YoutubePlatform
+- VideoSortByPopularity criterion=VALUE direction=DESC appliesToResource=Video appliesToFeedback=null inContext=YoutubePlatform

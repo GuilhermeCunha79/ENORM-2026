@@ -1,0 +1,296 @@
+@startuml
+title REF Model - Youtube
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = Youtube
+  version = "1.0.0"
+}
+
+class UserType_User {
+  name = User
+  kind = GENERIC
+}
+RefModel --> UserType_User
+
+class UserType_Creator {
+  name = Creator
+  kind = CREATOR
+}
+RefModel --> UserType_Creator
+
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Channel {
+  name = Channel
+  supportsMedia = false
+}
+RefModel --> ResourceType_Channel
+class Attribute_Channel_handle {
+  name = handle
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Channel *-- Attribute_Channel_handle
+class Attribute_Channel_displayName {
+  name = displayName
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Channel *-- Attribute_Channel_displayName
+
+class ResourceType_Video {
+  name = Video
+  supportsMedia = true
+}
+RefModel --> ResourceType_Video
+class Attribute_Video_videoId {
+  name = videoId
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_videoId
+class Attribute_Video_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_title
+class Attribute_Video_description {
+  name = description
+  type = TEXT
+  required = false
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_description
+class Attribute_Video_durationSeconds {
+  name = durationSeconds
+  type = NUMBER
+  required = true
+  multiValued = false
+}
+ResourceType_Video *-- Attribute_Video_durationSeconds
+
+class ContextType_YoutubePlatform {
+  name = YoutubePlatform
+  kind = CHANNEL
+}
+RefModel --> ContextType_YoutubePlatform
+ContextType_YoutubePlatform --> ResourceType_Channel : contains
+ContextType_YoutubePlatform --> ResourceType_Video : contains
+ResourceType_Channel --> ResourceType_Video : ChannelHostsVideo ["1".."0..*"] recursive=false
+
+class FeedbackType_VideoReviewType {
+  name = VideoReviewType
+  kind = REVIEW
+  subjectScope = RESOURCE_ONLY
+  hasRating = true
+  recursive = false
+  allowsText = true
+  allowsMedia = false
+  polarity = STARS
+}
+RefModel --> FeedbackType_VideoReviewType
+
+class FeedbackType_VideoCommentType {
+  name = VideoCommentType
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = true
+  allowsText = true
+  allowsMedia = false
+  polarity = NONE
+}
+RefModel --> FeedbackType_VideoCommentType
+
+class FeedbackType_VideoLikeType {
+  name = VideoLikeType
+  kind = REACTION
+  subjectScope = RESOURCE_ONLY
+  hasRating = false
+  recursive = false
+  allowsText = false
+  allowsMedia = false
+  polarity = LIKE_DISLIKE
+}
+RefModel --> FeedbackType_VideoLikeType
+
+class FeedbackDefinition_VideoReview {
+  name = VideoReview
+  requiresVerifiedContext = true
+  verificationRequirement = OPTIONAL
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_VideoReview
+FeedbackDefinition_VideoReview --> FeedbackType_VideoReviewType : type
+FeedbackDefinition_VideoReview --> UserType_User : author
+FeedbackDefinition_VideoReview --> ResourceType_Video : subjectResource
+class FeedbackPolicy_VideoReview {
+  status = ENABLED
+}
+FeedbackDefinition_VideoReview *-- FeedbackPolicy_VideoReview
+class RatingPolicy_VideoReview {
+  min = 1.0
+  max = 5.0
+  step = 1.0
+}
+FeedbackDefinition_VideoReview *-- RatingPolicy_VideoReview
+
+class FeedbackDefinition_TopVideoComment {
+  name = TopVideoComment
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_TopVideoComment
+FeedbackDefinition_TopVideoComment --> FeedbackType_VideoCommentType : type
+FeedbackDefinition_TopVideoComment --> UserType_User : author
+FeedbackDefinition_TopVideoComment --> ResourceType_Video : subjectResource
+class FeedbackPolicy_TopVideoComment {
+  status = ENABLED
+}
+FeedbackDefinition_TopVideoComment *-- FeedbackPolicy_TopVideoComment
+
+class FeedbackDefinition_ReplyVideoComment {
+  name = ReplyVideoComment
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_ReplyVideoComment
+FeedbackDefinition_ReplyVideoComment --> FeedbackType_VideoCommentType : type
+FeedbackDefinition_ReplyVideoComment --> UserType_Creator : author
+FeedbackDefinition_ReplyVideoComment --> FeedbackDefinition_TopVideoComment : subjectFeedback
+class FeedbackPolicy_ReplyVideoComment {
+  status = ENABLED
+}
+FeedbackDefinition_ReplyVideoComment *-- FeedbackPolicy_ReplyVideoComment
+
+class FeedbackDefinition_VideoLike {
+  name = VideoLike
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_VideoLike
+FeedbackDefinition_VideoLike --> FeedbackType_VideoLikeType : type
+FeedbackDefinition_VideoLike --> UserType_User : author
+FeedbackDefinition_VideoLike --> ResourceType_Video : subjectResource
+class FeedbackPolicy_VideoLike {
+  status = ENABLED
+}
+FeedbackDefinition_VideoLike *-- FeedbackPolicy_VideoLike
+
+class ValidationRule_YoutubeCommentValidation {
+  name = YoutubeCommentValidation
+  kind = AUTOMATIC
+  severity = WARNING
+  expression = "comment_length_ok"
+  implementationId = yt_cmt_001
+}
+RefModel --> ValidationRule_YoutubeCommentValidation
+ValidationRule_YoutubeCommentValidation --> ResourceType_Video : appliesToResource
+ValidationRule_YoutubeCommentValidation --> FeedbackDefinition_TopVideoComment : appliesToFeedback
+
+class AuthorizationRule_UserWatch {
+  name = UserWatch
+  allowedAction = READ
+}
+RefModel --> AuthorizationRule_UserWatch
+AuthorizationRule_UserWatch --> UserType_User : actor
+AuthorizationRule_UserWatch --> ResourceType_Video : resourceTarget
+AuthorizationRule_UserWatch --> FeedbackDefinition_VideoReview : feedbackTarget
+AuthorizationRule_UserWatch --> ContextType_YoutubePlatform : context
+
+class AuthorizationRule_CreatorComment {
+  name = CreatorComment
+  allowedAction = COMMENT
+}
+RefModel --> AuthorizationRule_CreatorComment
+AuthorizationRule_CreatorComment --> UserType_Creator : actor
+AuthorizationRule_CreatorComment --> ResourceType_Video : resourceTarget
+AuthorizationRule_CreatorComment --> FeedbackDefinition_TopVideoComment : feedbackTarget
+AuthorizationRule_CreatorComment --> ContextType_YoutubePlatform : context
+
+class AuthorizationRule_UserLike {
+  name = UserLike
+  allowedAction = RATE
+}
+RefModel --> AuthorizationRule_UserLike
+AuthorizationRule_UserLike --> UserType_User : actor
+AuthorizationRule_UserLike --> ResourceType_Video : resourceTarget
+AuthorizationRule_UserLike --> FeedbackDefinition_VideoLike : feedbackTarget
+AuthorizationRule_UserLike --> ContextType_YoutubePlatform : context
+
+class ModerationPolicy_VideoCommentModeration {
+  name = VideoCommentModeration
+  mode = MANUAL
+  trigger = ON_REPORT_SUBMITTED
+  decision = FLAGGED
+}
+RefModel --> ModerationPolicy_VideoCommentModeration
+ModerationPolicy_VideoCommentModeration --> ResourceType_Video : monitorsResource
+ModerationPolicy_VideoCommentModeration --> FeedbackDefinition_TopVideoComment : monitorsFeedback
+ModerationPolicy_VideoCommentModeration --> UserType_Moderator : executedBy
+ModerationPolicy_VideoCommentModeration --> ContextType_YoutubePlatform : inContext
+
+class AutomationRule_YoutubeCommentAutomation {
+  name = YoutubeCommentAutomation
+  trigger = ON_FEEDBACK_CREATE
+}
+RefModel --> AutomationRule_YoutubeCommentAutomation
+AutomationRule_YoutubeCommentAutomation --> ResourceType_Video : context
+AutomationRule_YoutubeCommentAutomation --> ContextType_YoutubePlatform : inContext
+AutomationRule_YoutubeCommentAutomation --> FeedbackDefinition_TopVideoComment : onFeedback
+AutomationRule_YoutubeCommentAutomation --> ValidationRule_YoutubeCommentValidation : uses
+AutomationRule_YoutubeCommentAutomation --> Condition_YoutubeCommentAutomation_TitlePresent : condition
+AutomationRule_YoutubeCommentAutomation --> Action_YoutubeCommentAutomation_AcceptComment : action
+class Condition_YoutubeCommentAutomation_TitlePresent {
+  name = TitlePresent
+  operator = HAS_PROPERTY
+  attribute = title
+}
+class Action_YoutubeCommentAutomation_AcceptComment {
+  name = AcceptComment
+  kind = DISPLAY_MESSAGE
+  message = "Comment queued"
+}
+
+class VerificationPolicy_VideoReviewVerification {
+  name = VideoReviewVerification
+  mode = AUTOMATIC
+  appliesWhen = ON_FEEDBACK_CREATE
+}
+RefModel --> VerificationPolicy_VideoReviewVerification
+VerificationPolicy_VideoReviewVerification --> FeedbackDefinition_VideoReview : verifies
+
+class SortingPolicy_VideoSortByDate {
+  name = VideoSortByDate
+  criterion = DATE
+  direction = DESC
+}
+RefModel --> SortingPolicy_VideoSortByDate
+SortingPolicy_VideoSortByDate --> ResourceType_Video : appliesToResource
+SortingPolicy_VideoSortByDate --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_VideoSortByDate --> ContextType_YoutubePlatform : inContext
+
+class SortingPolicy_VideoSortByPopularity {
+  name = VideoSortByPopularity
+  criterion = VALUE
+  direction = DESC
+}
+RefModel --> SortingPolicy_VideoSortByPopularity
+SortingPolicy_VideoSortByPopularity --> ResourceType_Video : appliesToResource
+SortingPolicy_VideoSortByPopularity --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_VideoSortByPopularity --> ContextType_YoutubePlatform : inContext
+
+@enduml
