@@ -17,6 +17,8 @@ import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransi
 import pt.isep.enorm.refdsl.refDsl.Attribute;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.Condition;
+import pt.isep.enorm.refdsl.refDsl.ConditionValue;
 import pt.isep.enorm.refdsl.refDsl.ContextType;
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.FeedbackPolicy;
@@ -27,6 +29,7 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
 import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.SortingPolicy;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
@@ -46,6 +49,9 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		Set<Parameter> parameters = context.getEnabledBooleanParameters();
 		if (epackage == RefDslPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case RefDslPackage.ACTION:
+				sequence_Action(context, (pt.isep.enorm.refdsl.refDsl.Action) semanticObject); 
+				return; 
 			case RefDslPackage.ATTRIBUTE:
 				sequence_Attribute(context, (Attribute) semanticObject); 
 				return; 
@@ -54,6 +60,12 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case RefDslPackage.AUTOMATION_RULE:
 				sequence_AutomationRule(context, (AutomationRule) semanticObject); 
+				return; 
+			case RefDslPackage.CONDITION:
+				sequence_Condition(context, (Condition) semanticObject); 
+				return; 
+			case RefDslPackage.CONDITION_VALUE:
+				sequence_ConditionValue(context, (ConditionValue) semanticObject); 
 				return; 
 			case RefDslPackage.CONTEXT_TYPE:
 				sequence_ContextType(context, (ContextType) semanticObject); 
@@ -82,6 +94,9 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case RefDslPackage.RESOURCE_TYPE:
 				sequence_ResourceType(context, (ResourceType) semanticObject); 
 				return; 
+			case RefDslPackage.SORTING_POLICY:
+				sequence_SortingPolicy(context, (SortingPolicy) semanticObject); 
+				return; 
 			case RefDslPackage.USER_TYPE:
 				sequence_UserType(context, (UserType) semanticObject); 
 				return; 
@@ -95,6 +110,20 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     Action returns Action
+	 *
+	 * Constraint:
+	 *     (name=EString kind=ActionResultKind message=EString?)
+	 * </pre>
+	 */
+	protected void sequence_Action(ISerializationContext context, pt.isep.enorm.refdsl.refDsl.Action semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
 	
 	/**
 	 * <pre>
@@ -117,6 +146,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *
 	 * Constraint:
 	 *     (
+	 *         name=EString? 
 	 *         allowedAction=ActionKind 
 	 *         actor=[UserType|EString] 
 	 *         context=[ContextType|EString]? 
@@ -138,17 +168,54 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * Constraint:
 	 *     (
 	 *         name=EString 
-	 *         trigger=EString 
-	 *         condition=EString? 
-	 *         actionDescription=EString 
+	 *         trigger=TriggerEvent 
 	 *         context=[ResourceType|EString]? 
 	 *         inContext=[ContextType|EString]? 
 	 *         onFeedback=[FeedbackDefinition|EString] 
-	 *         uses=[ValidationRule|EString]
+	 *         uses=[ValidationRule|EString] 
+	 *         (invokedValidationRules+=[ValidationRule|EString] invokedValidationRules+=[ValidationRule|EString]*)? 
+	 *         conditions+=Condition 
+	 *         conditions+=Condition* 
+	 *         actions+=Action 
+	 *         actions+=Action*
 	 *     )
 	 * </pre>
 	 */
 	protected void sequence_AutomationRule(ISerializationContext context, AutomationRule semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     ConditionValue returns ConditionValue
+	 *
+	 * Constraint:
+	 *     value=EString
+	 * </pre>
+	 */
+	protected void sequence_ConditionValue(ISerializationContext context, ConditionValue semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, RefDslPackage.Literals.CONDITION_VALUE__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, RefDslPackage.Literals.CONDITION_VALUE__VALUE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getConditionValueAccess().getValueEStringParserRuleCall_1_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     Condition returns Condition
+	 *
+	 * Constraint:
+	 *     (name=EString operator=ConditionOperator attribute=[Attribute|EString] (children+=ConditionValue children+=ConditionValue*)?)
+	 * </pre>
+	 */
+	protected void sequence_Condition(ISerializationContext context, Condition semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -177,11 +244,11 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *         name=EString 
 	 *         type=[FeedbackType|EString] 
 	 *         requiresVerifiedContext=EBoolean? 
+	 *         verificationRequirement=VerificationRequirement? 
 	 *         uniquePerAuthorTarget=EBoolean? 
 	 *         author=[UserType|EString] 
 	 *         subjectResource=[ResourceType|EString]? 
 	 *         subjectFeedback=[FeedbackDefinition|EString]? 
-	 *         parent=[FeedbackDefinition|EString]? 
 	 *         policy=FeedbackPolicy? 
 	 *         rating=RatingPolicy?
 	 *     )
@@ -224,7 +291,9 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *         subjectScope=FeedbackSubjectScope? 
 	 *         hasRating=EBoolean? 
 	 *         recursive=EBoolean? 
-	 *         allowsMedia=EBoolean?
+	 *         allowsText=EBoolean? 
+	 *         allowsMedia=EBoolean? 
+	 *         polarity=FeedbackPolarity?
 	 *     )
 	 * </pre>
 	 */
@@ -242,7 +311,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     (
 	 *         name=EString? 
 	 *         mode=ModerationMode 
-	 *         trigger=EString? 
+	 *         trigger=TriggerEvent? 
 	 *         decision=ModerationDecision? 
 	 *         monitorsResource=[ResourceType|EString] 
 	 *         monitorsFeedback=[FeedbackDefinition|EString] 
@@ -262,7 +331,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     RatingPolicy returns RatingPolicy
 	 *
 	 * Constraint:
-	 *     (minValue=EDouble maxValue=EDouble step=EDouble? scaleKind=RatingScaleKind?)
+	 *     (minValue=EDouble maxValue=EDouble step=EDouble?)
 	 * </pre>
 	 */
 	protected void sequence_RatingPolicy(ISerializationContext context, RatingPolicy semanticObject) {
@@ -289,7 +358,8 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *         (validationRules+=ValidationRule validationRules+=ValidationRule*)? 
 	 *         (moderationPolicies+=ModerationPolicy moderationPolicies+=ModerationPolicy*)? 
 	 *         (automationRules+=AutomationRule automationRules+=AutomationRule*)? 
-	 *         (verificationPolicies+=VerificationPolicy verificationPolicies+=VerificationPolicy*)?
+	 *         (verificationPolicies+=VerificationPolicy verificationPolicies+=VerificationPolicy*)? 
+	 *         (sortingPolicies+=SortingPolicy sortingPolicies+=SortingPolicy*)?
 	 *     )
 	 * </pre>
 	 */
@@ -342,6 +412,27 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     SortingPolicy returns SortingPolicy
+	 *
+	 * Constraint:
+	 *     (
+	 *         name=EString 
+	 *         criterion=SortCriterion 
+	 *         direction=SortDirection 
+	 *         appliesToResource=[ResourceType|EString]? 
+	 *         appliesToFeedback=[FeedbackDefinition|EString]? 
+	 *         inContext=[ContextType|EString]?
+	 *     )
+	 * </pre>
+	 */
+	protected void sequence_SortingPolicy(ISerializationContext context, SortingPolicy semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     UserType returns UserType
 	 *
 	 * Constraint:
@@ -382,7 +473,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     VerificationPolicy returns VerificationPolicy
 	 *
 	 * Constraint:
-	 *     (name=EString? mode=ValidationKind appliesWhen=EString verifies=[FeedbackDefinition|EString])
+	 *     (name=EString? mode=ValidationKind appliesWhen=TriggerEvent verifies=[FeedbackDefinition|EString])
 	 * </pre>
 	 */
 	protected void sequence_VerificationPolicy(ISerializationContext context, VerificationPolicy semanticObject) {

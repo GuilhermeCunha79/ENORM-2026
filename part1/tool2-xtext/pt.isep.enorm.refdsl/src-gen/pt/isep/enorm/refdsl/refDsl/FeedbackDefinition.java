@@ -17,11 +17,11 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getType <em>Type</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getAuthor <em>Author</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getSubjectResource <em>Subject Resource</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getSubjectFeedback <em>Subject Feedback</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getParent <em>Parent</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getPolicy <em>Policy</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getRating <em>Rating</em>}</li>
  * </ul>
@@ -97,6 +97,31 @@ public interface FeedbackDefinition extends EObject
    * @generated
    */
   void setRequiresVerifiedContext(boolean value);
+
+  /**
+   * Returns the value of the '<em><b>Verification Requirement</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.VerificationRequirement}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Verification Requirement</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.VerificationRequirement
+   * @see #setVerificationRequirement(VerificationRequirement)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackDefinition_VerificationRequirement()
+   * @model
+   * @generated
+   */
+  VerificationRequirement getVerificationRequirement();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Verification Requirement</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.VerificationRequirement
+   * @see #getVerificationRequirement()
+   * @generated
+   */
+  void setVerificationRequirement(VerificationRequirement value);
 
   /**
    * Returns the value of the '<em><b>Unique Per Author Target</b></em>' attribute.
@@ -185,28 +210,6 @@ public interface FeedbackDefinition extends EObject
    * @generated
    */
   void setSubjectFeedback(FeedbackDefinition value);
-
-  /**
-   * Returns the value of the '<em><b>Parent</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Parent</em>' reference.
-   * @see #setParent(FeedbackDefinition)
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackDefinition_Parent()
-   * @model
-   * @generated
-   */
-  FeedbackDefinition getParent();
-
-  /**
-   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getParent <em>Parent</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Parent</em>' reference.
-   * @see #getParent()
-   * @generated
-   */
-  void setParent(FeedbackDefinition value);
 
   /**
    * Returns the value of the '<em><b>Policy</b></em>' containment reference.

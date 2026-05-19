@@ -16,6 +16,10 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor;
 import org.eclipse.xtext.validation.Issue;
 
 import pt.isep.enorm.refdsl.refDsl.Attribute;
+import pt.isep.enorm.refdsl.refDsl.Action;
+import pt.isep.enorm.refdsl.refDsl.ActionResultKind;
+import pt.isep.enorm.refdsl.refDsl.Condition;
+import pt.isep.enorm.refdsl.refDsl.ConditionOperator;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
 import pt.isep.enorm.refdsl.refDsl.ContextType;
@@ -24,11 +28,11 @@ import pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope;
 import pt.isep.enorm.refdsl.refDsl.FeedbackType;
 import pt.isep.enorm.refdsl.refDsl.ModerationPolicy;
 import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
-import pt.isep.enorm.refdsl.refDsl.RatingScaleKind;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
 import pt.isep.enorm.refdsl.refDsl.RefDslFactory;
 import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.TriggerEvent;
 import pt.isep.enorm.refdsl.refDsl.UserKind;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationKind;
@@ -37,6 +41,31 @@ import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
 import pt.isep.enorm.refdsl.validation.RefDslValidator;
 
 public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
+
+	@Fix(RefDslValidator.INVALID_REF_MODEL_NAME_EMPTY)
+	public void fixRefModelNameDefault(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Set default RefModel name", "Use MyRefModel as name.", "add.png", sem(e -> {
+			if (e instanceof RefModel) {
+				String n = ((RefModel) e).getName();
+				if (n == null || n.trim().isEmpty())
+					((RefModel) e).setName("MyRefModel");
+			}
+		}));
+	}
+
+	@Fix(RefDslValidator.INVALID_REF_MODEL_NAME_LENGTH)
+	public void fixRefModelNameLengthen(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Extend name past 2 characters", "Appends letters until length > 2.", "add.png", sem(e -> {
+			if (e instanceof RefModel) {
+				String n = ((RefModel) e).getName();
+				if (n == null)
+					n = "";
+				while (n.length() <= 2)
+					n = n + "X";
+				((RefModel) e).setName(n);
+			}
+		}));
+	}
 
 	// Capitalizes the first character of the RefModel name.
 	@Fix(RefDslValidator.INVALID_REF_MODEL_NAME)
@@ -203,6 +232,18 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		}));
 	}
 
+	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_TYPE)
+	public void fixFeedbackDefinitionTypeFirst(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Set first FeedbackType", null, "add.png", sem(e -> {
+			if (e instanceof FeedbackDefinition) {
+				FeedbackDefinition fd = (FeedbackDefinition) e;
+				RefModel rm = root(fd);
+				if (rm != null && !rm.getFeedbackTypes().isEmpty())
+					fd.setType(rm.getFeedbackTypes().get(0));
+			}
+		}));
+	}
+
 	// Assigns the first available UserType as FeedbackDefinition author.
 	@Fix(RefDslValidator.INVALID_FEEDBACK_DEFINITION_AUTHOR)
 	public void fixFeedbackDefinitionAuthor(final Issue issue, IssueResolutionAcceptor acceptor) {
@@ -319,8 +360,8 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		acceptor.accept(issue, "Set default trigger", null, "add.png", sem(e -> {
 			if (e instanceof ModerationPolicy) {
 				ModerationPolicy mp = (ModerationPolicy) e;
-				if (mp.getTrigger() == null || mp.getTrigger().trim().isEmpty())
-					mp.setTrigger("onFlag");
+				if (mp.getTrigger() == null)
+					mp.setTrigger(TriggerEvent.ON_FEEDBACK_CREATE);
 			}
 		}));
 	}
@@ -357,20 +398,54 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 		acceptor.accept(issue, "Set default trigger", null, "add.png", sem(e -> {
 			if (e instanceof AutomationRule) {
 				AutomationRule r = (AutomationRule) e;
-				if (r.getTrigger() == null || r.getTrigger().trim().isEmpty())
-					r.setTrigger("onFeedbackCreated");
+				if (r.getTrigger() == null)
+					r.setTrigger(TriggerEvent.ON_FEEDBACK_CREATE);
 			}
 		}));
 	}
 
-	// Sets a default action description for AutomationRule when missing.
+	/**
+	 * v3: adds a minimal Condition referencing the first Attribute in the model (if any).
+	 */
+	@Fix(RefDslValidator.INVALID_AUTOMATION_RULE_CONDITIONS)
+	public void fixAutomationAddSampleCondition(final Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, "Add sample Condition", "Uses first Attribute in the model.", "add.png", sem(e -> {
+			if (!(e instanceof AutomationRule))
+				return;
+			AutomationRule ar = (AutomationRule) e;
+			RefModel rm = root(ar);
+			if (rm == null)
+				return;
+			Attribute attr = null;
+			for (ResourceType rt : rm.getResourceTypes()) {
+				if (!rt.getAttributes().isEmpty()) {
+					attr = rt.getAttributes().get(0);
+					break;
+				}
+			}
+			if (attr == null)
+				return;
+			Condition cond = RefDslFactory.eINSTANCE.createCondition();
+			cond.setName("DefaultCondition");
+			cond.setOperator(ConditionOperator.HAS_PROPERTY);
+			cond.setAttribute(attr);
+			ar.getConditions().add(cond);
+		}));
+	}
+
+	/** v3: append a minimal Action when the automation has none. */
 	@Fix(RefDslValidator.INVALID_AUTOMATION_RULE_ACTION)
 	public void fixAutomationAction(final Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, "Set default actionDescription", null, "add.png", sem(e -> {
+		acceptor.accept(issue, "Add default Action", "Adds Action with DISPLAY_MESSAGE.", "add.png", sem(e -> {
 			if (e instanceof AutomationRule) {
 				AutomationRule r = (AutomationRule) e;
-				if (r.getActionDescription() == null || r.getActionDescription().trim().isEmpty())
-					r.setActionDescription("Execute validation");
+				if (r.getActions() != null && r.getActions().isEmpty()) {
+					Action act = RefDslFactory.eINSTANCE.createAction();
+					act.setName("DefaultAction");
+					act.setKind(ActionResultKind.DISPLAY_MESSAGE);
+					act.setMessage("Execute validation");
+					r.getActions().add(act);
+				}
 			}
 		}));
 	}
@@ -385,7 +460,6 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 				rp.setMinValue(1);
 				rp.setMaxValue(5);
 				rp.setStep(1);
-				rp.setScaleKind(RatingScaleKind.NUMERIC);
 				fd.setRating(rp);
 			}
 		}));
@@ -450,7 +524,7 @@ public class RefDslQuickfixProvider extends DefaultQuickfixProvider {
 				String base = fd.getName() != null ? fd.getName() : "Feedback";
 				vp.setName(base + "Verification");
 				vp.setMode(ValidationKind.MANUAL);
-				vp.setAppliesWhen("onCreate");
+				vp.setAppliesWhen(TriggerEvent.ON_FEEDBACK_CREATE);
 				vp.setVerifies(fd);
 				rm.getVerificationPolicies().add(vp);
 			}

@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import pt.isep.enorm.ref.ref.RatingPolicy;
-import pt.isep.enorm.ref.ref.RatingScaleKind;
 import pt.isep.enorm.ref.ref.RefPackage;
 
 /**
@@ -24,7 +23,6 @@ import pt.isep.enorm.ref.ref.RefPackage;
  *   <li>{@link pt.isep.enorm.ref.ref.impl.RatingPolicyImpl#getMinValue <em>Min Value</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.RatingPolicyImpl#getMaxValue <em>Max Value</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.RatingPolicyImpl#getStep <em>Step</em>}</li>
- *   <li>{@link pt.isep.enorm.ref.ref.impl.RatingPolicyImpl#getScaleKind <em>Scale Kind</em>}</li>
  * </ul>
  *
  * @generated
@@ -89,26 +87,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 	 * @ordered
 	 */
 	protected double step = STEP_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getScaleKind() <em>Scale Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getScaleKind()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final RatingScaleKind SCALE_KIND_EDEFAULT = RatingScaleKind.NUMERIC;
-
-	/**
-	 * The cached value of the '{@link #getScaleKind() <em>Scale Kind</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getScaleKind()
-	 * @generated
-	 * @ordered
-	 */
-	protected RatingScaleKind scaleKind = SCALE_KIND_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -206,30 +184,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 	 * @generated
 	 */
 	@Override
-	public RatingScaleKind getScaleKind() {
-		return scaleKind;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setScaleKind(RatingScaleKind newScaleKind) {
-		RatingScaleKind oldScaleKind = scaleKind;
-		scaleKind = newScaleKind == null ? SCALE_KIND_EDEFAULT : newScaleKind;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.RATING_POLICY__SCALE_KIND, oldScaleKind,
-					scaleKind));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 		case RefPackage.RATING_POLICY__MIN_VALUE:
@@ -238,8 +192,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 			return getMaxValue();
 		case RefPackage.RATING_POLICY__STEP:
 			return getStep();
-		case RefPackage.RATING_POLICY__SCALE_KIND:
-			return getScaleKind();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -260,9 +212,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 			return;
 		case RefPackage.RATING_POLICY__STEP:
 			setStep((Double) newValue);
-			return;
-		case RefPackage.RATING_POLICY__SCALE_KIND:
-			setScaleKind((RatingScaleKind) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -285,9 +234,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 		case RefPackage.RATING_POLICY__STEP:
 			setStep(STEP_EDEFAULT);
 			return;
-		case RefPackage.RATING_POLICY__SCALE_KIND:
-			setScaleKind(SCALE_KIND_EDEFAULT);
-			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -306,8 +252,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 			return maxValue != MAX_VALUE_EDEFAULT;
 		case RefPackage.RATING_POLICY__STEP:
 			return step != STEP_EDEFAULT;
-		case RefPackage.RATING_POLICY__SCALE_KIND:
-			return scaleKind != SCALE_KIND_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -329,8 +273,6 @@ public class RatingPolicyImpl extends MinimalEObjectImpl.Container implements Ra
 		result.append(maxValue);
 		result.append(", step: ");
 		result.append(step);
-		result.append(", scaleKind: ");
-		result.append(scaleKind);
 		result.append(')');
 		return result.toString();
 	}

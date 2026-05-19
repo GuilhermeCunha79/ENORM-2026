@@ -16,6 +16,7 @@ import pt.isep.enorm.refdsl.refDsl.ModerationPolicy;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
 import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.SortingPolicy;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
@@ -55,6 +56,9 @@ public class RefDslFormatter extends AbstractJavaFormatter {
 		}
 		for (VerificationPolicy verificationPolicy : refModel.getVerificationPolicies()) {
 			doc.format(verificationPolicy);
+		}
+		for (SortingPolicy sortingPolicy : refModel.getSortingPolicies()) {
+			doc.format(sortingPolicy);
 		}
 	}
 

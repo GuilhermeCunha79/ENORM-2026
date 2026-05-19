@@ -448,11 +448,11 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
 		if (newInvokedBy != invokedBy) {
 			NotificationChain msgs = null;
 			if (invokedBy != null)
-				msgs = ((InternalEObject) invokedBy).eInverseRemove(this, RefPackage.AUTOMATION_RULE__USES,
-						AutomationRule.class, msgs);
+				msgs = ((InternalEObject) invokedBy).eInverseRemove(this,
+						RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES, AutomationRule.class, msgs);
 			if (newInvokedBy != null)
-				msgs = ((InternalEObject) newInvokedBy).eInverseAdd(this, RefPackage.AUTOMATION_RULE__USES,
-						AutomationRule.class, msgs);
+				msgs = ((InternalEObject) newInvokedBy).eInverseAdd(this,
+						RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES, AutomationRule.class, msgs);
 			msgs = basicSetInvokedBy(newInvokedBy, msgs);
 			if (msgs != null)
 				msgs.dispatch();
@@ -471,8 +471,8 @@ public class ValidationRuleImpl extends MinimalEObjectImpl.Container implements 
 		switch (featureID) {
 		case RefPackage.VALIDATION_RULE__INVOKED_BY:
 			if (invokedBy != null)
-				msgs = ((InternalEObject) invokedBy).eInverseRemove(this, RefPackage.AUTOMATION_RULE__USES,
-						AutomationRule.class, msgs);
+				msgs = ((InternalEObject) invokedBy).eInverseRemove(this,
+						RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES, AutomationRule.class, msgs);
 			return basicSetInvokedBy((AutomationRule) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);

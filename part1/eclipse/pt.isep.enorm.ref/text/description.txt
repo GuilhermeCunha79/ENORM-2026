@@ -71,7 +71,6 @@ Package ref <http://www.example.org/ref>
     Attribute minValue : EDouble
     Attribute maxValue : EDouble
     Attribute step : EDouble
-    Attribute scaleKind : RatingScaleKind
 
   Class FeedbackDefinition
     Attribute name : EString
@@ -82,28 +81,8 @@ Package ref <http://www.example.org/ref>
     Reference subjectResource : ResourceType
     Reference author : UserType<<1..1>>
     Reference subjectFeedback : FeedbackDefinition
-    Reference parent : FeedbackDefinition
     Reference policy : FeedbackPolicy
     Reference rating : RatingPolicy
-
-  Class Condition
-    Attribute name : EString
-    Attribute field : EString
-    Attribute operator : ConditionOperator
-    Attribute value : EString
-
-  Class Action
-    Attribute name : EString
-    Attribute kind : ActionResultKind
-    Attribute message : EString
-
-  Class SortingPolicy
-    Attribute name : EString
-    Attribute criterion : SortCriterion
-    Attribute direction : SortDirection
-    Reference appliesToResource : ResourceType
-    Reference appliesToFeedback : FeedbackDefinition
-    Reference inContext : ContextType
 
   Class ValidationRule
     Attribute name : EString
@@ -113,7 +92,7 @@ Package ref <http://www.example.org/ref>
     Attribute implementationId : EString
     Reference appliesToResource : ResourceType
     Reference appliesToFeedback : FeedbackDefinition
-    Reference invokedBy : AutomationRule<<1..1>>
+    Reference invokedBy : AutomationRule
 
   Class ModerationPolicy
     Attribute name : EString
@@ -140,14 +119,37 @@ Package ref <http://www.example.org/ref>
     Reference inContext : ContextType
     Reference onFeedback : FeedbackDefinition<<1..1>>
     Reference uses : ValidationRule<<1..1>>
+    Reference invokedValidationRules : ValidationRule<<0..*>>
     Reference conditions : Condition<<1..*>>
     Reference actions : Action<<1..*>>
+
+  Class Condition
+    Attribute name : EString
+    Attribute operator : ConditionOperator
+    Reference attribute : Attribute<<1..1>>
+    Reference children : ConditionValue<<0..*>>
+
+  Class ConditionValue
+    Attribute value : EString
+
+  Class Action
+    Attribute name : EString
+    Attribute kind : ActionResultKind
+    Attribute message : EString
 
   Class VerificationPolicy
     Attribute name : EString
     Attribute mode : ValidationKind
     Attribute appliesWhen : TriggerEvent
     Reference verifies : FeedbackDefinition<<1..1>>
+
+  Class SortingPolicy
+    Attribute name : EString
+    Attribute criterion : SortCriterion
+    Attribute direction : SortDirection
+    Reference appliesToResource : ResourceType
+    Reference appliesToFeedback : FeedbackDefinition
+    Reference inContext : ContextType
 
   Enum UserKind
     Literal GENERIC = 0
@@ -185,24 +187,20 @@ Package ref <http://www.example.org/ref>
     Literal FEEDBACK_ONLY = 1
     Literal RESOURCE_OR_FEEDBACK = 2
 
-  Enum FeedbackStatus
-    Literal ENABLED = 0
-    Literal DISABLED = 1
-
   Enum FeedbackPolarity
     Literal NONE = 0
     Literal LIKE_DISLIKE = 1
     Literal UP_DOWN = 2
+    Literal STARS = 3
+
+  Enum FeedbackStatus
+    Literal ENABLED = 0
+    Literal DISABLED = 1
 
   Enum VerificationRequirement
     Literal NONE = 0
     Literal OPTIONAL = 1
     Literal REQUIRED = 2
-
-  Enum RatingScaleKind
-    Literal NUMERIC = 0
-    Literal ORDINAL = 1
-    Literal PERCENTAGE = 2
 
   Enum ValidationKind
     Literal AUTOMATIC = 0
@@ -273,7 +271,6 @@ Package ref <http://www.example.org/ref>
   Enum SortCriterion
     Literal DATE = 0
     Literal VALUE = 1
-    Literal RELEVANCE = 2
 
   Enum SortDirection
     Literal ASC = 0

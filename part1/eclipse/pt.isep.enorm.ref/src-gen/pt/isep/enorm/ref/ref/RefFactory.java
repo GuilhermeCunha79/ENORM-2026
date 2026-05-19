@@ -121,6 +121,15 @@ public interface RefFactory extends EFactory {
 	Condition createCondition();
 
 	/**
+	 * Returns a new object of class '<em>Condition Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Condition Value</em>'.
+	 * @generated
+	 */
+	ConditionValue createConditionValue();
+
+	/**
 	 * Returns a new object of class '<em>Action</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

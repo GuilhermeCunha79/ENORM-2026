@@ -79,25 +79,28 @@ public interface ModerationPolicy extends EObject
 
   /**
    * Returns the value of the '<em><b>Trigger</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.TriggerEvent}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Trigger</em>' attribute.
-   * @see #setTrigger(String)
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+   * @see #setTrigger(TriggerEvent)
    * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getModerationPolicy_Trigger()
    * @model
    * @generated
    */
-  String getTrigger();
+  TriggerEvent getTrigger();
 
   /**
    * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.ModerationPolicy#getTrigger <em>Trigger</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Trigger</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
    * @see #getTrigger()
    * @generated
    */
-  void setTrigger(String value);
+  void setTrigger(TriggerEvent value);
 
   /**
    * Returns the value of the '<em><b>Decision</b></em>' attribute.

@@ -18,6 +18,7 @@ import pt.isep.enorm.ref.ref.AuthorizationRule;
 import pt.isep.enorm.ref.ref.AutomationRule;
 import pt.isep.enorm.ref.ref.Condition;
 import pt.isep.enorm.ref.ref.ConditionOperator;
+import pt.isep.enorm.ref.ref.ConditionValue;
 import pt.isep.enorm.ref.ref.ContextKind;
 import pt.isep.enorm.ref.ref.ContextType;
 import pt.isep.enorm.ref.ref.FeedbackDefinition;
@@ -32,7 +33,6 @@ import pt.isep.enorm.ref.ref.ModerationMode;
 import pt.isep.enorm.ref.ref.ModerationPolicy;
 import pt.isep.enorm.ref.ref.PrimitiveType;
 import pt.isep.enorm.ref.ref.RatingPolicy;
-import pt.isep.enorm.ref.ref.RatingScaleKind;
 import pt.isep.enorm.ref.ref.RefFactory;
 import pt.isep.enorm.ref.ref.RefModel;
 import pt.isep.enorm.ref.ref.RefPackage;
@@ -139,6 +139,13 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EClass conditionValueEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EClass actionEClass = null;
 
 	/**
@@ -238,13 +245,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	private EEnum verificationRequirementEEnum = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EEnum ratingScaleKindEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -946,16 +946,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getRatingPolicy_ScaleKind() {
-		return (EAttribute) ratingPolicyEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getFeedbackDefinition() {
 		return feedbackDefinitionEClass;
 	}
@@ -1046,7 +1036,7 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Parent() {
+	public EReference getFeedbackDefinition_Policy() {
 		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -1056,18 +1046,8 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFeedbackDefinition_Policy() {
-		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getFeedbackDefinition_Rating() {
-		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(10);
+		return (EReference) feedbackDefinitionEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -1096,7 +1076,7 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCondition_Field() {
+	public EAttribute getCondition_Operator() {
 		return (EAttribute) conditionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1106,8 +1086,8 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCondition_Operator() {
-		return (EAttribute) conditionEClass.getEStructuralFeatures().get(2);
+	public EReference getCondition_Attribute() {
+		return (EReference) conditionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1116,8 +1096,28 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getCondition_Value() {
-		return (EAttribute) conditionEClass.getEStructuralFeatures().get(3);
+	public EReference getCondition_Children() {
+		return (EReference) conditionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getConditionValue() {
+		return conditionValueEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getConditionValue_Value() {
+		return (EAttribute) conditionValueEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -1556,7 +1556,7 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAutomationRule_Conditions() {
+	public EReference getAutomationRule_InvokedValidationRules() {
 		return (EReference) automationRuleEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1566,8 +1566,18 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAutomationRule_Actions() {
+	public EReference getAutomationRule_Conditions() {
 		return (EReference) automationRuleEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAutomationRule_Actions() {
+		return (EReference) automationRuleEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1698,16 +1708,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 	@Override
 	public EEnum getVerificationRequirement() {
 		return verificationRequirementEEnum;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EEnum getRatingScaleKind() {
-		return ratingScaleKindEEnum;
 	}
 
 	/**
@@ -1904,7 +1904,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		createEAttribute(ratingPolicyEClass, RATING_POLICY__MIN_VALUE);
 		createEAttribute(ratingPolicyEClass, RATING_POLICY__MAX_VALUE);
 		createEAttribute(ratingPolicyEClass, RATING_POLICY__STEP);
-		createEAttribute(ratingPolicyEClass, RATING_POLICY__SCALE_KIND);
 
 		feedbackDefinitionEClass = createEClass(FEEDBACK_DEFINITION);
 		createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__NAME);
@@ -1915,28 +1914,8 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__SUBJECT_RESOURCE);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__AUTHOR);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__SUBJECT_FEEDBACK);
-		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__PARENT);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__POLICY);
 		createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__RATING);
-
-		conditionEClass = createEClass(CONDITION);
-		createEAttribute(conditionEClass, CONDITION__NAME);
-		createEAttribute(conditionEClass, CONDITION__FIELD);
-		createEAttribute(conditionEClass, CONDITION__OPERATOR);
-		createEAttribute(conditionEClass, CONDITION__VALUE);
-
-		actionEClass = createEClass(ACTION);
-		createEAttribute(actionEClass, ACTION__NAME);
-		createEAttribute(actionEClass, ACTION__KIND);
-		createEAttribute(actionEClass, ACTION__MESSAGE);
-
-		sortingPolicyEClass = createEClass(SORTING_POLICY);
-		createEAttribute(sortingPolicyEClass, SORTING_POLICY__NAME);
-		createEAttribute(sortingPolicyEClass, SORTING_POLICY__CRITERION);
-		createEAttribute(sortingPolicyEClass, SORTING_POLICY__DIRECTION);
-		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_RESOURCE);
-		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_FEEDBACK);
-		createEReference(sortingPolicyEClass, SORTING_POLICY__IN_CONTEXT);
 
 		validationRuleEClass = createEClass(VALIDATION_RULE);
 		createEAttribute(validationRuleEClass, VALIDATION_RULE__NAME);
@@ -1973,8 +1952,23 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		createEReference(automationRuleEClass, AUTOMATION_RULE__IN_CONTEXT);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__ON_FEEDBACK);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__USES);
+		createEReference(automationRuleEClass, AUTOMATION_RULE__INVOKED_VALIDATION_RULES);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__CONDITIONS);
 		createEReference(automationRuleEClass, AUTOMATION_RULE__ACTIONS);
+
+		conditionEClass = createEClass(CONDITION);
+		createEAttribute(conditionEClass, CONDITION__NAME);
+		createEAttribute(conditionEClass, CONDITION__OPERATOR);
+		createEReference(conditionEClass, CONDITION__ATTRIBUTE);
+		createEReference(conditionEClass, CONDITION__CHILDREN);
+
+		conditionValueEClass = createEClass(CONDITION_VALUE);
+		createEAttribute(conditionValueEClass, CONDITION_VALUE__VALUE);
+
+		actionEClass = createEClass(ACTION);
+		createEAttribute(actionEClass, ACTION__NAME);
+		createEAttribute(actionEClass, ACTION__KIND);
+		createEAttribute(actionEClass, ACTION__MESSAGE);
 
 		verificationPolicyEClass = createEClass(VERIFICATION_POLICY);
 		createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__NAME);
@@ -1982,16 +1976,23 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__APPLIES_WHEN);
 		createEReference(verificationPolicyEClass, VERIFICATION_POLICY__VERIFIES);
 
+		sortingPolicyEClass = createEClass(SORTING_POLICY);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__NAME);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__CRITERION);
+		createEAttribute(sortingPolicyEClass, SORTING_POLICY__DIRECTION);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_RESOURCE);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_FEEDBACK);
+		createEReference(sortingPolicyEClass, SORTING_POLICY__IN_CONTEXT);
+
 		// Create enums
 		userKindEEnum = createEEnum(USER_KIND);
 		contextKindEEnum = createEEnum(CONTEXT_KIND);
 		primitiveTypeEEnum = createEEnum(PRIMITIVE_TYPE);
 		feedbackKindEEnum = createEEnum(FEEDBACK_KIND);
 		feedbackSubjectScopeEEnum = createEEnum(FEEDBACK_SUBJECT_SCOPE);
-		feedbackStatusEEnum = createEEnum(FEEDBACK_STATUS);
 		feedbackPolarityEEnum = createEEnum(FEEDBACK_POLARITY);
+		feedbackStatusEEnum = createEEnum(FEEDBACK_STATUS);
 		verificationRequirementEEnum = createEEnum(VERIFICATION_REQUIREMENT);
-		ratingScaleKindEEnum = createEEnum(RATING_SCALE_KIND);
 		validationKindEEnum = createEEnum(VALIDATION_KIND);
 		ruleSeverityEEnum = createEEnum(RULE_SEVERITY);
 		moderationModeEEnum = createEEnum(MODERATION_MODE);
@@ -2188,9 +2189,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRatingPolicy_Step(), ecorePackage.getEDouble(), "step", null, 0, 1, RatingPolicy.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRatingPolicy_ScaleKind(), this.getRatingScaleKind(), "scaleKind", null, 0, 1,
-				RatingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(feedbackDefinitionEClass, FeedbackDefinition.class, "FeedbackDefinition", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2218,53 +2216,11 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		initEReference(getFeedbackDefinition_SubjectFeedback(), this.getFeedbackDefinition(), null, "subjectFeedback",
 				null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getFeedbackDefinition_Parent(), this.getFeedbackDefinition(), null, "parent", null, 0, 1,
-				FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFeedbackDefinition_Policy(), this.getFeedbackPolicy(), null, "policy", null, 0, 1,
 				FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFeedbackDefinition_Rating(), this.getRatingPolicy(), null, "rating", null, 0, 1,
 				FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(conditionEClass, Condition.class, "Condition", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getCondition_Name(), ecorePackage.getEString(), "name", null, 0, 1, Condition.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCondition_Field(), ecorePackage.getEString(), "field", null, 0, 1, Condition.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCondition_Operator(), this.getConditionOperator(), "operator", null, 0, 1, Condition.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCondition_Value(), ecorePackage.getEString(), "value", null, 0, 1, Condition.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getAction_Name(), ecorePackage.getEString(), "name", null, 0, 1, Action.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAction_Kind(), this.getActionResultKind(), "kind", null, 0, 1, Action.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, Action.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(sortingPolicyEClass, SortingPolicy.class, "SortingPolicy", !IS_ABSTRACT, !IS_INTERFACE,
-				IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSortingPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, SortingPolicy.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSortingPolicy_Criterion(), this.getSortCriterion(), "criterion", null, 0, 1,
-				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSortingPolicy_Direction(), this.getSortDirection(), "direction", null, 0, 1,
-				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getSortingPolicy_AppliesToResource(), this.getResourceType(), null, "appliesToResource", null, 0,
-				1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSortingPolicy_AppliesToFeedback(), this.getFeedbackDefinition(), null, "appliesToFeedback",
-				null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getSortingPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1,
-				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(validationRuleEClass, ValidationRule.class, "ValidationRule", !IS_ABSTRACT, !IS_INTERFACE,
@@ -2288,9 +2244,10 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		initEReference(getValidationRule_AppliesToFeedback(), this.getFeedbackDefinition(), null, "appliesToFeedback",
 				null, 0, 1, ValidationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getValidationRule_InvokedBy(), this.getAutomationRule(), this.getAutomationRule_Uses(),
-				"invokedBy", null, 1, 1, ValidationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getValidationRule_InvokedBy(), this.getAutomationRule(),
+				this.getAutomationRule_InvokedValidationRules(), "invokedBy", null, 0, 1, ValidationRule.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(moderationPolicyEClass, ModerationPolicy.class, "ModerationPolicy", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -2354,15 +2311,45 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		initEReference(getAutomationRule_OnFeedback(), this.getFeedbackDefinition(), null, "onFeedback", null, 1, 1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAutomationRule_Uses(), this.getValidationRule(), this.getValidationRule_InvokedBy(), "uses",
-				null, 1, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAutomationRule_Uses(), this.getValidationRule(), null, "uses", null, 1, 1,
+				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAutomationRule_InvokedValidationRules(), this.getValidationRule(),
+				this.getValidationRule_InvokedBy(), "invokedValidationRules", null, 0, -1, AutomationRule.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAutomationRule_Conditions(), this.getCondition(), null, "conditions", null, 1, -1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAutomationRule_Actions(), this.getAction(), null, "actions", null, 1, -1,
 				AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(conditionEClass, Condition.class, "Condition", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCondition_Name(), ecorePackage.getEString(), "name", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCondition_Operator(), this.getConditionOperator(), "operator", null, 0, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCondition_Attribute(), this.getAttribute(), null, "attribute", null, 1, 1, Condition.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCondition_Children(), this.getConditionValue(), null, "children", null, 0, -1,
+				Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(conditionValueEClass, ConditionValue.class, "ConditionValue", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConditionValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, ConditionValue.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAction_Name(), ecorePackage.getEString(), "name", null, 0, 1, Action.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAction_Kind(), this.getActionResultKind(), "kind", null, 0, 1, Action.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, Action.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(verificationPolicyEClass, VerificationPolicy.class, "VerificationPolicy", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -2377,6 +2364,26 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 				!IS_DERIVED, IS_ORDERED);
 		initEReference(getVerificationPolicy_Verifies(), this.getFeedbackDefinition(), null, "verifies", null, 1, 1,
 				VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(sortingPolicyEClass, SortingPolicy.class, "SortingPolicy", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSortingPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, SortingPolicy.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSortingPolicy_Criterion(), this.getSortCriterion(), "criterion", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSortingPolicy_Direction(), this.getSortDirection(), "direction", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_AppliesToResource(), this.getResourceType(), null, "appliesToResource", null, 0,
+				1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_AppliesToFeedback(), this.getFeedbackDefinition(), null, "appliesToFeedback",
+				null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSortingPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1,
+				SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
@@ -2416,24 +2423,20 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.FEEDBACK_ONLY);
 		addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.RESOURCE_OR_FEEDBACK);
 
-		initEEnum(feedbackStatusEEnum, FeedbackStatus.class, "FeedbackStatus");
-		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.ENABLED);
-		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.DISABLED);
-
 		initEEnum(feedbackPolarityEEnum, FeedbackPolarity.class, "FeedbackPolarity");
 		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.NONE);
 		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.LIKE_DISLIKE);
 		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.UP_DOWN);
+		addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.STARS);
+
+		initEEnum(feedbackStatusEEnum, FeedbackStatus.class, "FeedbackStatus");
+		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.ENABLED);
+		addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.DISABLED);
 
 		initEEnum(verificationRequirementEEnum, VerificationRequirement.class, "VerificationRequirement");
 		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.NONE);
 		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.OPTIONAL);
 		addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.REQUIRED);
-
-		initEEnum(ratingScaleKindEEnum, RatingScaleKind.class, "RatingScaleKind");
-		addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.NUMERIC);
-		addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.ORDINAL);
-		addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.PERCENTAGE);
 
 		initEEnum(validationKindEEnum, ValidationKind.class, "ValidationKind");
 		addEEnumLiteral(validationKindEEnum, ValidationKind.AUTOMATIC);
@@ -2504,7 +2507,6 @@ public class RefPackageImpl extends EPackageImpl implements RefPackage {
 		initEEnum(sortCriterionEEnum, SortCriterion.class, "SortCriterion");
 		addEEnumLiteral(sortCriterionEEnum, SortCriterion.DATE);
 		addEEnumLiteral(sortCriterionEEnum, SortCriterion.VALUE);
-		addEEnumLiteral(sortCriterionEEnum, SortCriterion.RELEVANCE);
 
 		initEEnum(sortDirectionEEnum, SortDirection.class, "SortDirection");
 		addEEnumLiteral(sortDirectionEEnum, SortDirection.ASC);

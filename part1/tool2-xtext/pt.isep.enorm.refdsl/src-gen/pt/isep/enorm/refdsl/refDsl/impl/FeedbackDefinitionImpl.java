@@ -19,6 +19,7 @@ import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
 import pt.isep.enorm.refdsl.refDsl.UserType;
+import pt.isep.enorm.refdsl.refDsl.VerificationRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,11 +32,11 @@ import pt.isep.enorm.refdsl.refDsl.UserType;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getType <em>Type</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getVerificationRequirement <em>Verification Requirement</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getSubjectResource <em>Subject Resource</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getSubjectFeedback <em>Subject Feedback</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getPolicy <em>Policy</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl#getRating <em>Rating</em>}</li>
  * </ul>
@@ -95,6 +96,26 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
   protected boolean requiresVerifiedContext = REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
 
   /**
+   * The default value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getVerificationRequirement()
+   * @generated
+   * @ordered
+   */
+  protected static final VerificationRequirement VERIFICATION_REQUIREMENT_EDEFAULT = VerificationRequirement.NONE;
+
+  /**
+   * The cached value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getVerificationRequirement()
+   * @generated
+   * @ordered
+   */
+  protected VerificationRequirement verificationRequirement = VERIFICATION_REQUIREMENT_EDEFAULT;
+
+  /**
    * The default value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -143,16 +164,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @ordered
    */
   protected FeedbackDefinition subjectFeedback;
-
-  /**
-   * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getParent()
-   * @generated
-   * @ordered
-   */
-  protected FeedbackDefinition parent;
 
   /**
    * The cached value of the '{@link #getPolicy() <em>Policy</em>}' containment reference.
@@ -288,6 +299,31 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
     requiresVerifiedContext = newRequiresVerifiedContext;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT, oldRequiresVerifiedContext, requiresVerifiedContext));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public VerificationRequirement getVerificationRequirement()
+  {
+    return verificationRequirement;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setVerificationRequirement(VerificationRequirement newVerificationRequirement)
+  {
+    VerificationRequirement oldVerificationRequirement = verificationRequirement;
+    verificationRequirement = newVerificationRequirement == null ? VERIFICATION_REQUIREMENT_EDEFAULT : newVerificationRequirement;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT, oldVerificationRequirement, verificationRequirement));
   }
 
   /**
@@ -456,51 +492,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
    * @generated
    */
   @Override
-  public FeedbackDefinition getParent()
-  {
-    if (parent != null && parent.eIsProxy())
-    {
-      InternalEObject oldParent = (InternalEObject)parent;
-      parent = (FeedbackDefinition)eResolveProxy(oldParent);
-      if (parent != oldParent)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefDslPackage.FEEDBACK_DEFINITION__PARENT, oldParent, parent));
-      }
-    }
-    return parent;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public FeedbackDefinition basicGetParent()
-  {
-    return parent;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setParent(FeedbackDefinition newParent)
-  {
-    FeedbackDefinition oldParent = parent;
-    parent = newParent;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_DEFINITION__PARENT, oldParent, parent));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public FeedbackPolicy getPolicy()
   {
     return policy;
@@ -630,6 +621,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return basicGetType();
       case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
         return isRequiresVerifiedContext();
+      case RefDslPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+        return getVerificationRequirement();
       case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
         return isUniquePerAuthorTarget();
       case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
@@ -641,9 +634,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
         if (resolve) return getSubjectFeedback();
         return basicGetSubjectFeedback();
-      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
-        if (resolve) return getParent();
-        return basicGetParent();
       case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
         return getPolicy();
       case RefDslPackage.FEEDBACK_DEFINITION__RATING:
@@ -671,6 +661,9 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
         setRequiresVerifiedContext((Boolean)newValue);
         return;
+      case RefDslPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+        setVerificationRequirement((VerificationRequirement)newValue);
+        return;
       case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
         setUniquePerAuthorTarget((Boolean)newValue);
         return;
@@ -682,9 +675,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return;
       case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
         setSubjectFeedback((FeedbackDefinition)newValue);
-        return;
-      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
-        setParent((FeedbackDefinition)newValue);
         return;
       case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
         setPolicy((FeedbackPolicy)newValue);
@@ -715,6 +705,9 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
       case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
         setRequiresVerifiedContext(REQUIRES_VERIFIED_CONTEXT_EDEFAULT);
         return;
+      case RefDslPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+        setVerificationRequirement(VERIFICATION_REQUIREMENT_EDEFAULT);
+        return;
       case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
         setUniquePerAuthorTarget(UNIQUE_PER_AUTHOR_TARGET_EDEFAULT);
         return;
@@ -726,9 +719,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return;
       case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
         setSubjectFeedback((FeedbackDefinition)null);
-        return;
-      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
-        setParent((FeedbackDefinition)null);
         return;
       case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
         setPolicy((FeedbackPolicy)null);
@@ -756,6 +746,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return type != null;
       case RefDslPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
         return requiresVerifiedContext != REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+      case RefDslPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+        return verificationRequirement != VERIFICATION_REQUIREMENT_EDEFAULT;
       case RefDslPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
         return uniquePerAuthorTarget != UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
       case RefDslPackage.FEEDBACK_DEFINITION__AUTHOR:
@@ -764,8 +756,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
         return subjectResource != null;
       case RefDslPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
         return subjectFeedback != null;
-      case RefDslPackage.FEEDBACK_DEFINITION__PARENT:
-        return parent != null;
       case RefDslPackage.FEEDBACK_DEFINITION__POLICY:
         return policy != null;
       case RefDslPackage.FEEDBACK_DEFINITION__RATING:
@@ -789,6 +779,8 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
     result.append(name);
     result.append(", requiresVerifiedContext: ");
     result.append(requiresVerifiedContext);
+    result.append(", verificationRequirement: ");
+    result.append(verificationRequirement);
     result.append(", uniquePerAuthorTarget: ");
     result.append(uniquePerAuthorTarget);
     result.append(')');

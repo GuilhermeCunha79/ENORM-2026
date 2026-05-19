@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getMinValue <em>Min Value</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getMaxValue <em>Max Value</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getStep <em>Step</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getScaleKind <em>Scale Kind</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRatingPolicy()
@@ -91,30 +90,5 @@ public interface RatingPolicy extends EObject
    * @generated
    */
   void setStep(double value);
-
-  /**
-   * Returns the value of the '<em><b>Scale Kind</b></em>' attribute.
-   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.RatingScaleKind}.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Scale Kind</em>' attribute.
-   * @see pt.isep.enorm.refdsl.refDsl.RatingScaleKind
-   * @see #setScaleKind(RatingScaleKind)
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRatingPolicy_ScaleKind()
-   * @model
-   * @generated
-   */
-  RatingScaleKind getScaleKind();
-
-  /**
-   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getScaleKind <em>Scale Kind</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Scale Kind</em>' attribute.
-   * @see pt.isep.enorm.refdsl.refDsl.RatingScaleKind
-   * @see #getScaleKind()
-   * @generated
-   */
-  void setScaleKind(RatingScaleKind value);
 
 } // RatingPolicy

@@ -10,6 +10,7 @@ import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -22,6 +23,7 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
 import pt.isep.enorm.ref.ref.Condition;
+import pt.isep.enorm.ref.ref.RefFactory;
 import pt.isep.enorm.ref.ref.RefPackage;
 
 /**
@@ -54,9 +56,8 @@ public class ConditionItemProvider extends ItemProviderAdapter implements IEditi
 			super.getPropertyDescriptors(object);
 
 			addNamePropertyDescriptor(object);
-			addFieldPropertyDescriptor(object);
 			addOperatorPropertyDescriptor(object);
-			addValuePropertyDescriptor(object);
+			addAttributePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -78,22 +79,6 @@ public class ConditionItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This adds a property descriptor for the Field feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addFieldPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_Condition_field_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_Condition_field_feature",
-								"_UI_Condition_type"),
-						RefPackage.Literals.CONDITION__FIELD, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
 	 * This adds a property descriptor for the Operator feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -110,19 +95,48 @@ public class ConditionItemProvider extends ItemProviderAdapter implements IEditi
 	}
 
 	/**
-	 * This adds a property descriptor for the Value feature.
+	 * This adds a property descriptor for the Attribute feature.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected void addValuePropertyDescriptor(Object object) {
+	protected void addAttributePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_Condition_value_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_Condition_value_feature",
+						getResourceLocator(), getString("_UI_Condition_attribute_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Condition_attribute_feature",
 								"_UI_Condition_type"),
-						RefPackage.Literals.CONDITION__VALUE, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+						RefPackage.Literals.CONDITION__ATTRIBUTE, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
+	 * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
+	 * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
+		if (childrenFeatures == null) {
+			super.getChildrenFeatures(object);
+			childrenFeatures.add(RefPackage.Literals.CONDITION__CHILDREN);
+		}
+		return childrenFeatures;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EStructuralFeature getChildFeature(Object object, Object child) {
+		// Check the type of the specified child object and return the proper feature to use for
+		// adding (see {@link AddCommand}) it as a child.
+
+		return super.getChildFeature(object, child);
 	}
 
 	/**
@@ -162,10 +176,11 @@ public class ConditionItemProvider extends ItemProviderAdapter implements IEditi
 
 		switch (notification.getFeatureID(Condition.class)) {
 		case RefPackage.CONDITION__NAME:
-		case RefPackage.CONDITION__FIELD:
 		case RefPackage.CONDITION__OPERATOR:
-		case RefPackage.CONDITION__VALUE:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			return;
+		case RefPackage.CONDITION__CHILDREN:
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
 		super.notifyChanged(notification);
@@ -181,6 +196,9 @@ public class ConditionItemProvider extends ItemProviderAdapter implements IEditi
 	@Override
 	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
+
+		newChildDescriptors.add(createChildParameter(RefPackage.Literals.CONDITION__CHILDREN,
+				RefFactory.eINSTANCE.createConditionValue()));
 	}
 
 	/**

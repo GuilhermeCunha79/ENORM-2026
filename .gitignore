@@ -37,6 +37,13 @@ gradle-app.setting
 # Specific to the project
 **/reports/
 
+# Xtext: Spring Boot output from RefDslGenerator (deep paths; exceeds Windows MAX_PATH)
+# Regenerate in Eclipse: open .refdsl with RefDsl Editor → Save → src-gen/generated-backend/
+**/src-gen/generated-backend/
+
+# Local Eclipse runtime workspaces (duplicate of scenarios-a7; not for Git)
+part1/tool2-xtext/runtime-New_configuration/
+
 # NetBeans
 nbactions.xml
 

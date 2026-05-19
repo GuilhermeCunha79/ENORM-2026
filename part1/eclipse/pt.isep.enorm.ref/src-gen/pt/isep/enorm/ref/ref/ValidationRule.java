@@ -190,14 +190,14 @@ public interface ValidationRule extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Invoked By</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link pt.isep.enorm.ref.ref.AutomationRule#getUses <em>Uses</em>}'.
+	 * It is bidirectional and its opposite is '{@link pt.isep.enorm.ref.ref.AutomationRule#getInvokedValidationRules <em>Invoked Validation Rules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Invoked By</em>' reference.
 	 * @see #setInvokedBy(AutomationRule)
 	 * @see pt.isep.enorm.ref.ref.RefPackage#getValidationRule_InvokedBy()
-	 * @see pt.isep.enorm.ref.ref.AutomationRule#getUses
-	 * @model opposite="uses" required="true"
+	 * @see pt.isep.enorm.ref.ref.AutomationRule#getInvokedValidationRules
+	 * @model opposite="invokedValidationRules"
 	 * @generated
 	 */
 	AutomationRule getInvokedBy();

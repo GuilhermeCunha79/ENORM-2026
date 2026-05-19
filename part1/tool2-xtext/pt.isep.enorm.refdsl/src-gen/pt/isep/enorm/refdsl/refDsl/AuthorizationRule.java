@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getAllowedAction <em>Allowed Action</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getActor <em>Actor</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getContext <em>Context</em>}</li>
@@ -27,6 +28,28 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface AuthorizationRule extends EObject
 {
+  /**
+   * Returns the value of the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Name</em>' attribute.
+   * @see #setName(String)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAuthorizationRule_Name()
+   * @model
+   * @generated
+   */
+  String getName();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getName <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Name</em>' attribute.
+   * @see #getName()
+   * @generated
+   */
+  void setName(String value);
+
   /**
    * Returns the value of the '<em><b>Allowed Action</b></em>' attribute.
    * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.ActionKind}.

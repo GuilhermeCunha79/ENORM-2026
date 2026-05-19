@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getInContext <em>In Context</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getUses <em>Uses</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getInvokedValidationRules <em>Invoked Validation Rules</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getConditions <em>Conditions</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.AutomationRule#getActions <em>Actions</em>}</li>
  * </ul>
@@ -144,14 +145,12 @@ public interface AutomationRule extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Uses</b></em>' reference.
-	 * It is bidirectional and its opposite is '{@link pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy <em>Invoked By</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Uses</em>' reference.
 	 * @see #setUses(ValidationRule)
 	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_Uses()
-	 * @see pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy
-	 * @model opposite="invokedBy" required="true"
+	 * @model required="true"
 	 * @generated
 	 */
 	ValidationRule getUses();
@@ -165,6 +164,20 @@ public interface AutomationRule extends EObject {
 	 * @generated
 	 */
 	void setUses(ValidationRule value);
+
+	/**
+	 * Returns the value of the '<em><b>Invoked Validation Rules</b></em>' reference list.
+	 * The list contents are of type {@link pt.isep.enorm.ref.ref.ValidationRule}.
+	 * It is bidirectional and its opposite is '{@link pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy <em>Invoked By</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Invoked Validation Rules</em>' reference list.
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getAutomationRule_InvokedValidationRules()
+	 * @see pt.isep.enorm.ref.ref.ValidationRule#getInvokedBy
+	 * @model opposite="invokedBy"
+	 * @generated
+	 */
+	EList<ValidationRule> getInvokedValidationRules();
 
 	/**
 	 * Returns the value of the '<em><b>Conditions</b></em>' containment reference list.

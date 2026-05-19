@@ -32,27 +32,27 @@ version "1.0.0"
   }
 
   feedbackTypes {
-    FeedbackType Review kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsMedia false,
-    FeedbackType Comment kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsMedia false
+    FeedbackType Review kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsText true allowsMedia false polarity NONE,
+    FeedbackType Comment kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsText true allowsMedia false polarity NONE
   }
 
   feedbackDefinitions {
     FeedbackDefinition ProductReview
       type Review
       requiresVerifiedContext true
+      verificationRequirement OPTIONAL
       uniquePerAuthorTarget true
       author Buyer
       subjectResource Product
       policy FeedbackPolicy status ENABLED
-      rating RatingPolicy min 1 max 5 step 1 scaleKind NUMERIC,
+      rating RatingPolicy min 1 max 5 step 1,
 
     FeedbackDefinition ProductComment
       type Comment
       requiresVerifiedContext false
       uniquePerAuthorTarget false
       author Buyer
-      subjectResource Product
-      parent ProductReview
+      subjectFeedback ProductReview
       policy FeedbackPolicy status ENABLED
   }
 
@@ -65,14 +65,29 @@ version "1.0.0"
   }
 
   moderationPolicies {
-    ModerationPolicy name ReviewModeration mode MANUAL trigger "onReport" decision FLAGGED monitorsResource Product monitorsFeedback ProductReview executedBy Moderator inContext AmazonMarketplace
+    ModerationPolicy name ReviewModeration mode MANUAL trigger ON_REPORT_SUBMITTED decision FLAGGED monitorsResource Product monitorsFeedback ProductReview executedBy Moderator inContext AmazonMarketplace
   }
 
   automationRules {
-    AutomationRule AmazonAutoValidate trigger "onCreate" condition "true" actionDescription "run validations" context Product inContext AmazonMarketplace onFeedback ProductReview uses AmazonValidation
+    AutomationRule AmazonAutoValidate
+      trigger ON_FEEDBACK_CREATE
+      context Product
+      inContext AmazonMarketplace
+      onFeedback ProductReview
+      uses AmazonValidation
+      conditions {
+        Condition CheckTitle operator HAS_PROPERTY attribute title
+      }
+      actions {
+        Action RunValidation kind DISPLAY_MESSAGE message "run validations"
+      }
   }
 
   verificationPolicies {
-    VerificationPolicy name ProductReviewVerification mode MANUAL appliesWhen "onCreate" verifies ProductReview
+    VerificationPolicy name ProductReviewVerification mode MANUAL appliesWhen ON_FEEDBACK_CREATE verifies ProductReview
+  }
+
+  sortingPolicies {
+    SortingPolicy ByPrice criterion DATE direction DESC appliesToResource Product inContext AmazonMarketplace
   }
 }

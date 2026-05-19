@@ -29,6 +29,7 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
 import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.SortingPolicy;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
@@ -54,6 +55,7 @@ import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getModerationPolicies <em>Moderation Policies</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getAutomationRules <em>Automation Rules</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getVerificationPolicies <em>Verification Policies</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getSortingPolicies <em>Sorting Policies</em>}</li>
  * </ul>
  *
  * @generated
@@ -209,6 +211,16 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
    * @ordered
    */
   protected EList<VerificationPolicy> verificationPolicies;
+
+  /**
+   * The cached value of the '{@link #getSortingPolicies() <em>Sorting Policies</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSortingPolicies()
+   * @generated
+   * @ordered
+   */
+  protected EList<SortingPolicy> sortingPolicies;
 
   /**
    * <!-- begin-user-doc -->
@@ -452,6 +464,21 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
    * @generated
    */
   @Override
+  public EList<SortingPolicy> getSortingPolicies()
+  {
+    if (sortingPolicies == null)
+    {
+      sortingPolicies = new EObjectContainmentEList<SortingPolicy>(SortingPolicy.class, this, RefDslPackage.REF_MODEL__SORTING_POLICIES);
+    }
+    return sortingPolicies;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
     switch (featureID)
@@ -478,6 +505,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return ((InternalEList<?>)getAutomationRules()).basicRemove(otherEnd, msgs);
       case RefDslPackage.REF_MODEL__VERIFICATION_POLICIES:
         return ((InternalEList<?>)getVerificationPolicies()).basicRemove(otherEnd, msgs);
+      case RefDslPackage.REF_MODEL__SORTING_POLICIES:
+        return ((InternalEList<?>)getSortingPolicies()).basicRemove(otherEnd, msgs);
     }
     return super.eInverseRemove(otherEnd, featureID, msgs);
   }
@@ -518,6 +547,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return getAutomationRules();
       case RefDslPackage.REF_MODEL__VERIFICATION_POLICIES:
         return getVerificationPolicies();
+      case RefDslPackage.REF_MODEL__SORTING_POLICIES:
+        return getSortingPolicies();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -583,6 +614,10 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         getVerificationPolicies().clear();
         getVerificationPolicies().addAll((Collection<? extends VerificationPolicy>)newValue);
         return;
+      case RefDslPackage.REF_MODEL__SORTING_POLICIES:
+        getSortingPolicies().clear();
+        getSortingPolicies().addAll((Collection<? extends SortingPolicy>)newValue);
+        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -636,6 +671,9 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
       case RefDslPackage.REF_MODEL__VERIFICATION_POLICIES:
         getVerificationPolicies().clear();
         return;
+      case RefDslPackage.REF_MODEL__SORTING_POLICIES:
+        getSortingPolicies().clear();
+        return;
     }
     super.eUnset(featureID);
   }
@@ -676,6 +714,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return automationRules != null && !automationRules.isEmpty();
       case RefDslPackage.REF_MODEL__VERIFICATION_POLICIES:
         return verificationPolicies != null && !verificationPolicies.isEmpty();
+      case RefDslPackage.REF_MODEL__SORTING_POLICIES:
+        return sortingPolicies != null && !sortingPolicies.isEmpty();
     }
     return super.eIsSet(featureID);
   }

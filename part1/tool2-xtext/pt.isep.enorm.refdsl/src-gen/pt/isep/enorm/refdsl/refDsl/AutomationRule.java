@@ -3,6 +3,8 @@
  */
 package pt.isep.enorm.refdsl.refDsl;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -16,12 +18,13 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getTrigger <em>Trigger</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getCondition <em>Condition</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActionDescription <em>Action Description</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getContext <em>Context</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getInContext <em>In Context</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getUses <em>Uses</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getInvokedValidationRules <em>Invoked Validation Rules</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActions <em>Actions</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule()
@@ -54,69 +57,28 @@ public interface AutomationRule extends EObject
 
   /**
    * Returns the value of the '<em><b>Trigger</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.TriggerEvent}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Trigger</em>' attribute.
-   * @see #setTrigger(String)
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+   * @see #setTrigger(TriggerEvent)
    * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Trigger()
    * @model
    * @generated
    */
-  String getTrigger();
+  TriggerEvent getTrigger();
 
   /**
    * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getTrigger <em>Trigger</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Trigger</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
    * @see #getTrigger()
    * @generated
    */
-  void setTrigger(String value);
-
-  /**
-   * Returns the value of the '<em><b>Condition</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Condition</em>' attribute.
-   * @see #setCondition(String)
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Condition()
-   * @model
-   * @generated
-   */
-  String getCondition();
-
-  /**
-   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getCondition <em>Condition</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Condition</em>' attribute.
-   * @see #getCondition()
-   * @generated
-   */
-  void setCondition(String value);
-
-  /**
-   * Returns the value of the '<em><b>Action Description</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Action Description</em>' attribute.
-   * @see #setActionDescription(String)
-   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_ActionDescription()
-   * @model
-   * @generated
-   */
-  String getActionDescription();
-
-  /**
-   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActionDescription <em>Action Description</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Action Description</em>' attribute.
-   * @see #getActionDescription()
-   * @generated
-   */
-  void setActionDescription(String value);
+  void setTrigger(TriggerEvent value);
 
   /**
    * Returns the value of the '<em><b>Context</b></em>' reference.
@@ -205,5 +167,41 @@ public interface AutomationRule extends EObject
    * @generated
    */
   void setUses(ValidationRule value);
+
+  /**
+   * Returns the value of the '<em><b>Invoked Validation Rules</b></em>' reference list.
+   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.ValidationRule}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Invoked Validation Rules</em>' reference list.
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_InvokedValidationRules()
+   * @model
+   * @generated
+   */
+  EList<ValidationRule> getInvokedValidationRules();
+
+  /**
+   * Returns the value of the '<em><b>Conditions</b></em>' containment reference list.
+   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.Condition}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Conditions</em>' containment reference list.
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Conditions()
+   * @model containment="true"
+   * @generated
+   */
+  EList<Condition> getConditions();
+
+  /**
+   * Returns the value of the '<em><b>Actions</b></em>' containment reference list.
+   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.Action}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Actions</em>' containment reference list.
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getAutomationRule_Actions()
+   * @model containment="true"
+   * @generated
+   */
+  EList<Action> getActions();
 
 } // AutomationRule

@@ -46,7 +46,16 @@ public enum FeedbackPolarity implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	UP_DOWN(2, "UP_DOWN", "UP_DOWN");
+	UP_DOWN(2, "UP_DOWN", "UP_DOWN"),
+	/**
+	* The '<em><b>STARS</b></em>' literal object.
+	* <!-- begin-user-doc -->
+	* <!-- end-user-doc -->
+	* @see #STARS_VALUE
+	* @generated
+	* @ordered
+	*/
+	STARS(3, "STARS", "STARS");
 
 	/**
 	 * The '<em><b>NONE</b></em>' literal value.
@@ -82,12 +91,24 @@ public enum FeedbackPolarity implements Enumerator {
 	public static final int UP_DOWN_VALUE = 2;
 
 	/**
+	 * The '<em><b>STARS</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #STARS
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int STARS_VALUE = 3;
+
+	/**
 	 * An array of all the '<em><b>Feedback Polarity</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final FeedbackPolarity[] VALUES_ARRAY = new FeedbackPolarity[] { NONE, LIKE_DISLIKE, UP_DOWN, };
+	private static final FeedbackPolarity[] VALUES_ARRAY = new FeedbackPolarity[] { NONE, LIKE_DISLIKE, UP_DOWN,
+			STARS, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Feedback Polarity</b></em>' enumerators.
@@ -149,6 +170,8 @@ public enum FeedbackPolarity implements Enumerator {
 			return LIKE_DISLIKE;
 		case UP_DOWN_VALUE:
 			return UP_DOWN;
+		case STARS_VALUE:
+			return STARS;
 		}
 		return null;
 	}

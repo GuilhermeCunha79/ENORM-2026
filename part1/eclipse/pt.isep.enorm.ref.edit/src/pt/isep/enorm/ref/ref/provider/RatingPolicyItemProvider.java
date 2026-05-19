@@ -56,7 +56,6 @@ public class RatingPolicyItemProvider extends ItemProviderAdapter implements IEd
 			addMinValuePropertyDescriptor(object);
 			addMaxValuePropertyDescriptor(object);
 			addStepPropertyDescriptor(object);
-			addScaleKindPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -110,22 +109,6 @@ public class RatingPolicyItemProvider extends ItemProviderAdapter implements IEd
 	}
 
 	/**
-	 * This adds a property descriptor for the Scale Kind feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addScaleKindPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_RatingPolicy_scaleKind_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_RatingPolicy_scaleKind_feature",
-								"_UI_RatingPolicy_type"),
-						RefPackage.Literals.RATING_POLICY__SCALE_KIND, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
-	}
-
-	/**
 	 * This returns RatingPolicy.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -163,7 +146,6 @@ public class RatingPolicyItemProvider extends ItemProviderAdapter implements IEd
 		case RefPackage.RATING_POLICY__MIN_VALUE:
 		case RefPackage.RATING_POLICY__MAX_VALUE:
 		case RefPackage.RATING_POLICY__STEP:
-		case RefPackage.RATING_POLICY__SCALE_KIND:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

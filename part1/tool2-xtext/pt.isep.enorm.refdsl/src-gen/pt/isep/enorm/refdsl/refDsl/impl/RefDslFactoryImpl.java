@@ -80,7 +80,11 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
       case RefDslPackage.MODERATION_POLICY: return createModerationPolicy();
       case RefDslPackage.AUTHORIZATION_RULE: return createAuthorizationRule();
       case RefDslPackage.AUTOMATION_RULE: return createAutomationRule();
+      case RefDslPackage.CONDITION: return createCondition();
+      case RefDslPackage.CONDITION_VALUE: return createConditionValue();
+      case RefDslPackage.ACTION: return createAction();
       case RefDslPackage.VERIFICATION_POLICY: return createVerificationPolicy();
+      case RefDslPackage.SORTING_POLICY: return createSortingPolicy();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -106,10 +110,12 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
         return createFeedbackKindFromString(eDataType, initialValue);
       case RefDslPackage.FEEDBACK_SUBJECT_SCOPE:
         return createFeedbackSubjectScopeFromString(eDataType, initialValue);
+      case RefDslPackage.FEEDBACK_POLARITY:
+        return createFeedbackPolarityFromString(eDataType, initialValue);
       case RefDslPackage.FEEDBACK_STATUS:
         return createFeedbackStatusFromString(eDataType, initialValue);
-      case RefDslPackage.RATING_SCALE_KIND:
-        return createRatingScaleKindFromString(eDataType, initialValue);
+      case RefDslPackage.VERIFICATION_REQUIREMENT:
+        return createVerificationRequirementFromString(eDataType, initialValue);
       case RefDslPackage.VALIDATION_KIND:
         return createValidationKindFromString(eDataType, initialValue);
       case RefDslPackage.RULE_SEVERITY:
@@ -120,6 +126,16 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
         return createModerationDecisionFromString(eDataType, initialValue);
       case RefDslPackage.ACTION_KIND:
         return createActionKindFromString(eDataType, initialValue);
+      case RefDslPackage.TRIGGER_EVENT:
+        return createTriggerEventFromString(eDataType, initialValue);
+      case RefDslPackage.CONDITION_OPERATOR:
+        return createConditionOperatorFromString(eDataType, initialValue);
+      case RefDslPackage.ACTION_RESULT_KIND:
+        return createActionResultKindFromString(eDataType, initialValue);
+      case RefDslPackage.SORT_CRITERION:
+        return createSortCriterionFromString(eDataType, initialValue);
+      case RefDslPackage.SORT_DIRECTION:
+        return createSortDirectionFromString(eDataType, initialValue);
       default:
         throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
@@ -145,10 +161,12 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
         return convertFeedbackKindToString(eDataType, instanceValue);
       case RefDslPackage.FEEDBACK_SUBJECT_SCOPE:
         return convertFeedbackSubjectScopeToString(eDataType, instanceValue);
+      case RefDslPackage.FEEDBACK_POLARITY:
+        return convertFeedbackPolarityToString(eDataType, instanceValue);
       case RefDslPackage.FEEDBACK_STATUS:
         return convertFeedbackStatusToString(eDataType, instanceValue);
-      case RefDslPackage.RATING_SCALE_KIND:
-        return convertRatingScaleKindToString(eDataType, instanceValue);
+      case RefDslPackage.VERIFICATION_REQUIREMENT:
+        return convertVerificationRequirementToString(eDataType, instanceValue);
       case RefDslPackage.VALIDATION_KIND:
         return convertValidationKindToString(eDataType, instanceValue);
       case RefDslPackage.RULE_SEVERITY:
@@ -159,6 +177,16 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
         return convertModerationDecisionToString(eDataType, instanceValue);
       case RefDslPackage.ACTION_KIND:
         return convertActionKindToString(eDataType, instanceValue);
+      case RefDslPackage.TRIGGER_EVENT:
+        return convertTriggerEventToString(eDataType, instanceValue);
+      case RefDslPackage.CONDITION_OPERATOR:
+        return convertConditionOperatorToString(eDataType, instanceValue);
+      case RefDslPackage.ACTION_RESULT_KIND:
+        return convertActionResultKindToString(eDataType, instanceValue);
+      case RefDslPackage.SORT_CRITERION:
+        return convertSortCriterionToString(eDataType, instanceValue);
+      case RefDslPackage.SORT_DIRECTION:
+        return convertSortDirectionToString(eDataType, instanceValue);
       default:
         throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
     }
@@ -338,10 +366,58 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
    * @generated
    */
   @Override
+  public Condition createCondition()
+  {
+    ConditionImpl condition = new ConditionImpl();
+    return condition;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ConditionValue createConditionValue()
+  {
+    ConditionValueImpl conditionValue = new ConditionValueImpl();
+    return conditionValue;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Action createAction()
+  {
+    ActionImpl action = new ActionImpl();
+    return action;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public VerificationPolicy createVerificationPolicy()
   {
     VerificationPolicyImpl verificationPolicy = new VerificationPolicyImpl();
     return verificationPolicy;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public SortingPolicy createSortingPolicy()
+  {
+    SortingPolicyImpl sortingPolicy = new SortingPolicyImpl();
+    return sortingPolicy;
   }
 
   /**
@@ -459,6 +535,28 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public FeedbackPolarity createFeedbackPolarityFromString(EDataType eDataType, String initialValue)
+  {
+    FeedbackPolarity result = FeedbackPolarity.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertFeedbackPolarityToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public FeedbackStatus createFeedbackStatusFromString(EDataType eDataType, String initialValue)
   {
     FeedbackStatus result = FeedbackStatus.get(initialValue);
@@ -481,9 +579,9 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public RatingScaleKind createRatingScaleKindFromString(EDataType eDataType, String initialValue)
+  public VerificationRequirement createVerificationRequirementFromString(EDataType eDataType, String initialValue)
   {
-    RatingScaleKind result = RatingScaleKind.get(initialValue);
+    VerificationRequirement result = VerificationRequirement.get(initialValue);
     if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
     return result;
   }
@@ -493,7 +591,7 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public String convertRatingScaleKindToString(EDataType eDataType, Object instanceValue)
+  public String convertVerificationRequirementToString(EDataType eDataType, Object instanceValue)
   {
     return instanceValue == null ? null : instanceValue.toString();
   }
@@ -604,6 +702,116 @@ public class RefDslFactoryImpl extends EFactoryImpl implements RefDslFactory
    * @generated
    */
   public String convertActionKindToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public TriggerEvent createTriggerEventFromString(EDataType eDataType, String initialValue)
+  {
+    TriggerEvent result = TriggerEvent.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertTriggerEventToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConditionOperator createConditionOperatorFromString(EDataType eDataType, String initialValue)
+  {
+    ConditionOperator result = ConditionOperator.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertConditionOperatorToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ActionResultKind createActionResultKindFromString(EDataType eDataType, String initialValue)
+  {
+    ActionResultKind result = ActionResultKind.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertActionResultKindToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SortCriterion createSortCriterionFromString(EDataType eDataType, String initialValue)
+  {
+    SortCriterion result = SortCriterion.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertSortCriterionToString(EDataType eDataType, Object instanceValue)
+  {
+    return instanceValue == null ? null : instanceValue.toString();
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SortDirection createSortDirectionFromString(EDataType eDataType, String initialValue)
+  {
+    SortDirection result = SortDirection.get(initialValue);
+    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+    return result;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public String convertSortDirectionToString(EDataType eDataType, Object instanceValue)
   {
     return instanceValue == null ? null : instanceValue.toString();
   }

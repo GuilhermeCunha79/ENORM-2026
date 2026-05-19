@@ -19,7 +19,9 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getSubjectScope <em>Subject Scope</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isHasRating <em>Has Rating</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isRecursive <em>Recursive</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsText <em>Allows Text</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsMedia <em>Allows Media</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getPolarity <em>Polarity</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType()
@@ -145,6 +147,28 @@ public interface FeedbackType extends EObject
   void setRecursive(boolean value);
 
   /**
+   * Returns the value of the '<em><b>Allows Text</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Allows Text</em>' attribute.
+   * @see #setAllowsText(boolean)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_AllowsText()
+   * @model
+   * @generated
+   */
+  boolean isAllowsText();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsText <em>Allows Text</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Allows Text</em>' attribute.
+   * @see #isAllowsText()
+   * @generated
+   */
+  void setAllowsText(boolean value);
+
+  /**
    * Returns the value of the '<em><b>Allows Media</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -165,5 +189,30 @@ public interface FeedbackType extends EObject
    * @generated
    */
   void setAllowsMedia(boolean value);
+
+  /**
+   * Returns the value of the '<em><b>Polarity</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.FeedbackPolarity}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Polarity</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolarity
+   * @see #setPolarity(FeedbackPolarity)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackType_Polarity()
+   * @model
+   * @generated
+   */
+  FeedbackPolarity getPolarity();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getPolarity <em>Polarity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Polarity</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolarity
+   * @see #getPolarity()
+   * @generated
+   */
+  void setPolarity(FeedbackPolarity value);
 
 } // FeedbackType

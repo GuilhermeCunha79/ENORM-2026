@@ -150,6 +150,33 @@ public interface RefDslFactory extends EFactory
   AutomationRule createAutomationRule();
 
   /**
+   * Returns a new object of class '<em>Condition</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Condition</em>'.
+   * @generated
+   */
+  Condition createCondition();
+
+  /**
+   * Returns a new object of class '<em>Condition Value</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Condition Value</em>'.
+   * @generated
+   */
+  ConditionValue createConditionValue();
+
+  /**
+   * Returns a new object of class '<em>Action</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Action</em>'.
+   * @generated
+   */
+  Action createAction();
+
+  /**
    * Returns a new object of class '<em>Verification Policy</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -157,6 +184,15 @@ public interface RefDslFactory extends EFactory
    * @generated
    */
   VerificationPolicy createVerificationPolicy();
+
+  /**
+   * Returns a new object of class '<em>Sorting Policy</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Sorting Policy</em>'.
+   * @generated
+   */
+  SortingPolicy createSortingPolicy();
 
   /**
    * Returns the package supported by this factory.
