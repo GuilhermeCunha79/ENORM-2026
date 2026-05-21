@@ -435,7 +435,7 @@ The next tables map **every metamodel type and enumeration** from REF v3 to **va
 
 | Metamodel element | Amazon (`amazon-backend`) | Reddit (`reddit-backend`) | YouTube (`youtube-backend`) | Notes / manual completion |
 |---|---|---|---|---|
-| `RefModel` | Scenario identity implied by package `...ref.amazon`, `pom.xml` artifactId, and seed data | Same pattern for `...ref.reddit` | Same pattern for `...ref.youtube` | No single `RefModel` entity. It could be generated as metadata or documentation |
+| `RefModel` | Scenario identity implied by package `...ref`, `pom.xml` artifactId, and seed data | Package `...ref.reddit`, artifactId, and seed data | Package `...ref`, artifactId, and seed data | No single `RefModel` entity. It could be generated as metadata or documentation |
 | `UserType` | `AmazonUser` + `Role` enum | `RedditUser` + `Role` | `YoutubeUser` + `Role` | Subtype is manual extension point on `Generated*` user |
 | `ContextType` | `ContextType`, `ContextResource` | `Subreddit` (community container) | `Channel` | Different REF `ContextKind` realizations |
 | `ResourceType` | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Post`, `Comment`, … | `Video`, `Comment`, … | Each scenario’s resource set |

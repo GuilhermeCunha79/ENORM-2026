@@ -14,14 +14,14 @@ Spring Boot MVP for the ENORM REF Amazon scenario, now using Maven, JWT authenti
 
 ## Generation Gap structure
 
-- `pt.isep.enorm.ref.amazon.domain.generated`: generated/common JPA base classes
-- `pt.isep.enorm.ref.amazon.domain`: handwritten extension entities
-- `pt.isep.enorm.ref.amazon.repository.generated`: generated/common repositories
-- `pt.isep.enorm.ref.amazon.repository`: handwritten repository extension points
-- `pt.isep.enorm.ref.amazon.service.generated`: generated/common service logic
-- `pt.isep.enorm.ref.amazon.service`: handwritten service extension points
-- `pt.isep.enorm.ref.amazon.web.generated`: generated/common REST endpoints
-- `pt.isep.enorm.ref.amazon.web`: handwritten controller/error extension points
+- `pt.isep.enorm.ref.domain.generated`: generated/common JPA base classes
+- `pt.isep.enorm.ref.domain`: handwritten extension entities
+- `pt.isep.enorm.ref.repository.generated`: generated/common repositories
+- `pt.isep.enorm.ref.repository`: handwritten repository extension points
+- `pt.isep.enorm.ref.service.generated`: generated/common service logic
+- `pt.isep.enorm.ref.service`: handwritten service extension points
+- `pt.isep.enorm.ref.web.generated`: generated/common REST endpoints
+- `pt.isep.enorm.ref.web`: handwritten controller/error extension points
 
 ## Run
 
