@@ -2,6 +2,7 @@
  */
 package pt.isep.enorm.ref.ref;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -14,9 +15,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link pt.isep.enorm.ref.ref.Condition#getName <em>Name</em>}</li>
- *   <li>{@link pt.isep.enorm.ref.ref.Condition#getField <em>Field</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.Condition#getOperator <em>Operator</em>}</li>
- *   <li>{@link pt.isep.enorm.ref.ref.Condition#getValue <em>Value</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.Condition#getAttribute <em>Attribute</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.Condition#getChildren <em>Children</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.ref.ref.RefPackage#getCondition()
@@ -47,28 +48,6 @@ public interface Condition extends EObject {
 	void setName(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Field</em>' attribute.
-	 * @see #setField(String)
-	 * @see pt.isep.enorm.ref.ref.RefPackage#getCondition_Field()
-	 * @model
-	 * @generated
-	 */
-	String getField();
-
-	/**
-	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.Condition#getField <em>Field</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Field</em>' attribute.
-	 * @see #getField()
-	 * @generated
-	 */
-	void setField(String value);
-
-	/**
 	 * Returns the value of the '<em><b>Operator</b></em>' attribute.
 	 * The literals are from the enumeration {@link pt.isep.enorm.ref.ref.ConditionOperator}.
 	 * <!-- begin-user-doc -->
@@ -94,25 +73,37 @@ public interface Condition extends EObject {
 	void setOperator(ConditionOperator value);
 
 	/**
-	 * Returns the value of the '<em><b>Value</b></em>' attribute.
+	 * Returns the value of the '<em><b>Attribute</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Value</em>' attribute.
-	 * @see #setValue(String)
-	 * @see pt.isep.enorm.ref.ref.RefPackage#getCondition_Value()
-	 * @model
+	 * @return the value of the '<em>Attribute</em>' reference.
+	 * @see #setAttribute(Attribute)
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getCondition_Attribute()
+	 * @model required="true"
 	 * @generated
 	 */
-	String getValue();
+	Attribute getAttribute();
 
 	/**
-	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.Condition#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.Condition#getAttribute <em>Attribute</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Value</em>' attribute.
-	 * @see #getValue()
+	 * @param value the new value of the '<em>Attribute</em>' reference.
+	 * @see #getAttribute()
 	 * @generated
 	 */
-	void setValue(String value);
+	void setAttribute(Attribute value);
+
+	/**
+	 * Returns the value of the '<em><b>Children</b></em>' containment reference list.
+	 * The list contents are of type {@link pt.isep.enorm.ref.ref.ConditionValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Children</em>' containment reference list.
+	 * @see pt.isep.enorm.ref.ref.RefPackage#getCondition_Children()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<ConditionValue> getChildren();
 
 } // Condition

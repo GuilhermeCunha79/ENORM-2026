@@ -146,7 +146,17 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Assignment cVerificationPoliciesAssignment_14_3_1 = (Assignment)cGroup_14_3.eContents().get(1);
 		private final RuleCall cVerificationPoliciesVerificationPolicyParserRuleCall_14_3_1_0 = (RuleCall)cVerificationPoliciesAssignment_14_3_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_14_4 = (Keyword)cGroup_14.eContents().get(4);
-		private final Keyword cRightCurlyBracketKeyword_15 = (Keyword)cGroup.eContents().get(15);
+		private final Group cGroup_15 = (Group)cGroup.eContents().get(15);
+		private final Keyword cSortingPoliciesKeyword_15_0 = (Keyword)cGroup_15.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_15_1 = (Keyword)cGroup_15.eContents().get(1);
+		private final Assignment cSortingPoliciesAssignment_15_2 = (Assignment)cGroup_15.eContents().get(2);
+		private final RuleCall cSortingPoliciesSortingPolicyParserRuleCall_15_2_0 = (RuleCall)cSortingPoliciesAssignment_15_2.eContents().get(0);
+		private final Group cGroup_15_3 = (Group)cGroup_15.eContents().get(3);
+		private final Keyword cCommaKeyword_15_3_0 = (Keyword)cGroup_15_3.eContents().get(0);
+		private final Assignment cSortingPoliciesAssignment_15_3_1 = (Assignment)cGroup_15_3.eContents().get(1);
+		private final RuleCall cSortingPoliciesSortingPolicyParserRuleCall_15_3_1_0 = (RuleCall)cSortingPoliciesAssignment_15_3_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_15_4 = (Keyword)cGroup_15.eContents().get(4);
+		private final Keyword cRightCurlyBracketKeyword_16 = (Keyword)cGroup.eContents().get(16);
 		
 		//RefModel returns RefModel:
 		//    'RefModel' name=EString
@@ -163,6 +173,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//        ('moderationPolicies' '{' moderationPolicies+=ModerationPolicy (',' moderationPolicies+=ModerationPolicy)* '}')?
 		//        ('automationRules' '{' automationRules+=AutomationRule (',' automationRules+=AutomationRule)* '}')?
 		//        ('verificationPolicies' '{' verificationPolicies+=VerificationPolicy (',' verificationPolicies+=VerificationPolicy)* '}')?
+		//        ('sortingPolicies' '{' sortingPolicies+=SortingPolicy (',' sortingPolicies+=SortingPolicy)* '}')?
 		//    '}';
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -180,6 +191,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//    ('moderationPolicies' '{' moderationPolicies+=ModerationPolicy (',' moderationPolicies+=ModerationPolicy)* '}')?
 		//    ('automationRules' '{' automationRules+=AutomationRule (',' automationRules+=AutomationRule)* '}')?
 		//    ('verificationPolicies' '{' verificationPolicies+=VerificationPolicy (',' verificationPolicies+=VerificationPolicy)* '}')?
+		//    ('sortingPolicies' '{' sortingPolicies+=SortingPolicy (',' sortingPolicies+=SortingPolicy)* '}')?
 		//'}'
 		public Group getGroup() { return cGroup; }
 		
@@ -537,8 +549,38 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_14_4() { return cRightCurlyBracketKeyword_14_4; }
 		
+		//('sortingPolicies' '{' sortingPolicies+=SortingPolicy (',' sortingPolicies+=SortingPolicy)* '}')?
+		public Group getGroup_15() { return cGroup_15; }
+		
+		//'sortingPolicies'
+		public Keyword getSortingPoliciesKeyword_15_0() { return cSortingPoliciesKeyword_15_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_15_1() { return cLeftCurlyBracketKeyword_15_1; }
+		
+		//sortingPolicies+=SortingPolicy
+		public Assignment getSortingPoliciesAssignment_15_2() { return cSortingPoliciesAssignment_15_2; }
+		
+		//SortingPolicy
+		public RuleCall getSortingPoliciesSortingPolicyParserRuleCall_15_2_0() { return cSortingPoliciesSortingPolicyParserRuleCall_15_2_0; }
+		
+		//(',' sortingPolicies+=SortingPolicy)*
+		public Group getGroup_15_3() { return cGroup_15_3; }
+		
+		//','
+		public Keyword getCommaKeyword_15_3_0() { return cCommaKeyword_15_3_0; }
+		
+		//sortingPolicies+=SortingPolicy
+		public Assignment getSortingPoliciesAssignment_15_3_1() { return cSortingPoliciesAssignment_15_3_1; }
+		
+		//SortingPolicy
+		public RuleCall getSortingPoliciesSortingPolicyParserRuleCall_15_3_1_0() { return cSortingPoliciesSortingPolicyParserRuleCall_15_3_1_0; }
+		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_15() { return cRightCurlyBracketKeyword_15; }
+		public Keyword getRightCurlyBracketKeyword_15_4() { return cRightCurlyBracketKeyword_15_4; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_16() { return cRightCurlyBracketKeyword_16; }
 	}
 	public class UserTypeElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.UserType");
@@ -1085,9 +1127,17 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Assignment cRecursiveAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
 		private final RuleCall cRecursiveEBooleanParserRuleCall_6_1_0 = (RuleCall)cRecursiveAssignment_6_1.eContents().get(0);
 		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cAllowsMediaKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cAllowsMediaAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final RuleCall cAllowsMediaEBooleanParserRuleCall_7_1_0 = (RuleCall)cAllowsMediaAssignment_7_1.eContents().get(0);
+		private final Keyword cAllowsTextKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Assignment cAllowsTextAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
+		private final RuleCall cAllowsTextEBooleanParserRuleCall_7_1_0 = (RuleCall)cAllowsTextAssignment_7_1.eContents().get(0);
+		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
+		private final Keyword cAllowsMediaKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
+		private final Assignment cAllowsMediaAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
+		private final RuleCall cAllowsMediaEBooleanParserRuleCall_8_1_0 = (RuleCall)cAllowsMediaAssignment_8_1.eContents().get(0);
+		private final Group cGroup_9 = (Group)cGroup.eContents().get(9);
+		private final Keyword cPolarityKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Assignment cPolarityAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
+		private final RuleCall cPolarityFeedbackPolarityEnumRuleCall_9_1_0 = (RuleCall)cPolarityAssignment_9_1.eContents().get(0);
 		
 		//FeedbackType returns FeedbackType:
 		//    'FeedbackType' name=EString
@@ -1095,7 +1145,9 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//    ('subjectScope' subjectScope=FeedbackSubjectScope)?
 		//    ('hasRating' hasRating=EBoolean)?
 		//    ('recursive' recursive=EBoolean)?
-		//    ('allowsMedia' allowsMedia=EBoolean)?;
+		//    ('allowsText' allowsText=EBoolean)?
+		//    ('allowsMedia' allowsMedia=EBoolean)?
+		//    ('polarity' polarity=FeedbackPolarity)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'FeedbackType' name=EString
@@ -1103,7 +1155,9 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//('subjectScope' subjectScope=FeedbackSubjectScope)?
 		//('hasRating' hasRating=EBoolean)?
 		//('recursive' recursive=EBoolean)?
+		//('allowsText' allowsText=EBoolean)?
 		//('allowsMedia' allowsMedia=EBoolean)?
+		//('polarity' polarity=FeedbackPolarity)?
 		public Group getGroup() { return cGroup; }
 		
 		//'FeedbackType'
@@ -1160,17 +1214,41 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//EBoolean
 		public RuleCall getRecursiveEBooleanParserRuleCall_6_1_0() { return cRecursiveEBooleanParserRuleCall_6_1_0; }
 		
-		//('allowsMedia' allowsMedia=EBoolean)?
+		//('allowsText' allowsText=EBoolean)?
 		public Group getGroup_7() { return cGroup_7; }
 		
-		//'allowsMedia'
-		public Keyword getAllowsMediaKeyword_7_0() { return cAllowsMediaKeyword_7_0; }
+		//'allowsText'
+		public Keyword getAllowsTextKeyword_7_0() { return cAllowsTextKeyword_7_0; }
 		
-		//allowsMedia=EBoolean
-		public Assignment getAllowsMediaAssignment_7_1() { return cAllowsMediaAssignment_7_1; }
+		//allowsText=EBoolean
+		public Assignment getAllowsTextAssignment_7_1() { return cAllowsTextAssignment_7_1; }
 		
 		//EBoolean
-		public RuleCall getAllowsMediaEBooleanParserRuleCall_7_1_0() { return cAllowsMediaEBooleanParserRuleCall_7_1_0; }
+		public RuleCall getAllowsTextEBooleanParserRuleCall_7_1_0() { return cAllowsTextEBooleanParserRuleCall_7_1_0; }
+		
+		//('allowsMedia' allowsMedia=EBoolean)?
+		public Group getGroup_8() { return cGroup_8; }
+		
+		//'allowsMedia'
+		public Keyword getAllowsMediaKeyword_8_0() { return cAllowsMediaKeyword_8_0; }
+		
+		//allowsMedia=EBoolean
+		public Assignment getAllowsMediaAssignment_8_1() { return cAllowsMediaAssignment_8_1; }
+		
+		//EBoolean
+		public RuleCall getAllowsMediaEBooleanParserRuleCall_8_1_0() { return cAllowsMediaEBooleanParserRuleCall_8_1_0; }
+		
+		//('polarity' polarity=FeedbackPolarity)?
+		public Group getGroup_9() { return cGroup_9; }
+		
+		//'polarity'
+		public Keyword getPolarityKeyword_9_0() { return cPolarityKeyword_9_0; }
+		
+		//polarity=FeedbackPolarity
+		public Assignment getPolarityAssignment_9_1() { return cPolarityAssignment_9_1; }
+		
+		//FeedbackPolarity
+		public RuleCall getPolarityFeedbackPolarityEnumRuleCall_9_1_0() { return cPolarityFeedbackPolarityEnumRuleCall_9_1_0; }
 	}
 	public class FeedbackDefinitionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.FeedbackDefinition");
@@ -1187,28 +1265,27 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Assignment cRequiresVerifiedContextAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
 		private final RuleCall cRequiresVerifiedContextEBooleanParserRuleCall_4_1_0 = (RuleCall)cRequiresVerifiedContextAssignment_4_1.eContents().get(0);
 		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cUniquePerAuthorTargetKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Assignment cUniquePerAuthorTargetAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
-		private final RuleCall cUniquePerAuthorTargetEBooleanParserRuleCall_5_1_0 = (RuleCall)cUniquePerAuthorTargetAssignment_5_1.eContents().get(0);
-		private final Keyword cAuthorKeyword_6 = (Keyword)cGroup.eContents().get(6);
-		private final Assignment cAuthorAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final CrossReference cAuthorUserTypeCrossReference_7_0 = (CrossReference)cAuthorAssignment_7.eContents().get(0);
-		private final RuleCall cAuthorUserTypeEStringParserRuleCall_7_0_1 = (RuleCall)cAuthorUserTypeCrossReference_7_0.eContents().get(1);
-		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
-		private final Keyword cSubjectResourceKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
-		private final Assignment cSubjectResourceAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
-		private final CrossReference cSubjectResourceResourceTypeCrossReference_8_1_0 = (CrossReference)cSubjectResourceAssignment_8_1.eContents().get(0);
-		private final RuleCall cSubjectResourceResourceTypeEStringParserRuleCall_8_1_0_1 = (RuleCall)cSubjectResourceResourceTypeCrossReference_8_1_0.eContents().get(1);
+		private final Keyword cVerificationRequirementKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cVerificationRequirementAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final RuleCall cVerificationRequirementVerificationRequirementEnumRuleCall_5_1_0 = (RuleCall)cVerificationRequirementAssignment_5_1.eContents().get(0);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cUniquePerAuthorTargetKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cUniquePerAuthorTargetAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final RuleCall cUniquePerAuthorTargetEBooleanParserRuleCall_6_1_0 = (RuleCall)cUniquePerAuthorTargetAssignment_6_1.eContents().get(0);
+		private final Keyword cAuthorKeyword_7 = (Keyword)cGroup.eContents().get(7);
+		private final Assignment cAuthorAssignment_8 = (Assignment)cGroup.eContents().get(8);
+		private final CrossReference cAuthorUserTypeCrossReference_8_0 = (CrossReference)cAuthorAssignment_8.eContents().get(0);
+		private final RuleCall cAuthorUserTypeEStringParserRuleCall_8_0_1 = (RuleCall)cAuthorUserTypeCrossReference_8_0.eContents().get(1);
 		private final Group cGroup_9 = (Group)cGroup.eContents().get(9);
-		private final Keyword cSubjectFeedbackKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
-		private final Assignment cSubjectFeedbackAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
-		private final CrossReference cSubjectFeedbackFeedbackDefinitionCrossReference_9_1_0 = (CrossReference)cSubjectFeedbackAssignment_9_1.eContents().get(0);
-		private final RuleCall cSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_9_1_0_1 = (RuleCall)cSubjectFeedbackFeedbackDefinitionCrossReference_9_1_0.eContents().get(1);
+		private final Keyword cSubjectResourceKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Assignment cSubjectResourceAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
+		private final CrossReference cSubjectResourceResourceTypeCrossReference_9_1_0 = (CrossReference)cSubjectResourceAssignment_9_1.eContents().get(0);
+		private final RuleCall cSubjectResourceResourceTypeEStringParserRuleCall_9_1_0_1 = (RuleCall)cSubjectResourceResourceTypeCrossReference_9_1_0.eContents().get(1);
 		private final Group cGroup_10 = (Group)cGroup.eContents().get(10);
-		private final Keyword cParentKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
-		private final Assignment cParentAssignment_10_1 = (Assignment)cGroup_10.eContents().get(1);
-		private final CrossReference cParentFeedbackDefinitionCrossReference_10_1_0 = (CrossReference)cParentAssignment_10_1.eContents().get(0);
-		private final RuleCall cParentFeedbackDefinitionEStringParserRuleCall_10_1_0_1 = (RuleCall)cParentFeedbackDefinitionCrossReference_10_1_0.eContents().get(1);
+		private final Keyword cSubjectFeedbackKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
+		private final Assignment cSubjectFeedbackAssignment_10_1 = (Assignment)cGroup_10.eContents().get(1);
+		private final CrossReference cSubjectFeedbackFeedbackDefinitionCrossReference_10_1_0 = (CrossReference)cSubjectFeedbackAssignment_10_1.eContents().get(0);
+		private final RuleCall cSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_10_1_0_1 = (RuleCall)cSubjectFeedbackFeedbackDefinitionCrossReference_10_1_0.eContents().get(1);
 		private final Group cGroup_11 = (Group)cGroup.eContents().get(11);
 		private final Keyword cPolicyKeyword_11_0 = (Keyword)cGroup_11.eContents().get(0);
 		private final Assignment cPolicyAssignment_11_1 = (Assignment)cGroup_11.eContents().get(1);
@@ -1222,11 +1299,11 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//    'FeedbackDefinition' name=EString
 		//    'type' type=[FeedbackType|EString]
 		//    ('requiresVerifiedContext' requiresVerifiedContext=EBoolean)?
+		//    ('verificationRequirement' verificationRequirement=VerificationRequirement)?
 		//    ('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
 		//    'author' author=[UserType|EString]
 		//    ('subjectResource' subjectResource=[ResourceType|EString])?
 		//    ('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
-		//    ('parent' parent=[FeedbackDefinition|EString])?
 		//    ('policy' policy=FeedbackPolicy)?
 		//    ('rating' rating=RatingPolicy)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -1234,11 +1311,11 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'FeedbackDefinition' name=EString
 		//'type' type=[FeedbackType|EString]
 		//('requiresVerifiedContext' requiresVerifiedContext=EBoolean)?
+		//('verificationRequirement' verificationRequirement=VerificationRequirement)?
 		//('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
 		//'author' author=[UserType|EString]
 		//('subjectResource' subjectResource=[ResourceType|EString])?
 		//('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
-		//('parent' parent=[FeedbackDefinition|EString])?
 		//('policy' policy=FeedbackPolicy)?
 		//('rating' rating=RatingPolicy)?
 		public Group getGroup() { return cGroup; }
@@ -1276,74 +1353,71 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//EBoolean
 		public RuleCall getRequiresVerifiedContextEBooleanParserRuleCall_4_1_0() { return cRequiresVerifiedContextEBooleanParserRuleCall_4_1_0; }
 		
-		//('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
+		//('verificationRequirement' verificationRequirement=VerificationRequirement)?
 		public Group getGroup_5() { return cGroup_5; }
 		
+		//'verificationRequirement'
+		public Keyword getVerificationRequirementKeyword_5_0() { return cVerificationRequirementKeyword_5_0; }
+		
+		//verificationRequirement=VerificationRequirement
+		public Assignment getVerificationRequirementAssignment_5_1() { return cVerificationRequirementAssignment_5_1; }
+		
+		//VerificationRequirement
+		public RuleCall getVerificationRequirementVerificationRequirementEnumRuleCall_5_1_0() { return cVerificationRequirementVerificationRequirementEnumRuleCall_5_1_0; }
+		
+		//('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
+		public Group getGroup_6() { return cGroup_6; }
+		
 		//'uniquePerAuthorTarget'
-		public Keyword getUniquePerAuthorTargetKeyword_5_0() { return cUniquePerAuthorTargetKeyword_5_0; }
+		public Keyword getUniquePerAuthorTargetKeyword_6_0() { return cUniquePerAuthorTargetKeyword_6_0; }
 		
 		//uniquePerAuthorTarget=EBoolean
-		public Assignment getUniquePerAuthorTargetAssignment_5_1() { return cUniquePerAuthorTargetAssignment_5_1; }
+		public Assignment getUniquePerAuthorTargetAssignment_6_1() { return cUniquePerAuthorTargetAssignment_6_1; }
 		
 		//EBoolean
-		public RuleCall getUniquePerAuthorTargetEBooleanParserRuleCall_5_1_0() { return cUniquePerAuthorTargetEBooleanParserRuleCall_5_1_0; }
+		public RuleCall getUniquePerAuthorTargetEBooleanParserRuleCall_6_1_0() { return cUniquePerAuthorTargetEBooleanParserRuleCall_6_1_0; }
 		
 		//'author'
-		public Keyword getAuthorKeyword_6() { return cAuthorKeyword_6; }
+		public Keyword getAuthorKeyword_7() { return cAuthorKeyword_7; }
 		
 		//author=[UserType|EString]
-		public Assignment getAuthorAssignment_7() { return cAuthorAssignment_7; }
+		public Assignment getAuthorAssignment_8() { return cAuthorAssignment_8; }
 		
 		//[UserType|EString]
-		public CrossReference getAuthorUserTypeCrossReference_7_0() { return cAuthorUserTypeCrossReference_7_0; }
+		public CrossReference getAuthorUserTypeCrossReference_8_0() { return cAuthorUserTypeCrossReference_8_0; }
 		
 		//EString
-		public RuleCall getAuthorUserTypeEStringParserRuleCall_7_0_1() { return cAuthorUserTypeEStringParserRuleCall_7_0_1; }
+		public RuleCall getAuthorUserTypeEStringParserRuleCall_8_0_1() { return cAuthorUserTypeEStringParserRuleCall_8_0_1; }
 		
 		//('subjectResource' subjectResource=[ResourceType|EString])?
-		public Group getGroup_8() { return cGroup_8; }
-		
-		//'subjectResource'
-		public Keyword getSubjectResourceKeyword_8_0() { return cSubjectResourceKeyword_8_0; }
-		
-		//subjectResource=[ResourceType|EString]
-		public Assignment getSubjectResourceAssignment_8_1() { return cSubjectResourceAssignment_8_1; }
-		
-		//[ResourceType|EString]
-		public CrossReference getSubjectResourceResourceTypeCrossReference_8_1_0() { return cSubjectResourceResourceTypeCrossReference_8_1_0; }
-		
-		//EString
-		public RuleCall getSubjectResourceResourceTypeEStringParserRuleCall_8_1_0_1() { return cSubjectResourceResourceTypeEStringParserRuleCall_8_1_0_1; }
-		
-		//('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
 		public Group getGroup_9() { return cGroup_9; }
 		
-		//'subjectFeedback'
-		public Keyword getSubjectFeedbackKeyword_9_0() { return cSubjectFeedbackKeyword_9_0; }
+		//'subjectResource'
+		public Keyword getSubjectResourceKeyword_9_0() { return cSubjectResourceKeyword_9_0; }
 		
-		//subjectFeedback=[FeedbackDefinition|EString]
-		public Assignment getSubjectFeedbackAssignment_9_1() { return cSubjectFeedbackAssignment_9_1; }
+		//subjectResource=[ResourceType|EString]
+		public Assignment getSubjectResourceAssignment_9_1() { return cSubjectResourceAssignment_9_1; }
 		
-		//[FeedbackDefinition|EString]
-		public CrossReference getSubjectFeedbackFeedbackDefinitionCrossReference_9_1_0() { return cSubjectFeedbackFeedbackDefinitionCrossReference_9_1_0; }
+		//[ResourceType|EString]
+		public CrossReference getSubjectResourceResourceTypeCrossReference_9_1_0() { return cSubjectResourceResourceTypeCrossReference_9_1_0; }
 		
 		//EString
-		public RuleCall getSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_9_1_0_1() { return cSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_9_1_0_1; }
+		public RuleCall getSubjectResourceResourceTypeEStringParserRuleCall_9_1_0_1() { return cSubjectResourceResourceTypeEStringParserRuleCall_9_1_0_1; }
 		
-		//('parent' parent=[FeedbackDefinition|EString])?
+		//('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
 		public Group getGroup_10() { return cGroup_10; }
 		
-		//'parent'
-		public Keyword getParentKeyword_10_0() { return cParentKeyword_10_0; }
+		//'subjectFeedback'
+		public Keyword getSubjectFeedbackKeyword_10_0() { return cSubjectFeedbackKeyword_10_0; }
 		
-		//parent=[FeedbackDefinition|EString]
-		public Assignment getParentAssignment_10_1() { return cParentAssignment_10_1; }
+		//subjectFeedback=[FeedbackDefinition|EString]
+		public Assignment getSubjectFeedbackAssignment_10_1() { return cSubjectFeedbackAssignment_10_1; }
 		
 		//[FeedbackDefinition|EString]
-		public CrossReference getParentFeedbackDefinitionCrossReference_10_1_0() { return cParentFeedbackDefinitionCrossReference_10_1_0; }
+		public CrossReference getSubjectFeedbackFeedbackDefinitionCrossReference_10_1_0() { return cSubjectFeedbackFeedbackDefinitionCrossReference_10_1_0; }
 		
 		//EString
-		public RuleCall getParentFeedbackDefinitionEStringParserRuleCall_10_1_0_1() { return cParentFeedbackDefinitionEStringParserRuleCall_10_1_0_1; }
+		public RuleCall getSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_10_1_0_1() { return cSubjectFeedbackFeedbackDefinitionEStringParserRuleCall_10_1_0_1; }
 		
 		//('policy' policy=FeedbackPolicy)?
 		public Group getGroup_11() { return cGroup_11; }
@@ -1414,24 +1488,18 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Keyword cStepKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
 		private final Assignment cStepAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
 		private final RuleCall cStepEDoubleParserRuleCall_5_1_0 = (RuleCall)cStepAssignment_5_1.eContents().get(0);
-		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
-		private final Keyword cScaleKindKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
-		private final Assignment cScaleKindAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
-		private final RuleCall cScaleKindRatingScaleKindEnumRuleCall_6_1_0 = (RuleCall)cScaleKindAssignment_6_1.eContents().get(0);
 		
 		//RatingPolicy returns RatingPolicy:
 		//    'RatingPolicy'
 		//    'min' minValue=EDouble
 		//    'max' maxValue=EDouble
-		//    ('step' step=EDouble)?
-		//    ('scaleKind' scaleKind=RatingScaleKind)?;
+		//    ('step' step=EDouble)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'RatingPolicy'
 		//'min' minValue=EDouble
 		//'max' maxValue=EDouble
 		//('step' step=EDouble)?
-		//('scaleKind' scaleKind=RatingScaleKind)?
 		public Group getGroup() { return cGroup; }
 		
 		//'RatingPolicy'
@@ -1466,18 +1534,6 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//EDouble
 		public RuleCall getStepEDoubleParserRuleCall_5_1_0() { return cStepEDoubleParserRuleCall_5_1_0; }
-		
-		//('scaleKind' scaleKind=RatingScaleKind)?
-		public Group getGroup_6() { return cGroup_6; }
-		
-		//'scaleKind'
-		public Keyword getScaleKindKeyword_6_0() { return cScaleKindKeyword_6_0; }
-		
-		//scaleKind=RatingScaleKind
-		public Assignment getScaleKindAssignment_6_1() { return cScaleKindAssignment_6_1; }
-		
-		//RatingScaleKind
-		public RuleCall getScaleKindRatingScaleKindEnumRuleCall_6_1_0() { return cScaleKindRatingScaleKindEnumRuleCall_6_1_0; }
 	}
 	public class ValidationRuleElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.ValidationRule");
@@ -1654,7 +1710,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
 		private final Keyword cTriggerKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
 		private final Assignment cTriggerAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cTriggerEStringParserRuleCall_4_1_0 = (RuleCall)cTriggerAssignment_4_1.eContents().get(0);
+		private final RuleCall cTriggerTriggerEventEnumRuleCall_4_1_0 = (RuleCall)cTriggerAssignment_4_1.eContents().get(0);
 		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
 		private final Keyword cDecisionKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
 		private final Assignment cDecisionAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
@@ -1680,7 +1736,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//ModerationPolicy returns ModerationPolicy:
 		//    'ModerationPolicy' ('name' name=EString)?
 		//    'mode' mode=ModerationMode
-		//    ('trigger' trigger=EString)?
+		//    ('trigger' trigger=TriggerEvent)?
 		//    ('decision' decision=ModerationDecision)?
 		//    'monitorsResource' monitorsResource=[ResourceType|EString]
 		//    'monitorsFeedback' monitorsFeedback=[FeedbackDefinition|EString]
@@ -1690,7 +1746,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//'ModerationPolicy' ('name' name=EString)?
 		//'mode' mode=ModerationMode
-		//('trigger' trigger=EString)?
+		//('trigger' trigger=TriggerEvent)?
 		//('decision' decision=ModerationDecision)?
 		//'monitorsResource' monitorsResource=[ResourceType|EString]
 		//'monitorsFeedback' monitorsFeedback=[FeedbackDefinition|EString]
@@ -1722,17 +1778,17 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//ModerationMode
 		public RuleCall getModeModerationModeEnumRuleCall_3_0() { return cModeModerationModeEnumRuleCall_3_0; }
 		
-		//('trigger' trigger=EString)?
+		//('trigger' trigger=TriggerEvent)?
 		public Group getGroup_4() { return cGroup_4; }
 		
 		//'trigger'
 		public Keyword getTriggerKeyword_4_0() { return cTriggerKeyword_4_0; }
 		
-		//trigger=EString
+		//trigger=TriggerEvent
 		public Assignment getTriggerAssignment_4_1() { return cTriggerAssignment_4_1; }
 		
-		//EString
-		public RuleCall getTriggerEStringParserRuleCall_4_1_0() { return cTriggerEStringParserRuleCall_4_1_0; }
+		//TriggerEvent
+		public RuleCall getTriggerTriggerEventEnumRuleCall_4_1_0() { return cTriggerTriggerEventEnumRuleCall_4_1_0; }
 		
 		//('decision' decision=ModerationDecision)?
 		public Group getGroup_5() { return cGroup_5; }
@@ -1801,30 +1857,34 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.AuthorizationRule");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cAuthorizationRuleKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Keyword cAllowedActionKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cAllowedActionAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cAllowedActionActionKindEnumRuleCall_2_0 = (RuleCall)cAllowedActionAssignment_2.eContents().get(0);
-		private final Keyword cActorKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cActorAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final CrossReference cActorUserTypeCrossReference_4_0 = (CrossReference)cActorAssignment_4.eContents().get(0);
-		private final RuleCall cActorUserTypeEStringParserRuleCall_4_0_1 = (RuleCall)cActorUserTypeCrossReference_4_0.eContents().get(1);
-		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
-		private final Keyword cContextKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
-		private final Assignment cContextAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
-		private final CrossReference cContextContextTypeCrossReference_5_1_0 = (CrossReference)cContextAssignment_5_1.eContents().get(0);
-		private final RuleCall cContextContextTypeEStringParserRuleCall_5_1_0_1 = (RuleCall)cContextContextTypeCrossReference_5_1_0.eContents().get(1);
-		private final Keyword cResourceTargetKeyword_6 = (Keyword)cGroup.eContents().get(6);
-		private final Assignment cResourceTargetAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final CrossReference cResourceTargetResourceTypeCrossReference_7_0 = (CrossReference)cResourceTargetAssignment_7.eContents().get(0);
-		private final RuleCall cResourceTargetResourceTypeEStringParserRuleCall_7_0_1 = (RuleCall)cResourceTargetResourceTypeCrossReference_7_0.eContents().get(1);
-		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
-		private final Keyword cFeedbackTargetKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
-		private final Assignment cFeedbackTargetAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
-		private final CrossReference cFeedbackTargetFeedbackDefinitionCrossReference_8_1_0 = (CrossReference)cFeedbackTargetAssignment_8_1.eContents().get(0);
-		private final RuleCall cFeedbackTargetFeedbackDefinitionEStringParserRuleCall_8_1_0_1 = (RuleCall)cFeedbackTargetFeedbackDefinitionCrossReference_8_1_0.eContents().get(1);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Keyword cNameKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Assignment cNameAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_1_1_0 = (RuleCall)cNameAssignment_1_1.eContents().get(0);
+		private final Keyword cAllowedActionKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cAllowedActionAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cAllowedActionActionKindEnumRuleCall_3_0 = (RuleCall)cAllowedActionAssignment_3.eContents().get(0);
+		private final Keyword cActorKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cActorAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final CrossReference cActorUserTypeCrossReference_5_0 = (CrossReference)cActorAssignment_5.eContents().get(0);
+		private final RuleCall cActorUserTypeEStringParserRuleCall_5_0_1 = (RuleCall)cActorUserTypeCrossReference_5_0.eContents().get(1);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cContextKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cContextAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final CrossReference cContextContextTypeCrossReference_6_1_0 = (CrossReference)cContextAssignment_6_1.eContents().get(0);
+		private final RuleCall cContextContextTypeEStringParserRuleCall_6_1_0_1 = (RuleCall)cContextContextTypeCrossReference_6_1_0.eContents().get(1);
+		private final Keyword cResourceTargetKeyword_7 = (Keyword)cGroup.eContents().get(7);
+		private final Assignment cResourceTargetAssignment_8 = (Assignment)cGroup.eContents().get(8);
+		private final CrossReference cResourceTargetResourceTypeCrossReference_8_0 = (CrossReference)cResourceTargetAssignment_8.eContents().get(0);
+		private final RuleCall cResourceTargetResourceTypeEStringParserRuleCall_8_0_1 = (RuleCall)cResourceTargetResourceTypeCrossReference_8_0.eContents().get(1);
+		private final Group cGroup_9 = (Group)cGroup.eContents().get(9);
+		private final Keyword cFeedbackTargetKeyword_9_0 = (Keyword)cGroup_9.eContents().get(0);
+		private final Assignment cFeedbackTargetAssignment_9_1 = (Assignment)cGroup_9.eContents().get(1);
+		private final CrossReference cFeedbackTargetFeedbackDefinitionCrossReference_9_1_0 = (CrossReference)cFeedbackTargetAssignment_9_1.eContents().get(0);
+		private final RuleCall cFeedbackTargetFeedbackDefinitionEStringParserRuleCall_9_1_0_1 = (RuleCall)cFeedbackTargetFeedbackDefinitionCrossReference_9_1_0.eContents().get(1);
 		
 		//AuthorizationRule returns AuthorizationRule:
-		//    'AuthorizationRule'
+		//    'AuthorizationRule' ('name' name=EString)?
 		//    'allowedAction' allowedAction=ActionKind
 		//    'actor' actor=[UserType|EString]
 		//    ('context' context=[ContextType|EString])?
@@ -1832,7 +1892,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//    ('feedbackTarget' feedbackTarget=[FeedbackDefinition|EString])?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'AuthorizationRule'
+		//'AuthorizationRule' ('name' name=EString)?
 		//'allowedAction' allowedAction=ActionKind
 		//'actor' actor=[UserType|EString]
 		//('context' context=[ContextType|EString])?
@@ -1843,68 +1903,80 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'AuthorizationRule'
 		public Keyword getAuthorizationRuleKeyword_0() { return cAuthorizationRuleKeyword_0; }
 		
+		//('name' name=EString)?
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'name'
+		public Keyword getNameKeyword_1_0() { return cNameKeyword_1_0; }
+		
+		//name=EString
+		public Assignment getNameAssignment_1_1() { return cNameAssignment_1_1; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_1_1_0() { return cNameEStringParserRuleCall_1_1_0; }
+		
 		//'allowedAction'
-		public Keyword getAllowedActionKeyword_1() { return cAllowedActionKeyword_1; }
+		public Keyword getAllowedActionKeyword_2() { return cAllowedActionKeyword_2; }
 		
 		//allowedAction=ActionKind
-		public Assignment getAllowedActionAssignment_2() { return cAllowedActionAssignment_2; }
+		public Assignment getAllowedActionAssignment_3() { return cAllowedActionAssignment_3; }
 		
 		//ActionKind
-		public RuleCall getAllowedActionActionKindEnumRuleCall_2_0() { return cAllowedActionActionKindEnumRuleCall_2_0; }
+		public RuleCall getAllowedActionActionKindEnumRuleCall_3_0() { return cAllowedActionActionKindEnumRuleCall_3_0; }
 		
 		//'actor'
-		public Keyword getActorKeyword_3() { return cActorKeyword_3; }
+		public Keyword getActorKeyword_4() { return cActorKeyword_4; }
 		
 		//actor=[UserType|EString]
-		public Assignment getActorAssignment_4() { return cActorAssignment_4; }
+		public Assignment getActorAssignment_5() { return cActorAssignment_5; }
 		
 		//[UserType|EString]
-		public CrossReference getActorUserTypeCrossReference_4_0() { return cActorUserTypeCrossReference_4_0; }
+		public CrossReference getActorUserTypeCrossReference_5_0() { return cActorUserTypeCrossReference_5_0; }
 		
 		//EString
-		public RuleCall getActorUserTypeEStringParserRuleCall_4_0_1() { return cActorUserTypeEStringParserRuleCall_4_0_1; }
+		public RuleCall getActorUserTypeEStringParserRuleCall_5_0_1() { return cActorUserTypeEStringParserRuleCall_5_0_1; }
 		
 		//('context' context=[ContextType|EString])?
-		public Group getGroup_5() { return cGroup_5; }
+		public Group getGroup_6() { return cGroup_6; }
 		
 		//'context'
-		public Keyword getContextKeyword_5_0() { return cContextKeyword_5_0; }
+		public Keyword getContextKeyword_6_0() { return cContextKeyword_6_0; }
 		
 		//context=[ContextType|EString]
-		public Assignment getContextAssignment_5_1() { return cContextAssignment_5_1; }
+		public Assignment getContextAssignment_6_1() { return cContextAssignment_6_1; }
 		
 		//[ContextType|EString]
-		public CrossReference getContextContextTypeCrossReference_5_1_0() { return cContextContextTypeCrossReference_5_1_0; }
+		public CrossReference getContextContextTypeCrossReference_6_1_0() { return cContextContextTypeCrossReference_6_1_0; }
 		
 		//EString
-		public RuleCall getContextContextTypeEStringParserRuleCall_5_1_0_1() { return cContextContextTypeEStringParserRuleCall_5_1_0_1; }
+		public RuleCall getContextContextTypeEStringParserRuleCall_6_1_0_1() { return cContextContextTypeEStringParserRuleCall_6_1_0_1; }
 		
 		//'resourceTarget'
-		public Keyword getResourceTargetKeyword_6() { return cResourceTargetKeyword_6; }
+		public Keyword getResourceTargetKeyword_7() { return cResourceTargetKeyword_7; }
 		
 		//resourceTarget=[ResourceType|EString]
-		public Assignment getResourceTargetAssignment_7() { return cResourceTargetAssignment_7; }
+		public Assignment getResourceTargetAssignment_8() { return cResourceTargetAssignment_8; }
 		
 		//[ResourceType|EString]
-		public CrossReference getResourceTargetResourceTypeCrossReference_7_0() { return cResourceTargetResourceTypeCrossReference_7_0; }
+		public CrossReference getResourceTargetResourceTypeCrossReference_8_0() { return cResourceTargetResourceTypeCrossReference_8_0; }
 		
 		//EString
-		public RuleCall getResourceTargetResourceTypeEStringParserRuleCall_7_0_1() { return cResourceTargetResourceTypeEStringParserRuleCall_7_0_1; }
+		public RuleCall getResourceTargetResourceTypeEStringParserRuleCall_8_0_1() { return cResourceTargetResourceTypeEStringParserRuleCall_8_0_1; }
 		
 		//('feedbackTarget' feedbackTarget=[FeedbackDefinition|EString])?
-		public Group getGroup_8() { return cGroup_8; }
+		public Group getGroup_9() { return cGroup_9; }
 		
 		//'feedbackTarget'
-		public Keyword getFeedbackTargetKeyword_8_0() { return cFeedbackTargetKeyword_8_0; }
+		public Keyword getFeedbackTargetKeyword_9_0() { return cFeedbackTargetKeyword_9_0; }
 		
 		//feedbackTarget=[FeedbackDefinition|EString]
-		public Assignment getFeedbackTargetAssignment_8_1() { return cFeedbackTargetAssignment_8_1; }
+		public Assignment getFeedbackTargetAssignment_9_1() { return cFeedbackTargetAssignment_9_1; }
 		
 		//[FeedbackDefinition|EString]
-		public CrossReference getFeedbackTargetFeedbackDefinitionCrossReference_8_1_0() { return cFeedbackTargetFeedbackDefinitionCrossReference_8_1_0; }
+		public CrossReference getFeedbackTargetFeedbackDefinitionCrossReference_9_1_0() { return cFeedbackTargetFeedbackDefinitionCrossReference_9_1_0; }
 		
 		//EString
-		public RuleCall getFeedbackTargetFeedbackDefinitionEStringParserRuleCall_8_1_0_1() { return cFeedbackTargetFeedbackDefinitionEStringParserRuleCall_8_1_0_1; }
+		public RuleCall getFeedbackTargetFeedbackDefinitionEStringParserRuleCall_9_1_0_1() { return cFeedbackTargetFeedbackDefinitionEStringParserRuleCall_9_1_0_1; }
 	}
 	public class AutomationRuleElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.AutomationRule");
@@ -1914,52 +1986,77 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Keyword cTriggerKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		private final Assignment cTriggerAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cTriggerEStringParserRuleCall_3_0 = (RuleCall)cTriggerAssignment_3.eContents().get(0);
+		private final RuleCall cTriggerTriggerEventEnumRuleCall_3_0 = (RuleCall)cTriggerAssignment_3.eContents().get(0);
 		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cConditionKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cConditionAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cConditionEStringParserRuleCall_4_1_0 = (RuleCall)cConditionAssignment_4_1.eContents().get(0);
-		private final Keyword cActionDescriptionKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Assignment cActionDescriptionAssignment_6 = (Assignment)cGroup.eContents().get(6);
-		private final RuleCall cActionDescriptionEStringParserRuleCall_6_0 = (RuleCall)cActionDescriptionAssignment_6.eContents().get(0);
-		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
-		private final Keyword cContextKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
-		private final Assignment cContextAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
-		private final CrossReference cContextResourceTypeCrossReference_7_1_0 = (CrossReference)cContextAssignment_7_1.eContents().get(0);
-		private final RuleCall cContextResourceTypeEStringParserRuleCall_7_1_0_1 = (RuleCall)cContextResourceTypeCrossReference_7_1_0.eContents().get(1);
-		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
-		private final Keyword cInContextKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
-		private final Assignment cInContextAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
-		private final CrossReference cInContextContextTypeCrossReference_8_1_0 = (CrossReference)cInContextAssignment_8_1.eContents().get(0);
-		private final RuleCall cInContextContextTypeEStringParserRuleCall_8_1_0_1 = (RuleCall)cInContextContextTypeCrossReference_8_1_0.eContents().get(1);
-		private final Keyword cOnFeedbackKeyword_9 = (Keyword)cGroup.eContents().get(9);
-		private final Assignment cOnFeedbackAssignment_10 = (Assignment)cGroup.eContents().get(10);
-		private final CrossReference cOnFeedbackFeedbackDefinitionCrossReference_10_0 = (CrossReference)cOnFeedbackAssignment_10.eContents().get(0);
-		private final RuleCall cOnFeedbackFeedbackDefinitionEStringParserRuleCall_10_0_1 = (RuleCall)cOnFeedbackFeedbackDefinitionCrossReference_10_0.eContents().get(1);
-		private final Keyword cUsesKeyword_11 = (Keyword)cGroup.eContents().get(11);
-		private final Assignment cUsesAssignment_12 = (Assignment)cGroup.eContents().get(12);
-		private final CrossReference cUsesValidationRuleCrossReference_12_0 = (CrossReference)cUsesAssignment_12.eContents().get(0);
-		private final RuleCall cUsesValidationRuleEStringParserRuleCall_12_0_1 = (RuleCall)cUsesValidationRuleCrossReference_12_0.eContents().get(1);
+		private final Keyword cContextKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cContextAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final CrossReference cContextResourceTypeCrossReference_4_1_0 = (CrossReference)cContextAssignment_4_1.eContents().get(0);
+		private final RuleCall cContextResourceTypeEStringParserRuleCall_4_1_0_1 = (RuleCall)cContextResourceTypeCrossReference_4_1_0.eContents().get(1);
+		private final Group cGroup_5 = (Group)cGroup.eContents().get(5);
+		private final Keyword cInContextKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final Assignment cInContextAssignment_5_1 = (Assignment)cGroup_5.eContents().get(1);
+		private final CrossReference cInContextContextTypeCrossReference_5_1_0 = (CrossReference)cInContextAssignment_5_1.eContents().get(0);
+		private final RuleCall cInContextContextTypeEStringParserRuleCall_5_1_0_1 = (RuleCall)cInContextContextTypeCrossReference_5_1_0.eContents().get(1);
+		private final Keyword cOnFeedbackKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Assignment cOnFeedbackAssignment_7 = (Assignment)cGroup.eContents().get(7);
+		private final CrossReference cOnFeedbackFeedbackDefinitionCrossReference_7_0 = (CrossReference)cOnFeedbackAssignment_7.eContents().get(0);
+		private final RuleCall cOnFeedbackFeedbackDefinitionEStringParserRuleCall_7_0_1 = (RuleCall)cOnFeedbackFeedbackDefinitionCrossReference_7_0.eContents().get(1);
+		private final Keyword cUsesKeyword_8 = (Keyword)cGroup.eContents().get(8);
+		private final Assignment cUsesAssignment_9 = (Assignment)cGroup.eContents().get(9);
+		private final CrossReference cUsesValidationRuleCrossReference_9_0 = (CrossReference)cUsesAssignment_9.eContents().get(0);
+		private final RuleCall cUsesValidationRuleEStringParserRuleCall_9_0_1 = (RuleCall)cUsesValidationRuleCrossReference_9_0.eContents().get(1);
+		private final Group cGroup_10 = (Group)cGroup.eContents().get(10);
+		private final Keyword cInvokedValidationRulesKeyword_10_0 = (Keyword)cGroup_10.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_10_1 = (Keyword)cGroup_10.eContents().get(1);
+		private final Assignment cInvokedValidationRulesAssignment_10_2 = (Assignment)cGroup_10.eContents().get(2);
+		private final CrossReference cInvokedValidationRulesValidationRuleCrossReference_10_2_0 = (CrossReference)cInvokedValidationRulesAssignment_10_2.eContents().get(0);
+		private final RuleCall cInvokedValidationRulesValidationRuleEStringParserRuleCall_10_2_0_1 = (RuleCall)cInvokedValidationRulesValidationRuleCrossReference_10_2_0.eContents().get(1);
+		private final Group cGroup_10_3 = (Group)cGroup_10.eContents().get(3);
+		private final Keyword cCommaKeyword_10_3_0 = (Keyword)cGroup_10_3.eContents().get(0);
+		private final Assignment cInvokedValidationRulesAssignment_10_3_1 = (Assignment)cGroup_10_3.eContents().get(1);
+		private final CrossReference cInvokedValidationRulesValidationRuleCrossReference_10_3_1_0 = (CrossReference)cInvokedValidationRulesAssignment_10_3_1.eContents().get(0);
+		private final RuleCall cInvokedValidationRulesValidationRuleEStringParserRuleCall_10_3_1_0_1 = (RuleCall)cInvokedValidationRulesValidationRuleCrossReference_10_3_1_0.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_10_4 = (Keyword)cGroup_10.eContents().get(4);
+		private final Keyword cConditionsKeyword_11 = (Keyword)cGroup.eContents().get(11);
+		private final Keyword cLeftCurlyBracketKeyword_12 = (Keyword)cGroup.eContents().get(12);
+		private final Assignment cConditionsAssignment_13 = (Assignment)cGroup.eContents().get(13);
+		private final RuleCall cConditionsConditionParserRuleCall_13_0 = (RuleCall)cConditionsAssignment_13.eContents().get(0);
+		private final Group cGroup_14 = (Group)cGroup.eContents().get(14);
+		private final Keyword cCommaKeyword_14_0 = (Keyword)cGroup_14.eContents().get(0);
+		private final Assignment cConditionsAssignment_14_1 = (Assignment)cGroup_14.eContents().get(1);
+		private final RuleCall cConditionsConditionParserRuleCall_14_1_0 = (RuleCall)cConditionsAssignment_14_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_15 = (Keyword)cGroup.eContents().get(15);
+		private final Keyword cActionsKeyword_16 = (Keyword)cGroup.eContents().get(16);
+		private final Keyword cLeftCurlyBracketKeyword_17 = (Keyword)cGroup.eContents().get(17);
+		private final Assignment cActionsAssignment_18 = (Assignment)cGroup.eContents().get(18);
+		private final RuleCall cActionsActionParserRuleCall_18_0 = (RuleCall)cActionsAssignment_18.eContents().get(0);
+		private final Group cGroup_19 = (Group)cGroup.eContents().get(19);
+		private final Keyword cCommaKeyword_19_0 = (Keyword)cGroup_19.eContents().get(0);
+		private final Assignment cActionsAssignment_19_1 = (Assignment)cGroup_19.eContents().get(1);
+		private final RuleCall cActionsActionParserRuleCall_19_1_0 = (RuleCall)cActionsAssignment_19_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_20 = (Keyword)cGroup.eContents().get(20);
 		
 		//AutomationRule returns AutomationRule:
 		//    'AutomationRule' name=EString
-		//    'trigger' trigger=EString
-		//    ('condition' condition=EString)?
-		//    'actionDescription' actionDescription=EString
+		//    'trigger' trigger=TriggerEvent
 		//    ('context' context=[ResourceType|EString])?
 		//    ('inContext' inContext=[ContextType|EString])?
 		//    'onFeedback' onFeedback=[FeedbackDefinition|EString]
-		//    'uses' uses=[ValidationRule|EString];
+		//    'uses' uses=[ValidationRule|EString]
+		//    ('invokedValidationRules' '(' invokedValidationRules+=[ValidationRule|EString] (',' invokedValidationRules+=[ValidationRule|EString])* ')')?
+		//    'conditions' '{' conditions+=Condition (',' conditions+=Condition)* '}'
+		//    'actions' '{' actions+=Action (',' actions+=Action)* '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'AutomationRule' name=EString
-		//'trigger' trigger=EString
-		//('condition' condition=EString)?
-		//'actionDescription' actionDescription=EString
+		//'trigger' trigger=TriggerEvent
 		//('context' context=[ResourceType|EString])?
 		//('inContext' inContext=[ContextType|EString])?
 		//'onFeedback' onFeedback=[FeedbackDefinition|EString]
 		//'uses' uses=[ValidationRule|EString]
+		//('invokedValidationRules' '(' invokedValidationRules+=[ValidationRule|EString] (',' invokedValidationRules+=[ValidationRule|EString])* ')')?
+		//'conditions' '{' conditions+=Condition (',' conditions+=Condition)* '}'
+		//'actions' '{' actions+=Action (',' actions+=Action)* '}'
 		public Group getGroup() { return cGroup; }
 		
 		//'AutomationRule'
@@ -1974,86 +2071,330 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'trigger'
 		public Keyword getTriggerKeyword_2() { return cTriggerKeyword_2; }
 		
-		//trigger=EString
+		//trigger=TriggerEvent
 		public Assignment getTriggerAssignment_3() { return cTriggerAssignment_3; }
 		
-		//EString
-		public RuleCall getTriggerEStringParserRuleCall_3_0() { return cTriggerEStringParserRuleCall_3_0; }
-		
-		//('condition' condition=EString)?
-		public Group getGroup_4() { return cGroup_4; }
-		
-		//'condition'
-		public Keyword getConditionKeyword_4_0() { return cConditionKeyword_4_0; }
-		
-		//condition=EString
-		public Assignment getConditionAssignment_4_1() { return cConditionAssignment_4_1; }
-		
-		//EString
-		public RuleCall getConditionEStringParserRuleCall_4_1_0() { return cConditionEStringParserRuleCall_4_1_0; }
-		
-		//'actionDescription'
-		public Keyword getActionDescriptionKeyword_5() { return cActionDescriptionKeyword_5; }
-		
-		//actionDescription=EString
-		public Assignment getActionDescriptionAssignment_6() { return cActionDescriptionAssignment_6; }
-		
-		//EString
-		public RuleCall getActionDescriptionEStringParserRuleCall_6_0() { return cActionDescriptionEStringParserRuleCall_6_0; }
+		//TriggerEvent
+		public RuleCall getTriggerTriggerEventEnumRuleCall_3_0() { return cTriggerTriggerEventEnumRuleCall_3_0; }
 		
 		//('context' context=[ResourceType|EString])?
-		public Group getGroup_7() { return cGroup_7; }
+		public Group getGroup_4() { return cGroup_4; }
 		
 		//'context'
-		public Keyword getContextKeyword_7_0() { return cContextKeyword_7_0; }
+		public Keyword getContextKeyword_4_0() { return cContextKeyword_4_0; }
 		
 		//context=[ResourceType|EString]
-		public Assignment getContextAssignment_7_1() { return cContextAssignment_7_1; }
+		public Assignment getContextAssignment_4_1() { return cContextAssignment_4_1; }
 		
 		//[ResourceType|EString]
-		public CrossReference getContextResourceTypeCrossReference_7_1_0() { return cContextResourceTypeCrossReference_7_1_0; }
+		public CrossReference getContextResourceTypeCrossReference_4_1_0() { return cContextResourceTypeCrossReference_4_1_0; }
 		
 		//EString
-		public RuleCall getContextResourceTypeEStringParserRuleCall_7_1_0_1() { return cContextResourceTypeEStringParserRuleCall_7_1_0_1; }
+		public RuleCall getContextResourceTypeEStringParserRuleCall_4_1_0_1() { return cContextResourceTypeEStringParserRuleCall_4_1_0_1; }
 		
 		//('inContext' inContext=[ContextType|EString])?
-		public Group getGroup_8() { return cGroup_8; }
+		public Group getGroup_5() { return cGroup_5; }
 		
 		//'inContext'
-		public Keyword getInContextKeyword_8_0() { return cInContextKeyword_8_0; }
+		public Keyword getInContextKeyword_5_0() { return cInContextKeyword_5_0; }
 		
 		//inContext=[ContextType|EString]
-		public Assignment getInContextAssignment_8_1() { return cInContextAssignment_8_1; }
+		public Assignment getInContextAssignment_5_1() { return cInContextAssignment_5_1; }
 		
 		//[ContextType|EString]
-		public CrossReference getInContextContextTypeCrossReference_8_1_0() { return cInContextContextTypeCrossReference_8_1_0; }
+		public CrossReference getInContextContextTypeCrossReference_5_1_0() { return cInContextContextTypeCrossReference_5_1_0; }
 		
 		//EString
-		public RuleCall getInContextContextTypeEStringParserRuleCall_8_1_0_1() { return cInContextContextTypeEStringParserRuleCall_8_1_0_1; }
+		public RuleCall getInContextContextTypeEStringParserRuleCall_5_1_0_1() { return cInContextContextTypeEStringParserRuleCall_5_1_0_1; }
 		
 		//'onFeedback'
-		public Keyword getOnFeedbackKeyword_9() { return cOnFeedbackKeyword_9; }
+		public Keyword getOnFeedbackKeyword_6() { return cOnFeedbackKeyword_6; }
 		
 		//onFeedback=[FeedbackDefinition|EString]
-		public Assignment getOnFeedbackAssignment_10() { return cOnFeedbackAssignment_10; }
+		public Assignment getOnFeedbackAssignment_7() { return cOnFeedbackAssignment_7; }
 		
 		//[FeedbackDefinition|EString]
-		public CrossReference getOnFeedbackFeedbackDefinitionCrossReference_10_0() { return cOnFeedbackFeedbackDefinitionCrossReference_10_0; }
+		public CrossReference getOnFeedbackFeedbackDefinitionCrossReference_7_0() { return cOnFeedbackFeedbackDefinitionCrossReference_7_0; }
 		
 		//EString
-		public RuleCall getOnFeedbackFeedbackDefinitionEStringParserRuleCall_10_0_1() { return cOnFeedbackFeedbackDefinitionEStringParserRuleCall_10_0_1; }
+		public RuleCall getOnFeedbackFeedbackDefinitionEStringParserRuleCall_7_0_1() { return cOnFeedbackFeedbackDefinitionEStringParserRuleCall_7_0_1; }
 		
 		//'uses'
-		public Keyword getUsesKeyword_11() { return cUsesKeyword_11; }
+		public Keyword getUsesKeyword_8() { return cUsesKeyword_8; }
 		
 		//uses=[ValidationRule|EString]
-		public Assignment getUsesAssignment_12() { return cUsesAssignment_12; }
+		public Assignment getUsesAssignment_9() { return cUsesAssignment_9; }
 		
 		//[ValidationRule|EString]
-		public CrossReference getUsesValidationRuleCrossReference_12_0() { return cUsesValidationRuleCrossReference_12_0; }
+		public CrossReference getUsesValidationRuleCrossReference_9_0() { return cUsesValidationRuleCrossReference_9_0; }
 		
 		//EString
-		public RuleCall getUsesValidationRuleEStringParserRuleCall_12_0_1() { return cUsesValidationRuleEStringParserRuleCall_12_0_1; }
+		public RuleCall getUsesValidationRuleEStringParserRuleCall_9_0_1() { return cUsesValidationRuleEStringParserRuleCall_9_0_1; }
+		
+		//('invokedValidationRules' '(' invokedValidationRules+=[ValidationRule|EString] (',' invokedValidationRules+=[ValidationRule|EString])* ')')?
+		public Group getGroup_10() { return cGroup_10; }
+		
+		//'invokedValidationRules'
+		public Keyword getInvokedValidationRulesKeyword_10_0() { return cInvokedValidationRulesKeyword_10_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_10_1() { return cLeftParenthesisKeyword_10_1; }
+		
+		//invokedValidationRules+=[ValidationRule|EString]
+		public Assignment getInvokedValidationRulesAssignment_10_2() { return cInvokedValidationRulesAssignment_10_2; }
+		
+		//[ValidationRule|EString]
+		public CrossReference getInvokedValidationRulesValidationRuleCrossReference_10_2_0() { return cInvokedValidationRulesValidationRuleCrossReference_10_2_0; }
+		
+		//EString
+		public RuleCall getInvokedValidationRulesValidationRuleEStringParserRuleCall_10_2_0_1() { return cInvokedValidationRulesValidationRuleEStringParserRuleCall_10_2_0_1; }
+		
+		//(',' invokedValidationRules+=[ValidationRule|EString])*
+		public Group getGroup_10_3() { return cGroup_10_3; }
+		
+		//','
+		public Keyword getCommaKeyword_10_3_0() { return cCommaKeyword_10_3_0; }
+		
+		//invokedValidationRules+=[ValidationRule|EString]
+		public Assignment getInvokedValidationRulesAssignment_10_3_1() { return cInvokedValidationRulesAssignment_10_3_1; }
+		
+		//[ValidationRule|EString]
+		public CrossReference getInvokedValidationRulesValidationRuleCrossReference_10_3_1_0() { return cInvokedValidationRulesValidationRuleCrossReference_10_3_1_0; }
+		
+		//EString
+		public RuleCall getInvokedValidationRulesValidationRuleEStringParserRuleCall_10_3_1_0_1() { return cInvokedValidationRulesValidationRuleEStringParserRuleCall_10_3_1_0_1; }
+		
+		//')'
+		public Keyword getRightParenthesisKeyword_10_4() { return cRightParenthesisKeyword_10_4; }
+		
+		//'conditions'
+		public Keyword getConditionsKeyword_11() { return cConditionsKeyword_11; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_12() { return cLeftCurlyBracketKeyword_12; }
+		
+		//conditions+=Condition
+		public Assignment getConditionsAssignment_13() { return cConditionsAssignment_13; }
+		
+		//Condition
+		public RuleCall getConditionsConditionParserRuleCall_13_0() { return cConditionsConditionParserRuleCall_13_0; }
+		
+		//(',' conditions+=Condition)*
+		public Group getGroup_14() { return cGroup_14; }
+		
+		//','
+		public Keyword getCommaKeyword_14_0() { return cCommaKeyword_14_0; }
+		
+		//conditions+=Condition
+		public Assignment getConditionsAssignment_14_1() { return cConditionsAssignment_14_1; }
+		
+		//Condition
+		public RuleCall getConditionsConditionParserRuleCall_14_1_0() { return cConditionsConditionParserRuleCall_14_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_15() { return cRightCurlyBracketKeyword_15; }
+		
+		//'actions'
+		public Keyword getActionsKeyword_16() { return cActionsKeyword_16; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_17() { return cLeftCurlyBracketKeyword_17; }
+		
+		//actions+=Action
+		public Assignment getActionsAssignment_18() { return cActionsAssignment_18; }
+		
+		//Action
+		public RuleCall getActionsActionParserRuleCall_18_0() { return cActionsActionParserRuleCall_18_0; }
+		
+		//(',' actions+=Action)*
+		public Group getGroup_19() { return cGroup_19; }
+		
+		//','
+		public Keyword getCommaKeyword_19_0() { return cCommaKeyword_19_0; }
+		
+		//actions+=Action
+		public Assignment getActionsAssignment_19_1() { return cActionsAssignment_19_1; }
+		
+		//Action
+		public RuleCall getActionsActionParserRuleCall_19_1_0() { return cActionsActionParserRuleCall_19_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_20() { return cRightCurlyBracketKeyword_20; }
+	}
+	public class ConditionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.Condition");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cConditionKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cOperatorKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cOperatorAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cOperatorConditionOperatorEnumRuleCall_3_0 = (RuleCall)cOperatorAssignment_3.eContents().get(0);
+		private final Keyword cAttributeKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cAttributeAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final CrossReference cAttributeAttributeCrossReference_5_0 = (CrossReference)cAttributeAssignment_5.eContents().get(0);
+		private final RuleCall cAttributeAttributeEStringParserRuleCall_5_0_1 = (RuleCall)cAttributeAttributeCrossReference_5_0.eContents().get(1);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cValuesKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_6_1 = (Keyword)cGroup_6.eContents().get(1);
+		private final Assignment cChildrenAssignment_6_2 = (Assignment)cGroup_6.eContents().get(2);
+		private final RuleCall cChildrenConditionValueParserRuleCall_6_2_0 = (RuleCall)cChildrenAssignment_6_2.eContents().get(0);
+		private final Group cGroup_6_3 = (Group)cGroup_6.eContents().get(3);
+		private final Keyword cCommaKeyword_6_3_0 = (Keyword)cGroup_6_3.eContents().get(0);
+		private final Assignment cChildrenAssignment_6_3_1 = (Assignment)cGroup_6_3.eContents().get(1);
+		private final RuleCall cChildrenConditionValueParserRuleCall_6_3_1_0 = (RuleCall)cChildrenAssignment_6_3_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_6_4 = (Keyword)cGroup_6.eContents().get(4);
+		
+		//Condition returns Condition:
+		//    'Condition' name=EString
+		//    'operator' operator=ConditionOperator
+		//    'attribute' attribute=[Attribute|EString]
+		//    ('values' '{' children+=ConditionValue (',' children+=ConditionValue)* '}')?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'Condition' name=EString
+		//'operator' operator=ConditionOperator
+		//'attribute' attribute=[Attribute|EString]
+		//('values' '{' children+=ConditionValue (',' children+=ConditionValue)* '}')?
+		public Group getGroup() { return cGroup; }
+		
+		//'Condition'
+		public Keyword getConditionKeyword_0() { return cConditionKeyword_0; }
+		
+		//name=EString
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_1_0() { return cNameEStringParserRuleCall_1_0; }
+		
+		//'operator'
+		public Keyword getOperatorKeyword_2() { return cOperatorKeyword_2; }
+		
+		//operator=ConditionOperator
+		public Assignment getOperatorAssignment_3() { return cOperatorAssignment_3; }
+		
+		//ConditionOperator
+		public RuleCall getOperatorConditionOperatorEnumRuleCall_3_0() { return cOperatorConditionOperatorEnumRuleCall_3_0; }
+		
+		//'attribute'
+		public Keyword getAttributeKeyword_4() { return cAttributeKeyword_4; }
+		
+		//attribute=[Attribute|EString]
+		public Assignment getAttributeAssignment_5() { return cAttributeAssignment_5; }
+		
+		//[Attribute|EString]
+		public CrossReference getAttributeAttributeCrossReference_5_0() { return cAttributeAttributeCrossReference_5_0; }
+		
+		//EString
+		public RuleCall getAttributeAttributeEStringParserRuleCall_5_0_1() { return cAttributeAttributeEStringParserRuleCall_5_0_1; }
+		
+		//('values' '{' children+=ConditionValue (',' children+=ConditionValue)* '}')?
+		public Group getGroup_6() { return cGroup_6; }
+		
+		//'values'
+		public Keyword getValuesKeyword_6_0() { return cValuesKeyword_6_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_6_1() { return cLeftCurlyBracketKeyword_6_1; }
+		
+		//children+=ConditionValue
+		public Assignment getChildrenAssignment_6_2() { return cChildrenAssignment_6_2; }
+		
+		//ConditionValue
+		public RuleCall getChildrenConditionValueParserRuleCall_6_2_0() { return cChildrenConditionValueParserRuleCall_6_2_0; }
+		
+		//(',' children+=ConditionValue)*
+		public Group getGroup_6_3() { return cGroup_6_3; }
+		
+		//','
+		public Keyword getCommaKeyword_6_3_0() { return cCommaKeyword_6_3_0; }
+		
+		//children+=ConditionValue
+		public Assignment getChildrenAssignment_6_3_1() { return cChildrenAssignment_6_3_1; }
+		
+		//ConditionValue
+		public RuleCall getChildrenConditionValueParserRuleCall_6_3_1_0() { return cChildrenConditionValueParserRuleCall_6_3_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_6_4() { return cRightCurlyBracketKeyword_6_4; }
+	}
+	public class ConditionValueElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.ConditionValue");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cValueKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cValueAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cValueEStringParserRuleCall_1_0 = (RuleCall)cValueAssignment_1.eContents().get(0);
+		
+		//ConditionValue returns ConditionValue:
+		//    'value' value=EString;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'value' value=EString
+		public Group getGroup() { return cGroup; }
+		
+		//'value'
+		public Keyword getValueKeyword_0() { return cValueKeyword_0; }
+		
+		//value=EString
+		public Assignment getValueAssignment_1() { return cValueAssignment_1; }
+		
+		//EString
+		public RuleCall getValueEStringParserRuleCall_1_0() { return cValueEStringParserRuleCall_1_0; }
+	}
+	public class ActionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.Action");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cActionKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cKindKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cKindAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cKindActionResultKindEnumRuleCall_3_0 = (RuleCall)cKindAssignment_3.eContents().get(0);
+		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
+		private final Keyword cMessageKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
+		private final Assignment cMessageAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
+		private final RuleCall cMessageEStringParserRuleCall_4_1_0 = (RuleCall)cMessageAssignment_4_1.eContents().get(0);
+		
+		//Action returns Action:
+		//    'Action' name=EString
+		//    'kind' kind=ActionResultKind
+		//    ('message' message=EString)?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'Action' name=EString
+		//'kind' kind=ActionResultKind
+		//('message' message=EString)?
+		public Group getGroup() { return cGroup; }
+		
+		//'Action'
+		public Keyword getActionKeyword_0() { return cActionKeyword_0; }
+		
+		//name=EString
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_1_0() { return cNameEStringParserRuleCall_1_0; }
+		
+		//'kind'
+		public Keyword getKindKeyword_2() { return cKindKeyword_2; }
+		
+		//kind=ActionResultKind
+		public Assignment getKindAssignment_3() { return cKindAssignment_3; }
+		
+		//ActionResultKind
+		public RuleCall getKindActionResultKindEnumRuleCall_3_0() { return cKindActionResultKindEnumRuleCall_3_0; }
+		
+		//('message' message=EString)?
+		public Group getGroup_4() { return cGroup_4; }
+		
+		//'message'
+		public Keyword getMessageKeyword_4_0() { return cMessageKeyword_4_0; }
+		
+		//message=EString
+		public Assignment getMessageAssignment_4_1() { return cMessageAssignment_4_1; }
+		
+		//EString
+		public RuleCall getMessageEStringParserRuleCall_4_1_0() { return cMessageEStringParserRuleCall_4_1_0; }
 	}
 	public class VerificationPolicyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.VerificationPolicy");
@@ -2068,7 +2409,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		private final RuleCall cModeValidationKindEnumRuleCall_3_0 = (RuleCall)cModeAssignment_3.eContents().get(0);
 		private final Keyword cAppliesWhenKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		private final Assignment cAppliesWhenAssignment_5 = (Assignment)cGroup.eContents().get(5);
-		private final RuleCall cAppliesWhenEStringParserRuleCall_5_0 = (RuleCall)cAppliesWhenAssignment_5.eContents().get(0);
+		private final RuleCall cAppliesWhenTriggerEventEnumRuleCall_5_0 = (RuleCall)cAppliesWhenAssignment_5.eContents().get(0);
 		private final Keyword cVerifiesKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		private final Assignment cVerifiesAssignment_7 = (Assignment)cGroup.eContents().get(7);
 		private final CrossReference cVerifiesFeedbackDefinitionCrossReference_7_0 = (CrossReference)cVerifiesAssignment_7.eContents().get(0);
@@ -2077,13 +2418,13 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//VerificationPolicy returns VerificationPolicy:
 		//    'VerificationPolicy' ('name' name=EString)?
 		//    'mode' mode=ValidationKind
-		//    'appliesWhen' appliesWhen=EString
+		//    'appliesWhen' appliesWhen=TriggerEvent
 		//    'verifies' verifies=[FeedbackDefinition|EString];
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'VerificationPolicy' ('name' name=EString)?
 		//'mode' mode=ValidationKind
-		//'appliesWhen' appliesWhen=EString
+		//'appliesWhen' appliesWhen=TriggerEvent
 		//'verifies' verifies=[FeedbackDefinition|EString]
 		public Group getGroup() { return cGroup; }
 		
@@ -2114,11 +2455,11 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'appliesWhen'
 		public Keyword getAppliesWhenKeyword_4() { return cAppliesWhenKeyword_4; }
 		
-		//appliesWhen=EString
+		//appliesWhen=TriggerEvent
 		public Assignment getAppliesWhenAssignment_5() { return cAppliesWhenAssignment_5; }
 		
-		//EString
-		public RuleCall getAppliesWhenEStringParserRuleCall_5_0() { return cAppliesWhenEStringParserRuleCall_5_0; }
+		//TriggerEvent
+		public RuleCall getAppliesWhenTriggerEventEnumRuleCall_5_0() { return cAppliesWhenTriggerEventEnumRuleCall_5_0; }
 		
 		//'verifies'
 		public Keyword getVerifiesKeyword_6() { return cVerifiesKeyword_6; }
@@ -2131,6 +2472,123 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		
 		//EString
 		public RuleCall getVerifiesFeedbackDefinitionEStringParserRuleCall_7_0_1() { return cVerifiesFeedbackDefinitionEStringParserRuleCall_7_0_1; }
+	}
+	public class SortingPolicyElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.SortingPolicy");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cSortingPolicyKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cNameEStringParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Keyword cCriterionKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cCriterionAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cCriterionSortCriterionEnumRuleCall_3_0 = (RuleCall)cCriterionAssignment_3.eContents().get(0);
+		private final Keyword cDirectionKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cDirectionAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cDirectionSortDirectionEnumRuleCall_5_0 = (RuleCall)cDirectionAssignment_5.eContents().get(0);
+		private final Group cGroup_6 = (Group)cGroup.eContents().get(6);
+		private final Keyword cAppliesToResourceKeyword_6_0 = (Keyword)cGroup_6.eContents().get(0);
+		private final Assignment cAppliesToResourceAssignment_6_1 = (Assignment)cGroup_6.eContents().get(1);
+		private final CrossReference cAppliesToResourceResourceTypeCrossReference_6_1_0 = (CrossReference)cAppliesToResourceAssignment_6_1.eContents().get(0);
+		private final RuleCall cAppliesToResourceResourceTypeEStringParserRuleCall_6_1_0_1 = (RuleCall)cAppliesToResourceResourceTypeCrossReference_6_1_0.eContents().get(1);
+		private final Group cGroup_7 = (Group)cGroup.eContents().get(7);
+		private final Keyword cAppliesToFeedbackKeyword_7_0 = (Keyword)cGroup_7.eContents().get(0);
+		private final Assignment cAppliesToFeedbackAssignment_7_1 = (Assignment)cGroup_7.eContents().get(1);
+		private final CrossReference cAppliesToFeedbackFeedbackDefinitionCrossReference_7_1_0 = (CrossReference)cAppliesToFeedbackAssignment_7_1.eContents().get(0);
+		private final RuleCall cAppliesToFeedbackFeedbackDefinitionEStringParserRuleCall_7_1_0_1 = (RuleCall)cAppliesToFeedbackFeedbackDefinitionCrossReference_7_1_0.eContents().get(1);
+		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
+		private final Keyword cInContextKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
+		private final Assignment cInContextAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
+		private final CrossReference cInContextContextTypeCrossReference_8_1_0 = (CrossReference)cInContextAssignment_8_1.eContents().get(0);
+		private final RuleCall cInContextContextTypeEStringParserRuleCall_8_1_0_1 = (RuleCall)cInContextContextTypeCrossReference_8_1_0.eContents().get(1);
+		
+		//SortingPolicy returns SortingPolicy:
+		//    'SortingPolicy' name=EString
+		//    'criterion' criterion=SortCriterion
+		//    'direction' direction=SortDirection
+		//    ('appliesToResource' appliesToResource=[ResourceType|EString])?
+		//    ('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+		//    ('inContext' inContext=[ContextType|EString])?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'SortingPolicy' name=EString
+		//'criterion' criterion=SortCriterion
+		//'direction' direction=SortDirection
+		//('appliesToResource' appliesToResource=[ResourceType|EString])?
+		//('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+		//('inContext' inContext=[ContextType|EString])?
+		public Group getGroup() { return cGroup; }
+		
+		//'SortingPolicy'
+		public Keyword getSortingPolicyKeyword_0() { return cSortingPolicyKeyword_0; }
+		
+		//name=EString
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//EString
+		public RuleCall getNameEStringParserRuleCall_1_0() { return cNameEStringParserRuleCall_1_0; }
+		
+		//'criterion'
+		public Keyword getCriterionKeyword_2() { return cCriterionKeyword_2; }
+		
+		//criterion=SortCriterion
+		public Assignment getCriterionAssignment_3() { return cCriterionAssignment_3; }
+		
+		//SortCriterion
+		public RuleCall getCriterionSortCriterionEnumRuleCall_3_0() { return cCriterionSortCriterionEnumRuleCall_3_0; }
+		
+		//'direction'
+		public Keyword getDirectionKeyword_4() { return cDirectionKeyword_4; }
+		
+		//direction=SortDirection
+		public Assignment getDirectionAssignment_5() { return cDirectionAssignment_5; }
+		
+		//SortDirection
+		public RuleCall getDirectionSortDirectionEnumRuleCall_5_0() { return cDirectionSortDirectionEnumRuleCall_5_0; }
+		
+		//('appliesToResource' appliesToResource=[ResourceType|EString])?
+		public Group getGroup_6() { return cGroup_6; }
+		
+		//'appliesToResource'
+		public Keyword getAppliesToResourceKeyword_6_0() { return cAppliesToResourceKeyword_6_0; }
+		
+		//appliesToResource=[ResourceType|EString]
+		public Assignment getAppliesToResourceAssignment_6_1() { return cAppliesToResourceAssignment_6_1; }
+		
+		//[ResourceType|EString]
+		public CrossReference getAppliesToResourceResourceTypeCrossReference_6_1_0() { return cAppliesToResourceResourceTypeCrossReference_6_1_0; }
+		
+		//EString
+		public RuleCall getAppliesToResourceResourceTypeEStringParserRuleCall_6_1_0_1() { return cAppliesToResourceResourceTypeEStringParserRuleCall_6_1_0_1; }
+		
+		//('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+		public Group getGroup_7() { return cGroup_7; }
+		
+		//'appliesToFeedback'
+		public Keyword getAppliesToFeedbackKeyword_7_0() { return cAppliesToFeedbackKeyword_7_0; }
+		
+		//appliesToFeedback=[FeedbackDefinition|EString]
+		public Assignment getAppliesToFeedbackAssignment_7_1() { return cAppliesToFeedbackAssignment_7_1; }
+		
+		//[FeedbackDefinition|EString]
+		public CrossReference getAppliesToFeedbackFeedbackDefinitionCrossReference_7_1_0() { return cAppliesToFeedbackFeedbackDefinitionCrossReference_7_1_0; }
+		
+		//EString
+		public RuleCall getAppliesToFeedbackFeedbackDefinitionEStringParserRuleCall_7_1_0_1() { return cAppliesToFeedbackFeedbackDefinitionEStringParserRuleCall_7_1_0_1; }
+		
+		//('inContext' inContext=[ContextType|EString])?
+		public Group getGroup_8() { return cGroup_8; }
+		
+		//'inContext'
+		public Keyword getInContextKeyword_8_0() { return cInContextKeyword_8_0; }
+		
+		//inContext=[ContextType|EString]
+		public Assignment getInContextAssignment_8_1() { return cInContextAssignment_8_1; }
+		
+		//[ContextType|EString]
+		public CrossReference getInContextContextTypeCrossReference_8_1_0() { return cInContextContextTypeCrossReference_8_1_0; }
+		
+		//EString
+		public RuleCall getInContextContextTypeEStringParserRuleCall_8_1_0_1() { return cInContextContextTypeEStringParserRuleCall_8_1_0_1; }
 	}
 	public class EStringElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.EString");
@@ -2465,6 +2923,49 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'RESOURCE_OR_FEEDBACK'
 		public Keyword getRESOURCE_OR_FEEDBACKRESOURCE_OR_FEEDBACKKeyword_2_0() { return cRESOURCE_OR_FEEDBACKRESOURCE_OR_FEEDBACKKeyword_2_0; }
 	}
+	public class FeedbackPolarityElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.FeedbackPolarity");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cNONEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cNONENONEKeyword_0_0 = (Keyword)cNONEEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cLIKE_DISLIKEEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cLIKE_DISLIKELIKE_DISLIKEKeyword_1_0 = (Keyword)cLIKE_DISLIKEEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cUP_DOWNEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cUP_DOWNUP_DOWNKeyword_2_0 = (Keyword)cUP_DOWNEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cSTARSEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cSTARSSTARSKeyword_3_0 = (Keyword)cSTARSEnumLiteralDeclaration_3.eContents().get(0);
+		
+		//enum FeedbackPolarity returns FeedbackPolarity:
+		//    NONE = 'NONE' | LIKE_DISLIKE = 'LIKE_DISLIKE' | UP_DOWN = 'UP_DOWN' | STARS = 'STARS';
+		public EnumRule getRule() { return rule; }
+		
+		//NONE = 'NONE' | LIKE_DISLIKE = 'LIKE_DISLIKE' | UP_DOWN = 'UP_DOWN' | STARS = 'STARS'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//NONE = 'NONE'
+		public EnumLiteralDeclaration getNONEEnumLiteralDeclaration_0() { return cNONEEnumLiteralDeclaration_0; }
+		
+		//'NONE'
+		public Keyword getNONENONEKeyword_0_0() { return cNONENONEKeyword_0_0; }
+		
+		//LIKE_DISLIKE = 'LIKE_DISLIKE'
+		public EnumLiteralDeclaration getLIKE_DISLIKEEnumLiteralDeclaration_1() { return cLIKE_DISLIKEEnumLiteralDeclaration_1; }
+		
+		//'LIKE_DISLIKE'
+		public Keyword getLIKE_DISLIKELIKE_DISLIKEKeyword_1_0() { return cLIKE_DISLIKELIKE_DISLIKEKeyword_1_0; }
+		
+		//UP_DOWN = 'UP_DOWN'
+		public EnumLiteralDeclaration getUP_DOWNEnumLiteralDeclaration_2() { return cUP_DOWNEnumLiteralDeclaration_2; }
+		
+		//'UP_DOWN'
+		public Keyword getUP_DOWNUP_DOWNKeyword_2_0() { return cUP_DOWNUP_DOWNKeyword_2_0; }
+		
+		//STARS = 'STARS'
+		public EnumLiteralDeclaration getSTARSEnumLiteralDeclaration_3() { return cSTARSEnumLiteralDeclaration_3; }
+		
+		//'STARS'
+		public Keyword getSTARSSTARSKeyword_3_0() { return cSTARSSTARSKeyword_3_0; }
+	}
 	public class FeedbackStatusElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.FeedbackStatus");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -2492,40 +2993,40 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'DISABLED'
 		public Keyword getDISABLEDDISABLEDKeyword_1_0() { return cDISABLEDDISABLEDKeyword_1_0; }
 	}
-	public class RatingScaleKindElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
-		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.RatingScaleKind");
+	public class VerificationRequirementElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.VerificationRequirement");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final EnumLiteralDeclaration cNUMERICEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
-		private final Keyword cNUMERICNUMERICKeyword_0_0 = (Keyword)cNUMERICEnumLiteralDeclaration_0.eContents().get(0);
-		private final EnumLiteralDeclaration cORDINALEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
-		private final Keyword cORDINALORDINALKeyword_1_0 = (Keyword)cORDINALEnumLiteralDeclaration_1.eContents().get(0);
-		private final EnumLiteralDeclaration cPERCENTAGEEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
-		private final Keyword cPERCENTAGEPERCENTAGEKeyword_2_0 = (Keyword)cPERCENTAGEEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cNONEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cNONENONEKeyword_0_0 = (Keyword)cNONEEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cOPTIONALEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cOPTIONALOPTIONALKeyword_1_0 = (Keyword)cOPTIONALEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cREQUIREDEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cREQUIREDREQUIREDKeyword_2_0 = (Keyword)cREQUIREDEnumLiteralDeclaration_2.eContents().get(0);
 		
-		//enum RatingScaleKind returns RatingScaleKind:
-		//    NUMERIC = 'NUMERIC' | ORDINAL = 'ORDINAL' | PERCENTAGE = 'PERCENTAGE';
+		//enum VerificationRequirement returns VerificationRequirement:
+		//    NONE = 'NONE' | OPTIONAL = 'OPTIONAL' | REQUIRED = 'REQUIRED';
 		public EnumRule getRule() { return rule; }
 		
-		//NUMERIC = 'NUMERIC' | ORDINAL = 'ORDINAL' | PERCENTAGE = 'PERCENTAGE'
+		//NONE = 'NONE' | OPTIONAL = 'OPTIONAL' | REQUIRED = 'REQUIRED'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//NUMERIC = 'NUMERIC'
-		public EnumLiteralDeclaration getNUMERICEnumLiteralDeclaration_0() { return cNUMERICEnumLiteralDeclaration_0; }
+		//NONE = 'NONE'
+		public EnumLiteralDeclaration getNONEEnumLiteralDeclaration_0() { return cNONEEnumLiteralDeclaration_0; }
 		
-		//'NUMERIC'
-		public Keyword getNUMERICNUMERICKeyword_0_0() { return cNUMERICNUMERICKeyword_0_0; }
+		//'NONE'
+		public Keyword getNONENONEKeyword_0_0() { return cNONENONEKeyword_0_0; }
 		
-		//ORDINAL = 'ORDINAL'
-		public EnumLiteralDeclaration getORDINALEnumLiteralDeclaration_1() { return cORDINALEnumLiteralDeclaration_1; }
+		//OPTIONAL = 'OPTIONAL'
+		public EnumLiteralDeclaration getOPTIONALEnumLiteralDeclaration_1() { return cOPTIONALEnumLiteralDeclaration_1; }
 		
-		//'ORDINAL'
-		public Keyword getORDINALORDINALKeyword_1_0() { return cORDINALORDINALKeyword_1_0; }
+		//'OPTIONAL'
+		public Keyword getOPTIONALOPTIONALKeyword_1_0() { return cOPTIONALOPTIONALKeyword_1_0; }
 		
-		//PERCENTAGE = 'PERCENTAGE'
-		public EnumLiteralDeclaration getPERCENTAGEEnumLiteralDeclaration_2() { return cPERCENTAGEEnumLiteralDeclaration_2; }
+		//REQUIRED = 'REQUIRED'
+		public EnumLiteralDeclaration getREQUIREDEnumLiteralDeclaration_2() { return cREQUIREDEnumLiteralDeclaration_2; }
 		
-		//'PERCENTAGE'
-		public Keyword getPERCENTAGEPERCENTAGEKeyword_2_0() { return cPERCENTAGEPERCENTAGEKeyword_2_0; }
+		//'REQUIRED'
+		public Keyword getREQUIREDREQUIREDKeyword_2_0() { return cREQUIREDREQUIREDKeyword_2_0; }
 	}
 	public class ValidationKindElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
 		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.ValidationKind");
@@ -2786,6 +3287,311 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		//'VALIDATE'
 		public Keyword getVALIDATEVALIDATEKeyword_10_0() { return cVALIDATEVALIDATEKeyword_10_0; }
 	}
+	public class TriggerEventElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.TriggerEvent");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cON_RESOURCE_CREATEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cON_RESOURCE_CREATEON_RESOURCE_CREATEKeyword_0_0 = (Keyword)cON_RESOURCE_CREATEEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cON_RESOURCE_UPDATEEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cON_RESOURCE_UPDATEON_RESOURCE_UPDATEKeyword_1_0 = (Keyword)cON_RESOURCE_UPDATEEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cON_RESOURCE_DELETEEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cON_RESOURCE_DELETEON_RESOURCE_DELETEKeyword_2_0 = (Keyword)cON_RESOURCE_DELETEEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cON_FEEDBACK_CREATEEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cON_FEEDBACK_CREATEON_FEEDBACK_CREATEKeyword_3_0 = (Keyword)cON_FEEDBACK_CREATEEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cON_FEEDBACK_UPDATEEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cON_FEEDBACK_UPDATEON_FEEDBACK_UPDATEKeyword_4_0 = (Keyword)cON_FEEDBACK_UPDATEEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cON_FEEDBACK_DELETEEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cON_FEEDBACK_DELETEON_FEEDBACK_DELETEKeyword_5_0 = (Keyword)cON_FEEDBACK_DELETEEnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cON_REPORT_SUBMITTEDEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
+		private final Keyword cON_REPORT_SUBMITTEDON_REPORT_SUBMITTEDKeyword_6_0 = (Keyword)cON_REPORT_SUBMITTEDEnumLiteralDeclaration_6.eContents().get(0);
+		private final EnumLiteralDeclaration cON_REPORT_THRESHOLDEnumLiteralDeclaration_7 = (EnumLiteralDeclaration)cAlternatives.eContents().get(7);
+		private final Keyword cON_REPORT_THRESHOLDON_REPORT_THRESHOLDKeyword_7_0 = (Keyword)cON_REPORT_THRESHOLDEnumLiteralDeclaration_7.eContents().get(0);
+		private final EnumLiteralDeclaration cON_MANUAL_REQUESTEnumLiteralDeclaration_8 = (EnumLiteralDeclaration)cAlternatives.eContents().get(8);
+		private final Keyword cON_MANUAL_REQUESTON_MANUAL_REQUESTKeyword_8_0 = (Keyword)cON_MANUAL_REQUESTEnumLiteralDeclaration_8.eContents().get(0);
+		
+		//enum TriggerEvent returns TriggerEvent:
+		//    ON_RESOURCE_CREATE = 'ON_RESOURCE_CREATE' | ON_RESOURCE_UPDATE = 'ON_RESOURCE_UPDATE'
+		//    | ON_RESOURCE_DELETE = 'ON_RESOURCE_DELETE' | ON_FEEDBACK_CREATE = 'ON_FEEDBACK_CREATE'
+		//    | ON_FEEDBACK_UPDATE = 'ON_FEEDBACK_UPDATE' | ON_FEEDBACK_DELETE = 'ON_FEEDBACK_DELETE'
+		//    | ON_REPORT_SUBMITTED = 'ON_REPORT_SUBMITTED' | ON_REPORT_THRESHOLD = 'ON_REPORT_THRESHOLD'
+		//    | ON_MANUAL_REQUEST = 'ON_MANUAL_REQUEST';
+		public EnumRule getRule() { return rule; }
+		
+		//ON_RESOURCE_CREATE = 'ON_RESOURCE_CREATE' | ON_RESOURCE_UPDATE = 'ON_RESOURCE_UPDATE'
+		//| ON_RESOURCE_DELETE = 'ON_RESOURCE_DELETE' | ON_FEEDBACK_CREATE = 'ON_FEEDBACK_CREATE'
+		//| ON_FEEDBACK_UPDATE = 'ON_FEEDBACK_UPDATE' | ON_FEEDBACK_DELETE = 'ON_FEEDBACK_DELETE'
+		//| ON_REPORT_SUBMITTED = 'ON_REPORT_SUBMITTED' | ON_REPORT_THRESHOLD = 'ON_REPORT_THRESHOLD'
+		//| ON_MANUAL_REQUEST = 'ON_MANUAL_REQUEST'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//ON_RESOURCE_CREATE = 'ON_RESOURCE_CREATE'
+		public EnumLiteralDeclaration getON_RESOURCE_CREATEEnumLiteralDeclaration_0() { return cON_RESOURCE_CREATEEnumLiteralDeclaration_0; }
+		
+		//'ON_RESOURCE_CREATE'
+		public Keyword getON_RESOURCE_CREATEON_RESOURCE_CREATEKeyword_0_0() { return cON_RESOURCE_CREATEON_RESOURCE_CREATEKeyword_0_0; }
+		
+		//ON_RESOURCE_UPDATE = 'ON_RESOURCE_UPDATE'
+		public EnumLiteralDeclaration getON_RESOURCE_UPDATEEnumLiteralDeclaration_1() { return cON_RESOURCE_UPDATEEnumLiteralDeclaration_1; }
+		
+		//'ON_RESOURCE_UPDATE'
+		public Keyword getON_RESOURCE_UPDATEON_RESOURCE_UPDATEKeyword_1_0() { return cON_RESOURCE_UPDATEON_RESOURCE_UPDATEKeyword_1_0; }
+		
+		//ON_RESOURCE_DELETE = 'ON_RESOURCE_DELETE'
+		public EnumLiteralDeclaration getON_RESOURCE_DELETEEnumLiteralDeclaration_2() { return cON_RESOURCE_DELETEEnumLiteralDeclaration_2; }
+		
+		//'ON_RESOURCE_DELETE'
+		public Keyword getON_RESOURCE_DELETEON_RESOURCE_DELETEKeyword_2_0() { return cON_RESOURCE_DELETEON_RESOURCE_DELETEKeyword_2_0; }
+		
+		//ON_FEEDBACK_CREATE = 'ON_FEEDBACK_CREATE'
+		public EnumLiteralDeclaration getON_FEEDBACK_CREATEEnumLiteralDeclaration_3() { return cON_FEEDBACK_CREATEEnumLiteralDeclaration_3; }
+		
+		//'ON_FEEDBACK_CREATE'
+		public Keyword getON_FEEDBACK_CREATEON_FEEDBACK_CREATEKeyword_3_0() { return cON_FEEDBACK_CREATEON_FEEDBACK_CREATEKeyword_3_0; }
+		
+		//ON_FEEDBACK_UPDATE = 'ON_FEEDBACK_UPDATE'
+		public EnumLiteralDeclaration getON_FEEDBACK_UPDATEEnumLiteralDeclaration_4() { return cON_FEEDBACK_UPDATEEnumLiteralDeclaration_4; }
+		
+		//'ON_FEEDBACK_UPDATE'
+		public Keyword getON_FEEDBACK_UPDATEON_FEEDBACK_UPDATEKeyword_4_0() { return cON_FEEDBACK_UPDATEON_FEEDBACK_UPDATEKeyword_4_0; }
+		
+		//ON_FEEDBACK_DELETE = 'ON_FEEDBACK_DELETE'
+		public EnumLiteralDeclaration getON_FEEDBACK_DELETEEnumLiteralDeclaration_5() { return cON_FEEDBACK_DELETEEnumLiteralDeclaration_5; }
+		
+		//'ON_FEEDBACK_DELETE'
+		public Keyword getON_FEEDBACK_DELETEON_FEEDBACK_DELETEKeyword_5_0() { return cON_FEEDBACK_DELETEON_FEEDBACK_DELETEKeyword_5_0; }
+		
+		//ON_REPORT_SUBMITTED = 'ON_REPORT_SUBMITTED'
+		public EnumLiteralDeclaration getON_REPORT_SUBMITTEDEnumLiteralDeclaration_6() { return cON_REPORT_SUBMITTEDEnumLiteralDeclaration_6; }
+		
+		//'ON_REPORT_SUBMITTED'
+		public Keyword getON_REPORT_SUBMITTEDON_REPORT_SUBMITTEDKeyword_6_0() { return cON_REPORT_SUBMITTEDON_REPORT_SUBMITTEDKeyword_6_0; }
+		
+		//ON_REPORT_THRESHOLD = 'ON_REPORT_THRESHOLD'
+		public EnumLiteralDeclaration getON_REPORT_THRESHOLDEnumLiteralDeclaration_7() { return cON_REPORT_THRESHOLDEnumLiteralDeclaration_7; }
+		
+		//'ON_REPORT_THRESHOLD'
+		public Keyword getON_REPORT_THRESHOLDON_REPORT_THRESHOLDKeyword_7_0() { return cON_REPORT_THRESHOLDON_REPORT_THRESHOLDKeyword_7_0; }
+		
+		//ON_MANUAL_REQUEST = 'ON_MANUAL_REQUEST'
+		public EnumLiteralDeclaration getON_MANUAL_REQUESTEnumLiteralDeclaration_8() { return cON_MANUAL_REQUESTEnumLiteralDeclaration_8; }
+		
+		//'ON_MANUAL_REQUEST'
+		public Keyword getON_MANUAL_REQUESTON_MANUAL_REQUESTKeyword_8_0() { return cON_MANUAL_REQUESTON_MANUAL_REQUESTKeyword_8_0; }
+	}
+	public class ConditionOperatorElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.ConditionOperator");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cCONTAINS_KEYWORDSEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cCONTAINS_KEYWORDSCONTAINS_KEYWORDSKeyword_0_0 = (Keyword)cCONTAINS_KEYWORDSEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cNOT_CONTAINS_KEYWORDSEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cNOT_CONTAINS_KEYWORDSNOT_CONTAINS_KEYWORDSKeyword_1_0 = (Keyword)cNOT_CONTAINS_KEYWORDSEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cMATCH_REGEXEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cMATCH_REGEXMATCH_REGEXKeyword_2_0 = (Keyword)cMATCH_REGEXEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cNOT_MATCH_REGEXEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cNOT_MATCH_REGEXNOT_MATCH_REGEXKeyword_3_0 = (Keyword)cNOT_MATCH_REGEXEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cHAS_PROPERTYEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cHAS_PROPERTYHAS_PROPERTYKeyword_4_0 = (Keyword)cHAS_PROPERTYEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cNOT_HAS_PROPERTYEnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cNOT_HAS_PROPERTYNOT_HAS_PROPERTYKeyword_5_0 = (Keyword)cNOT_HAS_PROPERTYEnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cHAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
+		private final Keyword cHAS_SPECIFIC_PROPERTYHAS_SPECIFIC_PROPERTYKeyword_6_0 = (Keyword)cHAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_6.eContents().get(0);
+		private final EnumLiteralDeclaration cNOT_HAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_7 = (EnumLiteralDeclaration)cAlternatives.eContents().get(7);
+		private final Keyword cNOT_HAS_SPECIFIC_PROPERTYNOT_HAS_SPECIFIC_PROPERTYKeyword_7_0 = (Keyword)cNOT_HAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_7.eContents().get(0);
+		
+		//enum ConditionOperator returns ConditionOperator:
+		//    CONTAINS_KEYWORDS = 'CONTAINS_KEYWORDS' | NOT_CONTAINS_KEYWORDS = 'NOT_CONTAINS_KEYWORDS'
+		//    | MATCH_REGEX = 'MATCH_REGEX' | NOT_MATCH_REGEX = 'NOT_MATCH_REGEX' | HAS_PROPERTY = 'HAS_PROPERTY'
+		//    | NOT_HAS_PROPERTY = 'NOT_HAS_PROPERTY' | HAS_SPECIFIC_PROPERTY = 'HAS_SPECIFIC_PROPERTY'
+		//    | NOT_HAS_SPECIFIC_PROPERTY = 'NOT_HAS_SPECIFIC_PROPERTY';
+		public EnumRule getRule() { return rule; }
+		
+		//CONTAINS_KEYWORDS = 'CONTAINS_KEYWORDS' | NOT_CONTAINS_KEYWORDS = 'NOT_CONTAINS_KEYWORDS'
+		//| MATCH_REGEX = 'MATCH_REGEX' | NOT_MATCH_REGEX = 'NOT_MATCH_REGEX' | HAS_PROPERTY = 'HAS_PROPERTY'
+		//| NOT_HAS_PROPERTY = 'NOT_HAS_PROPERTY' | HAS_SPECIFIC_PROPERTY = 'HAS_SPECIFIC_PROPERTY'
+		//| NOT_HAS_SPECIFIC_PROPERTY = 'NOT_HAS_SPECIFIC_PROPERTY'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//CONTAINS_KEYWORDS = 'CONTAINS_KEYWORDS'
+		public EnumLiteralDeclaration getCONTAINS_KEYWORDSEnumLiteralDeclaration_0() { return cCONTAINS_KEYWORDSEnumLiteralDeclaration_0; }
+		
+		//'CONTAINS_KEYWORDS'
+		public Keyword getCONTAINS_KEYWORDSCONTAINS_KEYWORDSKeyword_0_0() { return cCONTAINS_KEYWORDSCONTAINS_KEYWORDSKeyword_0_0; }
+		
+		//NOT_CONTAINS_KEYWORDS = 'NOT_CONTAINS_KEYWORDS'
+		public EnumLiteralDeclaration getNOT_CONTAINS_KEYWORDSEnumLiteralDeclaration_1() { return cNOT_CONTAINS_KEYWORDSEnumLiteralDeclaration_1; }
+		
+		//'NOT_CONTAINS_KEYWORDS'
+		public Keyword getNOT_CONTAINS_KEYWORDSNOT_CONTAINS_KEYWORDSKeyword_1_0() { return cNOT_CONTAINS_KEYWORDSNOT_CONTAINS_KEYWORDSKeyword_1_0; }
+		
+		//MATCH_REGEX = 'MATCH_REGEX'
+		public EnumLiteralDeclaration getMATCH_REGEXEnumLiteralDeclaration_2() { return cMATCH_REGEXEnumLiteralDeclaration_2; }
+		
+		//'MATCH_REGEX'
+		public Keyword getMATCH_REGEXMATCH_REGEXKeyword_2_0() { return cMATCH_REGEXMATCH_REGEXKeyword_2_0; }
+		
+		//NOT_MATCH_REGEX = 'NOT_MATCH_REGEX'
+		public EnumLiteralDeclaration getNOT_MATCH_REGEXEnumLiteralDeclaration_3() { return cNOT_MATCH_REGEXEnumLiteralDeclaration_3; }
+		
+		//'NOT_MATCH_REGEX'
+		public Keyword getNOT_MATCH_REGEXNOT_MATCH_REGEXKeyword_3_0() { return cNOT_MATCH_REGEXNOT_MATCH_REGEXKeyword_3_0; }
+		
+		//HAS_PROPERTY = 'HAS_PROPERTY'
+		public EnumLiteralDeclaration getHAS_PROPERTYEnumLiteralDeclaration_4() { return cHAS_PROPERTYEnumLiteralDeclaration_4; }
+		
+		//'HAS_PROPERTY'
+		public Keyword getHAS_PROPERTYHAS_PROPERTYKeyword_4_0() { return cHAS_PROPERTYHAS_PROPERTYKeyword_4_0; }
+		
+		//NOT_HAS_PROPERTY = 'NOT_HAS_PROPERTY'
+		public EnumLiteralDeclaration getNOT_HAS_PROPERTYEnumLiteralDeclaration_5() { return cNOT_HAS_PROPERTYEnumLiteralDeclaration_5; }
+		
+		//'NOT_HAS_PROPERTY'
+		public Keyword getNOT_HAS_PROPERTYNOT_HAS_PROPERTYKeyword_5_0() { return cNOT_HAS_PROPERTYNOT_HAS_PROPERTYKeyword_5_0; }
+		
+		//HAS_SPECIFIC_PROPERTY = 'HAS_SPECIFIC_PROPERTY'
+		public EnumLiteralDeclaration getHAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_6() { return cHAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_6; }
+		
+		//'HAS_SPECIFIC_PROPERTY'
+		public Keyword getHAS_SPECIFIC_PROPERTYHAS_SPECIFIC_PROPERTYKeyword_6_0() { return cHAS_SPECIFIC_PROPERTYHAS_SPECIFIC_PROPERTYKeyword_6_0; }
+		
+		//NOT_HAS_SPECIFIC_PROPERTY = 'NOT_HAS_SPECIFIC_PROPERTY'
+		public EnumLiteralDeclaration getNOT_HAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_7() { return cNOT_HAS_SPECIFIC_PROPERTYEnumLiteralDeclaration_7; }
+		
+		//'NOT_HAS_SPECIFIC_PROPERTY'
+		public Keyword getNOT_HAS_SPECIFIC_PROPERTYNOT_HAS_SPECIFIC_PROPERTYKeyword_7_0() { return cNOT_HAS_SPECIFIC_PROPERTYNOT_HAS_SPECIFIC_PROPERTYKeyword_7_0; }
+	}
+	public class ActionResultKindElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.ActionResultKind");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cDISPLAY_MESSAGEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cDISPLAY_MESSAGEDISPLAY_MESSAGEKeyword_0_0 = (Keyword)cDISPLAY_MESSAGEEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cFLAG_CONTENTEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cFLAG_CONTENTFLAG_CONTENTKeyword_1_0 = (Keyword)cFLAG_CONTENTEnumLiteralDeclaration_1.eContents().get(0);
+		private final EnumLiteralDeclaration cHIDE_CONTENTEnumLiteralDeclaration_2 = (EnumLiteralDeclaration)cAlternatives.eContents().get(2);
+		private final Keyword cHIDE_CONTENTHIDE_CONTENTKeyword_2_0 = (Keyword)cHIDE_CONTENTEnumLiteralDeclaration_2.eContents().get(0);
+		private final EnumLiteralDeclaration cREMOVE_CONTENTEnumLiteralDeclaration_3 = (EnumLiteralDeclaration)cAlternatives.eContents().get(3);
+		private final Keyword cREMOVE_CONTENTREMOVE_CONTENTKeyword_3_0 = (Keyword)cREMOVE_CONTENTEnumLiteralDeclaration_3.eContents().get(0);
+		private final EnumLiteralDeclaration cBLOCK_SUBMISSIONEnumLiteralDeclaration_4 = (EnumLiteralDeclaration)cAlternatives.eContents().get(4);
+		private final Keyword cBLOCK_SUBMISSIONBLOCK_SUBMISSIONKeyword_4_0 = (Keyword)cBLOCK_SUBMISSIONEnumLiteralDeclaration_4.eContents().get(0);
+		private final EnumLiteralDeclaration cNOTIFY_MODERATOREnumLiteralDeclaration_5 = (EnumLiteralDeclaration)cAlternatives.eContents().get(5);
+		private final Keyword cNOTIFY_MODERATORNOTIFY_MODERATORKeyword_5_0 = (Keyword)cNOTIFY_MODERATOREnumLiteralDeclaration_5.eContents().get(0);
+		private final EnumLiteralDeclaration cAUTO_APPROVEEnumLiteralDeclaration_6 = (EnumLiteralDeclaration)cAlternatives.eContents().get(6);
+		private final Keyword cAUTO_APPROVEAUTO_APPROVEKeyword_6_0 = (Keyword)cAUTO_APPROVEEnumLiteralDeclaration_6.eContents().get(0);
+		private final EnumLiteralDeclaration cAUTO_REJECTEnumLiteralDeclaration_7 = (EnumLiteralDeclaration)cAlternatives.eContents().get(7);
+		private final Keyword cAUTO_REJECTAUTO_REJECTKeyword_7_0 = (Keyword)cAUTO_REJECTEnumLiteralDeclaration_7.eContents().get(0);
+		
+		//enum ActionResultKind returns ActionResultKind:
+		//    DISPLAY_MESSAGE = 'DISPLAY_MESSAGE' | FLAG_CONTENT = 'FLAG_CONTENT' | HIDE_CONTENT = 'HIDE_CONTENT'
+		//    | REMOVE_CONTENT = 'REMOVE_CONTENT' | BLOCK_SUBMISSION = 'BLOCK_SUBMISSION' | NOTIFY_MODERATOR = 'NOTIFY_MODERATOR'
+		//    | AUTO_APPROVE = 'AUTO_APPROVE' | AUTO_REJECT = 'AUTO_REJECT';
+		public EnumRule getRule() { return rule; }
+		
+		//DISPLAY_MESSAGE = 'DISPLAY_MESSAGE' | FLAG_CONTENT = 'FLAG_CONTENT' | HIDE_CONTENT = 'HIDE_CONTENT'
+		//| REMOVE_CONTENT = 'REMOVE_CONTENT' | BLOCK_SUBMISSION = 'BLOCK_SUBMISSION' | NOTIFY_MODERATOR = 'NOTIFY_MODERATOR'
+		//| AUTO_APPROVE = 'AUTO_APPROVE' | AUTO_REJECT = 'AUTO_REJECT'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//DISPLAY_MESSAGE = 'DISPLAY_MESSAGE'
+		public EnumLiteralDeclaration getDISPLAY_MESSAGEEnumLiteralDeclaration_0() { return cDISPLAY_MESSAGEEnumLiteralDeclaration_0; }
+		
+		//'DISPLAY_MESSAGE'
+		public Keyword getDISPLAY_MESSAGEDISPLAY_MESSAGEKeyword_0_0() { return cDISPLAY_MESSAGEDISPLAY_MESSAGEKeyword_0_0; }
+		
+		//FLAG_CONTENT = 'FLAG_CONTENT'
+		public EnumLiteralDeclaration getFLAG_CONTENTEnumLiteralDeclaration_1() { return cFLAG_CONTENTEnumLiteralDeclaration_1; }
+		
+		//'FLAG_CONTENT'
+		public Keyword getFLAG_CONTENTFLAG_CONTENTKeyword_1_0() { return cFLAG_CONTENTFLAG_CONTENTKeyword_1_0; }
+		
+		//HIDE_CONTENT = 'HIDE_CONTENT'
+		public EnumLiteralDeclaration getHIDE_CONTENTEnumLiteralDeclaration_2() { return cHIDE_CONTENTEnumLiteralDeclaration_2; }
+		
+		//'HIDE_CONTENT'
+		public Keyword getHIDE_CONTENTHIDE_CONTENTKeyword_2_0() { return cHIDE_CONTENTHIDE_CONTENTKeyword_2_0; }
+		
+		//REMOVE_CONTENT = 'REMOVE_CONTENT'
+		public EnumLiteralDeclaration getREMOVE_CONTENTEnumLiteralDeclaration_3() { return cREMOVE_CONTENTEnumLiteralDeclaration_3; }
+		
+		//'REMOVE_CONTENT'
+		public Keyword getREMOVE_CONTENTREMOVE_CONTENTKeyword_3_0() { return cREMOVE_CONTENTREMOVE_CONTENTKeyword_3_0; }
+		
+		//BLOCK_SUBMISSION = 'BLOCK_SUBMISSION'
+		public EnumLiteralDeclaration getBLOCK_SUBMISSIONEnumLiteralDeclaration_4() { return cBLOCK_SUBMISSIONEnumLiteralDeclaration_4; }
+		
+		//'BLOCK_SUBMISSION'
+		public Keyword getBLOCK_SUBMISSIONBLOCK_SUBMISSIONKeyword_4_0() { return cBLOCK_SUBMISSIONBLOCK_SUBMISSIONKeyword_4_0; }
+		
+		//NOTIFY_MODERATOR = 'NOTIFY_MODERATOR'
+		public EnumLiteralDeclaration getNOTIFY_MODERATOREnumLiteralDeclaration_5() { return cNOTIFY_MODERATOREnumLiteralDeclaration_5; }
+		
+		//'NOTIFY_MODERATOR'
+		public Keyword getNOTIFY_MODERATORNOTIFY_MODERATORKeyword_5_0() { return cNOTIFY_MODERATORNOTIFY_MODERATORKeyword_5_0; }
+		
+		//AUTO_APPROVE = 'AUTO_APPROVE'
+		public EnumLiteralDeclaration getAUTO_APPROVEEnumLiteralDeclaration_6() { return cAUTO_APPROVEEnumLiteralDeclaration_6; }
+		
+		//'AUTO_APPROVE'
+		public Keyword getAUTO_APPROVEAUTO_APPROVEKeyword_6_0() { return cAUTO_APPROVEAUTO_APPROVEKeyword_6_0; }
+		
+		//AUTO_REJECT = 'AUTO_REJECT'
+		public EnumLiteralDeclaration getAUTO_REJECTEnumLiteralDeclaration_7() { return cAUTO_REJECTEnumLiteralDeclaration_7; }
+		
+		//'AUTO_REJECT'
+		public Keyword getAUTO_REJECTAUTO_REJECTKeyword_7_0() { return cAUTO_REJECTAUTO_REJECTKeyword_7_0; }
+	}
+	public class SortCriterionElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.SortCriterion");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cDATEEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cDATEDATEKeyword_0_0 = (Keyword)cDATEEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cVALUEEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cVALUEVALUEKeyword_1_0 = (Keyword)cVALUEEnumLiteralDeclaration_1.eContents().get(0);
+		
+		//enum SortCriterion returns SortCriterion:
+		//    DATE = 'DATE' | VALUE = 'VALUE';
+		public EnumRule getRule() { return rule; }
+		
+		//DATE = 'DATE' | VALUE = 'VALUE'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//DATE = 'DATE'
+		public EnumLiteralDeclaration getDATEEnumLiteralDeclaration_0() { return cDATEEnumLiteralDeclaration_0; }
+		
+		//'DATE'
+		public Keyword getDATEDATEKeyword_0_0() { return cDATEDATEKeyword_0_0; }
+		
+		//VALUE = 'VALUE'
+		public EnumLiteralDeclaration getVALUEEnumLiteralDeclaration_1() { return cVALUEEnumLiteralDeclaration_1; }
+		
+		//'VALUE'
+		public Keyword getVALUEVALUEKeyword_1_0() { return cVALUEVALUEKeyword_1_0; }
+	}
+	public class SortDirectionElements extends AbstractElementFinder.AbstractEnumRuleElementFinder {
+		private final EnumRule rule = (EnumRule) GrammarUtil.findRuleForName(getGrammar(), "pt.isep.enorm.refdsl.RefDsl.SortDirection");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final EnumLiteralDeclaration cASCEnumLiteralDeclaration_0 = (EnumLiteralDeclaration)cAlternatives.eContents().get(0);
+		private final Keyword cASCASCKeyword_0_0 = (Keyword)cASCEnumLiteralDeclaration_0.eContents().get(0);
+		private final EnumLiteralDeclaration cDESCEnumLiteralDeclaration_1 = (EnumLiteralDeclaration)cAlternatives.eContents().get(1);
+		private final Keyword cDESCDESCKeyword_1_0 = (Keyword)cDESCEnumLiteralDeclaration_1.eContents().get(0);
+		
+		//enum SortDirection returns SortDirection:
+		//    ASC = 'ASC' | DESC = 'DESC';
+		public EnumRule getRule() { return rule; }
+		
+		//ASC = 'ASC' | DESC = 'DESC'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//ASC = 'ASC'
+		public EnumLiteralDeclaration getASCEnumLiteralDeclaration_0() { return cASCEnumLiteralDeclaration_0; }
+		
+		//'ASC'
+		public Keyword getASCASCKeyword_0_0() { return cASCASCKeyword_0_0; }
+		
+		//DESC = 'DESC'
+		public EnumLiteralDeclaration getDESCEnumLiteralDeclaration_1() { return cDESCEnumLiteralDeclaration_1; }
+		
+		//'DESC'
+		public Keyword getDESCDESCKeyword_1_0() { return cDESCDESCKeyword_1_0; }
+	}
 	
 	private final RefModelElements pRefModel;
 	private final UserTypeElements pUserType;
@@ -2801,19 +3607,29 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	private final ModerationPolicyElements pModerationPolicy;
 	private final AuthorizationRuleElements pAuthorizationRule;
 	private final AutomationRuleElements pAutomationRule;
+	private final ConditionElements pCondition;
+	private final ConditionValueElements pConditionValue;
+	private final ActionElements pAction;
 	private final VerificationPolicyElements pVerificationPolicy;
+	private final SortingPolicyElements pSortingPolicy;
 	private final UserKindElements eUserKind;
 	private final ContextKindElements eContextKind;
 	private final PrimitiveTypeElements ePrimitiveType;
 	private final FeedbackKindElements eFeedbackKind;
 	private final FeedbackSubjectScopeElements eFeedbackSubjectScope;
+	private final FeedbackPolarityElements eFeedbackPolarity;
 	private final FeedbackStatusElements eFeedbackStatus;
-	private final RatingScaleKindElements eRatingScaleKind;
+	private final VerificationRequirementElements eVerificationRequirement;
 	private final ValidationKindElements eValidationKind;
 	private final RuleSeverityElements eRuleSeverity;
 	private final ModerationModeElements eModerationMode;
 	private final ModerationDecisionElements eModerationDecision;
 	private final ActionKindElements eActionKind;
+	private final TriggerEventElements eTriggerEvent;
+	private final ConditionOperatorElements eConditionOperator;
+	private final ActionResultKindElements eActionResultKind;
+	private final SortCriterionElements eSortCriterion;
+	private final SortDirectionElements eSortDirection;
 	private final EStringElements pEString;
 	private final EBooleanElements pEBoolean;
 	private final EDoubleElements pEDouble;
@@ -2841,19 +3657,29 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		this.pModerationPolicy = new ModerationPolicyElements();
 		this.pAuthorizationRule = new AuthorizationRuleElements();
 		this.pAutomationRule = new AutomationRuleElements();
+		this.pCondition = new ConditionElements();
+		this.pConditionValue = new ConditionValueElements();
+		this.pAction = new ActionElements();
 		this.pVerificationPolicy = new VerificationPolicyElements();
+		this.pSortingPolicy = new SortingPolicyElements();
 		this.eUserKind = new UserKindElements();
 		this.eContextKind = new ContextKindElements();
 		this.ePrimitiveType = new PrimitiveTypeElements();
 		this.eFeedbackKind = new FeedbackKindElements();
 		this.eFeedbackSubjectScope = new FeedbackSubjectScopeElements();
+		this.eFeedbackPolarity = new FeedbackPolarityElements();
 		this.eFeedbackStatus = new FeedbackStatusElements();
-		this.eRatingScaleKind = new RatingScaleKindElements();
+		this.eVerificationRequirement = new VerificationRequirementElements();
 		this.eValidationKind = new ValidationKindElements();
 		this.eRuleSeverity = new RuleSeverityElements();
 		this.eModerationMode = new ModerationModeElements();
 		this.eModerationDecision = new ModerationDecisionElements();
 		this.eActionKind = new ActionKindElements();
+		this.eTriggerEvent = new TriggerEventElements();
+		this.eConditionOperator = new ConditionOperatorElements();
+		this.eActionResultKind = new ActionResultKindElements();
+		this.eSortCriterion = new SortCriterionElements();
+		this.eSortDirection = new SortDirectionElements();
 		this.pEString = new EStringElements();
 		this.pEBoolean = new EBooleanElements();
 		this.pEDouble = new EDoubleElements();
@@ -2901,6 +3727,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//        ('moderationPolicies' '{' moderationPolicies+=ModerationPolicy (',' moderationPolicies+=ModerationPolicy)* '}')?
 	//        ('automationRules' '{' automationRules+=AutomationRule (',' automationRules+=AutomationRule)* '}')?
 	//        ('verificationPolicies' '{' verificationPolicies+=VerificationPolicy (',' verificationPolicies+=VerificationPolicy)* '}')?
+	//        ('sortingPolicies' '{' sortingPolicies+=SortingPolicy (',' sortingPolicies+=SortingPolicy)* '}')?
 	//    '}';
 	public RefModelElements getRefModelAccess() {
 		return pRefModel;
@@ -2984,7 +3811,9 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//    ('subjectScope' subjectScope=FeedbackSubjectScope)?
 	//    ('hasRating' hasRating=EBoolean)?
 	//    ('recursive' recursive=EBoolean)?
-	//    ('allowsMedia' allowsMedia=EBoolean)?;
+	//    ('allowsText' allowsText=EBoolean)?
+	//    ('allowsMedia' allowsMedia=EBoolean)?
+	//    ('polarity' polarity=FeedbackPolarity)?;
 	public FeedbackTypeElements getFeedbackTypeAccess() {
 		return pFeedbackType;
 	}
@@ -2997,11 +3826,11 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//    'FeedbackDefinition' name=EString
 	//    'type' type=[FeedbackType|EString]
 	//    ('requiresVerifiedContext' requiresVerifiedContext=EBoolean)?
+	//    ('verificationRequirement' verificationRequirement=VerificationRequirement)?
 	//    ('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
 	//    'author' author=[UserType|EString]
 	//    ('subjectResource' subjectResource=[ResourceType|EString])?
 	//    ('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
-	//    ('parent' parent=[FeedbackDefinition|EString])?
 	//    ('policy' policy=FeedbackPolicy)?
 	//    ('rating' rating=RatingPolicy)?;
 	public FeedbackDefinitionElements getFeedbackDefinitionAccess() {
@@ -3026,8 +3855,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//    'RatingPolicy'
 	//    'min' minValue=EDouble
 	//    'max' maxValue=EDouble
-	//    ('step' step=EDouble)?
-	//    ('scaleKind' scaleKind=RatingScaleKind)?;
+	//    ('step' step=EDouble)?;
 	public RatingPolicyElements getRatingPolicyAccess() {
 		return pRatingPolicy;
 	}
@@ -3056,7 +3884,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	//ModerationPolicy returns ModerationPolicy:
 	//    'ModerationPolicy' ('name' name=EString)?
 	//    'mode' mode=ModerationMode
-	//    ('trigger' trigger=EString)?
+	//    ('trigger' trigger=TriggerEvent)?
 	//    ('decision' decision=ModerationDecision)?
 	//    'monitorsResource' monitorsResource=[ResourceType|EString]
 	//    'monitorsFeedback' monitorsFeedback=[FeedbackDefinition|EString]
@@ -3071,7 +3899,7 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	}
 	
 	//AuthorizationRule returns AuthorizationRule:
-	//    'AuthorizationRule'
+	//    'AuthorizationRule' ('name' name=EString)?
 	//    'allowedAction' allowedAction=ActionKind
 	//    'actor' actor=[UserType|EString]
 	//    ('context' context=[ContextType|EString])?
@@ -3087,13 +3915,14 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	//AutomationRule returns AutomationRule:
 	//    'AutomationRule' name=EString
-	//    'trigger' trigger=EString
-	//    ('condition' condition=EString)?
-	//    'actionDescription' actionDescription=EString
+	//    'trigger' trigger=TriggerEvent
 	//    ('context' context=[ResourceType|EString])?
 	//    ('inContext' inContext=[ContextType|EString])?
 	//    'onFeedback' onFeedback=[FeedbackDefinition|EString]
-	//    'uses' uses=[ValidationRule|EString];
+	//    'uses' uses=[ValidationRule|EString]
+	//    ('invokedValidationRules' '(' invokedValidationRules+=[ValidationRule|EString] (',' invokedValidationRules+=[ValidationRule|EString])* ')')?
+	//    'conditions' '{' conditions+=Condition (',' conditions+=Condition)* '}'
+	//    'actions' '{' actions+=Action (',' actions+=Action)* '}';
 	public AutomationRuleElements getAutomationRuleAccess() {
 		return pAutomationRule;
 	}
@@ -3102,10 +3931,45 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getAutomationRuleAccess().getRule();
 	}
 	
+	//Condition returns Condition:
+	//    'Condition' name=EString
+	//    'operator' operator=ConditionOperator
+	//    'attribute' attribute=[Attribute|EString]
+	//    ('values' '{' children+=ConditionValue (',' children+=ConditionValue)* '}')?;
+	public ConditionElements getConditionAccess() {
+		return pCondition;
+	}
+	
+	public ParserRule getConditionRule() {
+		return getConditionAccess().getRule();
+	}
+	
+	//ConditionValue returns ConditionValue:
+	//    'value' value=EString;
+	public ConditionValueElements getConditionValueAccess() {
+		return pConditionValue;
+	}
+	
+	public ParserRule getConditionValueRule() {
+		return getConditionValueAccess().getRule();
+	}
+	
+	//Action returns Action:
+	//    'Action' name=EString
+	//    'kind' kind=ActionResultKind
+	//    ('message' message=EString)?;
+	public ActionElements getActionAccess() {
+		return pAction;
+	}
+	
+	public ParserRule getActionRule() {
+		return getActionAccess().getRule();
+	}
+	
 	//VerificationPolicy returns VerificationPolicy:
 	//    'VerificationPolicy' ('name' name=EString)?
 	//    'mode' mode=ValidationKind
-	//    'appliesWhen' appliesWhen=EString
+	//    'appliesWhen' appliesWhen=TriggerEvent
 	//    'verifies' verifies=[FeedbackDefinition|EString];
 	public VerificationPolicyElements getVerificationPolicyAccess() {
 		return pVerificationPolicy;
@@ -3113,6 +3977,21 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	public ParserRule getVerificationPolicyRule() {
 		return getVerificationPolicyAccess().getRule();
+	}
+	
+	//SortingPolicy returns SortingPolicy:
+	//    'SortingPolicy' name=EString
+	//    'criterion' criterion=SortCriterion
+	//    'direction' direction=SortDirection
+	//    ('appliesToResource' appliesToResource=[ResourceType|EString])?
+	//    ('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+	//    ('inContext' inContext=[ContextType|EString])?;
+	public SortingPolicyElements getSortingPolicyAccess() {
+		return pSortingPolicy;
+	}
+	
+	public ParserRule getSortingPolicyRule() {
+		return getSortingPolicyAccess().getRule();
 	}
 	
 	//enum UserKind returns UserKind:
@@ -3167,6 +4046,16 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getFeedbackSubjectScopeAccess().getRule();
 	}
 	
+	//enum FeedbackPolarity returns FeedbackPolarity:
+	//    NONE = 'NONE' | LIKE_DISLIKE = 'LIKE_DISLIKE' | UP_DOWN = 'UP_DOWN' | STARS = 'STARS';
+	public FeedbackPolarityElements getFeedbackPolarityAccess() {
+		return eFeedbackPolarity;
+	}
+	
+	public EnumRule getFeedbackPolarityRule() {
+		return getFeedbackPolarityAccess().getRule();
+	}
+	
 	//enum FeedbackStatus returns FeedbackStatus:
 	//    ENABLED = 'ENABLED' | DISABLED = 'DISABLED';
 	public FeedbackStatusElements getFeedbackStatusAccess() {
@@ -3177,14 +4066,14 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 		return getFeedbackStatusAccess().getRule();
 	}
 	
-	//enum RatingScaleKind returns RatingScaleKind:
-	//    NUMERIC = 'NUMERIC' | ORDINAL = 'ORDINAL' | PERCENTAGE = 'PERCENTAGE';
-	public RatingScaleKindElements getRatingScaleKindAccess() {
-		return eRatingScaleKind;
+	//enum VerificationRequirement returns VerificationRequirement:
+	//    NONE = 'NONE' | OPTIONAL = 'OPTIONAL' | REQUIRED = 'REQUIRED';
+	public VerificationRequirementElements getVerificationRequirementAccess() {
+		return eVerificationRequirement;
 	}
 	
-	public EnumRule getRatingScaleKindRule() {
-		return getRatingScaleKindAccess().getRule();
+	public EnumRule getVerificationRequirementRule() {
+		return getVerificationRequirementAccess().getRule();
 	}
 	
 	//enum ValidationKind returns ValidationKind:
@@ -3237,6 +4126,65 @@ public class RefDslGrammarAccess extends AbstractElementFinder.AbstractGrammarEl
 	
 	public EnumRule getActionKindRule() {
 		return getActionKindAccess().getRule();
+	}
+	
+	//enum TriggerEvent returns TriggerEvent:
+	//    ON_RESOURCE_CREATE = 'ON_RESOURCE_CREATE' | ON_RESOURCE_UPDATE = 'ON_RESOURCE_UPDATE'
+	//    | ON_RESOURCE_DELETE = 'ON_RESOURCE_DELETE' | ON_FEEDBACK_CREATE = 'ON_FEEDBACK_CREATE'
+	//    | ON_FEEDBACK_UPDATE = 'ON_FEEDBACK_UPDATE' | ON_FEEDBACK_DELETE = 'ON_FEEDBACK_DELETE'
+	//    | ON_REPORT_SUBMITTED = 'ON_REPORT_SUBMITTED' | ON_REPORT_THRESHOLD = 'ON_REPORT_THRESHOLD'
+	//    | ON_MANUAL_REQUEST = 'ON_MANUAL_REQUEST';
+	public TriggerEventElements getTriggerEventAccess() {
+		return eTriggerEvent;
+	}
+	
+	public EnumRule getTriggerEventRule() {
+		return getTriggerEventAccess().getRule();
+	}
+	
+	//enum ConditionOperator returns ConditionOperator:
+	//    CONTAINS_KEYWORDS = 'CONTAINS_KEYWORDS' | NOT_CONTAINS_KEYWORDS = 'NOT_CONTAINS_KEYWORDS'
+	//    | MATCH_REGEX = 'MATCH_REGEX' | NOT_MATCH_REGEX = 'NOT_MATCH_REGEX' | HAS_PROPERTY = 'HAS_PROPERTY'
+	//    | NOT_HAS_PROPERTY = 'NOT_HAS_PROPERTY' | HAS_SPECIFIC_PROPERTY = 'HAS_SPECIFIC_PROPERTY'
+	//    | NOT_HAS_SPECIFIC_PROPERTY = 'NOT_HAS_SPECIFIC_PROPERTY';
+	public ConditionOperatorElements getConditionOperatorAccess() {
+		return eConditionOperator;
+	}
+	
+	public EnumRule getConditionOperatorRule() {
+		return getConditionOperatorAccess().getRule();
+	}
+	
+	//enum ActionResultKind returns ActionResultKind:
+	//    DISPLAY_MESSAGE = 'DISPLAY_MESSAGE' | FLAG_CONTENT = 'FLAG_CONTENT' | HIDE_CONTENT = 'HIDE_CONTENT'
+	//    | REMOVE_CONTENT = 'REMOVE_CONTENT' | BLOCK_SUBMISSION = 'BLOCK_SUBMISSION' | NOTIFY_MODERATOR = 'NOTIFY_MODERATOR'
+	//    | AUTO_APPROVE = 'AUTO_APPROVE' | AUTO_REJECT = 'AUTO_REJECT';
+	public ActionResultKindElements getActionResultKindAccess() {
+		return eActionResultKind;
+	}
+	
+	public EnumRule getActionResultKindRule() {
+		return getActionResultKindAccess().getRule();
+	}
+	
+	//enum SortCriterion returns SortCriterion:
+	//    DATE = 'DATE' | VALUE = 'VALUE';
+	public SortCriterionElements getSortCriterionAccess() {
+		return eSortCriterion;
+	}
+	
+	public EnumRule getSortCriterionRule() {
+		return getSortCriterionAccess().getRule();
+	}
+	
+	//enum SortDirection returns SortDirection:
+	//    ASC = 'ASC' | DESC = 'DESC';
+	public SortDirectionElements getSortDirectionAccess() {
+		return eSortDirection;
+	}
+	
+	public EnumRule getSortDirectionRule() {
+		return getSortDirectionAccess().getRule();
 	}
 	
 	//EString returns ecore::EString:

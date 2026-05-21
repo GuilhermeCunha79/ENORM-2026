@@ -117,21 +117,6 @@ public class RefAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseCondition(Condition object) {
-			return createConditionAdapter();
-		}
-
-		@Override
-		public Adapter caseAction(Action object) {
-			return createActionAdapter();
-		}
-
-		@Override
-		public Adapter caseSortingPolicy(SortingPolicy object) {
-			return createSortingPolicyAdapter();
-		}
-
-		@Override
 		public Adapter caseValidationRule(ValidationRule object) {
 			return createValidationRuleAdapter();
 		}
@@ -152,8 +137,28 @@ public class RefAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseCondition(Condition object) {
+			return createConditionAdapter();
+		}
+
+		@Override
+		public Adapter caseConditionValue(ConditionValue object) {
+			return createConditionValueAdapter();
+		}
+
+		@Override
+		public Adapter caseAction(Action object) {
+			return createActionAdapter();
+		}
+
+		@Override
 		public Adapter caseVerificationPolicy(VerificationPolicy object) {
 			return createVerificationPolicyAdapter();
+		}
+
+		@Override
+		public Adapter caseSortingPolicy(SortingPolicy object) {
+			return createSortingPolicyAdapter();
 		}
 
 		@Override
@@ -326,6 +331,20 @@ public class RefAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConditionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link pt.isep.enorm.ref.ref.ConditionValue <em>Condition Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see pt.isep.enorm.ref.ref.ConditionValue
+	 * @generated
+	 */
+	public Adapter createConditionValueAdapter() {
 		return null;
 	}
 

@@ -326,6 +326,29 @@ public class RefItemProviderAdapterFactory extends RefAdapterFactory
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all {@link pt.isep.enorm.ref.ref.ConditionValue} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected ConditionValueItemProvider conditionValueItemProvider;
+
+	/**
+	 * This creates an adapter for a {@link pt.isep.enorm.ref.ref.ConditionValue}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createConditionValueAdapter() {
+		if (conditionValueItemProvider == null) {
+			conditionValueItemProvider = new ConditionValueItemProvider(this);
+		}
+
+		return conditionValueItemProvider;
+	}
+
+	/**
 	 * This keeps track of the one adapter used for all {@link pt.isep.enorm.ref.ref.Action} instances.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -611,12 +634,6 @@ public class RefItemProviderAdapterFactory extends RefAdapterFactory
 			ratingPolicyItemProvider.dispose();
 		if (feedbackDefinitionItemProvider != null)
 			feedbackDefinitionItemProvider.dispose();
-		if (conditionItemProvider != null)
-			conditionItemProvider.dispose();
-		if (actionItemProvider != null)
-			actionItemProvider.dispose();
-		if (sortingPolicyItemProvider != null)
-			sortingPolicyItemProvider.dispose();
 		if (validationRuleItemProvider != null)
 			validationRuleItemProvider.dispose();
 		if (moderationPolicyItemProvider != null)
@@ -625,8 +642,16 @@ public class RefItemProviderAdapterFactory extends RefAdapterFactory
 			authorizationRuleItemProvider.dispose();
 		if (automationRuleItemProvider != null)
 			automationRuleItemProvider.dispose();
+		if (conditionItemProvider != null)
+			conditionItemProvider.dispose();
+		if (conditionValueItemProvider != null)
+			conditionValueItemProvider.dispose();
+		if (actionItemProvider != null)
+			actionItemProvider.dispose();
 		if (verificationPolicyItemProvider != null)
 			verificationPolicyItemProvider.dispose();
+		if (sortingPolicyItemProvider != null)
+			sortingPolicyItemProvider.dispose();
 	}
 
 }

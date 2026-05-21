@@ -18,6 +18,7 @@ import pt.isep.enorm.refdsl.refDsl.ModerationMode;
 import pt.isep.enorm.refdsl.refDsl.ModerationPolicy;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.TriggerEvent;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 
 /**
@@ -90,7 +91,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
    * @generated
    * @ordered
    */
-  protected static final String TRIGGER_EDEFAULT = null;
+  protected static final TriggerEvent TRIGGER_EDEFAULT = TriggerEvent.ON_RESOURCE_CREATE;
 
   /**
    * The cached value of the '{@link #getTrigger() <em>Trigger</em>}' attribute.
@@ -100,7 +101,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
    * @generated
    * @ordered
    */
-  protected String trigger = TRIGGER_EDEFAULT;
+  protected TriggerEvent trigger = TRIGGER_EDEFAULT;
 
   /**
    * The default value of the '{@link #getDecision() <em>Decision</em>}' attribute.
@@ -239,7 +240,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
    * @generated
    */
   @Override
-  public String getTrigger()
+  public TriggerEvent getTrigger()
   {
     return trigger;
   }
@@ -250,10 +251,10 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
    * @generated
    */
   @Override
-  public void setTrigger(String newTrigger)
+  public void setTrigger(TriggerEvent newTrigger)
   {
-    String oldTrigger = trigger;
-    trigger = newTrigger;
+    TriggerEvent oldTrigger = trigger;
+    trigger = newTrigger == null ? TRIGGER_EDEFAULT : newTrigger;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.MODERATION_POLICY__TRIGGER, oldTrigger, trigger));
   }
@@ -514,7 +515,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
         setMode((ModerationMode)newValue);
         return;
       case RefDslPackage.MODERATION_POLICY__TRIGGER:
-        setTrigger((String)newValue);
+        setTrigger((TriggerEvent)newValue);
         return;
       case RefDslPackage.MODERATION_POLICY__DECISION:
         setDecision((ModerationDecision)newValue);
@@ -588,7 +589,7 @@ public class ModerationPolicyImpl extends MinimalEObjectImpl.Container implement
       case RefDslPackage.MODERATION_POLICY__MODE:
         return mode != MODE_EDEFAULT;
       case RefDslPackage.MODERATION_POLICY__TRIGGER:
-        return TRIGGER_EDEFAULT == null ? trigger != null : !TRIGGER_EDEFAULT.equals(trigger);
+        return trigger != TRIGGER_EDEFAULT;
       case RefDslPackage.MODERATION_POLICY__DECISION:
         return decision != DECISION_EDEFAULT;
       case RefDslPackage.MODERATION_POLICY__MONITORS_RESOURCE:

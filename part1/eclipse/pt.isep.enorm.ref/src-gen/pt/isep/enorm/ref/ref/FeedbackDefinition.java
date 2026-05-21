@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getSubjectResource <em>Subject Resource</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getAuthor <em>Author</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getSubjectFeedback <em>Subject Feedback</em>}</li>
- *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getParent <em>Parent</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getPolicy <em>Policy</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getRating <em>Rating</em>}</li>
  * </ul>
@@ -209,28 +208,6 @@ public interface FeedbackDefinition extends EObject {
 	 * @generated
 	 */
 	void setSubjectFeedback(FeedbackDefinition value);
-
-	/**
-	 * Returns the value of the '<em><b>Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Parent</em>' reference.
-	 * @see #setParent(FeedbackDefinition)
-	 * @see pt.isep.enorm.ref.ref.RefPackage#getFeedbackDefinition_Parent()
-	 * @model
-	 * @generated
-	 */
-	FeedbackDefinition getParent();
-
-	/**
-	 * Sets the value of the '{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getParent <em>Parent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Parent</em>' reference.
-	 * @see #getParent()
-	 * @generated
-	 */
-	void setParent(FeedbackDefinition value);
 
 	/**
 	 * Returns the value of the '<em><b>Policy</b></em>' containment reference.

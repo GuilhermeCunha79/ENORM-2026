@@ -19,6 +19,7 @@ RefModel returns RefModel:
 		('moderationPolicies' '{' moderationPolicies+=ModerationPolicy (',' moderationPolicies+=ModerationPolicy)* '}')?
 		('automationRules' '{' automationRules+=AutomationRule (',' automationRules+=AutomationRule)* '}')?
 		('verificationPolicies' '{' verificationPolicies+=VerificationPolicy (',' verificationPolicies+=VerificationPolicy)* '}')?
+		('sortingPolicies' '{' sortingPolicies+=SortingPolicy (',' sortingPolicies+=SortingPolicy)* '}')?
 	'}';
 
 UserType returns UserType:
@@ -60,17 +61,19 @@ FeedbackType returns FeedbackType:
 	('subjectScope' subjectScope=FeedbackSubjectScope)?
 	('hasRating' hasRating=EBoolean)?
 	('recursive' recursive=EBoolean)?
-	('allowsMedia' allowsMedia=EBoolean)?;
+	('allowsText' allowsText=EBoolean)?
+	('allowsMedia' allowsMedia=EBoolean)?
+	('polarity' polarity=FeedbackPolarity)?;
 
 FeedbackDefinition returns FeedbackDefinition:
 	'FeedbackDefinition' name=EString
 	'type' type=[FeedbackType|EString]
 	('requiresVerifiedContext' requiresVerifiedContext=EBoolean)?
+	('verificationRequirement' verificationRequirement=VerificationRequirement)?
 	('uniquePerAuthorTarget' uniquePerAuthorTarget=EBoolean)?
 	'author' author=[UserType|EString]
 	('subjectResource' subjectResource=[ResourceType|EString])?
 	('subjectFeedback' subjectFeedback=[FeedbackDefinition|EString])?
-	('parent' parent=[FeedbackDefinition|EString])?
 	('policy' policy=FeedbackPolicy)?
 	('rating' rating=RatingPolicy)?;
 
@@ -81,8 +84,7 @@ RatingPolicy returns RatingPolicy:
 	'RatingPolicy'
 	'min' minValue=EDouble
 	'max' maxValue=EDouble
-	('step' step=EDouble)?
-	('scaleKind' scaleKind=RatingScaleKind)?;
+	('step' step=EDouble)?;
 
 ValidationRule returns ValidationRule:
 	'ValidationRule' ('name' name=EString)?
@@ -97,7 +99,7 @@ ValidationRule returns ValidationRule:
 ModerationPolicy returns ModerationPolicy:
 	'ModerationPolicy' ('name' name=EString)?
 	'mode' mode=ModerationMode
-	('trigger' trigger=EString)?
+	('trigger' trigger=TriggerEvent)?
 	('decision' decision=ModerationDecision)?
 	'monitorsResource' monitorsResource=[ResourceType|EString]
 	'monitorsFeedback' monitorsFeedback=[FeedbackDefinition|EString]
@@ -105,7 +107,7 @@ ModerationPolicy returns ModerationPolicy:
 	('inContext' inContext=[ContextType|EString])?;
 
 AuthorizationRule returns AuthorizationRule:
-	'AuthorizationRule'
+	'AuthorizationRule' ('name' name=EString)?
 	'allowedAction' allowedAction=ActionKind
 	'actor' actor=[UserType|EString]
 	('context' context=[ContextType|EString])?
@@ -114,19 +116,42 @@ AuthorizationRule returns AuthorizationRule:
 
 AutomationRule returns AutomationRule:
 	'AutomationRule' name=EString
-	'trigger' trigger=EString
-	('condition' condition=EString)?
-	'actionDescription' actionDescription=EString
+	'trigger' trigger=TriggerEvent
 	('context' context=[ResourceType|EString])?
 	('inContext' inContext=[ContextType|EString])?
 	'onFeedback' onFeedback=[FeedbackDefinition|EString]
-	'uses' uses=[ValidationRule|EString];
+	'uses' uses=[ValidationRule|EString]
+	('invokedValidationRules' '(' invokedValidationRules+=[ValidationRule|EString] (',' invokedValidationRules+=[ValidationRule|EString])* ')')?
+	'conditions' '{' conditions+=Condition (',' conditions+=Condition)* '}'
+	'actions' '{' actions+=Action (',' actions+=Action)* '}';
+
+Condition returns Condition:
+	'Condition' name=EString
+	'operator' operator=ConditionOperator
+	'attribute' attribute=[Attribute|EString]
+	('values' '{' children+=ConditionValue (',' children+=ConditionValue)* '}')?;
+
+ConditionValue returns ConditionValue:
+	'value' value=EString;
+
+Action returns Action:
+	'Action' name=EString
+	'kind' kind=ActionResultKind
+	('message' message=EString)?;
 
 VerificationPolicy returns VerificationPolicy:
 	'VerificationPolicy' ('name' name=EString)?
 	'mode' mode=ValidationKind
-	'appliesWhen' appliesWhen=EString
+	'appliesWhen' appliesWhen=TriggerEvent
 	'verifies' verifies=[FeedbackDefinition|EString];
+
+SortingPolicy returns SortingPolicy:
+	'SortingPolicy' name=EString
+	'criterion' criterion=SortCriterion
+	'direction' direction=SortDirection
+	('appliesToResource' appliesToResource=[ResourceType|EString])?
+	('appliesToFeedback' appliesToFeedback=[FeedbackDefinition|EString])?
+	('inContext' inContext=[ContextType|EString])?;
 
 enum UserKind returns UserKind:
 	GENERIC = 'GENERIC' | BUYER = 'BUYER' | SELLER = 'SELLER' | CREATOR = 'CREATOR' | MODERATOR = 'MODERATOR';
@@ -145,11 +170,14 @@ enum FeedbackKind returns FeedbackKind:
 enum FeedbackSubjectScope returns FeedbackSubjectScope:
 	RESOURCE_ONLY = 'RESOURCE_ONLY' | FEEDBACK_ONLY = 'FEEDBACK_ONLY' | RESOURCE_OR_FEEDBACK = 'RESOURCE_OR_FEEDBACK';
 
+enum FeedbackPolarity returns FeedbackPolarity:
+	NONE = 'NONE' | LIKE_DISLIKE = 'LIKE_DISLIKE' | UP_DOWN = 'UP_DOWN' | STARS = 'STARS';
+
 enum FeedbackStatus returns FeedbackStatus:
 	ENABLED = 'ENABLED' | DISABLED = 'DISABLED';
 
-enum RatingScaleKind returns RatingScaleKind:
-	NUMERIC = 'NUMERIC' | ORDINAL = 'ORDINAL' | PERCENTAGE = 'PERCENTAGE';
+enum VerificationRequirement returns VerificationRequirement:
+	NONE = 'NONE' | OPTIONAL = 'OPTIONAL' | REQUIRED = 'REQUIRED';
 
 enum ValidationKind returns ValidationKind:
 	AUTOMATIC = 'AUTOMATIC' | MANUAL = 'MANUAL';
@@ -167,6 +195,30 @@ enum ModerationDecision returns ModerationDecision:
 enum ActionKind returns ActionKind:
 	READ = 'READ' | CREATE = 'CREATE' | UPDATE = 'UPDATE' | DELETE = 'DELETE' | COMMENT = 'COMMENT' | RATE = 'RATE'
 	| VOTE = 'VOTE' | REPORT = 'REPORT' | SUBSCRIBE = 'SUBSCRIBE' | MODERATE = 'MODERATE' | VALIDATE = 'VALIDATE';
+
+enum TriggerEvent returns TriggerEvent:
+	ON_RESOURCE_CREATE = 'ON_RESOURCE_CREATE' | ON_RESOURCE_UPDATE = 'ON_RESOURCE_UPDATE'
+	| ON_RESOURCE_DELETE = 'ON_RESOURCE_DELETE' | ON_FEEDBACK_CREATE = 'ON_FEEDBACK_CREATE'
+	| ON_FEEDBACK_UPDATE = 'ON_FEEDBACK_UPDATE' | ON_FEEDBACK_DELETE = 'ON_FEEDBACK_DELETE'
+	| ON_REPORT_SUBMITTED = 'ON_REPORT_SUBMITTED' | ON_REPORT_THRESHOLD = 'ON_REPORT_THRESHOLD'
+	| ON_MANUAL_REQUEST = 'ON_MANUAL_REQUEST';
+
+enum ConditionOperator returns ConditionOperator:
+	CONTAINS_KEYWORDS = 'CONTAINS_KEYWORDS' | NOT_CONTAINS_KEYWORDS = 'NOT_CONTAINS_KEYWORDS'
+	| MATCH_REGEX = 'MATCH_REGEX' | NOT_MATCH_REGEX = 'NOT_MATCH_REGEX' | HAS_PROPERTY = 'HAS_PROPERTY'
+	| NOT_HAS_PROPERTY = 'NOT_HAS_PROPERTY' | HAS_SPECIFIC_PROPERTY = 'HAS_SPECIFIC_PROPERTY'
+	| NOT_HAS_SPECIFIC_PROPERTY = 'NOT_HAS_SPECIFIC_PROPERTY';
+
+enum ActionResultKind returns ActionResultKind:
+	DISPLAY_MESSAGE = 'DISPLAY_MESSAGE' | FLAG_CONTENT = 'FLAG_CONTENT' | HIDE_CONTENT = 'HIDE_CONTENT'
+	| REMOVE_CONTENT = 'REMOVE_CONTENT' | BLOCK_SUBMISSION = 'BLOCK_SUBMISSION' | NOTIFY_MODERATOR = 'NOTIFY_MODERATOR'
+	| AUTO_APPROVE = 'AUTO_APPROVE' | AUTO_REJECT = 'AUTO_REJECT';
+
+enum SortCriterion returns SortCriterion:
+	DATE = 'DATE' | VALUE = 'VALUE';
+
+enum SortDirection returns SortDirection:
+	ASC = 'ASC' | DESC = 'DESC';
 
 EString returns ecore::EString:
 	STRING | ID;

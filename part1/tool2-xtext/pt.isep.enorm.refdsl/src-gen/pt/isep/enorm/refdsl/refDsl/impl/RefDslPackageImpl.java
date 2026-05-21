@@ -11,14 +11,20 @@ import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import pt.isep.enorm.refdsl.refDsl.Action;
 import pt.isep.enorm.refdsl.refDsl.ActionKind;
+import pt.isep.enorm.refdsl.refDsl.ActionResultKind;
 import pt.isep.enorm.refdsl.refDsl.Attribute;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.Condition;
+import pt.isep.enorm.refdsl.refDsl.ConditionOperator;
+import pt.isep.enorm.refdsl.refDsl.ConditionValue;
 import pt.isep.enorm.refdsl.refDsl.ContextKind;
 import pt.isep.enorm.refdsl.refDsl.ContextType;
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.FeedbackKind;
+import pt.isep.enorm.refdsl.refDsl.FeedbackPolarity;
 import pt.isep.enorm.refdsl.refDsl.FeedbackPolicy;
 import pt.isep.enorm.refdsl.refDsl.FeedbackStatus;
 import pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope;
@@ -28,18 +34,22 @@ import pt.isep.enorm.refdsl.refDsl.ModerationMode;
 import pt.isep.enorm.refdsl.refDsl.ModerationPolicy;
 import pt.isep.enorm.refdsl.refDsl.PrimitiveType;
 import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
-import pt.isep.enorm.refdsl.refDsl.RatingScaleKind;
 import pt.isep.enorm.refdsl.refDsl.RefDslFactory;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.RefModel;
 import pt.isep.enorm.refdsl.refDsl.ResourceRelation;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
 import pt.isep.enorm.refdsl.refDsl.RuleSeverity;
+import pt.isep.enorm.refdsl.refDsl.SortCriterion;
+import pt.isep.enorm.refdsl.refDsl.SortDirection;
+import pt.isep.enorm.refdsl.refDsl.SortingPolicy;
+import pt.isep.enorm.refdsl.refDsl.TriggerEvent;
 import pt.isep.enorm.refdsl.refDsl.UserKind;
 import pt.isep.enorm.refdsl.refDsl.UserType;
 import pt.isep.enorm.refdsl.refDsl.ValidationKind;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
+import pt.isep.enorm.refdsl.refDsl.VerificationRequirement;
 
 /**
  * <!-- begin-user-doc -->
@@ -152,7 +162,35 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass conditionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass conditionValueEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass actionEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass verificationPolicyEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass sortingPolicyEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -194,6 +232,13 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EEnum feedbackPolarityEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EEnum feedbackStatusEEnum = null;
 
   /**
@@ -201,7 +246,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EEnum ratingScaleKindEEnum = null;
+  private EEnum verificationRequirementEEnum = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -237,6 +282,41 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   private EEnum actionKindEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EEnum triggerEventEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EEnum conditionOperatorEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EEnum actionResultKindEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EEnum sortCriterionEEnum = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EEnum sortDirectionEEnum = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -452,6 +532,17 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
   public EReference getRefModel_VerificationPolicies()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(12);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getRefModel_SortingPolicies()
+  {
+    return (EReference)refModelEClass.getEStructuralFeatures().get(13);
   }
 
   /**
@@ -812,9 +903,31 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EAttribute getFeedbackType_AllowsMedia()
+  public EAttribute getFeedbackType_AllowsText()
   {
     return (EAttribute)feedbackTypeEClass.getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getFeedbackType_AllowsMedia()
+  {
+    return (EAttribute)feedbackTypeEClass.getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getFeedbackType_Polarity()
+  {
+    return (EAttribute)feedbackTypeEClass.getEStructuralFeatures().get(7);
   }
 
   /**
@@ -867,7 +980,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EAttribute getFeedbackDefinition_UniquePerAuthorTarget()
+  public EAttribute getFeedbackDefinition_VerificationRequirement()
   {
     return (EAttribute)feedbackDefinitionEClass.getEStructuralFeatures().get(3);
   }
@@ -878,9 +991,9 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getFeedbackDefinition_Author()
+  public EAttribute getFeedbackDefinition_UniquePerAuthorTarget()
   {
-    return (EReference)feedbackDefinitionEClass.getEStructuralFeatures().get(4);
+    return (EAttribute)feedbackDefinitionEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -889,7 +1002,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getFeedbackDefinition_SubjectResource()
+  public EReference getFeedbackDefinition_Author()
   {
     return (EReference)feedbackDefinitionEClass.getEStructuralFeatures().get(5);
   }
@@ -900,7 +1013,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getFeedbackDefinition_SubjectFeedback()
+  public EReference getFeedbackDefinition_SubjectResource()
   {
     return (EReference)feedbackDefinitionEClass.getEStructuralFeatures().get(6);
   }
@@ -911,7 +1024,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getFeedbackDefinition_Parent()
+  public EReference getFeedbackDefinition_SubjectFeedback()
   {
     return (EReference)feedbackDefinitionEClass.getEStructuralFeatures().get(7);
   }
@@ -1002,17 +1115,6 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
   public EAttribute getRatingPolicy_Step()
   {
     return (EAttribute)ratingPolicyEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EAttribute getRatingPolicy_ScaleKind()
-  {
-    return (EAttribute)ratingPolicyEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1230,7 +1332,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EAttribute getAuthorizationRule_AllowedAction()
+  public EAttribute getAuthorizationRule_Name()
   {
     return (EAttribute)authorizationRuleEClass.getEStructuralFeatures().get(0);
   }
@@ -1241,9 +1343,9 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getAuthorizationRule_Actor()
+  public EAttribute getAuthorizationRule_AllowedAction()
   {
-    return (EReference)authorizationRuleEClass.getEStructuralFeatures().get(1);
+    return (EAttribute)authorizationRuleEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1252,7 +1354,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getAuthorizationRule_Context()
+  public EReference getAuthorizationRule_Actor()
   {
     return (EReference)authorizationRuleEClass.getEStructuralFeatures().get(2);
   }
@@ -1263,7 +1365,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getAuthorizationRule_ResourceTarget()
+  public EReference getAuthorizationRule_Context()
   {
     return (EReference)authorizationRuleEClass.getEStructuralFeatures().get(3);
   }
@@ -1274,9 +1376,20 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getAuthorizationRule_FeedbackTarget()
+  public EReference getAuthorizationRule_ResourceTarget()
   {
     return (EReference)authorizationRuleEClass.getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getAuthorizationRule_FeedbackTarget()
+  {
+    return (EReference)authorizationRuleEClass.getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1318,31 +1431,9 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EAttribute getAutomationRule_Condition()
-  {
-    return (EAttribute)automationRuleEClass.getEStructuralFeatures().get(2);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public EAttribute getAutomationRule_ActionDescription()
-  {
-    return (EAttribute)automationRuleEClass.getEStructuralFeatures().get(3);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
   public EReference getAutomationRule_Context()
   {
-    return (EReference)automationRuleEClass.getEStructuralFeatures().get(4);
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1353,7 +1444,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
   @Override
   public EReference getAutomationRule_InContext()
   {
-    return (EReference)automationRuleEClass.getEStructuralFeatures().get(5);
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1364,7 +1455,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
   @Override
   public EReference getAutomationRule_OnFeedback()
   {
-    return (EReference)automationRuleEClass.getEStructuralFeatures().get(6);
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1375,7 +1466,161 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
   @Override
   public EReference getAutomationRule_Uses()
   {
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getAutomationRule_InvokedValidationRules()
+  {
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getAutomationRule_Conditions()
+  {
     return (EReference)automationRuleEClass.getEStructuralFeatures().get(7);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getAutomationRule_Actions()
+  {
+    return (EReference)automationRuleEClass.getEStructuralFeatures().get(8);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getCondition()
+  {
+    return conditionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getCondition_Name()
+  {
+    return (EAttribute)conditionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getCondition_Operator()
+  {
+    return (EAttribute)conditionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getCondition_Attribute()
+  {
+    return (EReference)conditionEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getCondition_Children()
+  {
+    return (EReference)conditionEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getConditionValue()
+  {
+    return conditionValueEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getConditionValue_Value()
+  {
+    return (EAttribute)conditionValueEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EClass getAction()
+  {
+    return actionEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getAction_Name()
+  {
+    return (EAttribute)actionEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getAction_Kind()
+  {
+    return (EAttribute)actionEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getAction_Message()
+  {
+    return (EAttribute)actionEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1439,6 +1684,83 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
+  public EClass getSortingPolicy()
+  {
+    return sortingPolicyEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getSortingPolicy_Name()
+  {
+    return (EAttribute)sortingPolicyEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getSortingPolicy_Criterion()
+  {
+    return (EAttribute)sortingPolicyEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EAttribute getSortingPolicy_Direction()
+  {
+    return (EAttribute)sortingPolicyEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSortingPolicy_AppliesToResource()
+  {
+    return (EReference)sortingPolicyEClass.getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSortingPolicy_AppliesToFeedback()
+  {
+    return (EReference)sortingPolicyEClass.getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getSortingPolicy_InContext()
+  {
+    return (EReference)sortingPolicyEClass.getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EEnum getUserKind()
   {
     return userKindEEnum;
@@ -1494,6 +1816,17 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
+  public EEnum getFeedbackPolarity()
+  {
+    return feedbackPolarityEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public EEnum getFeedbackStatus()
   {
     return feedbackStatusEEnum;
@@ -1505,9 +1838,9 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EEnum getRatingScaleKind()
+  public EEnum getVerificationRequirement()
   {
-    return ratingScaleKindEEnum;
+    return verificationRequirementEEnum;
   }
 
   /**
@@ -1571,6 +1904,61 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
+  public EEnum getTriggerEvent()
+  {
+    return triggerEventEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EEnum getConditionOperator()
+  {
+    return conditionOperatorEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EEnum getActionResultKind()
+  {
+    return actionResultKindEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EEnum getSortCriterion()
+  {
+    return sortCriterionEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EEnum getSortDirection()
+  {
+    return sortDirectionEEnum;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public RefDslFactory getRefDslFactory()
   {
     return (RefDslFactory)getEFactoryInstance();
@@ -1610,6 +1998,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     createEReference(refModelEClass, REF_MODEL__MODERATION_POLICIES);
     createEReference(refModelEClass, REF_MODEL__AUTOMATION_RULES);
     createEReference(refModelEClass, REF_MODEL__VERIFICATION_POLICIES);
+    createEReference(refModelEClass, REF_MODEL__SORTING_POLICIES);
 
     userTypeEClass = createEClass(USER_TYPE);
     createEAttribute(userTypeEClass, USER_TYPE__NAME);
@@ -1648,17 +2037,19 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__SUBJECT_SCOPE);
     createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__HAS_RATING);
     createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__RECURSIVE);
+    createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__ALLOWS_TEXT);
     createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__ALLOWS_MEDIA);
+    createEAttribute(feedbackTypeEClass, FEEDBACK_TYPE__POLARITY);
 
     feedbackDefinitionEClass = createEClass(FEEDBACK_DEFINITION);
     createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__NAME);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__TYPE);
     createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT);
+    createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT);
     createEAttribute(feedbackDefinitionEClass, FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__AUTHOR);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__SUBJECT_RESOURCE);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__SUBJECT_FEEDBACK);
-    createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__PARENT);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__POLICY);
     createEReference(feedbackDefinitionEClass, FEEDBACK_DEFINITION__RATING);
 
@@ -1669,7 +2060,6 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     createEAttribute(ratingPolicyEClass, RATING_POLICY__MIN_VALUE);
     createEAttribute(ratingPolicyEClass, RATING_POLICY__MAX_VALUE);
     createEAttribute(ratingPolicyEClass, RATING_POLICY__STEP);
-    createEAttribute(ratingPolicyEClass, RATING_POLICY__SCALE_KIND);
 
     validationRuleEClass = createEClass(VALIDATION_RULE);
     createEAttribute(validationRuleEClass, VALIDATION_RULE__NAME);
@@ -1692,6 +2082,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     createEReference(moderationPolicyEClass, MODERATION_POLICY__IN_CONTEXT);
 
     authorizationRuleEClass = createEClass(AUTHORIZATION_RULE);
+    createEAttribute(authorizationRuleEClass, AUTHORIZATION_RULE__NAME);
     createEAttribute(authorizationRuleEClass, AUTHORIZATION_RULE__ALLOWED_ACTION);
     createEReference(authorizationRuleEClass, AUTHORIZATION_RULE__ACTOR);
     createEReference(authorizationRuleEClass, AUTHORIZATION_RULE__CONTEXT);
@@ -1701,12 +2092,27 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     automationRuleEClass = createEClass(AUTOMATION_RULE);
     createEAttribute(automationRuleEClass, AUTOMATION_RULE__NAME);
     createEAttribute(automationRuleEClass, AUTOMATION_RULE__TRIGGER);
-    createEAttribute(automationRuleEClass, AUTOMATION_RULE__CONDITION);
-    createEAttribute(automationRuleEClass, AUTOMATION_RULE__ACTION_DESCRIPTION);
     createEReference(automationRuleEClass, AUTOMATION_RULE__CONTEXT);
     createEReference(automationRuleEClass, AUTOMATION_RULE__IN_CONTEXT);
     createEReference(automationRuleEClass, AUTOMATION_RULE__ON_FEEDBACK);
     createEReference(automationRuleEClass, AUTOMATION_RULE__USES);
+    createEReference(automationRuleEClass, AUTOMATION_RULE__INVOKED_VALIDATION_RULES);
+    createEReference(automationRuleEClass, AUTOMATION_RULE__CONDITIONS);
+    createEReference(automationRuleEClass, AUTOMATION_RULE__ACTIONS);
+
+    conditionEClass = createEClass(CONDITION);
+    createEAttribute(conditionEClass, CONDITION__NAME);
+    createEAttribute(conditionEClass, CONDITION__OPERATOR);
+    createEReference(conditionEClass, CONDITION__ATTRIBUTE);
+    createEReference(conditionEClass, CONDITION__CHILDREN);
+
+    conditionValueEClass = createEClass(CONDITION_VALUE);
+    createEAttribute(conditionValueEClass, CONDITION_VALUE__VALUE);
+
+    actionEClass = createEClass(ACTION);
+    createEAttribute(actionEClass, ACTION__NAME);
+    createEAttribute(actionEClass, ACTION__KIND);
+    createEAttribute(actionEClass, ACTION__MESSAGE);
 
     verificationPolicyEClass = createEClass(VERIFICATION_POLICY);
     createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__NAME);
@@ -1714,19 +2120,33 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     createEAttribute(verificationPolicyEClass, VERIFICATION_POLICY__APPLIES_WHEN);
     createEReference(verificationPolicyEClass, VERIFICATION_POLICY__VERIFIES);
 
+    sortingPolicyEClass = createEClass(SORTING_POLICY);
+    createEAttribute(sortingPolicyEClass, SORTING_POLICY__NAME);
+    createEAttribute(sortingPolicyEClass, SORTING_POLICY__CRITERION);
+    createEAttribute(sortingPolicyEClass, SORTING_POLICY__DIRECTION);
+    createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_RESOURCE);
+    createEReference(sortingPolicyEClass, SORTING_POLICY__APPLIES_TO_FEEDBACK);
+    createEReference(sortingPolicyEClass, SORTING_POLICY__IN_CONTEXT);
+
     // Create enums
     userKindEEnum = createEEnum(USER_KIND);
     contextKindEEnum = createEEnum(CONTEXT_KIND);
     primitiveTypeEEnum = createEEnum(PRIMITIVE_TYPE);
     feedbackKindEEnum = createEEnum(FEEDBACK_KIND);
     feedbackSubjectScopeEEnum = createEEnum(FEEDBACK_SUBJECT_SCOPE);
+    feedbackPolarityEEnum = createEEnum(FEEDBACK_POLARITY);
     feedbackStatusEEnum = createEEnum(FEEDBACK_STATUS);
-    ratingScaleKindEEnum = createEEnum(RATING_SCALE_KIND);
+    verificationRequirementEEnum = createEEnum(VERIFICATION_REQUIREMENT);
     validationKindEEnum = createEEnum(VALIDATION_KIND);
     ruleSeverityEEnum = createEEnum(RULE_SEVERITY);
     moderationModeEEnum = createEEnum(MODERATION_MODE);
     moderationDecisionEEnum = createEEnum(MODERATION_DECISION);
     actionKindEEnum = createEEnum(ACTION_KIND);
+    triggerEventEEnum = createEEnum(TRIGGER_EVENT);
+    conditionOperatorEEnum = createEEnum(CONDITION_OPERATOR);
+    actionResultKindEEnum = createEEnum(ACTION_RESULT_KIND);
+    sortCriterionEEnum = createEEnum(SORT_CRITERION);
+    sortDirectionEEnum = createEEnum(SORT_DIRECTION);
   }
 
   /**
@@ -1774,6 +2194,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEReference(getRefModel_ModerationPolicies(), this.getModerationPolicy(), null, "moderationPolicies", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRefModel_AutomationRules(), this.getAutomationRule(), null, "automationRules", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRefModel_VerificationPolicies(), this.getVerificationPolicy(), null, "verificationPolicies", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getRefModel_SortingPolicies(), this.getSortingPolicy(), null, "sortingPolicies", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(userTypeEClass, UserType.class, "UserType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getUserType_Name(), ecorePackage.getEString(), "name", null, 0, 1, UserType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1812,17 +2233,19 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEAttribute(getFeedbackType_SubjectScope(), this.getFeedbackSubjectScope(), "subjectScope", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeedbackType_HasRating(), ecorePackage.getEBoolean(), "hasRating", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeedbackType_Recursive(), ecorePackage.getEBoolean(), "recursive", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeedbackType_AllowsText(), ecorePackage.getEBoolean(), "allowsText", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeedbackType_AllowsMedia(), ecorePackage.getEBoolean(), "allowsMedia", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeedbackType_Polarity(), this.getFeedbackPolarity(), "polarity", null, 0, 1, FeedbackType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(feedbackDefinitionEClass, FeedbackDefinition.class, "FeedbackDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getFeedbackDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_Type(), this.getFeedbackType(), null, "type", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeedbackDefinition_RequiresVerifiedContext(), ecorePackage.getEBoolean(), "requiresVerifiedContext", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getFeedbackDefinition_VerificationRequirement(), this.getVerificationRequirement(), "verificationRequirement", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getFeedbackDefinition_UniquePerAuthorTarget(), ecorePackage.getEBoolean(), "uniquePerAuthorTarget", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_Author(), this.getUserType(), null, "author", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_SubjectResource(), this.getResourceType(), null, "subjectResource", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_SubjectFeedback(), this.getFeedbackDefinition(), null, "subjectFeedback", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFeedbackDefinition_Parent(), this.getFeedbackDefinition(), null, "parent", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_Policy(), this.getFeedbackPolicy(), null, "policy", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getFeedbackDefinition_Rating(), this.getRatingPolicy(), null, "rating", null, 0, 1, FeedbackDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -1833,7 +2256,6 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEAttribute(getRatingPolicy_MinValue(), ecorePackage.getEDouble(), "minValue", null, 0, 1, RatingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRatingPolicy_MaxValue(), ecorePackage.getEDouble(), "maxValue", null, 0, 1, RatingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRatingPolicy_Step(), ecorePackage.getEDouble(), "step", null, 0, 1, RatingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getRatingPolicy_ScaleKind(), this.getRatingScaleKind(), "scaleKind", null, 0, 1, RatingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(validationRuleEClass, ValidationRule.class, "ValidationRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getValidationRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, ValidationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1848,7 +2270,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEClass(moderationPolicyEClass, ModerationPolicy.class, "ModerationPolicy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getModerationPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getModerationPolicy_Mode(), this.getModerationMode(), "mode", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getModerationPolicy_Trigger(), ecorePackage.getEString(), "trigger", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getModerationPolicy_Trigger(), this.getTriggerEvent(), "trigger", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getModerationPolicy_Decision(), this.getModerationDecision(), "decision", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getModerationPolicy_MonitorsResource(), this.getResourceType(), null, "monitorsResource", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getModerationPolicy_MonitorsFeedback(), this.getFeedbackDefinition(), null, "monitorsFeedback", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1856,6 +2278,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEReference(getModerationPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1, ModerationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(authorizationRuleEClass, AuthorizationRule.class, "AuthorizationRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAuthorizationRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getAuthorizationRule_AllowedAction(), this.getActionKind(), "allowedAction", null, 0, 1, AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAuthorizationRule_Actor(), this.getUserType(), null, "actor", null, 0, 1, AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAuthorizationRule_Context(), this.getContextType(), null, "context", null, 0, 1, AuthorizationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1864,19 +2287,42 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
 
     initEClass(automationRuleEClass, AutomationRule.class, "AutomationRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getAutomationRule_Name(), ecorePackage.getEString(), "name", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAutomationRule_Trigger(), ecorePackage.getEString(), "trigger", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAutomationRule_Condition(), ecorePackage.getEString(), "condition", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAutomationRule_ActionDescription(), ecorePackage.getEString(), "actionDescription", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAutomationRule_Trigger(), this.getTriggerEvent(), "trigger", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAutomationRule_Context(), this.getResourceType(), null, "context", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAutomationRule_InContext(), this.getContextType(), null, "inContext", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAutomationRule_OnFeedback(), this.getFeedbackDefinition(), null, "onFeedback", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getAutomationRule_Uses(), this.getValidationRule(), null, "uses", null, 0, 1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAutomationRule_InvokedValidationRules(), this.getValidationRule(), null, "invokedValidationRules", null, 0, -1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAutomationRule_Conditions(), this.getCondition(), null, "conditions", null, 0, -1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getAutomationRule_Actions(), this.getAction(), null, "actions", null, 0, -1, AutomationRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(conditionEClass, Condition.class, "Condition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getCondition_Name(), ecorePackage.getEString(), "name", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getCondition_Operator(), this.getConditionOperator(), "operator", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCondition_Attribute(), this.getAttribute(), null, "attribute", null, 0, 1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCondition_Children(), this.getConditionValue(), null, "children", null, 0, -1, Condition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(conditionValueEClass, ConditionValue.class, "ConditionValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getConditionValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, ConditionValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getAction_Name(), ecorePackage.getEString(), "name", null, 0, 1, Action.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAction_Kind(), this.getActionResultKind(), "kind", null, 0, 1, Action.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getAction_Message(), ecorePackage.getEString(), "message", null, 0, 1, Action.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(verificationPolicyEClass, VerificationPolicy.class, "VerificationPolicy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getVerificationPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getVerificationPolicy_Mode(), this.getValidationKind(), "mode", null, 0, 1, VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getVerificationPolicy_AppliesWhen(), ecorePackage.getEString(), "appliesWhen", null, 0, 1, VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getVerificationPolicy_AppliesWhen(), this.getTriggerEvent(), "appliesWhen", null, 0, 1, VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getVerificationPolicy_Verifies(), this.getFeedbackDefinition(), null, "verifies", null, 0, 1, VerificationPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(sortingPolicyEClass, SortingPolicy.class, "SortingPolicy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getSortingPolicy_Name(), ecorePackage.getEString(), "name", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSortingPolicy_Criterion(), this.getSortCriterion(), "criterion", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getSortingPolicy_Direction(), this.getSortDirection(), "direction", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSortingPolicy_AppliesToResource(), this.getResourceType(), null, "appliesToResource", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSortingPolicy_AppliesToFeedback(), this.getFeedbackDefinition(), null, "appliesToFeedback", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getSortingPolicy_InContext(), this.getContextType(), null, "inContext", null, 0, 1, SortingPolicy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(userKindEEnum, UserKind.class, "UserKind");
@@ -1915,14 +2361,20 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.FEEDBACK_ONLY);
     addEEnumLiteral(feedbackSubjectScopeEEnum, FeedbackSubjectScope.RESOURCE_OR_FEEDBACK);
 
+    initEEnum(feedbackPolarityEEnum, FeedbackPolarity.class, "FeedbackPolarity");
+    addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.NONE);
+    addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.LIKE_DISLIKE);
+    addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.UP_DOWN);
+    addEEnumLiteral(feedbackPolarityEEnum, FeedbackPolarity.STARS);
+
     initEEnum(feedbackStatusEEnum, FeedbackStatus.class, "FeedbackStatus");
     addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.ENABLED);
     addEEnumLiteral(feedbackStatusEEnum, FeedbackStatus.DISABLED);
 
-    initEEnum(ratingScaleKindEEnum, RatingScaleKind.class, "RatingScaleKind");
-    addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.NUMERIC);
-    addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.ORDINAL);
-    addEEnumLiteral(ratingScaleKindEEnum, RatingScaleKind.PERCENTAGE);
+    initEEnum(verificationRequirementEEnum, VerificationRequirement.class, "VerificationRequirement");
+    addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.NONE);
+    addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.OPTIONAL);
+    addEEnumLiteral(verificationRequirementEEnum, VerificationRequirement.REQUIRED);
 
     initEEnum(validationKindEEnum, ValidationKind.class, "ValidationKind");
     addEEnumLiteral(validationKindEEnum, ValidationKind.AUTOMATIC);
@@ -1958,6 +2410,45 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     addEEnumLiteral(actionKindEEnum, ActionKind.SUBSCRIBE);
     addEEnumLiteral(actionKindEEnum, ActionKind.MODERATE);
     addEEnumLiteral(actionKindEEnum, ActionKind.VALIDATE);
+
+    initEEnum(triggerEventEEnum, TriggerEvent.class, "TriggerEvent");
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_CREATE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_UPDATE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_RESOURCE_DELETE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_CREATE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_UPDATE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_FEEDBACK_DELETE);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_REPORT_SUBMITTED);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_REPORT_THRESHOLD);
+    addEEnumLiteral(triggerEventEEnum, TriggerEvent.ON_MANUAL_REQUEST);
+
+    initEEnum(conditionOperatorEEnum, ConditionOperator.class, "ConditionOperator");
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.CONTAINS_KEYWORDS);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_CONTAINS_KEYWORDS);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.MATCH_REGEX);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_MATCH_REGEX);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.HAS_PROPERTY);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_HAS_PROPERTY);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.HAS_SPECIFIC_PROPERTY);
+    addEEnumLiteral(conditionOperatorEEnum, ConditionOperator.NOT_HAS_SPECIFIC_PROPERTY);
+
+    initEEnum(actionResultKindEEnum, ActionResultKind.class, "ActionResultKind");
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.DISPLAY_MESSAGE);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.FLAG_CONTENT);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.HIDE_CONTENT);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.REMOVE_CONTENT);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.BLOCK_SUBMISSION);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.NOTIFY_MODERATOR);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.AUTO_APPROVE);
+    addEEnumLiteral(actionResultKindEEnum, ActionResultKind.AUTO_REJECT);
+
+    initEEnum(sortCriterionEEnum, SortCriterion.class, "SortCriterion");
+    addEEnumLiteral(sortCriterionEEnum, SortCriterion.DATE);
+    addEEnumLiteral(sortCriterionEEnum, SortCriterion.VALUE);
+
+    initEEnum(sortDirectionEEnum, SortDirection.class, "SortDirection");
+    addEEnumLiteral(sortDirectionEEnum, SortDirection.ASC);
+    addEEnumLiteral(sortDirectionEEnum, SortDirection.DESC);
 
     // Create resource
     createResource(eNS_URI);

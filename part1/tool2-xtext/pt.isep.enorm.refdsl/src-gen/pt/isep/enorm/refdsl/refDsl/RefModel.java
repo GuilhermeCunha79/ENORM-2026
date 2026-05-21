@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getModerationPolicies <em>Moderation Policies</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getAutomationRules <em>Automation Rules</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getVerificationPolicies <em>Verification Policies</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getSortingPolicies <em>Sorting Policies</em>}</li>
  * </ul>
  *
  * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRefModel()
@@ -212,5 +213,17 @@ public interface RefModel extends EObject
    * @generated
    */
   EList<VerificationPolicy> getVerificationPolicies();
+
+  /**
+   * Returns the value of the '<em><b>Sorting Policies</b></em>' containment reference list.
+   * The list contents are of type {@link pt.isep.enorm.refdsl.refDsl.SortingPolicy}.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Sorting Policies</em>' containment reference list.
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRefModel_SortingPolicies()
+   * @model containment="true"
+   * @generated
+   */
+  EList<SortingPolicy> getSortingPolicies();
 
 } // RefModel

@@ -186,13 +186,22 @@ public interface RefDslPackage extends EPackage
   int REF_MODEL__VERIFICATION_POLICIES = 12;
 
   /**
+   * The feature id for the '<em><b>Sorting Policies</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REF_MODEL__SORTING_POLICIES = 13;
+
+  /**
    * The number of structural features of the '<em>Ref Model</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int REF_MODEL_FEATURE_COUNT = 13;
+  int REF_MODEL_FEATURE_COUNT = 14;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl <em>User Type</em>}' class.
@@ -534,13 +543,31 @@ public interface RefDslPackage extends EPackage
   int FEEDBACK_TYPE__RECURSIVE = 4;
 
   /**
+   * The feature id for the '<em><b>Allows Text</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FEEDBACK_TYPE__ALLOWS_TEXT = 5;
+
+  /**
    * The feature id for the '<em><b>Allows Media</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEEDBACK_TYPE__ALLOWS_MEDIA = 5;
+  int FEEDBACK_TYPE__ALLOWS_MEDIA = 6;
+
+  /**
+   * The feature id for the '<em><b>Polarity</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FEEDBACK_TYPE__POLARITY = 7;
 
   /**
    * The number of structural features of the '<em>Feedback Type</em>' class.
@@ -549,7 +576,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEEDBACK_TYPE_FEATURE_COUNT = 6;
+  int FEEDBACK_TYPE_FEATURE_COUNT = 8;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl <em>Feedback Definition</em>}' class.
@@ -589,13 +616,22 @@ public interface RefDslPackage extends EPackage
   int FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT = 2;
 
   /**
+   * The feature id for the '<em><b>Verification Requirement</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT = 3;
+
+  /**
    * The feature id for the '<em><b>Unique Per Author Target</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET = 3;
+  int FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET = 4;
 
   /**
    * The feature id for the '<em><b>Author</b></em>' reference.
@@ -604,7 +640,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEEDBACK_DEFINITION__AUTHOR = 4;
+  int FEEDBACK_DEFINITION__AUTHOR = 5;
 
   /**
    * The feature id for the '<em><b>Subject Resource</b></em>' reference.
@@ -613,7 +649,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEEDBACK_DEFINITION__SUBJECT_RESOURCE = 5;
+  int FEEDBACK_DEFINITION__SUBJECT_RESOURCE = 6;
 
   /**
    * The feature id for the '<em><b>Subject Feedback</b></em>' reference.
@@ -622,16 +658,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = 6;
-
-  /**
-   * The feature id for the '<em><b>Parent</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int FEEDBACK_DEFINITION__PARENT = 7;
+  int FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = 7;
 
   /**
    * The feature id for the '<em><b>Policy</b></em>' containment reference.
@@ -726,22 +753,13 @@ public interface RefDslPackage extends EPackage
   int RATING_POLICY__STEP = 2;
 
   /**
-   * The feature id for the '<em><b>Scale Kind</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int RATING_POLICY__SCALE_KIND = 3;
-
-  /**
    * The number of structural features of the '<em>Rating Policy</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int RATING_POLICY_FEATURE_COUNT = 4;
+  int RATING_POLICY_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl <em>Validation Rule</em>}' class.
@@ -936,13 +954,22 @@ public interface RefDslPackage extends EPackage
   int AUTHORIZATION_RULE = 12;
 
   /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AUTHORIZATION_RULE__NAME = 0;
+
+  /**
    * The feature id for the '<em><b>Allowed Action</b></em>' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE__ALLOWED_ACTION = 0;
+  int AUTHORIZATION_RULE__ALLOWED_ACTION = 1;
 
   /**
    * The feature id for the '<em><b>Actor</b></em>' reference.
@@ -951,7 +978,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE__ACTOR = 1;
+  int AUTHORIZATION_RULE__ACTOR = 2;
 
   /**
    * The feature id for the '<em><b>Context</b></em>' reference.
@@ -960,7 +987,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE__CONTEXT = 2;
+  int AUTHORIZATION_RULE__CONTEXT = 3;
 
   /**
    * The feature id for the '<em><b>Resource Target</b></em>' reference.
@@ -969,7 +996,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE__RESOURCE_TARGET = 3;
+  int AUTHORIZATION_RULE__RESOURCE_TARGET = 4;
 
   /**
    * The feature id for the '<em><b>Feedback Target</b></em>' reference.
@@ -978,7 +1005,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE__FEEDBACK_TARGET = 4;
+  int AUTHORIZATION_RULE__FEEDBACK_TARGET = 5;
 
   /**
    * The number of structural features of the '<em>Authorization Rule</em>' class.
@@ -987,7 +1014,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTHORIZATION_RULE_FEATURE_COUNT = 5;
+  int AUTHORIZATION_RULE_FEATURE_COUNT = 6;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl <em>Automation Rule</em>}' class.
@@ -1018,31 +1045,13 @@ public interface RefDslPackage extends EPackage
   int AUTOMATION_RULE__TRIGGER = 1;
 
   /**
-   * The feature id for the '<em><b>Condition</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int AUTOMATION_RULE__CONDITION = 2;
-
-  /**
-   * The feature id for the '<em><b>Action Description</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int AUTOMATION_RULE__ACTION_DESCRIPTION = 3;
-
-  /**
    * The feature id for the '<em><b>Context</b></em>' reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int AUTOMATION_RULE__CONTEXT = 4;
+  int AUTOMATION_RULE__CONTEXT = 2;
 
   /**
    * The feature id for the '<em><b>In Context</b></em>' reference.
@@ -1051,7 +1060,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTOMATION_RULE__IN_CONTEXT = 5;
+  int AUTOMATION_RULE__IN_CONTEXT = 3;
 
   /**
    * The feature id for the '<em><b>On Feedback</b></em>' reference.
@@ -1060,7 +1069,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTOMATION_RULE__ON_FEEDBACK = 6;
+  int AUTOMATION_RULE__ON_FEEDBACK = 4;
 
   /**
    * The feature id for the '<em><b>Uses</b></em>' reference.
@@ -1069,7 +1078,34 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTOMATION_RULE__USES = 7;
+  int AUTOMATION_RULE__USES = 5;
+
+  /**
+   * The feature id for the '<em><b>Invoked Validation Rules</b></em>' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AUTOMATION_RULE__INVOKED_VALIDATION_RULES = 6;
+
+  /**
+   * The feature id for the '<em><b>Conditions</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AUTOMATION_RULE__CONDITIONS = 7;
+
+  /**
+   * The feature id for the '<em><b>Actions</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int AUTOMATION_RULE__ACTIONS = 8;
 
   /**
    * The number of structural features of the '<em>Automation Rule</em>' class.
@@ -1078,7 +1114,136 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int AUTOMATION_RULE_FEATURE_COUNT = 8;
+  int AUTOMATION_RULE_FEATURE_COUNT = 9;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ConditionImpl <em>Condition</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.impl.ConditionImpl
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getCondition()
+   * @generated
+   */
+  int CONDITION = 14;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Operator</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION__OPERATOR = 1;
+
+  /**
+   * The feature id for the '<em><b>Attribute</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION__ATTRIBUTE = 2;
+
+  /**
+   * The feature id for the '<em><b>Children</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION__CHILDREN = 3;
+
+  /**
+   * The number of structural features of the '<em>Condition</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION_FEATURE_COUNT = 4;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ConditionValueImpl <em>Condition Value</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.impl.ConditionValueImpl
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getConditionValue()
+   * @generated
+   */
+  int CONDITION_VALUE = 15;
+
+  /**
+   * The feature id for the '<em><b>Value</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION_VALUE__VALUE = 0;
+
+  /**
+   * The number of structural features of the '<em>Condition Value</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CONDITION_VALUE_FEATURE_COUNT = 1;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ActionImpl <em>Action</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.impl.ActionImpl
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getAction()
+   * @generated
+   */
+  int ACTION = 16;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Kind</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION__KIND = 1;
+
+  /**
+   * The feature id for the '<em><b>Message</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION__MESSAGE = 2;
+
+  /**
+   * The number of structural features of the '<em>Action</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int ACTION_FEATURE_COUNT = 3;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.VerificationPolicyImpl <em>Verification Policy</em>}' class.
@@ -1088,7 +1253,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getVerificationPolicy()
    * @generated
    */
-  int VERIFICATION_POLICY = 14;
+  int VERIFICATION_POLICY = 17;
 
   /**
    * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1136,6 +1301,79 @@ public interface RefDslPackage extends EPackage
   int VERIFICATION_POLICY_FEATURE_COUNT = 4;
 
   /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.SortingPolicyImpl <em>Sorting Policy</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.impl.SortingPolicyImpl
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortingPolicy()
+   * @generated
+   */
+  int SORTING_POLICY = 18;
+
+  /**
+   * The feature id for the '<em><b>Name</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__NAME = 0;
+
+  /**
+   * The feature id for the '<em><b>Criterion</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__CRITERION = 1;
+
+  /**
+   * The feature id for the '<em><b>Direction</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__DIRECTION = 2;
+
+  /**
+   * The feature id for the '<em><b>Applies To Resource</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__APPLIES_TO_RESOURCE = 3;
+
+  /**
+   * The feature id for the '<em><b>Applies To Feedback</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__APPLIES_TO_FEEDBACK = 4;
+
+  /**
+   * The feature id for the '<em><b>In Context</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY__IN_CONTEXT = 5;
+
+  /**
+   * The number of structural features of the '<em>Sorting Policy</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int SORTING_POLICY_FEATURE_COUNT = 6;
+
+  /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.UserKind <em>User Kind</em>}' enum.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1143,7 +1381,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getUserKind()
    * @generated
    */
-  int USER_KIND = 15;
+  int USER_KIND = 19;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ContextKind <em>Context Kind</em>}' enum.
@@ -1153,7 +1391,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getContextKind()
    * @generated
    */
-  int CONTEXT_KIND = 16;
+  int CONTEXT_KIND = 20;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.PrimitiveType <em>Primitive Type</em>}' enum.
@@ -1163,7 +1401,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getPrimitiveType()
    * @generated
    */
-  int PRIMITIVE_TYPE = 17;
+  int PRIMITIVE_TYPE = 21;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackKind <em>Feedback Kind</em>}' enum.
@@ -1173,7 +1411,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getFeedbackKind()
    * @generated
    */
-  int FEEDBACK_KIND = 18;
+  int FEEDBACK_KIND = 22;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope <em>Feedback Subject Scope</em>}' enum.
@@ -1183,7 +1421,17 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getFeedbackSubjectScope()
    * @generated
    */
-  int FEEDBACK_SUBJECT_SCOPE = 19;
+  int FEEDBACK_SUBJECT_SCOPE = 23;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackPolarity <em>Feedback Polarity</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolarity
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getFeedbackPolarity()
+   * @generated
+   */
+  int FEEDBACK_POLARITY = 24;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackStatus <em>Feedback Status</em>}' enum.
@@ -1193,17 +1441,17 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getFeedbackStatus()
    * @generated
    */
-  int FEEDBACK_STATUS = 20;
+  int FEEDBACK_STATUS = 25;
 
   /**
-   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.RatingScaleKind <em>Rating Scale Kind</em>}' enum.
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.VerificationRequirement <em>Verification Requirement</em>}' enum.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see pt.isep.enorm.refdsl.refDsl.RatingScaleKind
-   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getRatingScaleKind()
+   * @see pt.isep.enorm.refdsl.refDsl.VerificationRequirement
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getVerificationRequirement()
    * @generated
    */
-  int RATING_SCALE_KIND = 21;
+  int VERIFICATION_REQUIREMENT = 26;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ValidationKind <em>Validation Kind</em>}' enum.
@@ -1213,7 +1461,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getValidationKind()
    * @generated
    */
-  int VALIDATION_KIND = 22;
+  int VALIDATION_KIND = 27;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.RuleSeverity <em>Rule Severity</em>}' enum.
@@ -1223,7 +1471,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getRuleSeverity()
    * @generated
    */
-  int RULE_SEVERITY = 23;
+  int RULE_SEVERITY = 28;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ModerationMode <em>Moderation Mode</em>}' enum.
@@ -1233,7 +1481,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getModerationMode()
    * @generated
    */
-  int MODERATION_MODE = 24;
+  int MODERATION_MODE = 29;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ModerationDecision <em>Moderation Decision</em>}' enum.
@@ -1243,7 +1491,7 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getModerationDecision()
    * @generated
    */
-  int MODERATION_DECISION = 25;
+  int MODERATION_DECISION = 30;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ActionKind <em>Action Kind</em>}' enum.
@@ -1253,7 +1501,57 @@ public interface RefDslPackage extends EPackage
    * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getActionKind()
    * @generated
    */
-  int ACTION_KIND = 26;
+  int ACTION_KIND = 31;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.TriggerEvent <em>Trigger Event</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getTriggerEvent()
+   * @generated
+   */
+  int TRIGGER_EVENT = 32;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ConditionOperator <em>Condition Operator</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.ConditionOperator
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getConditionOperator()
+   * @generated
+   */
+  int CONDITION_OPERATOR = 33;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.ActionResultKind <em>Action Result Kind</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.ActionResultKind
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getActionResultKind()
+   * @generated
+   */
+  int ACTION_RESULT_KIND = 34;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.SortCriterion <em>Sort Criterion</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.SortCriterion
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortCriterion()
+   * @generated
+   */
+  int SORT_CRITERION = 35;
+
+  /**
+   * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.SortDirection <em>Sort Direction</em>}' enum.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see pt.isep.enorm.refdsl.refDsl.SortDirection
+   * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortDirection()
+   * @generated
+   */
+  int SORT_DIRECTION = 36;
 
 
   /**
@@ -1408,6 +1706,17 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EReference getRefModel_VerificationPolicies();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link pt.isep.enorm.refdsl.refDsl.RefModel#getSortingPolicies <em>Sorting Policies</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Sorting Policies</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.RefModel#getSortingPolicies()
+   * @see #getRefModel()
+   * @generated
+   */
+  EReference getRefModel_SortingPolicies();
 
   /**
    * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.UserType <em>User Type</em>}'.
@@ -1756,6 +2065,17 @@ public interface RefDslPackage extends EPackage
   EAttribute getFeedbackType_Recursive();
 
   /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsText <em>Allows Text</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Allows Text</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsText()
+   * @see #getFeedbackType()
+   * @generated
+   */
+  EAttribute getFeedbackType_AllowsText();
+
+  /**
    * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#isAllowsMedia <em>Allows Media</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1765,6 +2085,17 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EAttribute getFeedbackType_AllowsMedia();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.FeedbackType#getPolarity <em>Polarity</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Polarity</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackType#getPolarity()
+   * @see #getFeedbackType()
+   * @generated
+   */
+  EAttribute getFeedbackType_Polarity();
 
   /**
    * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition <em>Feedback Definition</em>}'.
@@ -1810,6 +2141,17 @@ public interface RefDslPackage extends EPackage
   EAttribute getFeedbackDefinition_RequiresVerifiedContext();
 
   /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getVerificationRequirement <em>Verification Requirement</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Verification Requirement</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getVerificationRequirement()
+   * @see #getFeedbackDefinition()
+   * @generated
+   */
+  EAttribute getFeedbackDefinition_VerificationRequirement();
+
+  /**
    * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1852,17 +2194,6 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EReference getFeedbackDefinition_SubjectFeedback();
-
-  /**
-   * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getParent <em>Parent</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the reference '<em>Parent</em>'.
-   * @see pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getParent()
-   * @see #getFeedbackDefinition()
-   * @generated
-   */
-  EReference getFeedbackDefinition_Parent();
 
   /**
    * Returns the meta object for the containment reference '{@link pt.isep.enorm.refdsl.refDsl.FeedbackDefinition#getPolicy <em>Policy</em>}'.
@@ -1949,17 +2280,6 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EAttribute getRatingPolicy_Step();
-
-  /**
-   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.RatingPolicy#getScaleKind <em>Scale Kind</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Scale Kind</em>'.
-   * @see pt.isep.enorm.refdsl.refDsl.RatingPolicy#getScaleKind()
-   * @see #getRatingPolicy()
-   * @generated
-   */
-  EAttribute getRatingPolicy_ScaleKind();
 
   /**
    * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.ValidationRule <em>Validation Rule</em>}'.
@@ -2168,6 +2488,17 @@ public interface RefDslPackage extends EPackage
   EClass getAuthorizationRule();
 
   /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getName()
+   * @see #getAuthorizationRule()
+   * @generated
+   */
+  EAttribute getAuthorizationRule_Name();
+
+  /**
    * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.AuthorizationRule#getAllowedAction <em>Allowed Action</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2255,28 +2586,6 @@ public interface RefDslPackage extends EPackage
   EAttribute getAutomationRule_Trigger();
 
   /**
-   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getCondition <em>Condition</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Condition</em>'.
-   * @see pt.isep.enorm.refdsl.refDsl.AutomationRule#getCondition()
-   * @see #getAutomationRule()
-   * @generated
-   */
-  EAttribute getAutomationRule_Condition();
-
-  /**
-   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActionDescription <em>Action Description</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Action Description</em>'.
-   * @see pt.isep.enorm.refdsl.refDsl.AutomationRule#getActionDescription()
-   * @see #getAutomationRule()
-   * @generated
-   */
-  EAttribute getAutomationRule_ActionDescription();
-
-  /**
    * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getContext <em>Context</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2319,6 +2628,157 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EReference getAutomationRule_Uses();
+
+  /**
+   * Returns the meta object for the reference list '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getInvokedValidationRules <em>Invoked Validation Rules</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference list '<em>Invoked Validation Rules</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.AutomationRule#getInvokedValidationRules()
+   * @see #getAutomationRule()
+   * @generated
+   */
+  EReference getAutomationRule_InvokedValidationRules();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getConditions <em>Conditions</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Conditions</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.AutomationRule#getConditions()
+   * @see #getAutomationRule()
+   * @generated
+   */
+  EReference getAutomationRule_Conditions();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link pt.isep.enorm.refdsl.refDsl.AutomationRule#getActions <em>Actions</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Actions</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.AutomationRule#getActions()
+   * @see #getAutomationRule()
+   * @generated
+   */
+  EReference getAutomationRule_Actions();
+
+  /**
+   * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.Condition <em>Condition</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Condition</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Condition
+   * @generated
+   */
+  EClass getCondition();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.Condition#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Condition#getName()
+   * @see #getCondition()
+   * @generated
+   */
+  EAttribute getCondition_Name();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.Condition#getOperator <em>Operator</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Operator</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Condition#getOperator()
+   * @see #getCondition()
+   * @generated
+   */
+  EAttribute getCondition_Operator();
+
+  /**
+   * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.Condition#getAttribute <em>Attribute</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Attribute</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Condition#getAttribute()
+   * @see #getCondition()
+   * @generated
+   */
+  EReference getCondition_Attribute();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link pt.isep.enorm.refdsl.refDsl.Condition#getChildren <em>Children</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Children</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Condition#getChildren()
+   * @see #getCondition()
+   * @generated
+   */
+  EReference getCondition_Children();
+
+  /**
+   * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.ConditionValue <em>Condition Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Condition Value</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.ConditionValue
+   * @generated
+   */
+  EClass getConditionValue();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.ConditionValue#getValue <em>Value</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Value</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.ConditionValue#getValue()
+   * @see #getConditionValue()
+   * @generated
+   */
+  EAttribute getConditionValue_Value();
+
+  /**
+   * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.Action <em>Action</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Action</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Action
+   * @generated
+   */
+  EClass getAction();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.Action#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Action#getName()
+   * @see #getAction()
+   * @generated
+   */
+  EAttribute getAction_Name();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.Action#getKind <em>Kind</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Kind</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Action#getKind()
+   * @see #getAction()
+   * @generated
+   */
+  EAttribute getAction_Kind();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.Action#getMessage <em>Message</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Message</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.Action#getMessage()
+   * @see #getAction()
+   * @generated
+   */
+  EAttribute getAction_Message();
 
   /**
    * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.VerificationPolicy <em>Verification Policy</em>}'.
@@ -2375,6 +2835,82 @@ public interface RefDslPackage extends EPackage
   EReference getVerificationPolicy_Verifies();
 
   /**
+   * Returns the meta object for class '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy <em>Sorting Policy</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Sorting Policy</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy
+   * @generated
+   */
+  EClass getSortingPolicy();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getName <em>Name</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Name</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getName()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EAttribute getSortingPolicy_Name();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getCriterion <em>Criterion</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Criterion</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getCriterion()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EAttribute getSortingPolicy_Criterion();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getDirection <em>Direction</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Direction</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getDirection()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EAttribute getSortingPolicy_Direction();
+
+  /**
+   * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getAppliesToResource <em>Applies To Resource</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Applies To Resource</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getAppliesToResource()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EReference getSortingPolicy_AppliesToResource();
+
+  /**
+   * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getAppliesToFeedback <em>Applies To Feedback</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>Applies To Feedback</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getAppliesToFeedback()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EReference getSortingPolicy_AppliesToFeedback();
+
+  /**
+   * Returns the meta object for the reference '{@link pt.isep.enorm.refdsl.refDsl.SortingPolicy#getInContext <em>In Context</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the reference '<em>In Context</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortingPolicy#getInContext()
+   * @see #getSortingPolicy()
+   * @generated
+   */
+  EReference getSortingPolicy_InContext();
+
+  /**
    * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.UserKind <em>User Kind</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2425,6 +2961,16 @@ public interface RefDslPackage extends EPackage
   EEnum getFeedbackSubjectScope();
 
   /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.FeedbackPolarity <em>Feedback Polarity</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Feedback Polarity</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolarity
+   * @generated
+   */
+  EEnum getFeedbackPolarity();
+
+  /**
    * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.FeedbackStatus <em>Feedback Status</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -2435,14 +2981,14 @@ public interface RefDslPackage extends EPackage
   EEnum getFeedbackStatus();
 
   /**
-   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.RatingScaleKind <em>Rating Scale Kind</em>}'.
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.VerificationRequirement <em>Verification Requirement</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for enum '<em>Rating Scale Kind</em>'.
-   * @see pt.isep.enorm.refdsl.refDsl.RatingScaleKind
+   * @return the meta object for enum '<em>Verification Requirement</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.VerificationRequirement
    * @generated
    */
-  EEnum getRatingScaleKind();
+  EEnum getVerificationRequirement();
 
   /**
    * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.ValidationKind <em>Validation Kind</em>}'.
@@ -2493,6 +3039,56 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EEnum getActionKind();
+
+  /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.TriggerEvent <em>Trigger Event</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Trigger Event</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+   * @generated
+   */
+  EEnum getTriggerEvent();
+
+  /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.ConditionOperator <em>Condition Operator</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Condition Operator</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.ConditionOperator
+   * @generated
+   */
+  EEnum getConditionOperator();
+
+  /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.ActionResultKind <em>Action Result Kind</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Action Result Kind</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.ActionResultKind
+   * @generated
+   */
+  EEnum getActionResultKind();
+
+  /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.SortCriterion <em>Sort Criterion</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Sort Criterion</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortCriterion
+   * @generated
+   */
+  EEnum getSortCriterion();
+
+  /**
+   * Returns the meta object for enum '{@link pt.isep.enorm.refdsl.refDsl.SortDirection <em>Sort Direction</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for enum '<em>Sort Direction</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.SortDirection
+   * @generated
+   */
+  EEnum getSortDirection();
 
   /**
    * Returns the factory that creates the instances of the model.
@@ -2630,6 +3226,14 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EReference REF_MODEL__VERIFICATION_POLICIES = eINSTANCE.getRefModel_VerificationPolicies();
+
+    /**
+     * The meta object literal for the '<em><b>Sorting Policies</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference REF_MODEL__SORTING_POLICIES = eINSTANCE.getRefModel_SortingPolicies();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl <em>User Type</em>}' class.
@@ -2900,12 +3504,28 @@ public interface RefDslPackage extends EPackage
     EAttribute FEEDBACK_TYPE__RECURSIVE = eINSTANCE.getFeedbackType_Recursive();
 
     /**
+     * The meta object literal for the '<em><b>Allows Text</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute FEEDBACK_TYPE__ALLOWS_TEXT = eINSTANCE.getFeedbackType_AllowsText();
+
+    /**
      * The meta object literal for the '<em><b>Allows Media</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     EAttribute FEEDBACK_TYPE__ALLOWS_MEDIA = eINSTANCE.getFeedbackType_AllowsMedia();
+
+    /**
+     * The meta object literal for the '<em><b>Polarity</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute FEEDBACK_TYPE__POLARITY = eINSTANCE.getFeedbackType_Polarity();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackDefinitionImpl <em>Feedback Definition</em>}' class.
@@ -2942,6 +3562,14 @@ public interface RefDslPackage extends EPackage
     EAttribute FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT = eINSTANCE.getFeedbackDefinition_RequiresVerifiedContext();
 
     /**
+     * The meta object literal for the '<em><b>Verification Requirement</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT = eINSTANCE.getFeedbackDefinition_VerificationRequirement();
+
+    /**
      * The meta object literal for the '<em><b>Unique Per Author Target</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2972,14 +3600,6 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EReference FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = eINSTANCE.getFeedbackDefinition_SubjectFeedback();
-
-    /**
-     * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EReference FEEDBACK_DEFINITION__PARENT = eINSTANCE.getFeedbackDefinition_Parent();
 
     /**
      * The meta object literal for the '<em><b>Policy</b></em>' containment reference feature.
@@ -3048,14 +3668,6 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EAttribute RATING_POLICY__STEP = eINSTANCE.getRatingPolicy_Step();
-
-    /**
-     * The meta object literal for the '<em><b>Scale Kind</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute RATING_POLICY__SCALE_KIND = eINSTANCE.getRatingPolicy_ScaleKind();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ValidationRuleImpl <em>Validation Rule</em>}' class.
@@ -3216,6 +3828,14 @@ public interface RefDslPackage extends EPackage
     EClass AUTHORIZATION_RULE = eINSTANCE.getAuthorizationRule();
 
     /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute AUTHORIZATION_RULE__NAME = eINSTANCE.getAuthorizationRule_Name();
+
+    /**
      * The meta object literal for the '<em><b>Allowed Action</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3282,22 +3902,6 @@ public interface RefDslPackage extends EPackage
     EAttribute AUTOMATION_RULE__TRIGGER = eINSTANCE.getAutomationRule_Trigger();
 
     /**
-     * The meta object literal for the '<em><b>Condition</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute AUTOMATION_RULE__CONDITION = eINSTANCE.getAutomationRule_Condition();
-
-    /**
-     * The meta object literal for the '<em><b>Action Description</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute AUTOMATION_RULE__ACTION_DESCRIPTION = eINSTANCE.getAutomationRule_ActionDescription();
-
-    /**
      * The meta object literal for the '<em><b>Context</b></em>' reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3328,6 +3932,124 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EReference AUTOMATION_RULE__USES = eINSTANCE.getAutomationRule_Uses();
+
+    /**
+     * The meta object literal for the '<em><b>Invoked Validation Rules</b></em>' reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AUTOMATION_RULE__INVOKED_VALIDATION_RULES = eINSTANCE.getAutomationRule_InvokedValidationRules();
+
+    /**
+     * The meta object literal for the '<em><b>Conditions</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AUTOMATION_RULE__CONDITIONS = eINSTANCE.getAutomationRule_Conditions();
+
+    /**
+     * The meta object literal for the '<em><b>Actions</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference AUTOMATION_RULE__ACTIONS = eINSTANCE.getAutomationRule_Actions();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ConditionImpl <em>Condition</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.impl.ConditionImpl
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getCondition()
+     * @generated
+     */
+    EClass CONDITION = eINSTANCE.getCondition();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CONDITION__NAME = eINSTANCE.getCondition_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Operator</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CONDITION__OPERATOR = eINSTANCE.getCondition_Operator();
+
+    /**
+     * The meta object literal for the '<em><b>Attribute</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONDITION__ATTRIBUTE = eINSTANCE.getCondition_Attribute();
+
+    /**
+     * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CONDITION__CHILDREN = eINSTANCE.getCondition_Children();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ConditionValueImpl <em>Condition Value</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.impl.ConditionValueImpl
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getConditionValue()
+     * @generated
+     */
+    EClass CONDITION_VALUE = eINSTANCE.getConditionValue();
+
+    /**
+     * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CONDITION_VALUE__VALUE = eINSTANCE.getConditionValue_Value();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.ActionImpl <em>Action</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.impl.ActionImpl
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getAction()
+     * @generated
+     */
+    EClass ACTION = eINSTANCE.getAction();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ACTION__NAME = eINSTANCE.getAction_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Kind</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ACTION__KIND = eINSTANCE.getAction_Kind();
+
+    /**
+     * The meta object literal for the '<em><b>Message</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute ACTION__MESSAGE = eINSTANCE.getAction_Message();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.VerificationPolicyImpl <em>Verification Policy</em>}' class.
@@ -3370,6 +4092,64 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EReference VERIFICATION_POLICY__VERIFIES = eINSTANCE.getVerificationPolicy_Verifies();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.impl.SortingPolicyImpl <em>Sorting Policy</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.impl.SortingPolicyImpl
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortingPolicy()
+     * @generated
+     */
+    EClass SORTING_POLICY = eINSTANCE.getSortingPolicy();
+
+    /**
+     * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SORTING_POLICY__NAME = eINSTANCE.getSortingPolicy_Name();
+
+    /**
+     * The meta object literal for the '<em><b>Criterion</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SORTING_POLICY__CRITERION = eINSTANCE.getSortingPolicy_Criterion();
+
+    /**
+     * The meta object literal for the '<em><b>Direction</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute SORTING_POLICY__DIRECTION = eINSTANCE.getSortingPolicy_Direction();
+
+    /**
+     * The meta object literal for the '<em><b>Applies To Resource</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SORTING_POLICY__APPLIES_TO_RESOURCE = eINSTANCE.getSortingPolicy_AppliesToResource();
+
+    /**
+     * The meta object literal for the '<em><b>Applies To Feedback</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SORTING_POLICY__APPLIES_TO_FEEDBACK = eINSTANCE.getSortingPolicy_AppliesToFeedback();
+
+    /**
+     * The meta object literal for the '<em><b>In Context</b></em>' reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference SORTING_POLICY__IN_CONTEXT = eINSTANCE.getSortingPolicy_InContext();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.UserKind <em>User Kind</em>}' enum.
@@ -3422,6 +4202,16 @@ public interface RefDslPackage extends EPackage
     EEnum FEEDBACK_SUBJECT_SCOPE = eINSTANCE.getFeedbackSubjectScope();
 
     /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackPolarity <em>Feedback Polarity</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.FeedbackPolarity
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getFeedbackPolarity()
+     * @generated
+     */
+    EEnum FEEDBACK_POLARITY = eINSTANCE.getFeedbackPolarity();
+
+    /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.FeedbackStatus <em>Feedback Status</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3432,14 +4222,14 @@ public interface RefDslPackage extends EPackage
     EEnum FEEDBACK_STATUS = eINSTANCE.getFeedbackStatus();
 
     /**
-     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.RatingScaleKind <em>Rating Scale Kind</em>}' enum.
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.VerificationRequirement <em>Verification Requirement</em>}' enum.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see pt.isep.enorm.refdsl.refDsl.RatingScaleKind
-     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getRatingScaleKind()
+     * @see pt.isep.enorm.refdsl.refDsl.VerificationRequirement
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getVerificationRequirement()
      * @generated
      */
-    EEnum RATING_SCALE_KIND = eINSTANCE.getRatingScaleKind();
+    EEnum VERIFICATION_REQUIREMENT = eINSTANCE.getVerificationRequirement();
 
     /**
      * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.ValidationKind <em>Validation Kind</em>}' enum.
@@ -3490,6 +4280,56 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EEnum ACTION_KIND = eINSTANCE.getActionKind();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.TriggerEvent <em>Trigger Event</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getTriggerEvent()
+     * @generated
+     */
+    EEnum TRIGGER_EVENT = eINSTANCE.getTriggerEvent();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.ConditionOperator <em>Condition Operator</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.ConditionOperator
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getConditionOperator()
+     * @generated
+     */
+    EEnum CONDITION_OPERATOR = eINSTANCE.getConditionOperator();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.ActionResultKind <em>Action Result Kind</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.ActionResultKind
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getActionResultKind()
+     * @generated
+     */
+    EEnum ACTION_RESULT_KIND = eINSTANCE.getActionResultKind();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.SortCriterion <em>Sort Criterion</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.SortCriterion
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortCriterion()
+     * @generated
+     */
+    EEnum SORT_CRITERION = eINSTANCE.getSortCriterion();
+
+    /**
+     * The meta object literal for the '{@link pt.isep.enorm.refdsl.refDsl.SortDirection <em>Sort Direction</em>}' enum.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see pt.isep.enorm.refdsl.refDsl.SortDirection
+     * @see pt.isep.enorm.refdsl.refDsl.impl.RefDslPackageImpl#getSortDirection()
+     * @generated
+     */
+    EEnum SORT_DIRECTION = eINSTANCE.getSortDirection();
 
   }
 

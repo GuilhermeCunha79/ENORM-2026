@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import pt.isep.enorm.ref.ref.Action;
 import pt.isep.enorm.ref.ref.AutomationRule;
@@ -39,6 +40,7 @@ import pt.isep.enorm.ref.ref.ValidationRule;
  *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getInContext <em>In Context</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getUses <em>Uses</em>}</li>
+ *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getInvokedValidationRules <em>Invoked Validation Rules</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getConditions <em>Conditions</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.AutomationRuleImpl#getActions <em>Actions</em>}</li>
  * </ul>
@@ -125,6 +127,16 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @ordered
 	 */
 	protected ValidationRule uses;
+
+	/**
+	 * The cached value of the '{@link #getInvokedValidationRules() <em>Invoked Validation Rules</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInvokedValidationRules()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ValidationRule> invokedValidationRules;
 
 	/**
 	 * The cached value of the '{@link #getConditions() <em>Conditions</em>}' containment reference list.
@@ -371,18 +383,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetUses(ValidationRule newUses, NotificationChain msgs) {
+	@Override
+	public void setUses(ValidationRule newUses) {
 		ValidationRule oldUses = uses;
 		uses = newUses;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
-					RefPackage.AUTOMATION_RULE__USES, oldUses, newUses);
-			if (msgs == null)
-				msgs = notification;
-			else
-				msgs.add(notification);
-		}
-		return msgs;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.AUTOMATION_RULE__USES, oldUses, uses));
 	}
 
 	/**
@@ -391,20 +397,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * @generated
 	 */
 	@Override
-	public void setUses(ValidationRule newUses) {
-		if (newUses != uses) {
-			NotificationChain msgs = null;
-			if (uses != null)
-				msgs = ((InternalEObject) uses).eInverseRemove(this, RefPackage.VALIDATION_RULE__INVOKED_BY,
-						ValidationRule.class, msgs);
-			if (newUses != null)
-				msgs = ((InternalEObject) newUses).eInverseAdd(this, RefPackage.VALIDATION_RULE__INVOKED_BY,
-						ValidationRule.class, msgs);
-			msgs = basicSetUses(newUses, msgs);
-			if (msgs != null)
-				msgs.dispatch();
-		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.AUTOMATION_RULE__USES, newUses, newUses));
+	public EList<ValidationRule> getInvokedValidationRules() {
+		if (invokedValidationRules == null) {
+			invokedValidationRules = new EObjectWithInverseResolvingEList<ValidationRule>(ValidationRule.class, this,
+					RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES, RefPackage.VALIDATION_RULE__INVOKED_BY);
+		}
+		return invokedValidationRules;
 	}
 
 	/**
@@ -439,14 +437,13 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RefPackage.AUTOMATION_RULE__USES:
-			if (uses != null)
-				msgs = ((InternalEObject) uses).eInverseRemove(this, RefPackage.VALIDATION_RULE__INVOKED_BY,
-						ValidationRule.class, msgs);
-			return basicSetUses((ValidationRule) otherEnd, msgs);
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getInvokedValidationRules()).basicAdd(otherEnd,
+					msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -459,8 +456,8 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-		case RefPackage.AUTOMATION_RULE__USES:
-			return basicSetUses(null, msgs);
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			return ((InternalEList<?>) getInvokedValidationRules()).basicRemove(otherEnd, msgs);
 		case RefPackage.AUTOMATION_RULE__CONDITIONS:
 			return ((InternalEList<?>) getConditions()).basicRemove(otherEnd, msgs);
 		case RefPackage.AUTOMATION_RULE__ACTIONS:
@@ -497,6 +494,8 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			if (resolve)
 				return getUses();
 			return basicGetUses();
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			return getInvokedValidationRules();
 		case RefPackage.AUTOMATION_RULE__CONDITIONS:
 			return getConditions();
 		case RefPackage.AUTOMATION_RULE__ACTIONS:
@@ -531,6 +530,10 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			return;
 		case RefPackage.AUTOMATION_RULE__USES:
 			setUses((ValidationRule) newValue);
+			return;
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			getInvokedValidationRules().clear();
+			getInvokedValidationRules().addAll((Collection<? extends ValidationRule>) newValue);
 			return;
 		case RefPackage.AUTOMATION_RULE__CONDITIONS:
 			getConditions().clear();
@@ -570,6 +573,9 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 		case RefPackage.AUTOMATION_RULE__USES:
 			setUses((ValidationRule) null);
 			return;
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			getInvokedValidationRules().clear();
+			return;
 		case RefPackage.AUTOMATION_RULE__CONDITIONS:
 			getConditions().clear();
 			return;
@@ -600,6 +606,8 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
 			return onFeedback != null;
 		case RefPackage.AUTOMATION_RULE__USES:
 			return uses != null;
+		case RefPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+			return invokedValidationRules != null && !invokedValidationRules.isEmpty();
 		case RefPackage.AUTOMATION_RULE__CONDITIONS:
 			return conditions != null && !conditions.isEmpty();
 		case RefPackage.AUTOMATION_RULE__ACTIONS:

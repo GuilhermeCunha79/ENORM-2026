@@ -76,12 +76,6 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 			return createRatingPolicy();
 		case RefPackage.FEEDBACK_DEFINITION:
 			return createFeedbackDefinition();
-		case RefPackage.CONDITION:
-			return createCondition();
-		case RefPackage.ACTION:
-			return createAction();
-		case RefPackage.SORTING_POLICY:
-			return createSortingPolicy();
 		case RefPackage.VALIDATION_RULE:
 			return createValidationRule();
 		case RefPackage.MODERATION_POLICY:
@@ -90,8 +84,16 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 			return createAuthorizationRule();
 		case RefPackage.AUTOMATION_RULE:
 			return createAutomationRule();
+		case RefPackage.CONDITION:
+			return createCondition();
+		case RefPackage.CONDITION_VALUE:
+			return createConditionValue();
+		case RefPackage.ACTION:
+			return createAction();
 		case RefPackage.VERIFICATION_POLICY:
 			return createVerificationPolicy();
+		case RefPackage.SORTING_POLICY:
+			return createSortingPolicy();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -115,14 +117,12 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 			return createFeedbackKindFromString(eDataType, initialValue);
 		case RefPackage.FEEDBACK_SUBJECT_SCOPE:
 			return createFeedbackSubjectScopeFromString(eDataType, initialValue);
-		case RefPackage.FEEDBACK_STATUS:
-			return createFeedbackStatusFromString(eDataType, initialValue);
 		case RefPackage.FEEDBACK_POLARITY:
 			return createFeedbackPolarityFromString(eDataType, initialValue);
+		case RefPackage.FEEDBACK_STATUS:
+			return createFeedbackStatusFromString(eDataType, initialValue);
 		case RefPackage.VERIFICATION_REQUIREMENT:
 			return createVerificationRequirementFromString(eDataType, initialValue);
-		case RefPackage.RATING_SCALE_KIND:
-			return createRatingScaleKindFromString(eDataType, initialValue);
 		case RefPackage.VALIDATION_KIND:
 			return createValidationKindFromString(eDataType, initialValue);
 		case RefPackage.RULE_SEVERITY:
@@ -166,14 +166,12 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 			return convertFeedbackKindToString(eDataType, instanceValue);
 		case RefPackage.FEEDBACK_SUBJECT_SCOPE:
 			return convertFeedbackSubjectScopeToString(eDataType, instanceValue);
-		case RefPackage.FEEDBACK_STATUS:
-			return convertFeedbackStatusToString(eDataType, instanceValue);
 		case RefPackage.FEEDBACK_POLARITY:
 			return convertFeedbackPolarityToString(eDataType, instanceValue);
+		case RefPackage.FEEDBACK_STATUS:
+			return convertFeedbackStatusToString(eDataType, instanceValue);
 		case RefPackage.VERIFICATION_REQUIREMENT:
 			return convertVerificationRequirementToString(eDataType, instanceValue);
-		case RefPackage.RATING_SCALE_KIND:
-			return convertRatingScaleKindToString(eDataType, instanceValue);
 		case RefPackage.VALIDATION_KIND:
 			return convertValidationKindToString(eDataType, instanceValue);
 		case RefPackage.RULE_SEVERITY:
@@ -318,6 +316,17 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 	public Condition createCondition() {
 		ConditionImpl condition = new ConditionImpl();
 		return condition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ConditionValue createConditionValue() {
+		ConditionValueImpl conditionValue = new ConditionValueImpl();
+		return conditionValue;
 	}
 
 	/**
@@ -570,28 +579,6 @@ public class RefFactoryImpl extends EFactoryImpl implements RefFactory {
 	 * @generated
 	 */
 	public String convertVerificationRequirementToString(EDataType eDataType, Object instanceValue) {
-		return instanceValue == null ? null : instanceValue.toString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RatingScaleKind createRatingScaleKindFromString(EDataType eDataType, String initialValue) {
-		RatingScaleKind result = RatingScaleKind.get(initialValue);
-		if (result == null)
-			throw new IllegalArgumentException(
-					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-		return result;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String convertRatingScaleKindToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

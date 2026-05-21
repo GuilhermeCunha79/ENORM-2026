@@ -171,10 +171,38 @@ public class RefDslSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case RefDslPackage.CONDITION:
+      {
+        Condition condition = (Condition)theEObject;
+        T result = caseCondition(condition);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.CONDITION_VALUE:
+      {
+        ConditionValue conditionValue = (ConditionValue)theEObject;
+        T result = caseConditionValue(conditionValue);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.ACTION:
+      {
+        Action action = (Action)theEObject;
+        T result = caseAction(action);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case RefDslPackage.VERIFICATION_POLICY:
       {
         VerificationPolicy verificationPolicy = (VerificationPolicy)theEObject;
         T result = caseVerificationPolicy(verificationPolicy);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case RefDslPackage.SORTING_POLICY:
+      {
+        SortingPolicy sortingPolicy = (SortingPolicy)theEObject;
+        T result = caseSortingPolicy(sortingPolicy);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -407,6 +435,54 @@ public class RefDslSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Condition</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Condition</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCondition(Condition object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Condition Value</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Condition Value</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseConditionValue(ConditionValue object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Action</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Action</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseAction(Action object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Verification Policy</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -418,6 +494,22 @@ public class RefDslSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseVerificationPolicy(VerificationPolicy object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Sorting Policy</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Sorting Policy</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseSortingPolicy(SortingPolicy object)
   {
     return null;
   }

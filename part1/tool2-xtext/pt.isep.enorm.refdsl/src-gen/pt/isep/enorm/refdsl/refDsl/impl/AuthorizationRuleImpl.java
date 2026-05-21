@@ -27,6 +27,7 @@ import pt.isep.enorm.refdsl.refDsl.UserType;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getAllowedAction <em>Allowed Action</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getActor <em>Actor</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AuthorizationRuleImpl#getContext <em>Context</em>}</li>
@@ -38,6 +39,26 @@ import pt.isep.enorm.refdsl.refDsl.UserType;
  */
 public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implements AuthorizationRule
 {
+  /**
+   * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected static final String NAME_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getName()
+   * @generated
+   * @ordered
+   */
+  protected String name = NAME_EDEFAULT;
+
   /**
    * The default value of the '{@link #getAllowedAction() <em>Allowed Action</em>}' attribute.
    * <!-- begin-user-doc -->
@@ -117,6 +138,31 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   protected EClass eStaticClass()
   {
     return RefDslPackage.Literals.AUTHORIZATION_RULE;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String getName()
+  {
+    return name;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setName(String newName)
+  {
+    String oldName = name;
+    name = newName;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTHORIZATION_RULE__NAME, oldName, name));
   }
 
   /**
@@ -334,6 +380,8 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   {
     switch (featureID)
     {
+      case RefDslPackage.AUTHORIZATION_RULE__NAME:
+        return getName();
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         return getAllowedAction();
       case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
@@ -362,6 +410,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   {
     switch (featureID)
     {
+      case RefDslPackage.AUTHORIZATION_RULE__NAME:
+        setName((String)newValue);
+        return;
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         setAllowedAction((ActionKind)newValue);
         return;
@@ -391,6 +442,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   {
     switch (featureID)
     {
+      case RefDslPackage.AUTHORIZATION_RULE__NAME:
+        setName(NAME_EDEFAULT);
+        return;
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         setAllowedAction(ALLOWED_ACTION_EDEFAULT);
         return;
@@ -420,6 +474,8 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
   {
     switch (featureID)
     {
+      case RefDslPackage.AUTHORIZATION_RULE__NAME:
+        return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.AUTHORIZATION_RULE__ALLOWED_ACTION:
         return allowedAction != ALLOWED_ACTION_EDEFAULT;
       case RefDslPackage.AUTHORIZATION_RULE__ACTOR:
@@ -445,7 +501,9 @@ public class AuthorizationRuleImpl extends MinimalEObjectImpl.Container implemen
     if (eIsProxy()) return super.toString();
 
     StringBuilder result = new StringBuilder(super.toString());
-    result.append(" (allowedAction: ");
+    result.append(" (name: ");
+    result.append(name);
+    result.append(", allowedAction: ");
     result.append(allowedAction);
     result.append(')');
     return result.toString();

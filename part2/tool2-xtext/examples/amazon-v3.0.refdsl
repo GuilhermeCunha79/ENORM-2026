@@ -1,0 +1,106 @@
+RefModel Amazon
+version "1.0.0"
+{
+  userTypes {
+    UserType User kind GENERIC,
+    UserType Buyer kind BUYER,
+    UserType Seller kind SELLER,
+    UserType Moderator kind MODERATOR
+  }
+
+  resourceTypes {
+    ResourceType Product supportsMedia true {
+      attributes {
+        required true multiValued false Attribute title type TEXT,
+        required true multiValued false Attribute description type TEXT,
+        required true multiValued false Attribute price type NUMBER,
+        required false multiValued false Attribute sku type TEXT
+      }
+    },
+    ResourceType Order supportsMedia false {
+      attributes {
+        required true multiValued false Attribute orderId type TEXT,
+        required true multiValued false Attribute total type NUMBER
+      }
+    }
+  }
+
+  contextTypes {
+    ContextType AmazonCatalog kind CATALOG contains ( Product, Order )
+  }
+
+  resourceRelations {
+    ResourceRelation OrderContainsProduct source Order target Product sourceCardinality "1" targetCardinality "0..1" containment false recursive false
+  }
+
+  feedbackTypes {
+    FeedbackType ProductReviewType kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsText true allowsMedia false polarity STARS,
+    FeedbackType ThreadCommentType kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsText true allowsMedia false polarity NONE
+  }
+
+  feedbackDefinitions {
+    FeedbackDefinition ProductReview
+      type ProductReviewType
+      requiresVerifiedContext true
+      verificationRequirement OPTIONAL
+      uniquePerAuthorTarget true
+      author Buyer
+      subjectResource Product
+      policy FeedbackPolicy status ENABLED
+      rating RatingPolicy min 1 max 5 step 1,
+
+    FeedbackDefinition TopThreadComment
+      type ThreadCommentType
+      requiresVerifiedContext false
+      uniquePerAuthorTarget false
+      author Buyer
+      subjectResource Product
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition ReplyComment
+      type ThreadCommentType
+      requiresVerifiedContext false
+      uniquePerAuthorTarget false
+      author Seller
+      subjectFeedback TopThreadComment
+      policy FeedbackPolicy status ENABLED
+  }
+
+  authorizationRules {
+    AuthorizationRule name BuyerReadProduct allowedAction READ actor Buyer context AmazonCatalog resourceTarget Product feedbackTarget ProductReview,
+    AuthorizationRule name BuyerThreadAuth allowedAction COMMENT actor Buyer context AmazonCatalog resourceTarget Product feedbackTarget TopThreadComment,
+    AuthorizationRule name SellerReplyAuth allowedAction COMMENT actor Seller context AmazonCatalog resourceTarget Product feedbackTarget ReplyComment
+  }
+
+  validationRules {
+    ValidationRule name AmazonReviewValidation kind AUTOMATIC severity ERROR expression "rating_and_text_ok" implementationId amazon_rev_001 appliesToResource Product appliesToFeedback ProductReview invokedBy AmazonReviewAutomation
+  }
+
+  moderationPolicies {
+    ModerationPolicy name AmazonReviewModeration mode HYBRID trigger ON_REPORT_THRESHOLD decision FLAGGED monitorsResource Product monitorsFeedback ProductReview executedBy Moderator inContext AmazonCatalog
+  }
+
+  automationRules {
+    AutomationRule AmazonReviewAutomation
+      trigger ON_FEEDBACK_CREATE
+      context Product
+      inContext AmazonCatalog
+      onFeedback ProductReview
+      uses AmazonReviewValidation
+      conditions {
+        Condition TitleNotEmpty operator HAS_PROPERTY attribute title
+      }
+      actions {
+        Action LogReview kind DISPLAY_MESSAGE message "Review accepted for validation pipeline"
+      }
+  }
+
+  verificationPolicies {
+    VerificationPolicy name ProductReviewVerification mode AUTOMATIC appliesWhen ON_FEEDBACK_CREATE verifies ProductReview
+  }
+
+  sortingPolicies {
+    SortingPolicy ProductByPrice criterion VALUE direction DESC appliesToResource Product inContext AmazonCatalog,
+    SortingPolicy ProductByDate criterion DATE direction DESC appliesToResource Product inContext AmazonCatalog
+  }
+}

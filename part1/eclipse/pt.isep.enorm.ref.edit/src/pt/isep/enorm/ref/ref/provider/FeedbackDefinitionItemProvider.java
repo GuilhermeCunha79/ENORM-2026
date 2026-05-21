@@ -64,7 +64,6 @@ public class FeedbackDefinitionItemProvider extends ItemProviderAdapter implemen
 			addSubjectResourcePropertyDescriptor(object);
 			addAuthorPropertyDescriptor(object);
 			addSubjectFeedbackPropertyDescriptor(object);
-			addParentPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -191,21 +190,6 @@ public class FeedbackDefinitionItemProvider extends ItemProviderAdapter implemen
 				getString("_UI_PropertyDescriptor_description", "_UI_FeedbackDefinition_subjectFeedback_feature",
 						"_UI_FeedbackDefinition_type"),
 				RefPackage.Literals.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK, true, false, true, null, null, null));
-	}
-
-	/**
-	 * This adds a property descriptor for the Parent feature.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	protected void addParentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_FeedbackDefinition_parent_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_FeedbackDefinition_parent_feature",
-								"_UI_FeedbackDefinition_type"),
-						RefPackage.Literals.FEEDBACK_DEFINITION__PARENT, true, false, true, null, null, null));
 	}
 
 	/**

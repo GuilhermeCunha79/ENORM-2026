@@ -136,27 +136,6 @@ public class RefSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case RefPackage.CONDITION: {
-			Condition condition = (Condition) theEObject;
-			T result = caseCondition(condition);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case RefPackage.ACTION: {
-			Action action = (Action) theEObject;
-			T result = caseAction(action);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
-		case RefPackage.SORTING_POLICY: {
-			SortingPolicy sortingPolicy = (SortingPolicy) theEObject;
-			T result = caseSortingPolicy(sortingPolicy);
-			if (result == null)
-				result = defaultCase(theEObject);
-			return result;
-		}
 		case RefPackage.VALIDATION_RULE: {
 			ValidationRule validationRule = (ValidationRule) theEObject;
 			T result = caseValidationRule(validationRule);
@@ -185,9 +164,37 @@ public class RefSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case RefPackage.CONDITION: {
+			Condition condition = (Condition) theEObject;
+			T result = caseCondition(condition);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case RefPackage.CONDITION_VALUE: {
+			ConditionValue conditionValue = (ConditionValue) theEObject;
+			T result = caseConditionValue(conditionValue);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case RefPackage.ACTION: {
+			Action action = (Action) theEObject;
+			T result = caseAction(action);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case RefPackage.VERIFICATION_POLICY: {
 			VerificationPolicy verificationPolicy = (VerificationPolicy) theEObject;
 			T result = caseVerificationPolicy(verificationPolicy);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case RefPackage.SORTING_POLICY: {
+			SortingPolicy sortingPolicy = (SortingPolicy) theEObject;
+			T result = caseSortingPolicy(sortingPolicy);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -359,6 +366,21 @@ public class RefSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseCondition(Condition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Condition Value</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Condition Value</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConditionValue(ConditionValue object) {
 		return null;
 	}
 

@@ -4,7 +4,10 @@
  */
 package pt.isep.enorm.ref.ref.validation;
 
+import org.eclipse.emf.common.util.EList;
+import pt.isep.enorm.ref.ref.Attribute;
 import pt.isep.enorm.ref.ref.ConditionOperator;
+import pt.isep.enorm.ref.ref.ConditionValue;
 
 /**
  * A sample validator interface for {@link pt.isep.enorm.ref.ref.Condition}.
@@ -20,6 +23,10 @@ public interface ConditionValidator {
 	boolean validateField(String value);
 
 	boolean validateOperator(ConditionOperator value);
+
+	boolean validateAttribute(Attribute value);
+
+	boolean validateChildren(EList<ConditionValue> value);
 
 	boolean validateValue(String value);
 }

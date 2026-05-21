@@ -36,7 +36,6 @@ import pt.isep.enorm.ref.ref.VerificationRequirement;
  *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getSubjectResource <em>Subject Resource</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getAuthor <em>Author</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getSubjectFeedback <em>Subject Feedback</em>}</li>
- *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getParent <em>Parent</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getPolicy <em>Policy</em>}</li>
  *   <li>{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl#getRating <em>Rating</em>}</li>
  * </ul>
@@ -163,16 +162,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected FeedbackDefinition subjectFeedback;
-
-	/**
-	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParent()
-	 * @generated
-	 * @ordered
-	 */
-	protected FeedbackDefinition parent;
 
 	/**
 	 * The cached value of the '{@link #getPolicy() <em>Policy</em>}' containment reference.
@@ -485,48 +474,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@Override
-	public FeedbackDefinition getParent() {
-		if (parent != null && parent.eIsProxy()) {
-			InternalEObject oldParent = (InternalEObject) parent;
-			parent = (FeedbackDefinition) eResolveProxy(oldParent);
-			if (parent != oldParent) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, RefPackage.FEEDBACK_DEFINITION__PARENT,
-							oldParent, parent));
-			}
-		}
-		return parent;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public FeedbackDefinition basicGetParent() {
-		return parent;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setParent(FeedbackDefinition newParent) {
-		FeedbackDefinition oldParent = parent;
-		parent = newParent;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RefPackage.FEEDBACK_DEFINITION__PARENT, oldParent,
-					parent));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public FeedbackPolicy getPolicy() {
 		return policy;
 	}
@@ -673,10 +620,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			if (resolve)
 				return getSubjectFeedback();
 			return basicGetSubjectFeedback();
-		case RefPackage.FEEDBACK_DEFINITION__PARENT:
-			if (resolve)
-				return getParent();
-			return basicGetParent();
 		case RefPackage.FEEDBACK_DEFINITION__POLICY:
 			return getPolicy();
 		case RefPackage.FEEDBACK_DEFINITION__RATING:
@@ -716,9 +659,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			return;
 		case RefPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
 			setSubjectFeedback((FeedbackDefinition) newValue);
-			return;
-		case RefPackage.FEEDBACK_DEFINITION__PARENT:
-			setParent((FeedbackDefinition) newValue);
 			return;
 		case RefPackage.FEEDBACK_DEFINITION__POLICY:
 			setPolicy((FeedbackPolicy) newValue);
@@ -762,9 +702,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 		case RefPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
 			setSubjectFeedback((FeedbackDefinition) null);
 			return;
-		case RefPackage.FEEDBACK_DEFINITION__PARENT:
-			setParent((FeedbackDefinition) null);
-			return;
 		case RefPackage.FEEDBACK_DEFINITION__POLICY:
 			setPolicy((FeedbackPolicy) null);
 			return;
@@ -799,8 +736,6 @@ public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container impleme
 			return author != null;
 		case RefPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
 			return subjectFeedback != null;
-		case RefPackage.FEEDBACK_DEFINITION__PARENT:
-			return parent != null;
 		case RefPackage.FEEDBACK_DEFINITION__POLICY:
 			return policy != null;
 		case RefPackage.FEEDBACK_DEFINITION__RATING:

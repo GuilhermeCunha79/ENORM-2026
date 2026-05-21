@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import pt.isep.enorm.refdsl.refDsl.FeedbackKind;
+import pt.isep.enorm.refdsl.refDsl.FeedbackPolarity;
 import pt.isep.enorm.refdsl.refDsl.FeedbackSubjectScope;
 import pt.isep.enorm.refdsl.refDsl.FeedbackType;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
@@ -28,7 +29,9 @@ import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#getSubjectScope <em>Subject Scope</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#isHasRating <em>Has Rating</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#isRecursive <em>Recursive</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#isAllowsText <em>Allows Text</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#isAllowsMedia <em>Allows Media</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.FeedbackTypeImpl#getPolarity <em>Polarity</em>}</li>
  * </ul>
  *
  * @generated
@@ -136,6 +139,26 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
   protected boolean recursive = RECURSIVE_EDEFAULT;
 
   /**
+   * The default value of the '{@link #isAllowsText() <em>Allows Text</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isAllowsText()
+   * @generated
+   * @ordered
+   */
+  protected static final boolean ALLOWS_TEXT_EDEFAULT = false;
+
+  /**
+   * The cached value of the '{@link #isAllowsText() <em>Allows Text</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #isAllowsText()
+   * @generated
+   * @ordered
+   */
+  protected boolean allowsText = ALLOWS_TEXT_EDEFAULT;
+
+  /**
    * The default value of the '{@link #isAllowsMedia() <em>Allows Media</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -154,6 +177,26 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
    * @ordered
    */
   protected boolean allowsMedia = ALLOWS_MEDIA_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getPolarity() <em>Polarity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getPolarity()
+   * @generated
+   * @ordered
+   */
+  protected static final FeedbackPolarity POLARITY_EDEFAULT = FeedbackPolarity.NONE;
+
+  /**
+   * The cached value of the '{@link #getPolarity() <em>Polarity</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getPolarity()
+   * @generated
+   * @ordered
+   */
+  protected FeedbackPolarity polarity = POLARITY_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -307,6 +350,31 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
    * @generated
    */
   @Override
+  public boolean isAllowsText()
+  {
+    return allowsText;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setAllowsText(boolean newAllowsText)
+  {
+    boolean oldAllowsText = allowsText;
+    allowsText = newAllowsText;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_TYPE__ALLOWS_TEXT, oldAllowsText, allowsText));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public boolean isAllowsMedia()
   {
     return allowsMedia;
@@ -332,6 +400,31 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
    * @generated
    */
   @Override
+  public FeedbackPolarity getPolarity()
+  {
+    return polarity;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setPolarity(FeedbackPolarity newPolarity)
+  {
+    FeedbackPolarity oldPolarity = polarity;
+    polarity = newPolarity == null ? POLARITY_EDEFAULT : newPolarity;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.FEEDBACK_TYPE__POLARITY, oldPolarity, polarity));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
@@ -346,8 +439,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
         return isHasRating();
       case RefDslPackage.FEEDBACK_TYPE__RECURSIVE:
         return isRecursive();
+      case RefDslPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+        return isAllowsText();
       case RefDslPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
         return isAllowsMedia();
+      case RefDslPackage.FEEDBACK_TYPE__POLARITY:
+        return getPolarity();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -377,8 +474,14 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
       case RefDslPackage.FEEDBACK_TYPE__RECURSIVE:
         setRecursive((Boolean)newValue);
         return;
+      case RefDslPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+        setAllowsText((Boolean)newValue);
+        return;
       case RefDslPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
         setAllowsMedia((Boolean)newValue);
+        return;
+      case RefDslPackage.FEEDBACK_TYPE__POLARITY:
+        setPolarity((FeedbackPolarity)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -409,8 +512,14 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
       case RefDslPackage.FEEDBACK_TYPE__RECURSIVE:
         setRecursive(RECURSIVE_EDEFAULT);
         return;
+      case RefDslPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+        setAllowsText(ALLOWS_TEXT_EDEFAULT);
+        return;
       case RefDslPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
         setAllowsMedia(ALLOWS_MEDIA_EDEFAULT);
+        return;
+      case RefDslPackage.FEEDBACK_TYPE__POLARITY:
+        setPolarity(POLARITY_EDEFAULT);
         return;
     }
     super.eUnset(featureID);
@@ -436,8 +545,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
         return hasRating != HAS_RATING_EDEFAULT;
       case RefDslPackage.FEEDBACK_TYPE__RECURSIVE:
         return recursive != RECURSIVE_EDEFAULT;
+      case RefDslPackage.FEEDBACK_TYPE__ALLOWS_TEXT:
+        return allowsText != ALLOWS_TEXT_EDEFAULT;
       case RefDslPackage.FEEDBACK_TYPE__ALLOWS_MEDIA:
         return allowsMedia != ALLOWS_MEDIA_EDEFAULT;
+      case RefDslPackage.FEEDBACK_TYPE__POLARITY:
+        return polarity != POLARITY_EDEFAULT;
     }
     return super.eIsSet(featureID);
   }
@@ -463,8 +576,12 @@ public class FeedbackTypeImpl extends MinimalEObjectImpl.Container implements Fe
     result.append(hasRating);
     result.append(", recursive: ");
     result.append(recursive);
+    result.append(", allowsText: ");
+    result.append(allowsText);
     result.append(", allowsMedia: ");
     result.append(allowsMedia);
+    result.append(", polarity: ");
+    result.append(polarity);
     result.append(')');
     return result.toString();
   }

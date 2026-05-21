@@ -40,6 +40,8 @@ public interface AutomationRuleValidator {
 
 	boolean validateUses(ValidationRule value);
 
+	boolean validateInvokedValidationRules(EList<ValidationRule> value);
+
 	boolean validateConditions(EList<Condition> value);
 
 	boolean validateActions(EList<Action> value);

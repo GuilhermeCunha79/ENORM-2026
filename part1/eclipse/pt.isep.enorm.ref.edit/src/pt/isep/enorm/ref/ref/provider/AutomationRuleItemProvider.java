@@ -62,6 +62,7 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 			addInContextPropertyDescriptor(object);
 			addOnFeedbackPropertyDescriptor(object);
 			addUsesPropertyDescriptor(object);
+			addInvokedValidationRulesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -156,6 +157,21 @@ public class AutomationRuleItemProvider extends ItemProviderAdapter implements I
 						getString("_UI_PropertyDescriptor_description", "_UI_AutomationRule_uses_feature",
 								"_UI_AutomationRule_type"),
 						RefPackage.Literals.AUTOMATION_RULE__USES, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Invoked Validation Rules feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addInvokedValidationRulesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_AutomationRule_invokedValidationRules_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_AutomationRule_invokedValidationRules_feature",
+						"_UI_AutomationRule_type"),
+				RefPackage.Literals.AUTOMATION_RULE__INVOKED_VALIDATION_RULES, true, false, true, null, null, null));
 	}
 
 	/**

@@ -380,15 +380,19 @@ Deliverables: entities, DTOs, repositories, services, controllers, security conf
 
 ### 4.1 Prototype goals and scope
 
-TODO
+Each team member implemented one Spring Boot REF backend prototype following Activity 2 (Java 21, Spring Boot 3, JPA/H2, Generation Gap). Prototypes are reference implementations for Activity 4–5 and are **not** overwritten by DSL generation.
 
 ### 4.2 Prototype summary by tool
 
-TODO
+| Tool | Member | Prototype | Path |
+|------|--------|-----------|------|
+| Xtext | Pedro Vilarinho | Amazon | `part2/amazon-backend` |
+| MPS | Guilherme Cunha | Reddit | `part2/reddit-backend` |
+| Sirius | Francisco Peixoto | YouTube | `part2/youtube-backend` |
 
 ### 4.3 Inputs for code generation design
 
-TODO
+The three prototypes supply concrete examples of common vs variable code (entities, feedback flows, policies, manual services). Xtext generation (`RefBackendGenerator`) targets the same architecture; see `part2/tool2-xtext/readme.md`.
 
 ---
 
@@ -489,19 +493,82 @@ This matches the Activity 2 requirement: the generator should emit **stable gene
 
 ### 6.1 Generation rules and templates
 
-TODO
+The code generation strategy is based on a deterministic pipeline from REF model to Spring Boot backend artifacts.
+
+**Generation pipeline**
+
+1. Parse and validate the REF model (Xtext/MPS/Sirius source) into a normalized in-memory representation.
+2. Build a `GenerationPlan` with scenario name, packages, resources, feedback definitions, policies, and endpoint matrix.
+3. Execute templates in dependency order (domain -> repository -> service -> web -> security -> config/tests/docs).
+4. Write generated artifacts under `generated` packages and preserve manual extension classes (Generation Gap).
+5. Run formatting and compile checks.
+
+**Template catalog implemented by the team**
+
+- **Project templates:** `pom.xml`, `application.properties`, `README.md`, boot application class, H2 configuration.
+- **Domain templates:** `Generated<Entity>` mapped superclasses, enums, and manual subclasses per entity.
+- **Repository templates:** `Generated<Entity>Repository` + manual repository interfaces.
+- **Service templates:** `Generated<Entity>Service` CRUD/use-case skeletons + manual services for scenario rules.
+- **Web templates:** `Generated<Entity>Controller` REST endpoints + manual controllers.
+- **Security templates:** user details service, JWT service/filter, security configuration with role mapping.
+- **Error/API templates:** `ApiError`, `ApiExceptionHandler`, common response style.
+- **Test templates:** application context test and scenario smoke tests.
+
+**Generation rules (high level)**
+
+- For each `ResourceType`, generate one persistent entity, repository, service, and controller stack.
+- For each `FeedbackDefinition`, generate dedicated entity and endpoints bound to its subject scope.
+- For each `SortingPolicy`, generate repository query strategy and public read endpoint ordering options.
+- For each `AuthorizationRule`, generate route-level security matchers and service-level ownership checks.
+- For each `ValidationRule`, generate validation hook method and bind to `implementationId` extension point.
+- For each `ModerationPolicy` and `AutomationRule`, generate policy storage/handler artifacts when modeled; otherwise generate no-op hooks in services.
 
 ### 6.2 Common parts generation
 
-TODO
+The following artifacts are always generated for every REF application, independent of scenario content.
+
+- **Build/runtime baseline:** Maven project, Spring Boot dependencies, Java 21 config, H2 persistence setup.
+- **Core architecture:** package structure (`domain`, `repository`, `service`, `web`, `security`, `config`) and Generation Gap split (`generated` + manual subclasses).
+- **Authentication baseline:** user entity/repository, password hashing, JWT issuance and filter chain.
+- **Cross-cutting web layer:** consistent exception mapping, error payload shape, and JSON REST conventions.
+- **Base CRUD infrastructure:** generic create/read/list/update/delete scaffolding for generated entities.
+- **Testing baseline:** context startup test plus generated API smoke checks for core flows.
+
+These common parts are generated unconditionally because they implement team decisions from Activity 2 (single Spring/JPA/JWT target architecture).
 
 ### 6.3 Variable parts generation
 
-TODO
+Variable parts are generated from model values. The generator reads concrete REF elements and activates templates conditionally.
+
+| Model-driven variability | Trigger in model | Generated output | Generation condition |
+|---|---|---|---|
+| Scenario identity | `RefModel.name`, `RefModel.version` | Package names, artifactId, app title, README header | Always |
+| Roles/actors | `UserType.kind` values | `Role` enum literals and auth checks | Only literals present in model are generated |
+| Resource data model | `ResourceType` + `Attribute` | Entity fields, DTO fields, validation annotations | One field per attribute, mapped by `PrimitiveType` |
+| Media capabilities | `ResourceType.supportsMedia` or feedback media flags | Media reference fields/endpoints | Generated only when media is enabled |
+| Feedback operations | `FeedbackDefinition`, `FeedbackType`, `FeedbackSubjectScope` | Comment/review/vote/report/subscription entities + endpoints | Generated per feedback definition |
+| Rating behavior | `FeedbackType.hasRating` + `RatingPolicy` | Numeric rating constraints, aggregation endpoints | Generated only when rating is enabled |
+| Verification flow | `VerificationRequirement`, `VerificationPolicy` | Required/optional verification guards, policy service hooks | Generated when verification is present |
+| Authorization matrix | `AuthorizationRule` + actor/context/targets | Route policies + service guards | Generated per rule; if missing, defaults are deny-by-default except auth endpoints |
+| Sorting/read views | `SortingPolicy` | Sort enums, query methods, controller parameters | Generated per sorting policy |
+| Moderation and automation | `ModerationPolicy`, `AutomationRule`, `Condition`, `Action` | Policy entities/handlers or moderation check artifacts | Generated only when those elements exist |
+
+**How generation is decided**
+
+- The generator first computes feature flags from the model (for example: `hasRatings`, `hasSubscriptions`, `hasAutomation`).
+- Templates are organized by feature; each template has a clear activation predicate.
+- Generated service methods include protected hooks for behavior that depends on external data (manual override point).
+- Existing manual classes are never overwritten; only generated classes are replaced on regeneration.
 
 ### 6.4 Notes per implementation tool
 
-TODO
+Each tool contributes to Activity 5 using the same metamodel semantics and target architecture.
+
+- **Tool 1 (MPS):** projectional definitions emit structured model instances and can generate backend code through model-to-text templates; useful for strict model editing and immediate generator feedback.
+- **Tool 2 (Xtext):** textual DSL parsing/validation drives deterministic generation templates; best suited for versioned model files and CI-friendly regeneration.
+- **Tool 3 (Sirius):** graphical editor creates/updates EMF instances that feed the same generation pipeline after model serialization/export.
+
+To keep cross-tool compatibility, generation uses a normalized intermediate representation independent of source notation (graphical/textual/projectional). This allows the same rules to generate Amazon, Reddit, and YouTube backends with scenario-specific variability.
 
 ---
 

@@ -642,22 +642,13 @@ public interface RefPackage extends EPackage {
 	int RATING_POLICY__STEP = 2;
 
 	/**
-	 * The feature id for the '<em><b>Scale Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int RATING_POLICY__SCALE_KIND = 3;
-
-	/**
 	 * The number of structural features of the '<em>Rating Policy</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RATING_POLICY_FEATURE_COUNT = 4;
+	int RATING_POLICY_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl <em>Feedback Definition</em>}' class.
@@ -742,22 +733,13 @@ public interface RefPackage extends EPackage {
 	int FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = 7;
 
 	/**
-	 * The feature id for the '<em><b>Parent</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FEEDBACK_DEFINITION__PARENT = 8;
-
-	/**
 	 * The feature id for the '<em><b>Policy</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__POLICY = 9;
+	int FEEDBACK_DEFINITION__POLICY = 8;
 
 	/**
 	 * The feature id for the '<em><b>Rating</b></em>' containment reference.
@@ -766,7 +748,7 @@ public interface RefPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION__RATING = 10;
+	int FEEDBACK_DEFINITION__RATING = 9;
 
 	/**
 	 * The number of structural features of the '<em>Feedback Definition</em>' class.
@@ -775,7 +757,7 @@ public interface RefPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FEEDBACK_DEFINITION_FEATURE_COUNT = 11;
+	int FEEDBACK_DEFINITION_FEATURE_COUNT = 10;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.ConditionImpl <em>Condition</em>}' class.
@@ -785,52 +767,17 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getCondition()
 	 * @generated
 	 */
-	int CONDITION = 10;
+	int CONDITION = 14;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.ConditionValueImpl <em>Condition Value</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @see pt.isep.enorm.ref.ref.impl.ConditionValueImpl
+	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getConditionValue()
 	 * @generated
-	 * @ordered
 	 */
-	int CONDITION__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Field</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONDITION__FIELD = 1;
-
-	/**
-	 * The feature id for the '<em><b>Operator</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONDITION__OPERATOR = 2;
-
-	/**
-	 * The feature id for the '<em><b>Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONDITION__VALUE = 3;
-
-	/**
-	 * The number of structural features of the '<em>Condition</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONDITION_FEATURE_COUNT = 4;
+	int CONDITION_VALUE = 15;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.ActionImpl <em>Action</em>}' class.
@@ -840,43 +787,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getAction()
 	 * @generated
 	 */
-	int ACTION = 11;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTION__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Kind</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTION__KIND = 1;
-
-	/**
-	 * The feature id for the '<em><b>Message</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTION__MESSAGE = 2;
-
-	/**
-	 * The number of structural features of the '<em>Action</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ACTION_FEATURE_COUNT = 3;
+	int ACTION = 16;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.SortingPolicyImpl <em>Sorting Policy</em>}' class.
@@ -886,70 +797,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getSortingPolicy()
 	 * @generated
 	 */
-	int SORTING_POLICY = 12;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Criterion</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__CRITERION = 1;
-
-	/**
-	 * The feature id for the '<em><b>Direction</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__DIRECTION = 2;
-
-	/**
-	 * The feature id for the '<em><b>Applies To Resource</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__APPLIES_TO_RESOURCE = 3;
-
-	/**
-	 * The feature id for the '<em><b>Applies To Feedback</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__APPLIES_TO_FEEDBACK = 4;
-
-	/**
-	 * The feature id for the '<em><b>In Context</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY__IN_CONTEXT = 5;
-
-	/**
-	 * The number of structural features of the '<em>Sorting Policy</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SORTING_POLICY_FEATURE_COUNT = 6;
+	int SORTING_POLICY = 18;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.ValidationRuleImpl <em>Validation Rule</em>}' class.
@@ -959,7 +807,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getValidationRule()
 	 * @generated
 	 */
-	int VALIDATION_RULE = 13;
+	int VALIDATION_RULE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1050,7 +898,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getModerationPolicy()
 	 * @generated
 	 */
-	int MODERATION_POLICY = 14;
+	int MODERATION_POLICY = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1141,7 +989,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getAuthorizationRule()
 	 * @generated
 	 */
-	int AUTHORIZATION_RULE = 15;
+	int AUTHORIZATION_RULE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1214,7 +1062,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getAutomationRule()
 	 * @generated
 	 */
-	int AUTOMATION_RULE = 16;
+	int AUTOMATION_RULE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1271,13 +1119,22 @@ public interface RefPackage extends EPackage {
 	int AUTOMATION_RULE__USES = 5;
 
 	/**
+	 * The feature id for the '<em><b>Invoked Validation Rules</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AUTOMATION_RULE__INVOKED_VALIDATION_RULES = 6;
+
+	/**
 	 * The feature id for the '<em><b>Conditions</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__CONDITIONS = 6;
+	int AUTOMATION_RULE__CONDITIONS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Actions</b></em>' containment reference list.
@@ -1286,7 +1143,7 @@ public interface RefPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE__ACTIONS = 7;
+	int AUTOMATION_RULE__ACTIONS = 8;
 
 	/**
 	 * The number of structural features of the '<em>Automation Rule</em>' class.
@@ -1295,7 +1152,106 @@ public interface RefPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int AUTOMATION_RULE_FEATURE_COUNT = 8;
+	int AUTOMATION_RULE_FEATURE_COUNT = 9;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Operator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__OPERATOR = 1;
+
+	/**
+	 * The feature id for the '<em><b>Attribute</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__ATTRIBUTE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION__CHILDREN = 3;
+
+	/**
+	 * The number of structural features of the '<em>Condition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_FEATURE_COUNT = 4;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_VALUE__VALUE = 0;
+
+	/**
+	 * The number of structural features of the '<em>Condition Value</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONDITION_VALUE_FEATURE_COUNT = 1;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Kind</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__KIND = 1;
+
+	/**
+	 * The feature id for the '<em><b>Message</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION__MESSAGE = 2;
+
+	/**
+	 * The number of structural features of the '<em>Action</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACTION_FEATURE_COUNT = 3;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.impl.VerificationPolicyImpl <em>Verification Policy</em>}' class.
@@ -1353,6 +1309,69 @@ public interface RefPackage extends EPackage {
 	int VERIFICATION_POLICY_FEATURE_COUNT = 4;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__NAME = 0;
+
+	/**
+	 * The feature id for the '<em><b>Criterion</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__CRITERION = 1;
+
+	/**
+	 * The feature id for the '<em><b>Direction</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__DIRECTION = 2;
+
+	/**
+	 * The feature id for the '<em><b>Applies To Resource</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__APPLIES_TO_RESOURCE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Applies To Feedback</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__APPLIES_TO_FEEDBACK = 4;
+
+	/**
+	 * The feature id for the '<em><b>In Context</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY__IN_CONTEXT = 5;
+
+	/**
+	 * The number of structural features of the '<em>Sorting Policy</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SORTING_POLICY_FEATURE_COUNT = 6;
+
+	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.UserKind <em>User Kind</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1360,7 +1379,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getUserKind()
 	 * @generated
 	 */
-	int USER_KIND = 18;
+	int USER_KIND = 19;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.ContextKind <em>Context Kind</em>}' enum.
@@ -1370,7 +1389,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getContextKind()
 	 * @generated
 	 */
-	int CONTEXT_KIND = 19;
+	int CONTEXT_KIND = 20;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.PrimitiveType <em>Primitive Type</em>}' enum.
@@ -1380,7 +1399,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 20;
+	int PRIMITIVE_TYPE = 21;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.FeedbackKind <em>Feedback Kind</em>}' enum.
@@ -1390,7 +1409,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getFeedbackKind()
 	 * @generated
 	 */
-	int FEEDBACK_KIND = 21;
+	int FEEDBACK_KIND = 22;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.FeedbackSubjectScope <em>Feedback Subject Scope</em>}' enum.
@@ -1400,7 +1419,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getFeedbackSubjectScope()
 	 * @generated
 	 */
-	int FEEDBACK_SUBJECT_SCOPE = 22;
+	int FEEDBACK_SUBJECT_SCOPE = 23;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.FeedbackStatus <em>Feedback Status</em>}' enum.
@@ -1410,7 +1429,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getFeedbackStatus()
 	 * @generated
 	 */
-	int FEEDBACK_STATUS = 23;
+	int FEEDBACK_STATUS = 25;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.FeedbackPolarity <em>Feedback Polarity</em>}' enum.
@@ -1430,17 +1449,7 @@ public interface RefPackage extends EPackage {
 	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getVerificationRequirement()
 	 * @generated
 	 */
-	int VERIFICATION_REQUIREMENT = 25;
-
-	/**
-	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.RatingScaleKind <em>Rating Scale Kind</em>}' enum.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see pt.isep.enorm.ref.ref.RatingScaleKind
-	 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getRatingScaleKind()
-	 * @generated
-	 */
-	int RATING_SCALE_KIND = 26;
+	int VERIFICATION_REQUIREMENT = 26;
 
 	/**
 	 * The meta object id for the '{@link pt.isep.enorm.ref.ref.ValidationKind <em>Validation Kind</em>}' enum.
@@ -2150,17 +2159,6 @@ public interface RefPackage extends EPackage {
 	EAttribute getRatingPolicy_Step();
 
 	/**
-	 * Returns the meta object for the attribute '{@link pt.isep.enorm.ref.ref.RatingPolicy#getScaleKind <em>Scale Kind</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Scale Kind</em>'.
-	 * @see pt.isep.enorm.ref.ref.RatingPolicy#getScaleKind()
-	 * @see #getRatingPolicy()
-	 * @generated
-	 */
-	EAttribute getRatingPolicy_ScaleKind();
-
-	/**
 	 * Returns the meta object for class '{@link pt.isep.enorm.ref.ref.FeedbackDefinition <em>Feedback Definition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2259,17 +2257,6 @@ public interface RefPackage extends EPackage {
 	EReference getFeedbackDefinition_SubjectFeedback();
 
 	/**
-	 * Returns the meta object for the reference '{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getParent <em>Parent</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Parent</em>'.
-	 * @see pt.isep.enorm.ref.ref.FeedbackDefinition#getParent()
-	 * @see #getFeedbackDefinition()
-	 * @generated
-	 */
-	EReference getFeedbackDefinition_Parent();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link pt.isep.enorm.ref.ref.FeedbackDefinition#getPolicy <em>Policy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2313,17 +2300,6 @@ public interface RefPackage extends EPackage {
 	EAttribute getCondition_Name();
 
 	/**
-	 * Returns the meta object for the attribute '{@link pt.isep.enorm.ref.ref.Condition#getField <em>Field</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Field</em>'.
-	 * @see pt.isep.enorm.ref.ref.Condition#getField()
-	 * @see #getCondition()
-	 * @generated
-	 */
-	EAttribute getCondition_Field();
-
-	/**
 	 * Returns the meta object for the attribute '{@link pt.isep.enorm.ref.ref.Condition#getOperator <em>Operator</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2335,15 +2311,47 @@ public interface RefPackage extends EPackage {
 	EAttribute getCondition_Operator();
 
 	/**
-	 * Returns the meta object for the attribute '{@link pt.isep.enorm.ref.ref.Condition#getValue <em>Value</em>}'.
+	 * Returns the meta object for the reference '{@link pt.isep.enorm.ref.ref.Condition#getAttribute <em>Attribute</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Value</em>'.
-	 * @see pt.isep.enorm.ref.ref.Condition#getValue()
+	 * @return the meta object for the reference '<em>Attribute</em>'.
+	 * @see pt.isep.enorm.ref.ref.Condition#getAttribute()
 	 * @see #getCondition()
 	 * @generated
 	 */
-	EAttribute getCondition_Value();
+	EReference getCondition_Attribute();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link pt.isep.enorm.ref.ref.Condition#getChildren <em>Children</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Children</em>'.
+	 * @see pt.isep.enorm.ref.ref.Condition#getChildren()
+	 * @see #getCondition()
+	 * @generated
+	 */
+	EReference getCondition_Children();
+
+	/**
+	 * Returns the meta object for class '{@link pt.isep.enorm.ref.ref.ConditionValue <em>Condition Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Condition Value</em>'.
+	 * @see pt.isep.enorm.ref.ref.ConditionValue
+	 * @generated
+	 */
+	EClass getConditionValue();
+
+	/**
+	 * Returns the meta object for the attribute '{@link pt.isep.enorm.ref.ref.ConditionValue#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see pt.isep.enorm.ref.ref.ConditionValue#getValue()
+	 * @see #getConditionValue()
+	 * @generated
+	 */
+	EAttribute getConditionValue_Value();
 
 	/**
 	 * Returns the meta object for class '{@link pt.isep.enorm.ref.ref.Action <em>Action</em>}'.
@@ -2813,6 +2821,17 @@ public interface RefPackage extends EPackage {
 	EReference getAutomationRule_Uses();
 
 	/**
+	 * Returns the meta object for the reference list '{@link pt.isep.enorm.ref.ref.AutomationRule#getInvokedValidationRules <em>Invoked Validation Rules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Invoked Validation Rules</em>'.
+	 * @see pt.isep.enorm.ref.ref.AutomationRule#getInvokedValidationRules()
+	 * @see #getAutomationRule()
+	 * @generated
+	 */
+	EReference getAutomationRule_InvokedValidationRules();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link pt.isep.enorm.ref.ref.AutomationRule#getConditions <em>Conditions</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2967,16 +2986,6 @@ public interface RefPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getVerificationRequirement();
-
-	/**
-	 * Returns the meta object for enum '{@link pt.isep.enorm.ref.ref.RatingScaleKind <em>Rating Scale Kind</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for enum '<em>Rating Scale Kind</em>'.
-	 * @see pt.isep.enorm.ref.ref.RatingScaleKind
-	 * @generated
-	 */
-	EEnum getRatingScaleKind();
 
 	/**
 	 * Returns the meta object for enum '{@link pt.isep.enorm.ref.ref.ValidationKind <em>Validation Kind</em>}'.
@@ -3567,14 +3576,6 @@ public interface RefPackage extends EPackage {
 		EAttribute RATING_POLICY__STEP = eINSTANCE.getRatingPolicy_Step();
 
 		/**
-		 * The meta object literal for the '<em><b>Scale Kind</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute RATING_POLICY__SCALE_KIND = eINSTANCE.getRatingPolicy_ScaleKind();
-
-		/**
 		 * The meta object literal for the '{@link pt.isep.enorm.ref.ref.impl.FeedbackDefinitionImpl <em>Feedback Definition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3652,14 +3653,6 @@ public interface RefPackage extends EPackage {
 		EReference FEEDBACK_DEFINITION__SUBJECT_FEEDBACK = eINSTANCE.getFeedbackDefinition_SubjectFeedback();
 
 		/**
-		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference FEEDBACK_DEFINITION__PARENT = eINSTANCE.getFeedbackDefinition_Parent();
-
-		/**
 		 * The meta object literal for the '<em><b>Policy</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3694,14 +3687,6 @@ public interface RefPackage extends EPackage {
 		EAttribute CONDITION__NAME = eINSTANCE.getCondition_Name();
 
 		/**
-		 * The meta object literal for the '<em><b>Field</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute CONDITION__FIELD = eINSTANCE.getCondition_Field();
-
-		/**
 		 * The meta object literal for the '<em><b>Operator</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -3710,12 +3695,38 @@ public interface RefPackage extends EPackage {
 		EAttribute CONDITION__OPERATOR = eINSTANCE.getCondition_Operator();
 
 		/**
+		 * The meta object literal for the '<em><b>Attribute</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONDITION__ATTRIBUTE = eINSTANCE.getCondition_Attribute();
+
+		/**
+		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONDITION__CHILDREN = eINSTANCE.getCondition_Children();
+
+		/**
+		 * The meta object literal for the '{@link pt.isep.enorm.ref.ref.impl.ConditionValueImpl <em>Condition Value</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see pt.isep.enorm.ref.ref.impl.ConditionValueImpl
+		 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getConditionValue()
+		 * @generated
+		 */
+		EClass CONDITION_VALUE = eINSTANCE.getConditionValue();
+
+		/**
 		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute CONDITION__VALUE = eINSTANCE.getCondition_Value();
+		EAttribute CONDITION_VALUE__VALUE = eINSTANCE.getConditionValue_Value();
 
 		/**
 		 * The meta object literal for the '{@link pt.isep.enorm.ref.ref.impl.ActionImpl <em>Action</em>}' class.
@@ -4074,6 +4085,14 @@ public interface RefPackage extends EPackage {
 		EReference AUTOMATION_RULE__USES = eINSTANCE.getAutomationRule_Uses();
 
 		/**
+		 * The meta object literal for the '<em><b>Invoked Validation Rules</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AUTOMATION_RULE__INVOKED_VALIDATION_RULES = eINSTANCE.getAutomationRule_InvokedValidationRules();
+
+		/**
 		 * The meta object literal for the '<em><b>Conditions</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -4210,16 +4229,6 @@ public interface RefPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum VERIFICATION_REQUIREMENT = eINSTANCE.getVerificationRequirement();
-
-		/**
-		 * The meta object literal for the '{@link pt.isep.enorm.ref.ref.RatingScaleKind <em>Rating Scale Kind</em>}' enum.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see pt.isep.enorm.ref.ref.RatingScaleKind
-		 * @see pt.isep.enorm.ref.ref.impl.RefPackageImpl#getRatingScaleKind()
-		 * @generated
-		 */
-		EEnum RATING_SCALE_KIND = eINSTANCE.getRatingScaleKind();
 
 		/**
 		 * The meta object literal for the '{@link pt.isep.enorm.ref.ref.ValidationKind <em>Validation Kind</em>}' enum.

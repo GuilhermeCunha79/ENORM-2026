@@ -75,25 +75,28 @@ public interface VerificationPolicy extends EObject
 
   /**
    * Returns the value of the '<em><b>Applies When</b></em>' attribute.
+   * The literals are from the enumeration {@link pt.isep.enorm.refdsl.refDsl.TriggerEvent}.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the value of the '<em>Applies When</em>' attribute.
-   * @see #setAppliesWhen(String)
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
+   * @see #setAppliesWhen(TriggerEvent)
    * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getVerificationPolicy_AppliesWhen()
    * @model
    * @generated
    */
-  String getAppliesWhen();
+  TriggerEvent getAppliesWhen();
 
   /**
    * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.VerificationPolicy#getAppliesWhen <em>Applies When</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the new value of the '<em>Applies When</em>' attribute.
+   * @see pt.isep.enorm.refdsl.refDsl.TriggerEvent
    * @see #getAppliesWhen()
    * @generated
    */
-  void setAppliesWhen(String value);
+  void setAppliesWhen(TriggerEvent value);
 
   /**
    * Returns the value of the '<em><b>Verifies</b></em>' reference.

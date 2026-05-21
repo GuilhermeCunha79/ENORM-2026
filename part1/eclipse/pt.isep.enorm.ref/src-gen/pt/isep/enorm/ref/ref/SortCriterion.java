@@ -36,17 +36,7 @@ public enum SortCriterion implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	VALUE(1, "VALUE", "VALUE"),
-
-	/**
-	 * The '<em><b>RELEVANCE</b></em>' literal object.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #RELEVANCE_VALUE
-	 * @generated
-	 * @ordered
-	 */
-	RELEVANCE(2, "RELEVANCE", "RELEVANCE");
+	VALUE(1, "VALUE", "VALUE");
 
 	/**
 	 * The '<em><b>DATE</b></em>' literal value.
@@ -71,23 +61,12 @@ public enum SortCriterion implements Enumerator {
 	public static final int VALUE_VALUE = 1;
 
 	/**
-	 * The '<em><b>RELEVANCE</b></em>' literal value.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #RELEVANCE
-	 * @model
-	 * @generated
-	 * @ordered
-	 */
-	public static final int RELEVANCE_VALUE = 2;
-
-	/**
 	 * An array of all the '<em><b>Sort Criterion</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private static final SortCriterion[] VALUES_ARRAY = new SortCriterion[] { DATE, VALUE, RELEVANCE, };
+	private static final SortCriterion[] VALUES_ARRAY = new SortCriterion[] { DATE, VALUE, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Sort Criterion</b></em>' enumerators.
@@ -147,8 +126,6 @@ public enum SortCriterion implements Enumerator {
 			return DATE;
 		case VALUE_VALUE:
 			return VALUE;
-		case RELEVANCE_VALUE:
-			return RELEVANCE;
 		}
 		return null;
 	}

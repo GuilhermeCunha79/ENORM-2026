@@ -1,0 +1,275 @@
+@startuml
+title REF Model - Amazon
+skinparam classAttributeIconSize 0
+
+class RefModel {
+  name = Amazon
+  version = "1.0.0"
+}
+
+class UserType_User {
+  name = User
+  kind = GENERIC
+}
+RefModel --> UserType_User
+
+class UserType_Buyer {
+  name = Buyer
+  kind = BUYER
+}
+RefModel --> UserType_Buyer
+
+class UserType_Seller {
+  name = Seller
+  kind = SELLER
+}
+RefModel --> UserType_Seller
+
+class UserType_Moderator {
+  name = Moderator
+  kind = MODERATOR
+}
+RefModel --> UserType_Moderator
+
+class ResourceType_Product {
+  name = Product
+  supportsMedia = true
+}
+RefModel --> ResourceType_Product
+class Attribute_Product_title {
+  name = title
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_title
+class Attribute_Product_description {
+  name = description
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_description
+class Attribute_Product_price {
+  name = price
+  type = NUMBER
+  required = true
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_price
+class Attribute_Product_sku {
+  name = sku
+  type = TEXT
+  required = false
+  multiValued = false
+}
+ResourceType_Product *-- Attribute_Product_sku
+
+class ResourceType_Order {
+  name = Order
+  supportsMedia = false
+}
+RefModel --> ResourceType_Order
+class Attribute_Order_orderId {
+  name = orderId
+  type = TEXT
+  required = true
+  multiValued = false
+}
+ResourceType_Order *-- Attribute_Order_orderId
+class Attribute_Order_total {
+  name = total
+  type = NUMBER
+  required = true
+  multiValued = false
+}
+ResourceType_Order *-- Attribute_Order_total
+
+class ContextType_AmazonCatalog {
+  name = AmazonCatalog
+  kind = CATALOG
+}
+RefModel --> ContextType_AmazonCatalog
+ContextType_AmazonCatalog --> ResourceType_Product : contains
+ContextType_AmazonCatalog --> ResourceType_Order : contains
+ResourceType_Order --> ResourceType_Product : OrderContainsProduct ["1".."0..1"] recursive=false
+
+class FeedbackType_ProductReviewType {
+  name = ProductReviewType
+  kind = REVIEW
+  subjectScope = RESOURCE_ONLY
+  hasRating = true
+  recursive = false
+  allowsText = true
+  allowsMedia = false
+  polarity = STARS
+}
+RefModel --> FeedbackType_ProductReviewType
+
+class FeedbackType_ThreadCommentType {
+  name = ThreadCommentType
+  kind = COMMENT
+  subjectScope = RESOURCE_OR_FEEDBACK
+  hasRating = false
+  recursive = true
+  allowsText = true
+  allowsMedia = false
+  polarity = NONE
+}
+RefModel --> FeedbackType_ThreadCommentType
+
+class FeedbackDefinition_ProductReview {
+  name = ProductReview
+  requiresVerifiedContext = true
+  verificationRequirement = OPTIONAL
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_ProductReview
+FeedbackDefinition_ProductReview --> FeedbackType_ProductReviewType : type
+FeedbackDefinition_ProductReview --> UserType_Buyer : author
+FeedbackDefinition_ProductReview --> ResourceType_Product : subjectResource
+class FeedbackPolicy_ProductReview {
+  status = ENABLED
+}
+FeedbackDefinition_ProductReview *-- FeedbackPolicy_ProductReview
+class RatingPolicy_ProductReview {
+  min = 1.0
+  max = 5.0
+  step = 1.0
+}
+FeedbackDefinition_ProductReview *-- RatingPolicy_ProductReview
+
+class FeedbackDefinition_TopThreadComment {
+  name = TopThreadComment
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_TopThreadComment
+FeedbackDefinition_TopThreadComment --> FeedbackType_ThreadCommentType : type
+FeedbackDefinition_TopThreadComment --> UserType_Buyer : author
+FeedbackDefinition_TopThreadComment --> ResourceType_Product : subjectResource
+class FeedbackPolicy_TopThreadComment {
+  status = ENABLED
+}
+FeedbackDefinition_TopThreadComment *-- FeedbackPolicy_TopThreadComment
+
+class FeedbackDefinition_ReplyComment {
+  name = ReplyComment
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = false
+}
+RefModel --> FeedbackDefinition_ReplyComment
+FeedbackDefinition_ReplyComment --> FeedbackType_ThreadCommentType : type
+FeedbackDefinition_ReplyComment --> UserType_Seller : author
+FeedbackDefinition_ReplyComment --> FeedbackDefinition_TopThreadComment : subjectFeedback
+class FeedbackPolicy_ReplyComment {
+  status = ENABLED
+}
+FeedbackDefinition_ReplyComment *-- FeedbackPolicy_ReplyComment
+
+class ValidationRule_AmazonReviewValidation {
+  name = AmazonReviewValidation
+  kind = AUTOMATIC
+  severity = ERROR
+  expression = "rating_and_text_ok"
+  implementationId = amazon_rev_001
+}
+RefModel --> ValidationRule_AmazonReviewValidation
+ValidationRule_AmazonReviewValidation --> ResourceType_Product : appliesToResource
+ValidationRule_AmazonReviewValidation --> FeedbackDefinition_ProductReview : appliesToFeedback
+
+class AuthorizationRule_BuyerReadProduct {
+  name = BuyerReadProduct
+  allowedAction = READ
+}
+RefModel --> AuthorizationRule_BuyerReadProduct
+AuthorizationRule_BuyerReadProduct --> UserType_Buyer : actor
+AuthorizationRule_BuyerReadProduct --> ResourceType_Product : resourceTarget
+AuthorizationRule_BuyerReadProduct --> FeedbackDefinition_ProductReview : feedbackTarget
+AuthorizationRule_BuyerReadProduct --> ContextType_AmazonCatalog : context
+
+class AuthorizationRule_BuyerThreadAuth {
+  name = BuyerThreadAuth
+  allowedAction = COMMENT
+}
+RefModel --> AuthorizationRule_BuyerThreadAuth
+AuthorizationRule_BuyerThreadAuth --> UserType_Buyer : actor
+AuthorizationRule_BuyerThreadAuth --> ResourceType_Product : resourceTarget
+AuthorizationRule_BuyerThreadAuth --> FeedbackDefinition_TopThreadComment : feedbackTarget
+AuthorizationRule_BuyerThreadAuth --> ContextType_AmazonCatalog : context
+
+class AuthorizationRule_SellerReplyAuth {
+  name = SellerReplyAuth
+  allowedAction = COMMENT
+}
+RefModel --> AuthorizationRule_SellerReplyAuth
+AuthorizationRule_SellerReplyAuth --> UserType_Seller : actor
+AuthorizationRule_SellerReplyAuth --> ResourceType_Product : resourceTarget
+AuthorizationRule_SellerReplyAuth --> FeedbackDefinition_ReplyComment : feedbackTarget
+AuthorizationRule_SellerReplyAuth --> ContextType_AmazonCatalog : context
+
+class ModerationPolicy_AmazonReviewModeration {
+  name = AmazonReviewModeration
+  mode = HYBRID
+  trigger = ON_REPORT_THRESHOLD
+  decision = FLAGGED
+}
+RefModel --> ModerationPolicy_AmazonReviewModeration
+ModerationPolicy_AmazonReviewModeration --> ResourceType_Product : monitorsResource
+ModerationPolicy_AmazonReviewModeration --> FeedbackDefinition_ProductReview : monitorsFeedback
+ModerationPolicy_AmazonReviewModeration --> UserType_Moderator : executedBy
+ModerationPolicy_AmazonReviewModeration --> ContextType_AmazonCatalog : inContext
+
+class AutomationRule_AmazonReviewAutomation {
+  name = AmazonReviewAutomation
+  trigger = ON_FEEDBACK_CREATE
+}
+RefModel --> AutomationRule_AmazonReviewAutomation
+AutomationRule_AmazonReviewAutomation --> ResourceType_Product : context
+AutomationRule_AmazonReviewAutomation --> ContextType_AmazonCatalog : inContext
+AutomationRule_AmazonReviewAutomation --> FeedbackDefinition_ProductReview : onFeedback
+AutomationRule_AmazonReviewAutomation --> ValidationRule_AmazonReviewValidation : uses
+AutomationRule_AmazonReviewAutomation --> Condition_AmazonReviewAutomation_TitleNotEmpty : condition
+AutomationRule_AmazonReviewAutomation --> Action_AmazonReviewAutomation_LogReview : action
+class Condition_AmazonReviewAutomation_TitleNotEmpty {
+  name = TitleNotEmpty
+  operator = HAS_PROPERTY
+  attribute = title
+}
+class Action_AmazonReviewAutomation_LogReview {
+  name = LogReview
+  kind = DISPLAY_MESSAGE
+  message = "Review accepted for validation pipeline"
+}
+
+class VerificationPolicy_ProductReviewVerification {
+  name = ProductReviewVerification
+  mode = AUTOMATIC
+  appliesWhen = ON_FEEDBACK_CREATE
+}
+RefModel --> VerificationPolicy_ProductReviewVerification
+VerificationPolicy_ProductReviewVerification --> FeedbackDefinition_ProductReview : verifies
+
+class SortingPolicy_ProductByPrice {
+  name = ProductByPrice
+  criterion = VALUE
+  direction = DESC
+}
+RefModel --> SortingPolicy_ProductByPrice
+SortingPolicy_ProductByPrice --> ResourceType_Product : appliesToResource
+SortingPolicy_ProductByPrice --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_ProductByPrice --> ContextType_AmazonCatalog : inContext
+
+class SortingPolicy_ProductByDate {
+  name = ProductByDate
+  criterion = DATE
+  direction = DESC
+}
+RefModel --> SortingPolicy_ProductByDate
+SortingPolicy_ProductByDate --> ResourceType_Product : appliesToResource
+SortingPolicy_ProductByDate --> FeedbackDefinition_UNNAMED : appliesToFeedback
+SortingPolicy_ProductByDate --> ContextType_AmazonCatalog : inContext
+
+@enduml

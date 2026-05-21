@@ -67,6 +67,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public static final String INVALID_FEEDBACK_DEFINITION_NAME_DUPLICATE = "invalidFeedbackDefinitionNameDuplicate";
 	public static final String INVALID_FEEDBACK_DEFINITION_TARGETS = "invalidFeedbackDefinitionTargets";
 	public static final String INVALID_FEEDBACK_DEFINITION_AUTHOR = "invalidFeedbackDefinitionAuthor";
+	public static final String INVALID_FEEDBACK_DEFINITION_TYPE = "invalidFeedbackDefinitionType";
 	public static final String INVALID_FEEDBACK_DEFINITION_RATING = "invalidFeedbackDefinitionRating";
 	public static final String INVALID_FEEDBACK_DEFINITION_SUBJECT_FEEDBACK_TYPE = "invalidFeedbackDefinitionSubjectFeedbackType";
 	public static final String INVALID_FEEDBACK_DEFINITION_SUBJECT_FEEDBACK_SELF = "invalidFeedbackDefinitionSubjectFeedbackSelf";
@@ -92,6 +93,7 @@ public class RefDslValidator extends AbstractRefDslValidator {
 	public static final String INVALID_AUTOMATION_RULE_NAME = "invalidAutomationRuleName";
 	public static final String INVALID_AUTOMATION_RULE_TRIGGER = "invalidAutomationRuleTrigger";
 	public static final String INVALID_AUTOMATION_RULE_ACTION = "invalidAutomationRuleAction";
+	public static final String INVALID_AUTOMATION_RULE_CONDITIONS = "invalidAutomationRuleConditions";
 
 	public static final String INVALID_VERIFICATION_POLICY_NAME_DUPLICATE = "invalidVerificationPolicyNameDuplicate";
 	public static final String INVALID_VERIFICATION_POLICY_VERIFIES = "invalidVerificationPolicyVerifies";
@@ -467,6 +469,15 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
+	// Requires a FeedbackType reference on every FeedbackDefinition.
+	@Check
+	public void checkFeedbackDefinitionType(FeedbackDefinition fd) {
+		if (fd.getType() == null) {
+			error("FeedbackDefinition must reference a FeedbackType.", RefDslPackage.Literals.FEEDBACK_DEFINITION__TYPE,
+					INVALID_FEEDBACK_DEFINITION_TYPE);
+		}
+	}
+
 	// Binds subjectResource / subjectFeedback to FeedbackType.subjectScope (RESOURCE / FEEDBACK / OR).
 	@Check
 	public void checkFeedbackDefinitionTargetsForScope(FeedbackDefinition fd) {
@@ -703,15 +714,12 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
-	// AUTOMATIC mode requires a non-empty trigger string.
+	// AUTOMATIC mode requires a TriggerEvent.
 	@Check
 	public void checkModerationPolicyTriggerForAuto(ModerationPolicy mp) {
-		if (mp.getMode() == ModerationMode.AUTOMATIC) {
-			String t = mp.getTrigger();
-			if (t == null || t.trim().isEmpty()) {
-				error("ModerationPolicy trigger must not be empty when mode is AUTOMATIC.",
-						RefDslPackage.Literals.MODERATION_POLICY__TRIGGER, INVALID_MODERATION_POLICY_TRIGGER_AUTO);
-			}
+		if (mp.getMode() == ModerationMode.AUTOMATIC && mp.getTrigger() == null) {
+			error("ModerationPolicy trigger must be set when mode is AUTOMATIC.",
+					RefDslPackage.Literals.MODERATION_POLICY__TRIGGER, INVALID_MODERATION_POLICY_TRIGGER_AUTO);
 		}
 	}
 
@@ -786,20 +794,29 @@ public class RefDslValidator extends AbstractRefDslValidator {
 		}
 	}
 
-	// trigger must be non-empty.
+	// trigger must be set (TriggerEvent).
 	@Check
 	public void checkAutomationRuleTrigger(AutomationRule rule) {
-		if (rule.getTrigger() == null || rule.getTrigger().trim().isEmpty()) {
-			error("AutomationRule trigger must not be empty.", RefDslPackage.Literals.AUTOMATION_RULE__TRIGGER,
+		if (rule.getTrigger() == null) {
+			error("AutomationRule trigger must be set.", RefDslPackage.Literals.AUTOMATION_RULE__TRIGGER,
 					INVALID_AUTOMATION_RULE_TRIGGER);
 		}
 	}
 
-	// actionDescription must be non-empty.
+	// At least one structured Condition is required (v3 AutomationRule).
 	@Check
-	public void checkAutomationRuleAction(AutomationRule rule) {
-		if (rule.getActionDescription() == null || rule.getActionDescription().trim().isEmpty()) {
-			error("AutomationRule actionDescription must not be empty.", RefDslPackage.Literals.AUTOMATION_RULE__ACTION_DESCRIPTION,
+	public void checkAutomationRuleConditions(AutomationRule rule) {
+		if (rule.getConditions() == null || rule.getConditions().isEmpty()) {
+			error("AutomationRule must define at least one condition.", RefDslPackage.Literals.AUTOMATION_RULE__CONDITIONS,
+					INVALID_AUTOMATION_RULE_CONDITIONS);
+		}
+	}
+
+	// At least one Action is required (v3 AutomationRule).
+	@Check
+	public void checkAutomationRuleActions(AutomationRule rule) {
+		if (rule.getActions() == null || rule.getActions().isEmpty()) {
+			error("AutomationRule must define at least one action.", RefDslPackage.Literals.AUTOMATION_RULE__ACTIONS,
 					INVALID_AUTOMATION_RULE_ACTION);
 		}
 	}

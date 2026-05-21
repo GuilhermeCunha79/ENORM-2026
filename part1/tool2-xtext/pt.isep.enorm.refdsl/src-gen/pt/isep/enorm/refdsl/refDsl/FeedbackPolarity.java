@@ -11,113 +11,135 @@ import org.eclipse.emf.common.util.Enumerator;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Rating Scale Kind</b></em>',
+ * A representation of the literals of the enumeration '<em><b>Feedback Polarity</b></em>',
  * and utility methods for working with them.
  * <!-- end-user-doc -->
- * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRatingScaleKind()
+ * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getFeedbackPolarity()
  * @model
  * @generated
  */
-public enum RatingScaleKind implements Enumerator
+public enum FeedbackPolarity implements Enumerator
 {
   /**
-   * The '<em><b>NUMERIC</b></em>' literal object.
+   * The '<em><b>NONE</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #NUMERIC_VALUE
+   * @see #NONE_VALUE
    * @generated
    * @ordered
    */
-  NUMERIC(0, "NUMERIC", "NUMERIC"),
+  NONE(0, "NONE", "NONE"),
 
   /**
-   * The '<em><b>ORDINAL</b></em>' literal object.
+   * The '<em><b>LIKE DISLIKE</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #ORDINAL_VALUE
+   * @see #LIKE_DISLIKE_VALUE
    * @generated
    * @ordered
    */
-  ORDINAL(1, "ORDINAL", "ORDINAL"),
+  LIKE_DISLIKE(1, "LIKE_DISLIKE", "LIKE_DISLIKE"),
 
   /**
-   * The '<em><b>PERCENTAGE</b></em>' literal object.
+   * The '<em><b>UP DOWN</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #PERCENTAGE_VALUE
+   * @see #UP_DOWN_VALUE
    * @generated
    * @ordered
    */
-  PERCENTAGE(2, "PERCENTAGE", "PERCENTAGE");
+  UP_DOWN(2, "UP_DOWN", "UP_DOWN"),
 
   /**
-   * The '<em><b>NUMERIC</b></em>' literal value.
+   * The '<em><b>STARS</b></em>' literal object.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #NUMERIC
+   * @see #STARS_VALUE
+   * @generated
+   * @ordered
+   */
+  STARS(3, "STARS", "STARS");
+
+  /**
+   * The '<em><b>NONE</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #NONE
    * @model
    * @generated
    * @ordered
    */
-  public static final int NUMERIC_VALUE = 0;
+  public static final int NONE_VALUE = 0;
 
   /**
-   * The '<em><b>ORDINAL</b></em>' literal value.
+   * The '<em><b>LIKE DISLIKE</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #ORDINAL
+   * @see #LIKE_DISLIKE
    * @model
    * @generated
    * @ordered
    */
-  public static final int ORDINAL_VALUE = 1;
+  public static final int LIKE_DISLIKE_VALUE = 1;
 
   /**
-   * The '<em><b>PERCENTAGE</b></em>' literal value.
+   * The '<em><b>UP DOWN</b></em>' literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #PERCENTAGE
+   * @see #UP_DOWN
    * @model
    * @generated
    * @ordered
    */
-  public static final int PERCENTAGE_VALUE = 2;
+  public static final int UP_DOWN_VALUE = 2;
 
   /**
-   * An array of all the '<em><b>Rating Scale Kind</b></em>' enumerators.
+   * The '<em><b>STARS</b></em>' literal value.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #STARS
+   * @model
+   * @generated
+   * @ordered
+   */
+  public static final int STARS_VALUE = 3;
+
+  /**
+   * An array of all the '<em><b>Feedback Polarity</b></em>' enumerators.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private static final RatingScaleKind[] VALUES_ARRAY =
-    new RatingScaleKind[]
+  private static final FeedbackPolarity[] VALUES_ARRAY =
+    new FeedbackPolarity[]
     {
-      NUMERIC,
-      ORDINAL,
-      PERCENTAGE,
+      NONE,
+      LIKE_DISLIKE,
+      UP_DOWN,
+      STARS,
     };
 
   /**
-   * A public read-only list of all the '<em><b>Rating Scale Kind</b></em>' enumerators.
+   * A public read-only list of all the '<em><b>Feedback Polarity</b></em>' enumerators.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  public static final List<RatingScaleKind> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+  public static final List<FeedbackPolarity> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
   /**
-   * Returns the '<em><b>Rating Scale Kind</b></em>' literal with the specified literal value.
+   * Returns the '<em><b>Feedback Polarity</b></em>' literal with the specified literal value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param literal the literal.
    * @return the matching enumerator or <code>null</code>.
    * @generated
    */
-  public static RatingScaleKind get(String literal)
+  public static FeedbackPolarity get(String literal)
   {
     for (int i = 0; i < VALUES_ARRAY.length; ++i)
     {
-      RatingScaleKind result = VALUES_ARRAY[i];
+      FeedbackPolarity result = VALUES_ARRAY[i];
       if (result.toString().equals(literal))
       {
         return result;
@@ -127,18 +149,18 @@ public enum RatingScaleKind implements Enumerator
   }
 
   /**
-   * Returns the '<em><b>Rating Scale Kind</b></em>' literal with the specified name.
+   * Returns the '<em><b>Feedback Polarity</b></em>' literal with the specified name.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param name the name.
    * @return the matching enumerator or <code>null</code>.
    * @generated
    */
-  public static RatingScaleKind getByName(String name)
+  public static FeedbackPolarity getByName(String name)
   {
     for (int i = 0; i < VALUES_ARRAY.length; ++i)
     {
-      RatingScaleKind result = VALUES_ARRAY[i];
+      FeedbackPolarity result = VALUES_ARRAY[i];
       if (result.getName().equals(name))
       {
         return result;
@@ -148,20 +170,21 @@ public enum RatingScaleKind implements Enumerator
   }
 
   /**
-   * Returns the '<em><b>Rating Scale Kind</b></em>' literal with the specified integer value.
+   * Returns the '<em><b>Feedback Polarity</b></em>' literal with the specified integer value.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @param value the integer value.
    * @return the matching enumerator or <code>null</code>.
    * @generated
    */
-  public static RatingScaleKind get(int value)
+  public static FeedbackPolarity get(int value)
   {
     switch (value)
     {
-      case NUMERIC_VALUE: return NUMERIC;
-      case ORDINAL_VALUE: return ORDINAL;
-      case PERCENTAGE_VALUE: return PERCENTAGE;
+      case NONE_VALUE: return NONE;
+      case LIKE_DISLIKE_VALUE: return LIKE_DISLIKE;
+      case UP_DOWN_VALUE: return UP_DOWN;
+      case STARS_VALUE: return STARS;
     }
     return null;
   }
@@ -193,7 +216,7 @@ public enum RatingScaleKind implements Enumerator
    * <!-- end-user-doc -->
    * @generated
    */
-  private RatingScaleKind(int value, String name, String literal)
+  private FeedbackPolarity(int value, String name, String literal)
   {
     this.value = value;
     this.name = name;
@@ -245,4 +268,4 @@ public enum RatingScaleKind implements Enumerator
     return literal;
   }
   
-} //RatingScaleKind
+} //FeedbackPolarity

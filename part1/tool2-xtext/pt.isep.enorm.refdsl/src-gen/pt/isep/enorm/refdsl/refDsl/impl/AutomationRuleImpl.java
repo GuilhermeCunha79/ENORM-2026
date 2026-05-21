@@ -3,7 +3,12 @@
  */
 package pt.isep.enorm.refdsl.refDsl.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -11,11 +16,18 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
+import pt.isep.enorm.refdsl.refDsl.Action;
 import pt.isep.enorm.refdsl.refDsl.AutomationRule;
+import pt.isep.enorm.refdsl.refDsl.Condition;
 import pt.isep.enorm.refdsl.refDsl.ContextType;
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.RefDslPackage;
 import pt.isep.enorm.refdsl.refDsl.ResourceType;
+import pt.isep.enorm.refdsl.refDsl.TriggerEvent;
 import pt.isep.enorm.refdsl.refDsl.ValidationRule;
 
 /**
@@ -28,12 +40,13 @@ import pt.isep.enorm.refdsl.refDsl.ValidationRule;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getTrigger <em>Trigger</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getCondition <em>Condition</em>}</li>
- *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getActionDescription <em>Action Description</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getContext <em>Context</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getInContext <em>In Context</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getOnFeedback <em>On Feedback</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getUses <em>Uses</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getInvokedValidationRules <em>Invoked Validation Rules</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getConditions <em>Conditions</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.AutomationRuleImpl#getActions <em>Actions</em>}</li>
  * </ul>
  *
  * @generated
@@ -68,7 +81,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    * @ordered
    */
-  protected static final String TRIGGER_EDEFAULT = null;
+  protected static final TriggerEvent TRIGGER_EDEFAULT = TriggerEvent.ON_RESOURCE_CREATE;
 
   /**
    * The cached value of the '{@link #getTrigger() <em>Trigger</em>}' attribute.
@@ -78,47 +91,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    * @ordered
    */
-  protected String trigger = TRIGGER_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #getCondition() <em>Condition</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCondition()
-   * @generated
-   * @ordered
-   */
-  protected static final String CONDITION_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getCondition() <em>Condition</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCondition()
-   * @generated
-   * @ordered
-   */
-  protected String condition = CONDITION_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #getActionDescription() <em>Action Description</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getActionDescription()
-   * @generated
-   * @ordered
-   */
-  protected static final String ACTION_DESCRIPTION_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getActionDescription() <em>Action Description</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getActionDescription()
-   * @generated
-   * @ordered
-   */
-  protected String actionDescription = ACTION_DESCRIPTION_EDEFAULT;
+  protected TriggerEvent trigger = TRIGGER_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getContext() <em>Context</em>}' reference.
@@ -159,6 +132,36 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @ordered
    */
   protected ValidationRule uses;
+
+  /**
+   * The cached value of the '{@link #getInvokedValidationRules() <em>Invoked Validation Rules</em>}' reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getInvokedValidationRules()
+   * @generated
+   * @ordered
+   */
+  protected EList<ValidationRule> invokedValidationRules;
+
+  /**
+   * The cached value of the '{@link #getConditions() <em>Conditions</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getConditions()
+   * @generated
+   * @ordered
+   */
+  protected EList<Condition> conditions;
+
+  /**
+   * The cached value of the '{@link #getActions() <em>Actions</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getActions()
+   * @generated
+   * @ordered
+   */
+  protected EList<Action> actions;
 
   /**
    * <!-- begin-user-doc -->
@@ -212,7 +215,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
-  public String getTrigger()
+  public TriggerEvent getTrigger()
   {
     return trigger;
   }
@@ -223,62 +226,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
-  public void setTrigger(String newTrigger)
+  public void setTrigger(TriggerEvent newTrigger)
   {
-    String oldTrigger = trigger;
-    trigger = newTrigger;
+    TriggerEvent oldTrigger = trigger;
+    trigger = newTrigger == null ? TRIGGER_EDEFAULT : newTrigger;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__TRIGGER, oldTrigger, trigger));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String getCondition()
-  {
-    return condition;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setCondition(String newCondition)
-  {
-    String oldCondition = condition;
-    condition = newCondition;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__CONDITION, oldCondition, condition));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String getActionDescription()
-  {
-    return actionDescription;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public void setActionDescription(String newActionDescription)
-  {
-    String oldActionDescription = actionDescription;
-    actionDescription = newActionDescription;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION, oldActionDescription, actionDescription));
   }
 
   /**
@@ -467,6 +420,69 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * @generated
    */
   @Override
+  public EList<ValidationRule> getInvokedValidationRules()
+  {
+    if (invokedValidationRules == null)
+    {
+      invokedValidationRules = new EObjectResolvingEList<ValidationRule>(ValidationRule.class, this, RefDslPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES);
+    }
+    return invokedValidationRules;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EList<Condition> getConditions()
+  {
+    if (conditions == null)
+    {
+      conditions = new EObjectContainmentEList<Condition>(Condition.class, this, RefDslPackage.AUTOMATION_RULE__CONDITIONS);
+    }
+    return conditions;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EList<Action> getActions()
+  {
+    if (actions == null)
+    {
+      actions = new EObjectContainmentEList<Action>(Action.class, this, RefDslPackage.AUTOMATION_RULE__ACTIONS);
+    }
+    return actions;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
+  {
+    switch (featureID)
+    {
+      case RefDslPackage.AUTOMATION_RULE__CONDITIONS:
+        return ((InternalEList<?>)getConditions()).basicRemove(otherEnd, msgs);
+      case RefDslPackage.AUTOMATION_RULE__ACTIONS:
+        return ((InternalEList<?>)getActions()).basicRemove(otherEnd, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
     switch (featureID)
@@ -475,10 +491,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return getName();
       case RefDslPackage.AUTOMATION_RULE__TRIGGER:
         return getTrigger();
-      case RefDslPackage.AUTOMATION_RULE__CONDITION:
-        return getCondition();
-      case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-        return getActionDescription();
       case RefDslPackage.AUTOMATION_RULE__CONTEXT:
         if (resolve) return getContext();
         return basicGetContext();
@@ -491,6 +503,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.AUTOMATION_RULE__USES:
         if (resolve) return getUses();
         return basicGetUses();
+      case RefDslPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+        return getInvokedValidationRules();
+      case RefDslPackage.AUTOMATION_RULE__CONDITIONS:
+        return getConditions();
+      case RefDslPackage.AUTOMATION_RULE__ACTIONS:
+        return getActions();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -500,6 +518,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
    * <!-- end-user-doc -->
    * @generated
    */
+  @SuppressWarnings("unchecked")
   @Override
   public void eSet(int featureID, Object newValue)
   {
@@ -509,13 +528,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         setName((String)newValue);
         return;
       case RefDslPackage.AUTOMATION_RULE__TRIGGER:
-        setTrigger((String)newValue);
-        return;
-      case RefDslPackage.AUTOMATION_RULE__CONDITION:
-        setCondition((String)newValue);
-        return;
-      case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-        setActionDescription((String)newValue);
+        setTrigger((TriggerEvent)newValue);
         return;
       case RefDslPackage.AUTOMATION_RULE__CONTEXT:
         setContext((ResourceType)newValue);
@@ -528,6 +541,18 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return;
       case RefDslPackage.AUTOMATION_RULE__USES:
         setUses((ValidationRule)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+        getInvokedValidationRules().clear();
+        getInvokedValidationRules().addAll((Collection<? extends ValidationRule>)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__CONDITIONS:
+        getConditions().clear();
+        getConditions().addAll((Collection<? extends Condition>)newValue);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__ACTIONS:
+        getActions().clear();
+        getActions().addAll((Collection<? extends Action>)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -549,12 +574,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.AUTOMATION_RULE__TRIGGER:
         setTrigger(TRIGGER_EDEFAULT);
         return;
-      case RefDslPackage.AUTOMATION_RULE__CONDITION:
-        setCondition(CONDITION_EDEFAULT);
-        return;
-      case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-        setActionDescription(ACTION_DESCRIPTION_EDEFAULT);
-        return;
       case RefDslPackage.AUTOMATION_RULE__CONTEXT:
         setContext((ResourceType)null);
         return;
@@ -566,6 +585,15 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return;
       case RefDslPackage.AUTOMATION_RULE__USES:
         setUses((ValidationRule)null);
+        return;
+      case RefDslPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+        getInvokedValidationRules().clear();
+        return;
+      case RefDslPackage.AUTOMATION_RULE__CONDITIONS:
+        getConditions().clear();
+        return;
+      case RefDslPackage.AUTOMATION_RULE__ACTIONS:
+        getActions().clear();
         return;
     }
     super.eUnset(featureID);
@@ -584,11 +612,7 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
       case RefDslPackage.AUTOMATION_RULE__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.AUTOMATION_RULE__TRIGGER:
-        return TRIGGER_EDEFAULT == null ? trigger != null : !TRIGGER_EDEFAULT.equals(trigger);
-      case RefDslPackage.AUTOMATION_RULE__CONDITION:
-        return CONDITION_EDEFAULT == null ? condition != null : !CONDITION_EDEFAULT.equals(condition);
-      case RefDslPackage.AUTOMATION_RULE__ACTION_DESCRIPTION:
-        return ACTION_DESCRIPTION_EDEFAULT == null ? actionDescription != null : !ACTION_DESCRIPTION_EDEFAULT.equals(actionDescription);
+        return trigger != TRIGGER_EDEFAULT;
       case RefDslPackage.AUTOMATION_RULE__CONTEXT:
         return context != null;
       case RefDslPackage.AUTOMATION_RULE__IN_CONTEXT:
@@ -597,6 +621,12 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
         return onFeedback != null;
       case RefDslPackage.AUTOMATION_RULE__USES:
         return uses != null;
+      case RefDslPackage.AUTOMATION_RULE__INVOKED_VALIDATION_RULES:
+        return invokedValidationRules != null && !invokedValidationRules.isEmpty();
+      case RefDslPackage.AUTOMATION_RULE__CONDITIONS:
+        return conditions != null && !conditions.isEmpty();
+      case RefDslPackage.AUTOMATION_RULE__ACTIONS:
+        return actions != null && !actions.isEmpty();
     }
     return super.eIsSet(featureID);
   }
@@ -616,10 +646,6 @@ public class AutomationRuleImpl extends MinimalEObjectImpl.Container implements 
     result.append(name);
     result.append(", trigger: ");
     result.append(trigger);
-    result.append(", condition: ");
-    result.append(condition);
-    result.append(", actionDescription: ");
-    result.append(actionDescription);
     result.append(')');
     return result.toString();
   }
