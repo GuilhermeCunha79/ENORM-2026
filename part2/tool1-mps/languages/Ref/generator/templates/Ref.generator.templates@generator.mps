@@ -58,6 +58,15 @@
     <import index="kxsd" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.config.http(dependency.importer/)" />
     <import index="cn7d" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.data.web.config(dependency.importer/)" />
     <import index="bjg2" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.boot.web.server(dependency.importer/)" />
+    <import index="qisj" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:jakarta.annotation.security(dependency.importer/)" />
+    <import index="nc2v" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.web.util.matcher(dependency.importer/)" />
+    <import index="ac0y" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.config.annotation.web.configuration(dependency.importer/)" />
+    <import index="mn00" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.web.servlet.util.matcher(dependency.importer/)" />
+    <import index="ynm1" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.util(dependency.importer/)" />
+    <import index="zwk2" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.authorization(dependency.importer/)" />
+    <import index="4dsp" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.web.access.intercept(dependency.importer/)" />
+    <import index="u35y" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.transaction.annotation(dependency.importer/)" />
+    <import index="5qhr" ref="b9fad875-c709-47c4-8c1f-a544f3be33fc/java:org.springframework.security.web.header.writers.frameoptions(dependency.importer/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -67,6 +76,9 @@
         <child id="1068498886295" name="lValue" index="37vLTJ" />
       </concept>
       <concept id="1202948039474" name="jetbrains.mps.baseLanguage.structure.InstanceMethodCallOperation" flags="nn" index="liA8E" />
+      <concept id="28358707492436943" name="jetbrains.mps.baseLanguage.structure.JavaImport" flags="ng" index="u1fJn">
+        <property id="28358707492436944" name="onDemand" index="u1fJ8" />
+      </concept>
       <concept id="1188207840427" name="jetbrains.mps.baseLanguage.structure.AnnotationInstance" flags="nn" index="2AHcQZ">
         <reference id="1188208074048" name="annotation" index="2AI5Lk" />
         <child id="1188214630783" name="value" index="2B76xF" />
@@ -95,13 +107,20 @@
       <concept id="1137021947720" name="jetbrains.mps.baseLanguage.structure.ConceptFunction" flags="in" index="2VMwT0">
         <child id="1137022507850" name="body" index="2VODD2" />
       </concept>
+      <concept id="2621000434129553333" name="jetbrains.mps.baseLanguage.structure.UnknownDotCall" flags="nn" index="Wc6QR">
+        <property id="4872723285943177972" name="callee" index="10XrrR" />
+      </concept>
       <concept id="1070475354124" name="jetbrains.mps.baseLanguage.structure.ThisExpression" flags="nn" index="Xjq3P" />
+      <concept id="1070475587102" name="jetbrains.mps.baseLanguage.structure.SuperConstructorInvocation" flags="nn" index="XkiVB" />
       <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
         <property id="1070475926801" name="value" index="Xl_RC" />
       </concept>
       <concept id="1081236700938" name="jetbrains.mps.baseLanguage.structure.StaticMethodDeclaration" flags="ig" index="2YIFZL" />
       <concept id="1081236700937" name="jetbrains.mps.baseLanguage.structure.StaticMethodCall" flags="nn" index="2YIFZM">
         <reference id="1144433194310" name="classConcept" index="1Pybhc" />
+      </concept>
+      <concept id="1164991038168" name="jetbrains.mps.baseLanguage.structure.ThrowStatement" flags="nn" index="YS8fn">
+        <child id="1164991057263" name="throwable" index="YScLw" />
       </concept>
       <concept id="1070533707846" name="jetbrains.mps.baseLanguage.structure.StaticFieldReference" flags="nn" index="10M0yZ">
         <reference id="1144433057691" name="classifier" index="1PxDUh" />
@@ -113,11 +132,18 @@
       </concept>
       <concept id="1068390468200" name="jetbrains.mps.baseLanguage.structure.FieldDeclaration" flags="ig" index="312cEg" />
       <concept id="1068390468198" name="jetbrains.mps.baseLanguage.structure.ClassConcept" flags="ig" index="312cEu">
+        <property id="1075300953594" name="abstractClass" index="1sVAO0" />
         <child id="1165602531693" name="superclass" index="1zkMxy" />
+      </concept>
+      <concept id="3304084122476667220" name="jetbrains.mps.baseLanguage.structure.UnknownNew" flags="nn" index="31S9pk">
+        <property id="3304084122476721463" name="className" index="31Ss8R" />
       </concept>
       <concept id="1068431474542" name="jetbrains.mps.baseLanguage.structure.VariableDeclaration" flags="ng" index="33uBYm">
         <property id="1176718929932" name="isFinal" index="3TUv4t" />
         <child id="1068431790190" name="initializer" index="33vP2m" />
+      </concept>
+      <concept id="1513279640883654088" name="jetbrains.mps.baseLanguage.structure.UnknownInstanceMethodCall" flags="ng" index="35GP8o">
+        <child id="1513279640883656453" name="operand" index="35GOzl" />
       </concept>
       <concept id="1109279763828" name="jetbrains.mps.baseLanguage.structure.TypeVariableDeclaration" flags="ng" index="16euLQ" />
       <concept id="1109279851642" name="jetbrains.mps.baseLanguage.structure.GenericDeclaration" flags="ng" index="16eOlS">
@@ -152,6 +178,9 @@
       <concept id="1068580123136" name="jetbrains.mps.baseLanguage.structure.StatementList" flags="sn" stub="5293379017992965193" index="3clFbS">
         <child id="1068581517665" name="statement" index="3cqZAp" />
       </concept>
+      <concept id="1068580123137" name="jetbrains.mps.baseLanguage.structure.BooleanConstant" flags="nn" index="3clFbT">
+        <property id="1068580123138" name="value" index="3clFbU" />
+      </concept>
       <concept id="1068580123140" name="jetbrains.mps.baseLanguage.structure.ConstructorDeclaration" flags="ig" index="3clFbW" />
       <concept id="1068580320020" name="jetbrains.mps.baseLanguage.structure.IntegerConstant" flags="nn" index="3cmrfG">
         <property id="1068580320021" name="value" index="3cmrfH" />
@@ -169,6 +198,9 @@
       <concept id="1081516740877" name="jetbrains.mps.baseLanguage.structure.NotExpression" flags="nn" index="3fqX7Q">
         <child id="1081516765348" name="expression" index="3fr31v" />
       </concept>
+      <concept id="6050519299856556786" name="jetbrains.mps.baseLanguage.structure.JavaImports" flags="ng" index="1lrU7d">
+        <child id="28358707492429991" name="entries" index="u1e2Z" />
+      </concept>
       <concept id="1204053956946" name="jetbrains.mps.baseLanguage.structure.IMethodCall" flags="ngI" index="1ndlxa">
         <reference id="1068499141037" name="baseMethodDeclaration" index="37wK5l" />
         <child id="1068499141038" name="actualArgument" index="37wK5m" />
@@ -183,13 +215,20 @@
         <reference id="1107535924139" name="classifier" index="3uigEE" />
         <child id="1109201940907" name="parameter" index="11_B2D" />
       </concept>
+      <concept id="6528213125912070246" name="jetbrains.mps.baseLanguage.structure.Tokens" flags="ngI" index="1u$dsA">
+        <property id="1843920760191311250" name="tokens" index="1CJj6V" />
+      </concept>
       <concept id="1081773326031" name="jetbrains.mps.baseLanguage.structure.BinaryOperation" flags="nn" index="3uHJSO">
         <child id="1081773367579" name="rightExpression" index="3uHU7w" />
         <child id="1081773367580" name="leftExpression" index="3uHU7B" />
       </concept>
       <concept id="1073239437375" name="jetbrains.mps.baseLanguage.structure.NotEqualsExpression" flags="nn" index="3y3z36" />
+      <concept id="8473865358220097975" name="jetbrains.mps.baseLanguage.structure.UnknownNameRef" flags="nn" index="3yEOSi" />
       <concept id="1178549954367" name="jetbrains.mps.baseLanguage.structure.IVisible" flags="ngI" index="1B3ioH">
         <child id="1178549979242" name="visibility" index="1B3o_S" />
+      </concept>
+      <concept id="1107796713796" name="jetbrains.mps.baseLanguage.structure.Interface" flags="ig" index="3HP615">
+        <child id="1107797138135" name="extendedInterface" index="3HQHJm" />
       </concept>
       <concept id="1146644602865" name="jetbrains.mps.baseLanguage.structure.PublicVisibility" flags="nn" index="3Tm1VV" />
       <concept id="1146644623116" name="jetbrains.mps.baseLanguage.structure.PrivateVisibility" flags="nn" index="3Tm6S6" />
@@ -2117,6 +2156,958 @@
     </node>
     <node concept="n94m4" id="33dPD0BeUr2" role="lGtFl">
       <ref role="n9lRv" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
+    </node>
+  </node>
+  <node concept="312cEu" id="2BbHItUQICK">
+    <property role="TrG5h" value="AuthenticationService" />
+    <node concept="3Tm1VV" id="2BbHItUQICL" role="1B3o_S" />
+    <node concept="2AHcQZ" id="2BbHItUQICM" role="2AJF6D">
+      <ref role="2AI5Lk" to="meih:~Service" resolve="Service" />
+    </node>
+    <node concept="3uibUv" id="2BbHItUQNrT" role="1zkMxy">
+      <ref role="3uigEE" node="2BbHItUQNaI" resolve="GeneratedAuthenticationService" />
+    </node>
+    <node concept="3clFbW" id="2BbHItUQICO" role="jymVt">
+      <node concept="3cqZAl" id="2BbHItUQICP" role="3clF45" />
+      <node concept="37vLTG" id="2BbHItUQICQ" role="3clF46">
+        <property role="TrG5h" value="amazonUserRepository" />
+        <node concept="3uibUv" id="2BbHItUQICR" role="1tU5fm">
+          <ref role="3uigEE" node="2BbHItUQNKJ" resolve="AmazonUserRepository" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQICS" role="3clF46">
+        <property role="TrG5h" value="passwordEncoder" />
+        <node concept="3uibUv" id="2BbHItUQICT" role="1tU5fm">
+          <ref role="3uigEE" to="f75t:~PasswordEncoder" resolve="PasswordEncoder" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQICU" role="3clF46">
+        <property role="TrG5h" value="authenticationManager" />
+        <node concept="3uibUv" id="2BbHItUQICV" role="1tU5fm">
+          <ref role="3uigEE" to="mwe7:~AuthenticationManager" resolve="AuthenticationManager" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQICW" role="3clF46">
+        <property role="TrG5h" value="jwtService" />
+        <node concept="3uibUv" id="2BbHItUQICX" role="1tU5fm">
+          <ref role="3uigEE" node="1s4BJy8oGbX" resolve="JwtService" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQICY" role="3clF47">
+        <node concept="XkiVB" id="2BbHItUQNr2" role="3cqZAp">
+          <ref role="37wK5l" node="2BbHItUQNb3" resolve="GeneratedAuthenticationService" />
+          <node concept="37vLTw" id="2BbHItUQNr3" role="37wK5m">
+            <ref role="3cqZAo" node="2BbHItUQICQ" resolve="amazonUserRepository" />
+          </node>
+          <node concept="37vLTw" id="2BbHItUQNr4" role="37wK5m">
+            <ref role="3cqZAo" node="2BbHItUQICS" resolve="passwordEncoder" />
+          </node>
+          <node concept="37vLTw" id="2BbHItUQNr5" role="37wK5m">
+            <ref role="3cqZAo" node="2BbHItUQICU" resolve="authenticationManager" />
+          </node>
+          <node concept="37vLTw" id="2BbHItUQNr6" role="37wK5m">
+            <ref role="3cqZAo" node="2BbHItUQICW" resolve="jwtService" />
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2BbHItUQID4" role="1B3o_S" />
+    </node>
+  </node>
+  <node concept="312cEu" id="2BbHItUQNaI">
+    <property role="TrG5h" value="GeneratedAuthenticationService" />
+    <property role="1sVAO0" value="true" />
+    <node concept="3Tm1VV" id="2BbHItUQNaJ" role="1B3o_S" />
+    <node concept="2AHcQZ" id="2BbHItUQNaK" role="2AJF6D">
+      <ref role="2AI5Lk" to="u35y:~Transactional" resolve="Transactional" />
+      <node concept="2B6LJw" id="2BbHItUQNaL" role="2B76xF">
+        <ref role="2B6OnR" to="u35y:~Transactional.readOnly()" resolve="readOnly" />
+        <node concept="3clFbT" id="2BbHItUQNaM" role="2B70Vg">
+          <property role="3clFbU" value="true" />
+        </node>
+      </node>
+    </node>
+    <node concept="312cEg" id="2BbHItUQNaN" role="jymVt">
+      <property role="TrG5h" value="amazonUserRepository" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3uibUv" id="2BbHItUQNaP" role="1tU5fm">
+        <ref role="3uigEE" to=":^" resolve="AmazonUserRepository" />
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNaQ" role="1B3o_S" />
+    </node>
+    <node concept="312cEg" id="2BbHItUQNaR" role="jymVt">
+      <property role="TrG5h" value="passwordEncoder" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3uibUv" id="2BbHItUQNaT" role="1tU5fm">
+        <ref role="3uigEE" to="f75t:~PasswordEncoder" resolve="PasswordEncoder" />
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNaU" role="1B3o_S" />
+    </node>
+    <node concept="312cEg" id="2BbHItUQNaV" role="jymVt">
+      <property role="TrG5h" value="authenticationManager" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3uibUv" id="2BbHItUQNaX" role="1tU5fm">
+        <ref role="3uigEE" to="mwe7:~AuthenticationManager" resolve="AuthenticationManager" />
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNaY" role="1B3o_S" />
+    </node>
+    <node concept="312cEg" id="2BbHItUQNaZ" role="jymVt">
+      <property role="TrG5h" value="jwtService" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3uibUv" id="2BbHItUQNb1" role="1tU5fm">
+        <ref role="3uigEE" node="1s4BJy8oGbX" resolve="JwtService" />
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNb2" role="1B3o_S" />
+    </node>
+    <node concept="3clFbW" id="2BbHItUQNb3" role="jymVt">
+      <node concept="3cqZAl" id="2BbHItUQNb4" role="3clF45" />
+      <node concept="37vLTG" id="2BbHItUQNb5" role="3clF46">
+        <property role="TrG5h" value="amazonUserRepository" />
+        <node concept="3uibUv" id="2BbHItUQNb6" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUserRepository" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQNb7" role="3clF46">
+        <property role="TrG5h" value="passwordEncoder" />
+        <node concept="3uibUv" id="2BbHItUQNb8" role="1tU5fm">
+          <ref role="3uigEE" to="f75t:~PasswordEncoder" resolve="PasswordEncoder" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQNb9" role="3clF46">
+        <property role="TrG5h" value="authenticationManager" />
+        <node concept="3uibUv" id="2BbHItUQNba" role="1tU5fm">
+          <ref role="3uigEE" to="mwe7:~AuthenticationManager" resolve="AuthenticationManager" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQNbb" role="3clF46">
+        <property role="TrG5h" value="jwtService" />
+        <node concept="3uibUv" id="2BbHItUQNbc" role="1tU5fm">
+          <ref role="3uigEE" node="1s4BJy8oGbX" resolve="JwtService" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNbd" role="3clF47">
+        <node concept="3clFbF" id="2BbHItUQNbe" role="3cqZAp">
+          <node concept="37vLTI" id="2BbHItUQNbf" role="3clFbG">
+            <node concept="2OqwBi" id="2BbHItUQNbg" role="37vLTJ">
+              <node concept="Xjq3P" id="2BbHItUQNbh" role="2Oq$k0" />
+              <node concept="2OwXpG" id="2BbHItUQNbi" role="2OqNvi">
+                <ref role="2Oxat5" node="2BbHItUQNaN" resolve="amazonUserRepository" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2BbHItUQNbj" role="37vLTx">
+              <ref role="3cqZAo" node="2BbHItUQNb5" resolve="amazonUserRepository" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNbk" role="3cqZAp">
+          <node concept="37vLTI" id="2BbHItUQNbl" role="3clFbG">
+            <node concept="2OqwBi" id="2BbHItUQNbm" role="37vLTJ">
+              <node concept="Xjq3P" id="2BbHItUQNbn" role="2Oq$k0" />
+              <node concept="2OwXpG" id="2BbHItUQNbo" role="2OqNvi">
+                <ref role="2Oxat5" node="2BbHItUQNaR" resolve="passwordEncoder" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2BbHItUQNbp" role="37vLTx">
+              <ref role="3cqZAo" node="2BbHItUQNb7" resolve="passwordEncoder" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNbq" role="3cqZAp">
+          <node concept="37vLTI" id="2BbHItUQNbr" role="3clFbG">
+            <node concept="2OqwBi" id="2BbHItUQNbs" role="37vLTJ">
+              <node concept="Xjq3P" id="2BbHItUQNbt" role="2Oq$k0" />
+              <node concept="2OwXpG" id="2BbHItUQNbu" role="2OqNvi">
+                <ref role="2Oxat5" node="2BbHItUQNaV" resolve="authenticationManager" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2BbHItUQNbv" role="37vLTx">
+              <ref role="3cqZAo" node="2BbHItUQNb9" resolve="authenticationManager" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNbw" role="3cqZAp">
+          <node concept="37vLTI" id="2BbHItUQNbx" role="3clFbG">
+            <node concept="2OqwBi" id="2BbHItUQNby" role="37vLTJ">
+              <node concept="Xjq3P" id="2BbHItUQNbz" role="2Oq$k0" />
+              <node concept="2OwXpG" id="2BbHItUQNb$" role="2OqNvi">
+                <ref role="2Oxat5" node="2BbHItUQNaZ" resolve="jwtService" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2BbHItUQNb_" role="37vLTx">
+              <ref role="3cqZAo" node="2BbHItUQNbb" resolve="jwtService" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tmbuc" id="2BbHItUQNbA" role="1B3o_S" />
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNbB" role="jymVt">
+      <property role="TrG5h" value="register" />
+      <node concept="2AHcQZ" id="2BbHItUQNbC" role="2AJF6D">
+        <ref role="2AI5Lk" to="u35y:~Transactional" resolve="Transactional" />
+      </node>
+      <node concept="37vLTG" id="2BbHItUQNbD" role="3clF46">
+        <property role="TrG5h" value="request" />
+        <node concept="3uibUv" id="2BbHItUQNbE" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNbF" role="3clF47">
+        <node concept="3cpWs8" id="2BbHItUQNbH" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNbG" role="3cpWs9">
+            <property role="TrG5h" value="credentials" />
+            <node concept="3uibUv" id="2BbHItUQNbI" role="1tU5fm">
+              <ref role="3uigEE" to=":^" resolve="Credentials" />
+            </node>
+            <node concept="1rXfSq" id="2BbHItUQNbJ" role="33vP2m">
+              <ref role="37wK5l" node="2BbHItUQNcX" resolve="validateRequest" />
+              <node concept="37vLTw" id="2BbHItUQNbK" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItUQNbD" resolve="request" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="2BbHItUQNbL" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNbM" role="3clFbw">
+            <property role="10XrrR" value="existsByUsername" />
+            <property role="1CJj6V" value="amazonUserRepository" />
+            <node concept="Wc6QR" id="2BbHItUQNbN" role="37wK5m">
+              <property role="10XrrR" value="username" />
+              <property role="1CJj6V" value="credentials" />
+            </node>
+          </node>
+          <node concept="3clFbS" id="2BbHItUQNbP" role="3clFbx">
+            <node concept="YS8fn" id="2BbHItUQNbS" role="3cqZAp">
+              <node concept="31S9pk" id="2BbHItUQNbQ" role="YScLw">
+                <property role="31Ss8R" value="IllegalStateException" />
+                <node concept="Xl_RD" id="2BbHItUQNbR" role="37wK5m">
+                  <property role="Xl_RC" value="Username already exists." />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="2BbHItUQNbU" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNbT" role="3cpWs9">
+            <property role="TrG5h" value="user" />
+            <node concept="3uibUv" id="2BbHItUQNbV" role="1tU5fm">
+              <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+            </node>
+            <node concept="31S9pk" id="2BbHItUQNbW" role="33vP2m">
+              <property role="31Ss8R" value="AmazonUser" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNbX" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNbY" role="3clFbG">
+            <property role="10XrrR" value="setUsername" />
+            <property role="1CJj6V" value="user" />
+            <node concept="Wc6QR" id="2BbHItUQNbZ" role="37wK5m">
+              <property role="10XrrR" value="username" />
+              <property role="1CJj6V" value="credentials" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNc0" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNc1" role="3clFbG">
+            <property role="10XrrR" value="setPassword" />
+            <property role="1CJj6V" value="user" />
+            <node concept="Wc6QR" id="2BbHItUQNc2" role="37wK5m">
+              <property role="10XrrR" value="encode" />
+              <property role="1CJj6V" value="passwordEncoder" />
+              <node concept="Wc6QR" id="2BbHItUQNc3" role="37wK5m">
+                <property role="10XrrR" value="password" />
+                <property role="1CJj6V" value="credentials" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNc4" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNc5" role="3clFbG">
+            <property role="10XrrR" value="setRole" />
+            <property role="1CJj6V" value="user" />
+            <node concept="3yEOSi" id="2BbHItUQNc6" role="37wK5m">
+              <property role="1CJj6V" value="Role.BUYER" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNc7" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNc8" role="3clFbG">
+            <property role="10XrrR" value="setVerifiedBuyer" />
+            <property role="1CJj6V" value="user" />
+            <node concept="3clFbT" id="2BbHItUQNc9" role="37wK5m" />
+          </node>
+        </node>
+        <node concept="3cpWs8" id="2BbHItUQNcb" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNca" role="3cpWs9">
+            <property role="TrG5h" value="savedUser" />
+            <node concept="3uibUv" id="2BbHItUQNcc" role="1tU5fm">
+              <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNcd" role="33vP2m">
+              <property role="10XrrR" value="save" />
+              <property role="1CJj6V" value="amazonUserRepository" />
+              <node concept="37vLTw" id="2BbHItUQNce" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItUQNbT" resolve="user" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNcf" role="3cqZAp">
+          <node concept="1rXfSq" id="2BbHItUQNcg" role="3clFbG">
+            <ref role="37wK5l" node="2BbHItUQNcR" resolve="afterRegister" />
+            <node concept="37vLTw" id="2BbHItUQNch" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNca" resolve="savedUser" />
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItUQNci" role="3cqZAp">
+          <node concept="1rXfSq" id="2BbHItUQNcj" role="3cqZAk">
+            <ref role="37wK5l" node="2BbHItUQNdL" resolve="toAuthenticationResult" />
+            <node concept="37vLTw" id="2BbHItUQNck" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNca" resolve="savedUser" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2BbHItUQNcl" role="1B3o_S" />
+      <node concept="3uibUv" id="2BbHItUQNcm" role="3clF45">
+        <ref role="3uigEE" to=":^" resolve="AuthenticationResult" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNcn" role="jymVt">
+      <property role="TrG5h" value="login" />
+      <node concept="37vLTG" id="2BbHItUQNco" role="3clF46">
+        <property role="TrG5h" value="request" />
+        <node concept="3uibUv" id="2BbHItUQNcp" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNcq" role="3clF47">
+        <node concept="3cpWs8" id="2BbHItUQNcs" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNcr" role="3cpWs9">
+            <property role="TrG5h" value="credentials" />
+            <node concept="3uibUv" id="2BbHItUQNct" role="1tU5fm">
+              <ref role="3uigEE" to=":^" resolve="Credentials" />
+            </node>
+            <node concept="1rXfSq" id="2BbHItUQNcu" role="33vP2m">
+              <ref role="37wK5l" node="2BbHItUQNcX" resolve="validateRequest" />
+              <node concept="37vLTw" id="2BbHItUQNcv" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItUQNco" resolve="request" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItUQNcw" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNcx" role="3clFbG">
+            <property role="10XrrR" value="authenticate" />
+            <property role="1CJj6V" value="authenticationManager" />
+            <node concept="31S9pk" id="2BbHItUQNcy" role="37wK5m">
+              <property role="31Ss8R" value="UsernamePasswordAuthenticationToken" />
+              <node concept="Wc6QR" id="2BbHItUQNcz" role="37wK5m">
+                <property role="10XrrR" value="username" />
+                <property role="1CJj6V" value="credentials" />
+              </node>
+              <node concept="Wc6QR" id="2BbHItUQNc$" role="37wK5m">
+                <property role="10XrrR" value="password" />
+                <property role="1CJj6V" value="credentials" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="2BbHItUQNcA" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNc_" role="3cpWs9">
+            <property role="TrG5h" value="user" />
+            <node concept="3uibUv" id="2BbHItUQNcB" role="1tU5fm">
+              <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+            </node>
+            <node concept="35GP8o" id="2BbHItUQNcC" role="33vP2m">
+              <property role="10XrrR" value="orElseThrow" />
+              <node concept="Wc6QR" id="2BbHItUQNcD" role="35GOzl">
+                <property role="10XrrR" value="findByUsername" />
+                <property role="1CJj6V" value="amazonUserRepository" />
+                <node concept="Wc6QR" id="2BbHItUQNcE" role="37wK5m">
+                  <property role="10XrrR" value="username" />
+                  <property role="1CJj6V" value="credentials" />
+                </node>
+              </node>
+              <node concept="1bVj0M" id="2BbHItUQNcF" role="37wK5m">
+                <node concept="3clFbS" id="2BbHItUQNcL" role="1bW5cS">
+                  <node concept="3clFbF" id="2BbHItUQNcG" role="3cqZAp">
+                    <node concept="31S9pk" id="2BbHItUQNcH" role="3clFbG">
+                      <property role="31Ss8R" value="ResourceNotFoundException" />
+                      <node concept="35GP8o" id="2BbHItUQNcI" role="37wK5m">
+                        <property role="10XrrR" value="formatted" />
+                        <node concept="Xl_RD" id="2BbHItUQNcJ" role="35GOzl">
+                          <property role="Xl_RC" value="User '%s' was not found." />
+                        </node>
+                        <node concept="Wc6QR" id="2BbHItUQNcK" role="37wK5m">
+                          <property role="10XrrR" value="username" />
+                          <property role="1CJj6V" value="credentials" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItUQNcM" role="3cqZAp">
+          <node concept="1rXfSq" id="2BbHItUQNcN" role="3cqZAk">
+            <ref role="37wK5l" node="2BbHItUQNdL" resolve="toAuthenticationResult" />
+            <node concept="37vLTw" id="2BbHItUQNcO" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNc_" resolve="user" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2BbHItUQNcP" role="1B3o_S" />
+      <node concept="3uibUv" id="2BbHItUQNcQ" role="3clF45">
+        <ref role="3uigEE" to=":^" resolve="AuthenticationResult" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNcR" role="jymVt">
+      <property role="TrG5h" value="afterRegister" />
+      <node concept="37vLTG" id="2BbHItUQNcS" role="3clF46">
+        <property role="TrG5h" value="savedUser" />
+        <node concept="3uibUv" id="2BbHItUQNcT" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNcU" role="3clF47" />
+      <node concept="3Tmbuc" id="2BbHItUQNcV" role="1B3o_S" />
+      <node concept="3cqZAl" id="2BbHItUQNcW" role="3clF45" />
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNcX" role="jymVt">
+      <property role="TrG5h" value="validateRequest" />
+      <node concept="37vLTG" id="2BbHItUQNcY" role="3clF46">
+        <property role="TrG5h" value="request" />
+        <node concept="3uibUv" id="2BbHItUQNcZ" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNd0" role="3clF47">
+        <node concept="3clFbF" id="2BbHItUQNd1" role="3cqZAp">
+          <node concept="Wc6QR" id="2BbHItUQNd2" role="3clFbG">
+            <property role="10XrrR" value="requireNonNull" />
+            <property role="1CJj6V" value="Objects" />
+            <node concept="37vLTw" id="2BbHItUQNd3" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNcY" resolve="request" />
+            </node>
+            <node concept="Xl_RD" id="2BbHItUQNd4" role="37wK5m">
+              <property role="Xl_RC" value="request is required" />
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="2BbHItUQNd6" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNd5" role="3cpWs9">
+            <property role="TrG5h" value="username" />
+            <node concept="3uibUv" id="2BbHItUQNd7" role="1tU5fm">
+              <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNd8" role="33vP2m">
+              <property role="10XrrR" value="getUsername" />
+              <property role="1CJj6V" value="request" />
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="2BbHItUQNda" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNd9" role="3cpWs9">
+            <property role="TrG5h" value="password" />
+            <node concept="3uibUv" id="2BbHItUQNdb" role="1tU5fm">
+              <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNdc" role="33vP2m">
+              <property role="10XrrR" value="getPassword" />
+              <property role="1CJj6V" value="request" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="2BbHItUQNdd" role="3cqZAp">
+          <node concept="22lmx$" id="2BbHItUQNde" role="3clFbw">
+            <node concept="3clFbC" id="2BbHItUQNdf" role="3uHU7B">
+              <node concept="37vLTw" id="2BbHItUQNdg" role="3uHU7B">
+                <ref role="3cqZAo" node="2BbHItUQNd5" resolve="username" />
+              </node>
+              <node concept="10Nm6u" id="2BbHItUQNdh" role="3uHU7w" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNdi" role="3uHU7w">
+              <property role="10XrrR" value="isBlank" />
+              <property role="1CJj6V" value="username" />
+            </node>
+          </node>
+          <node concept="3clFbS" id="2BbHItUQNdk" role="3clFbx">
+            <node concept="YS8fn" id="2BbHItUQNdn" role="3cqZAp">
+              <node concept="31S9pk" id="2BbHItUQNdl" role="YScLw">
+                <property role="31Ss8R" value="IllegalArgumentException" />
+                <node concept="Xl_RD" id="2BbHItUQNdm" role="37wK5m">
+                  <property role="Xl_RC" value="Username is required." />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="2BbHItUQNdo" role="3cqZAp">
+          <node concept="22lmx$" id="2BbHItUQNdp" role="3clFbw">
+            <node concept="3clFbC" id="2BbHItUQNdq" role="3uHU7B">
+              <node concept="37vLTw" id="2BbHItUQNdr" role="3uHU7B">
+                <ref role="3cqZAo" node="2BbHItUQNd9" resolve="password" />
+              </node>
+              <node concept="10Nm6u" id="2BbHItUQNds" role="3uHU7w" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNdt" role="3uHU7w">
+              <property role="10XrrR" value="isBlank" />
+              <property role="1CJj6V" value="password" />
+            </node>
+          </node>
+          <node concept="3clFbS" id="2BbHItUQNdv" role="3clFbx">
+            <node concept="YS8fn" id="2BbHItUQNdy" role="3cqZAp">
+              <node concept="31S9pk" id="2BbHItUQNdw" role="YScLw">
+                <property role="31Ss8R" value="IllegalArgumentException" />
+                <node concept="Xl_RD" id="2BbHItUQNdx" role="37wK5m">
+                  <property role="Xl_RC" value="Password is required." />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItUQNdz" role="3cqZAp">
+          <node concept="31S9pk" id="2BbHItUQNd$" role="3cqZAk">
+            <property role="31Ss8R" value="Credentials" />
+            <node concept="Wc6QR" id="2BbHItUQNd_" role="37wK5m">
+              <property role="10XrrR" value="trim" />
+              <property role="1CJj6V" value="username" />
+            </node>
+            <node concept="37vLTw" id="2BbHItUQNdA" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNd9" resolve="password" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNdB" role="1B3o_S" />
+      <node concept="3uibUv" id="2BbHItUQNdC" role="3clF45">
+        <ref role="3uigEE" to=":^" resolve="Credentials" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNdD" role="jymVt">
+      <property role="TrG5h" value="Credentials" />
+      <node concept="37vLTG" id="2BbHItUQNdE" role="3clF46">
+        <property role="TrG5h" value="username" />
+        <node concept="3uibUv" id="2BbHItUQNdF" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItUQNdG" role="3clF46">
+        <property role="TrG5h" value="password" />
+        <node concept="3uibUv" id="2BbHItUQNdH" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNdI" role="3clF47" />
+      <node concept="3Tm6S6" id="2BbHItUQNdJ" role="1B3o_S" />
+      <node concept="3uibUv" id="2BbHItUQNdK" role="3clF45">
+        <ref role="3uigEE" to=":^" resolve="record" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItUQNdL" role="jymVt">
+      <property role="TrG5h" value="toAuthenticationResult" />
+      <node concept="37vLTG" id="2BbHItUQNdM" role="3clF46">
+        <property role="TrG5h" value="user" />
+        <node concept="3uibUv" id="2BbHItUQNdN" role="1tU5fm">
+          <ref role="3uigEE" to=":^" resolve="AmazonUser" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItUQNdO" role="3clF47">
+        <node concept="3cpWs8" id="2BbHItUQNdQ" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItUQNdP" role="3cpWs9">
+            <property role="TrG5h" value="token" />
+            <node concept="3uibUv" id="2BbHItUQNdR" role="1tU5fm">
+              <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNdS" role="33vP2m">
+              <property role="10XrrR" value="generateToken" />
+              <property role="1CJj6V" value="jwtService" />
+              <node concept="37vLTw" id="2BbHItUQNdT" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItUQNdM" resolve="user" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItUQNdU" role="3cqZAp">
+          <node concept="31S9pk" id="2BbHItUQNdV" role="3cqZAk">
+            <property role="31Ss8R" value="AuthenticationResult" />
+            <node concept="37vLTw" id="2BbHItUQNdW" role="37wK5m">
+              <ref role="3cqZAo" node="2BbHItUQNdP" resolve="token" />
+            </node>
+            <node concept="Wc6QR" id="2BbHItUQNdX" role="37wK5m">
+              <property role="10XrrR" value="getUsername" />
+              <property role="1CJj6V" value="user" />
+            </node>
+            <node concept="35GP8o" id="2BbHItUQNdY" role="37wK5m">
+              <property role="10XrrR" value="name" />
+              <node concept="Wc6QR" id="2BbHItUQNdZ" role="35GOzl">
+                <property role="10XrrR" value="getRole" />
+                <property role="1CJj6V" value="user" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm6S6" id="2BbHItUQNe0" role="1B3o_S" />
+      <node concept="3uibUv" id="2BbHItUQNe1" role="3clF45">
+        <ref role="3uigEE" to=":^" resolve="AuthenticationResult" />
+      </node>
+    </node>
+    <node concept="1lrU7d" id="2BbHItUQNe2" role="lGtFl">
+      <node concept="u1fJn" id="2BbHItUQNe3" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.service.generated" />
+        <property role="u1fJ8" value="true" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe4" role="u1e2Z">
+        <property role="1CJj6V" value="java.util.Objects" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe5" role="u1e2Z">
+        <property role="1CJj6V" value="org.springframework.security.authentication.AuthenticationManager" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe6" role="u1e2Z">
+        <property role="1CJj6V" value="org.springframework.security.authentication.UsernamePasswordAuthenticationToken" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe7" role="u1e2Z">
+        <property role="1CJj6V" value="org.springframework.security.crypto.password.PasswordEncoder" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe8" role="u1e2Z">
+        <property role="1CJj6V" value="org.springframework.transaction.annotation.Transactional" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNe9" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.domain.AmazonUser" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNea" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.domain.enums.Role" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNeb" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.repository.AmazonUserRepository" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNec" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.security.JwtService" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNed" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.service.projection.AuthenticationResult" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNee" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException" />
+      </node>
+    </node>
+  </node>
+  <node concept="3HP615" id="2BbHItUQNKJ">
+    <property role="TrG5h" value="AmazonUserRepository" />
+    <node concept="3Tm1VV" id="2BbHItUQNKK" role="1B3o_S" />
+    <node concept="2AHcQZ" id="2BbHItUQNKL" role="2AJF6D">
+      <ref role="2AI5Lk" to="meih:~Repository" resolve="Repository" />
+    </node>
+    <node concept="3uibUv" id="2BbHItUQNKM" role="3HQHJm">
+      <ref role="3uigEE" to=":^" resolve="GeneratedAmazonUserRepository" />
+    </node>
+    <node concept="1lrU7d" id="2BbHItUQNKN" role="lGtFl">
+      <node concept="u1fJn" id="2BbHItUQNKO" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.repository" />
+        <property role="u1fJ8" value="true" />
+      </node>
+      <node concept="u1fJn" id="2BbHItUQNKQ" role="u1e2Z">
+        <property role="1CJj6V" value="pt.isep.enorm.ref.amazon.repository.generated.GeneratedAmazonUserRepository" />
+      </node>
+    </node>
+  </node>
+  <node concept="312cEu" id="2BbHItURztg">
+    <property role="TrG5h" value="SecurityConfiguration" />
+    <node concept="3Tm1VV" id="2BbHItURzth" role="1B3o_S" />
+    <node concept="2AHcQZ" id="2BbHItURzti" role="2AJF6D">
+      <ref role="2AI5Lk" to="1wnp:~Configuration" resolve="Configuration" />
+    </node>
+    <node concept="3clFb_" id="2BbHItURztj" role="jymVt">
+      <property role="TrG5h" value="securityFilterChain" />
+      <node concept="2AHcQZ" id="2BbHItURztk" role="2AJF6D">
+        <ref role="2AI5Lk" to="1wnp:~Bean" resolve="Bean" />
+      </node>
+      <node concept="37vLTG" id="2BbHItURztl" role="3clF46">
+        <property role="TrG5h" value="http" />
+        <node concept="3uibUv" id="2BbHItURztm" role="1tU5fm">
+          <ref role="3uigEE" to="mgjw:~HttpSecurity" resolve="HttpSecurity" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItURztn" role="3clF46">
+        <property role="TrG5h" value="jwtAuthenticationFilter" />
+        <node concept="3uibUv" id="2BbHItURzto" role="1tU5fm">
+          <ref role="3uigEE" node="1s4BJy8H0qq" resolve="JwtAuthenticationFilter" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItURztp" role="3clF46">
+        <property role="TrG5h" value="authenticationProvider" />
+        <node concept="3uibUv" id="2BbHItURztq" role="1tU5fm">
+          <ref role="3uigEE" to="mwe7:~AuthenticationProvider" resolve="AuthenticationProvider" />
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURztr" role="Sfmx6">
+        <ref role="3uigEE" to="wyt6:~Exception" resolve="Exception" />
+      </node>
+      <node concept="3clFbS" id="2BbHItURzts" role="3clF47">
+        <node concept="3clFbF" id="2BbHItURztt" role="3cqZAp">
+          <node concept="2OqwBi" id="2BbHItURCpF" role="3clFbG">
+            <node concept="2OqwBi" id="2BbHItURBcm" role="2Oq$k0">
+              <node concept="2OqwBi" id="2BbHItUR_Pr" role="2Oq$k0">
+                <node concept="2OqwBi" id="2BbHItUR_8q" role="2Oq$k0">
+                  <node concept="2OqwBi" id="2BbHItUR$nF" role="2Oq$k0">
+                    <node concept="37vLTw" id="2BbHItURzKP" role="2Oq$k0">
+                      <ref role="3cqZAo" node="2BbHItURztl" resolve="http" />
+                    </node>
+                    <node concept="liA8E" id="2BbHItUR$nG" role="2OqNvi">
+                      <ref role="37wK5l" to="mgjw:~HttpSecurity.csrf(org.springframework.security.config.Customizer)" resolve="csrf" />
+                      <node concept="1bVj0M" id="2BbHItUR$nH" role="37wK5m">
+                        <node concept="37vLTG" id="2BbHItUR$nI" role="1bW2Oz">
+                          <property role="TrG5h" value="csrf" />
+                          <node concept="3VYd8j" id="2BbHItUR$nJ" role="1tU5fm" />
+                        </node>
+                        <node concept="3clFbS" id="2BbHItUR$nK" role="1bW5cS">
+                          <node concept="3clFbF" id="2BbHItUR$nL" role="3cqZAp">
+                            <node concept="2OqwBi" id="2BbHItUR_0x" role="3clFbG">
+                              <node concept="37vLTw" id="2BbHItUR$nN" role="2Oq$k0">
+                                <ref role="3cqZAo" node="2BbHItUR$nI" resolve="csrf" />
+                              </node>
+                              <node concept="liA8E" id="2BbHItUR_0y" role="2OqNvi">
+                                <ref role="37wK5l" to="fm6r:~AbstractHttpConfigurer.disable()" resolve="disable" />
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="liA8E" id="2BbHItUR_8r" role="2OqNvi">
+                    <ref role="37wK5l" to="mgjw:~HttpSecurity.headers(org.springframework.security.config.Customizer)" resolve="headers" />
+                    <node concept="1bVj0M" id="2BbHItUR_8s" role="37wK5m">
+                      <node concept="37vLTG" id="2BbHItUR_8t" role="1bW2Oz">
+                        <property role="TrG5h" value="headers" />
+                        <node concept="3VYd8j" id="2BbHItUR_8u" role="1tU5fm" />
+                      </node>
+                      <node concept="3clFbS" id="2BbHItUR_8v" role="1bW5cS">
+                        <node concept="3clFbF" id="2BbHItUR_8w" role="3cqZAp">
+                          <node concept="2OqwBi" id="2BbHItURACV" role="3clFbG">
+                            <node concept="2OqwBi" id="2BbHItURA0e" role="2Oq$k0">
+                              <node concept="37vLTw" id="2BbHItUR_8z" role="2Oq$k0">
+                                <ref role="3cqZAo" node="2BbHItUR_8t" resolve="headers" />
+                              </node>
+                              <node concept="liA8E" id="2BbHItURA0f" role="2OqNvi">
+                                <ref role="37wK5l" to="fm6r:~HeadersConfigurer.frameOptions(org.springframework.security.config.Customizer)" resolve="frameOptions" />
+                                <node concept="1bVj0M" id="2BbHItURA0g" role="37wK5m">
+                                  <node concept="37vLTG" id="2BbHItURA0h" role="1bW2Oz">
+                                    <property role="TrG5h" value="frameOptions" />
+                                    <node concept="3VYd8j" id="2BbHItURA0i" role="1tU5fm" />
+                                  </node>
+                                  <node concept="3clFbS" id="2BbHItURA0j" role="1bW5cS">
+                                    <node concept="3clFbF" id="2BbHItURA0k" role="3cqZAp">
+                                      <node concept="2OqwBi" id="2BbHItURBu1" role="3clFbG">
+                                        <node concept="37vLTw" id="2BbHItURA0m" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="2BbHItURA0h" resolve="frameOptions" />
+                                        </node>
+                                        <node concept="liA8E" id="2BbHItURBu2" role="2OqNvi">
+                                          <ref role="37wK5l" to="fm6r:~AbstractHttpConfigurer.disable()" resolve="disable" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                            <node concept="liA8E" id="2BbHItURACW" role="2OqNvi">
+                              <ref role="37wK5l" to="fm6r:~HeadersConfigurer.addHeaderWriter(org.springframework.security.web.header.HeaderWriter)" resolve="addHeaderWriter" />
+                              <node concept="2ShNRf" id="2BbHItURACX" role="37wK5m">
+                                <node concept="1pGfFk" id="2BbHItURACY" role="2ShVmc">
+                                  <ref role="37wK5l" to="5qhr:~XFrameOptionsHeaderWriter.&lt;init&gt;(org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter$XFrameOptionsMode)" resolve="XFrameOptionsHeaderWriter" />
+                                  <node concept="Rm8GO" id="2BbHItURACZ" role="37wK5m">
+                                    <ref role="1Px2BO" to="5qhr:~XFrameOptionsHeaderWriter$XFrameOptionsMode" resolve="XFrameOptionsHeaderWriter.XFrameOptionsMode" />
+                                    <ref role="Rm8GQ" to="5qhr:~XFrameOptionsHeaderWriter$XFrameOptionsMode.SAMEORIGIN" resolve="SAMEORIGIN" />
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="liA8E" id="2BbHItUR_Ps" role="2OqNvi">
+                  <ref role="37wK5l" to="mgjw:~HttpSecurity.sessionManagement(org.springframework.security.config.Customizer)" resolve="sessionManagement" />
+                  <node concept="1bVj0M" id="2BbHItUR_Pt" role="37wK5m">
+                    <node concept="37vLTG" id="2BbHItUR_Pu" role="1bW2Oz">
+                      <property role="TrG5h" value="session" />
+                      <node concept="3VYd8j" id="2BbHItUR_Pv" role="1tU5fm" />
+                    </node>
+                    <node concept="3clFbS" id="2BbHItUR_Pw" role="1bW5cS">
+                      <node concept="3clFbF" id="2BbHItUR_Px" role="3cqZAp">
+                        <node concept="2OqwBi" id="2BbHItURBIt" role="3clFbG">
+                          <node concept="37vLTw" id="2BbHItUR_Pz" role="2Oq$k0">
+                            <ref role="3cqZAo" node="2BbHItUR_Pu" resolve="session" />
+                          </node>
+                          <node concept="liA8E" id="2BbHItURBIu" role="2OqNvi">
+                            <ref role="37wK5l" to="fm6r:~SessionManagementConfigurer.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy)" resolve="sessionCreationPolicy" />
+                            <node concept="Rm8GO" id="2BbHItURBIv" role="37wK5m">
+                              <ref role="1Px2BO" to="kxsd:~SessionCreationPolicy" resolve="SessionCreationPolicy" />
+                              <ref role="Rm8GQ" to="kxsd:~SessionCreationPolicy.STATELESS" resolve="STATELESS" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="liA8E" id="2BbHItURBcn" role="2OqNvi">
+                <ref role="37wK5l" to="mgjw:~HttpSecurity.authenticationProvider(org.springframework.security.authentication.AuthenticationProvider)" resolve="authenticationProvider" />
+                <node concept="37vLTw" id="2BbHItURBco" role="37wK5m">
+                  <ref role="3cqZAo" node="2BbHItURztp" resolve="authenticationProvider" />
+                </node>
+              </node>
+            </node>
+            <node concept="liA8E" id="2BbHItURCpG" role="2OqNvi">
+              <ref role="37wK5l" to="mgjw:~HttpSecurity.addFilterBefore(jakarta.servlet.Filter,java.lang.Class)" resolve="addFilterBefore" />
+              <node concept="37vLTw" id="2BbHItURCpH" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItURztn" resolve="jwtAuthenticationFilter" />
+              </node>
+              <node concept="3VsKOn" id="2BbHItURCpI" role="37wK5m">
+                <ref role="3VsUkX" to="pkux:~UsernamePasswordAuthenticationFilter" resolve="UsernamePasswordAuthenticationFilter" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItURzu3" role="3cqZAp">
+          <node concept="2OqwBi" id="2BbHItUR$cT" role="3cqZAk">
+            <node concept="37vLTw" id="2BbHItURzL9" role="2Oq$k0">
+              <ref role="3cqZAo" node="2BbHItURztl" resolve="http" />
+            </node>
+            <node concept="liA8E" id="2BbHItUR$cU" role="2OqNvi">
+              <ref role="37wK5l" to="1ipg:~AbstractSecurityBuilder.build()" resolve="build" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURzu5" role="3clF45">
+        <ref role="3uigEE" to="r5bh:~SecurityFilterChain" resolve="SecurityFilterChain" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItURzu6" role="jymVt">
+      <property role="TrG5h" value="authenticationProvider" />
+      <node concept="2AHcQZ" id="2BbHItURzu7" role="2AJF6D">
+        <ref role="2AI5Lk" to="1wnp:~Bean" resolve="Bean" />
+      </node>
+      <node concept="37vLTG" id="2BbHItURzu8" role="3clF46">
+        <property role="TrG5h" value="userDetailsService" />
+        <node concept="3uibUv" id="2BbHItURzu9" role="1tU5fm">
+          <ref role="3uigEE" to="ay6n:~UserDetailsService" resolve="UserDetailsService" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2BbHItURzua" role="3clF46">
+        <property role="TrG5h" value="passwordEncoder" />
+        <node concept="3uibUv" id="2BbHItURzub" role="1tU5fm">
+          <ref role="3uigEE" to="f75t:~PasswordEncoder" resolve="PasswordEncoder" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2BbHItURzuc" role="3clF47">
+        <node concept="3cpWs8" id="2BbHItURzue" role="3cqZAp">
+          <node concept="3cpWsn" id="2BbHItURzud" role="3cpWs9">
+            <property role="TrG5h" value="provider" />
+            <node concept="3uibUv" id="2BbHItURzuf" role="1tU5fm">
+              <ref role="3uigEE" to="aen7:~DaoAuthenticationProvider" resolve="DaoAuthenticationProvider" />
+            </node>
+            <node concept="2ShNRf" id="2BbHItURzLz" role="33vP2m">
+              <node concept="1pGfFk" id="2BbHItURzLB" role="2ShVmc">
+                <ref role="37wK5l" to="aen7:~DaoAuthenticationProvider.&lt;init&gt;()" resolve="DaoAuthenticationProvider" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItURzuh" role="3cqZAp">
+          <node concept="2OqwBi" id="2BbHItUR$sq" role="3clFbG">
+            <node concept="37vLTw" id="2BbHItURzLd" role="2Oq$k0">
+              <ref role="3cqZAo" node="2BbHItURzud" resolve="provider" />
+            </node>
+            <node concept="liA8E" id="2BbHItUR$sr" role="2OqNvi">
+              <ref role="37wK5l" to="aen7:~DaoAuthenticationProvider.setUserDetailsService(org.springframework.security.core.userdetails.UserDetailsService)" resolve="setUserDetailsService" />
+              <node concept="37vLTw" id="2BbHItUR$ss" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItURzu8" resolve="userDetailsService" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2BbHItURzuk" role="3cqZAp">
+          <node concept="2OqwBi" id="2BbHItUR$iV" role="3clFbG">
+            <node concept="37vLTw" id="2BbHItURzKF" role="2Oq$k0">
+              <ref role="3cqZAo" node="2BbHItURzud" resolve="provider" />
+            </node>
+            <node concept="liA8E" id="2BbHItUR$iW" role="2OqNvi">
+              <ref role="37wK5l" to="aen7:~DaoAuthenticationProvider.setPasswordEncoder(org.springframework.security.crypto.password.PasswordEncoder)" resolve="setPasswordEncoder" />
+              <node concept="37vLTw" id="2BbHItUR$iX" role="37wK5m">
+                <ref role="3cqZAo" node="2BbHItURzua" resolve="passwordEncoder" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2BbHItURzun" role="3cqZAp">
+          <node concept="37vLTw" id="2BbHItURzuo" role="3cqZAk">
+            <ref role="3cqZAo" node="2BbHItURzud" resolve="provider" />
+          </node>
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURzup" role="3clF45">
+        <ref role="3uigEE" to="mwe7:~AuthenticationProvider" resolve="AuthenticationProvider" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItURzuq" role="jymVt">
+      <property role="TrG5h" value="authenticationManager" />
+      <node concept="2AHcQZ" id="2BbHItURzur" role="2AJF6D">
+        <ref role="2AI5Lk" to="1wnp:~Bean" resolve="Bean" />
+      </node>
+      <node concept="37vLTG" id="2BbHItURzus" role="3clF46">
+        <property role="TrG5h" value="authenticationConfiguration" />
+        <node concept="3uibUv" id="2BbHItURzut" role="1tU5fm">
+          <ref role="3uigEE" to="52y:~AuthenticationConfiguration" resolve="AuthenticationConfiguration" />
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURzuu" role="Sfmx6">
+        <ref role="3uigEE" to="wyt6:~Exception" resolve="Exception" />
+      </node>
+      <node concept="3clFbS" id="2BbHItURzuv" role="3clF47">
+        <node concept="3cpWs6" id="2BbHItURzuw" role="3cqZAp">
+          <node concept="2OqwBi" id="2BbHItUR$8w" role="3cqZAk">
+            <node concept="37vLTw" id="2BbHItURzL5" role="2Oq$k0">
+              <ref role="3cqZAo" node="2BbHItURzus" resolve="authenticationConfiguration" />
+            </node>
+            <node concept="liA8E" id="2BbHItUR$8x" role="2OqNvi">
+              <ref role="37wK5l" to="52y:~AuthenticationConfiguration.getAuthenticationManager()" resolve="getAuthenticationManager" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURzuy" role="3clF45">
+        <ref role="3uigEE" to="mwe7:~AuthenticationManager" resolve="AuthenticationManager" />
+      </node>
+    </node>
+    <node concept="3clFb_" id="2BbHItURzuz" role="jymVt">
+      <property role="TrG5h" value="passwordEncoder" />
+      <node concept="2AHcQZ" id="2BbHItURzu$" role="2AJF6D">
+        <ref role="2AI5Lk" to="1wnp:~Bean" resolve="Bean" />
+      </node>
+      <node concept="3clFbS" id="2BbHItURzu_" role="3clF47">
+        <node concept="3cpWs6" id="2BbHItURzuA" role="3cqZAp">
+          <node concept="2ShNRf" id="2BbHItURzL0" role="3cqZAk">
+            <node concept="1pGfFk" id="2BbHItURzL2" role="2ShVmc">
+              <ref role="37wK5l" to="ypf6:~BCryptPasswordEncoder.&lt;init&gt;()" resolve="BCryptPasswordEncoder" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3uibUv" id="2BbHItURzuC" role="3clF45">
+        <ref role="3uigEE" to="f75t:~PasswordEncoder" resolve="PasswordEncoder" />
+      </node>
     </node>
   </node>
 </model>

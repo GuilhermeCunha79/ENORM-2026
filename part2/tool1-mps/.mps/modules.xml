@@ -6,8 +6,6 @@
       <modulePath path="$PROJECT_DIR$/languages/Ref/Ref.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/dependency.importer/dependency.importer.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/prototype.application/prototype.application.msd" folder="" />
-      <modulePath path="$PROJECT_DIR$/solutions/sprinboot.runtime/sprinboot.runtime.msd" folder="" />
-      <modulePath path="$PROJECT_DIR$/solutions/springboot/springboot.runtime.msd" folder="" />
     </projectModules>
   </component>
 </project>
