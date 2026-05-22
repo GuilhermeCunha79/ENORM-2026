@@ -1,0 +1,1865 @@
+[comment encoding = UTF-8 /]
+[module generate('http://www.example.org/enorm')/]
+
+[query public baseName(m : RefModel) : String =
+    if m.name.size() > 8 and m.name.substring(m.name.size() - 7, m.name.size()) = 'RefModel' then
+        m.name.substring(1, m.name.size() - 8)
+    else m.name
+    endif
+/]
+
+[query public pkg(m : RefModel) : String = baseName(m).toLower() /]
+
+[query public rootPath(m : RefModel) : String =
+    pkg(m).concat('/src/generated/').concat(pkg(m))
+/]
+
+[query public basePackage(m : RefModel) : String = 'generated.'.concat(pkg(m)) /]
+[query public domainPackage(m : RefModel) : String = basePackage(m).concat('.domain') /]
+[query public domainGeneratedPackage(m : RefModel) : String = domainPackage(m).concat('.generated') /]
+[query public domainEnumsPackage(m : RefModel) : String = domainPackage(m).concat('.enums') /]
+
+[query public domainRootPath(m : RefModel) : String = rootPath(m).concat('/domain') /]
+[query public domainGeneratedPath(m : RefModel) : String = domainRootPath(m).concat('/generated') /]
+[query public domainEnumsPath(m : RefModel) : String = domainRootPath(m).concat('/enums') /]
+
+[query public isRequiredCard(card : String) : Boolean = card = '1' /]
+[query public relationFieldName(r : ResourceRelation) : String =
+    if r.source = r.target then 'parent'
+    else lowerFirst(r.source.name)
+    endif
+/]
+
+[query public shouldSkipAttribute(a : Attribute) : Boolean = a.name.toLower() = 'id' /]
+[query public javaType(p : PrimitiveType, multi : Boolean) : String =
+    if multi then
+        'java.util.List<'.concat(
+            if p = PrimitiveType::TEXT then 'String'
+            else if p = PrimitiveType::NUMBER then 'Double'
+            else if p = PrimitiveType::BOOLEAN then 'Boolean'
+            else if p = PrimitiveType::DATE then 'java.time.LocalDate'
+            else if p = PrimitiveType::DATETIME then 'java.time.LocalDateTime'
+            else if p = PrimitiveType::URL then 'java.net.URI'
+            else if p = PrimitiveType::IMAGE then 'String'
+            else if p = PrimitiveType::VIDEO then 'String'
+            else 'String'
+            endif endif endif endif endif endif endif endif
+        ).concat('>')
+    else
+        if p = PrimitiveType::TEXT then 'String'
+        else if p = PrimitiveType::NUMBER then 'Double'
+        else if p = PrimitiveType::BOOLEAN then 'Boolean'
+        else if p = PrimitiveType::DATE then 'java.time.LocalDate'
+        else if p = PrimitiveType::DATETIME then 'java.time.LocalDateTime'
+        else if p = PrimitiveType::URL then 'java.net.URI'
+        else if p = PrimitiveType::IMAGE then 'String'
+        else if p = PrimitiveType::VIDEO then 'String'
+        else 'String'
+        endif endif endif endif endif endif endif endif
+    endif
+/]
+
+[query public defaultValue(a : Attribute) : String =
+    if a.multiValued then ' = new java.util.ArrayList<>()'
+    else ''
+    endif
+/]
+
+[query public runtimeProfile(m : RefModel) : String =
+    if baseName(m) = 'Amazon' then 'catalog-commerce'
+    else if baseName(m) = 'Reddit' then 'community-platform'
+    else if baseName(m) = 'YouTube' then 'media-platform'
+    else 'generic-platform'
+    endif endif endif
+/]
+
+[query public qString(s : String) : String =
+    if s.oclIsUndefined() then 'null'
+    else '\"'.concat(s).concat('\"')
+    endif
+/]
+
+[query public qResource(r : ResourceType) : String =
+    if r.oclIsUndefined() then 'null'
+    else '\"'.concat(r.name).concat('\"')
+    endif
+/]
+
+[query public qContext(c : ContextType) : String =
+    if c.oclIsUndefined() then 'null'
+    else '\"'.concat(c.name).concat('\"')
+    endif
+/]
+
+[query public qFeedback(f : FeedbackDefinition) : String =
+    if f.oclIsUndefined() then 'null'
+    else '\"'.concat(f.name).concat('\"')
+    endif
+/]
+
+[query public qAutomation(a : AutomationRule) : String =
+    if a.oclIsUndefined() then 'null'
+    else '\"'.concat(a.name).concat('\"')
+    endif
+/]
+
+[template public generateElement(m : RefModel)]
+[comment @main /]
+[generateApplication(m)/]
+[generateUsers(m)/]
+[generateResources(m)/]
+[generateContexts(m)/]
+[generateRelations(m)/]
+[generateFeedback(m)/]
+[generateGovernance(m)/]
+[generateRuleBodies(m)/]
+[generateDomain(m)/]
+[generateReadme(m)/]
+[/template]
+
+[template public generateApplication(m : RefModel)]
+[file (rootPath(m).concat('/').concat(baseName(m)).concat('Application.java'), false, 'UTF-8')]
+package generated.[pkg(m)/];
+
+import generated.[pkg(m)/].governance.[baseName(m)/]Governance;
+
+public final class [baseName(m)/]Application {
+
+    public static final String MODEL_NAME = "[baseName(m)/]";
+    public static final String MODEL_VERSION = "[m.version/]";
+    public static final String RUNTIME_PROFILE = "[runtimeProfile(m)/]";
+
+    private [baseName(m)/]Application() {
+    }
+
+    public static [baseName(m)/]Governance governance() {
+        return new [baseName(m)/]Governance();
+    }
+}
+[/file]
+[/template]
+
+[template public generateUsers(m : RefModel)]
+[file (rootPath(m).concat('/model/Users.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].model;
+
+import java.util.List;
+
+public final class Users {
+
+    private Users() {
+    }
+
+    public record UserTypeSpec(String name, String kind, List<String> superTypes) {}
+
+    public static List<UserTypeSpec> all() {
+        return List.of(
+            [for (u : UserType | m.userTypes) separator(',\n            ')]new UserTypeSpec(
+                "[u.name/]",
+                "[u.kind/]",
+                List.of([for (s : UserType | u.superTypes) separator(', ')]"[s.name/]"[/for])
+            )[/for]
+        );
+    }
+}
+[/file]
+[/template]
+
+[template public generateResources(m : RefModel)]
+[file (rootPath(m).concat('/model/Resources.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].model;
+
+public final class Resources {
+
+    private Resources() {
+    }
+
+[for (rt : ResourceType | m.resourceTypes)]
+    public static final class [rt.name/] {
+
+        public static final String TYPE = "[rt.name/]";
+        public static final boolean SUPPORTS_MEDIA = [rt.supportsMedia/];
+[if (not rt.superTypes->isEmpty())]
+        public static final java.util.List<String> SUPER_TYPES = java.util.List.of([for (s : ResourceType | rt.superTypes) separator(', ')]"[s.name/]"[/for]);
+[/if]
+
+[for (a : Attribute | rt.attributes)]
+        private [javaType(a.type, a.multiValued)/] [a.name/][defaultValue(a)/];
+[/for]
+
+        public [rt.name/]() {
+        }
+
+[for (a : Attribute | rt.attributes)]
+        public [javaType(a.type, a.multiValued)/] get[upperFirst(a.name)/]() {
+            return this.[a.name/];
+        }
+
+        public void set[upperFirst(a.name)/]([javaType(a.type, a.multiValued)/] [a.name/]) {
+            this.[a.name/] = [a.name/];
+        }
+
+[/for]
+    }
+
+[/for]
+}
+[/file]
+[/template]
+
+[template public generateContexts(m : RefModel)]
+[file (rootPath(m).concat('/model/Contexts.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].model;
+
+import java.util.List;
+
+public final class Contexts {
+
+    private Contexts() {
+    }
+
+    public record ContextSpec(String name, String kind, List<String> contains) {}
+
+    public static List<ContextSpec> all() {
+        return List.of(
+            [for (c : ContextType | m.contextTypes) separator(',\n            ')]new ContextSpec(
+                "[c.name/]",
+                "[c.kind/]",
+                List.of([for (r : ResourceType | c.contains) separator(', ')]"[r.name/]"[/for])
+            )[/for]
+        );
+    }
+}
+[/file]
+[/template]
+
+[template public generateRelations(m : RefModel)]
+[file (rootPath(m).concat('/model/Relations.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].model;
+
+import java.util.List;
+
+public final class Relations {
+
+    private Relations() {
+    }
+
+    public record RelationSpec(
+        String name,
+        String sourceCardinality,
+        String targetCardinality,
+        boolean containment,
+        boolean recursive,
+        String source,
+        String target
+    ) {}
+
+    public static List<RelationSpec> all() {
+        return List.of(
+            [for (r : ResourceRelation | m.resourceRelations) separator(',\n            ')]new RelationSpec(
+                "[r.name/]",
+                "[r.sourceCardinality/]",
+                "[r.targetCardinality/]",
+                [r.containment/],
+                [r.recursive/],
+                "[r.source.name/]",
+                "[r.target.name/]"
+            )[/for]
+        );
+    }
+}
+[/file]
+[/template]
+
+[template public generateFeedback(m : RefModel)]
+[file (rootPath(m).concat('/model/Feedback.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].model;
+
+import java.util.List;
+
+public final class Feedback {
+
+    private Feedback() {
+    }
+
+    public record FeedbackTypeSpec(
+        String name,
+        String kind,
+        String subjectScope,
+        boolean hasRating,
+        boolean recursive,
+        boolean allowsText,
+        boolean allowsMedia,
+        String polarity
+    ) {}
+
+    public record FeedbackDefinitionSpec(
+        String name,
+        boolean requiresVerifiedContext,
+        String verificationRequirement,
+        boolean uniquePerAuthorTarget,
+        String type,
+        String subjectResource,
+        String author,
+        String subjectFeedback,
+        String policyStatus,
+        String ratingMin,
+        String ratingMax,
+        String ratingStep
+    ) {}
+
+    public static List<FeedbackTypeSpec> types() {
+        return List.of(
+            [for (t : FeedbackType | m.feedbackTypes) separator(',\n            ')]new FeedbackTypeSpec(
+                "[t.name/]",
+                "[t.kind/]",
+                "[t.subjectScope/]",
+                [t.hasRating/],
+                [t.recursive/],
+                [t.allowsText/],
+                [t.allowsMedia/],
+                "[t.polarity/]"
+            )[/for]
+        );
+    }
+
+    public static List<FeedbackDefinitionSpec> definitions() {
+        return List.of(
+            [for (d : FeedbackDefinition | m.feedbackDefinitions) separator(',\n            ')]new FeedbackDefinitionSpec(
+                "[d.name/]",
+                [d.requiresVerifiedContext/],
+                "[d.verificationRequirement/]",
+                [d.uniquePerAuthorTarget/],
+                "[d.type.name/]",
+                [qResource(d.subjectResource)/],
+                "[d.author.name/]",
+                [qFeedback(d.subjectFeedback)/]",
+                [if (d.policy.oclIsUndefined())]null[else]"[d.policy.status/]"[/if],
+                [if (d.rating.oclIsUndefined())]null[else]"[d.rating.minValue/]"[/if],
+                [if (d.rating.oclIsUndefined())]null[else]"[d.rating.maxValue/]"[/if],
+                [if (d.rating.oclIsUndefined())]null[else]"[d.rating.step/]"[/if]
+            )[/for]
+        );
+    }
+}
+[/file]
+[/template]
+
+[template public generateGovernance(m : RefModel)]
+[file (rootPath(m).concat('/governance/').concat(baseName(m)).concat('Governance.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].governance;
+
+import java.util.List;
+
+public final class [baseName(m)/]Governance {
+
+    public record AuthorizationSpec(
+        String name,
+        String allowedAction,
+        String actor,
+        String context,
+        String resourceTarget,
+        String feedbackTarget
+    ) {}
+
+    public record ValidationSpec(
+        String name,
+        String kind,
+        String severity,
+        String expression,
+        String implementationBody,
+        String appliesToResource,
+        String appliesToFeedback,
+        String invokedBy
+    ) {}
+
+    public record ModerationPolicySpec(
+        String name,
+        String mode,
+        String trigger,
+        String decision,
+        String monitorsResource,
+        String monitorsFeedback,
+        List<String> executedBy,
+        String inContext
+    ) {}
+
+    public record ConditionSpec(
+        String name,
+        String operator,
+        String attribute,
+        List<String> values
+    ) {}
+
+    public record ActionSpec(
+        String name,
+        String kind,
+        String implementationBody
+    ) {}
+
+    public record AutomationSpec(
+        String name,
+        String trigger,
+        String contextResource,
+        String inContext,
+        String onFeedback,
+        String usesValidation,
+        List<ConditionSpec> conditions,
+        List<ActionSpec> actions
+    ) {}
+
+    public record VerificationPolicySpec(
+        String name,
+        String mode,
+        String appliesWhen,
+        String verifies
+    ) {}
+
+    public record SortingPolicySpec(
+        String name,
+        String criterion,
+        String direction,
+        String appliesToResource,
+        String appliesToFeedback,
+        String inContext
+    ) {}
+
+    public List<AuthorizationSpec> authorizations() {
+        return List.of(
+            [for (a : AuthorizationRule | m.authorizationRules) separator(',\n            ')]new AuthorizationSpec(
+                "[a.name/]",
+                "[a.allowedAction/]",
+                "[a.actor.name/]",
+                [qContext(a.eGet('context'))/],
+                "[a.resourceTarget.name/]",
+                [qFeedback(a.feedbackTarget)/]
+            )[/for]
+        );
+    }
+
+    public List<ValidationSpec> validations() {
+        return List.of(
+            [for (v : ValidationRule | m.validationRules) separator(',\n            ')]new ValidationSpec(
+                "[v.name/]",
+                "[v.kind/]",
+                "[v.severity/]",
+                """
+[v.expression/]
+                """,
+                """
+[v.implementationId/]
+                """,
+                [qResource(v.appliesToResource)/],
+                [qFeedback(v.appliesToFeedback)/],
+                [qAutomation(v.invokedBy)/]
+            )[/for]
+        );
+    }
+
+    public List<ModerationPolicySpec> moderationPolicies() {
+        return List.of(
+            [for (p : ModerationPolicy | m.moderationPolicies) separator(',\n            ')]new ModerationPolicySpec(
+                "[p.name/]",
+                "[p.mode/]",
+                "[p.trigger/]",
+                "[p.decision/]",
+                [qResource(p.monitorsResource)/],
+                [qFeedback(p.monitorsFeedback)/],
+                List.of([for (u : UserType | p.executedBy) separator(', ')]"[u.name/]"[/for]),
+                [qContext(p.inContext)/]
+            )[/for]
+        );
+    }
+
+    public List<AutomationSpec> automations() {
+        return List.of(
+            [for (a : AutomationRule | m.automationRules) separator(',\n            ')]new AutomationSpec(
+                "[a.name/]",
+                "[a.trigger/]",
+                [qResource(a.eGet('context'))/],
+                [qContext(a.inContext)/],
+                [qFeedback(a.onFeedback)/],
+                "[a.uses.name/]",
+                List.of(
+                    [for (c : Condition | a.conditions) separator(',\n                    ')]new ConditionSpec(
+                        "[c.name/]",
+                        "[c.operator/]",
+                        "[c.attribute.name/]",
+                        List.of([for (v : ConditionValue | c.children) separator(', ')]"[v.value/]"[/for])
+                    )[/for]
+                ),
+                List.of(
+                    [for (ac : Action | a.actions) separator(',\n                    ')]new ActionSpec(
+                        "[ac.name/]",
+                        "[ac.kind/]",
+                        """
+[ac.message/]
+                        """
+                    )[/for]
+                )
+            )[/for]
+        );
+    }
+
+    public List<VerificationPolicySpec> verificationPolicies() {
+        return List.of(
+            [for (v : VerificationPolicy | m.verificationPolicies) separator(',\n            ')]new VerificationPolicySpec(
+                "[v.name/]",
+                "[v.mode/]",
+                "[v.appliesWhen/]",
+                "[v.verifies.name/]"
+            )[/for]
+        );
+    }
+
+    public List<SortingPolicySpec> sortingPolicies() {
+        return List.of(
+            [for (s : SortingPolicy | m.sortingPolicies) separator(',\n            ')]new SortingPolicySpec(
+                "[s.name/]",
+                "[s.criterion/]",
+                "[s.direction/]",
+                [qResource(s.appliesToResource)/],
+                [qFeedback(s.appliesToFeedback)/],
+                [qContext(s.inContext)/]
+            )[/for]
+        );
+    }
+}
+[/file]
+[/template]
+
+[template public generateRuleBodies(m : RefModel)]
+[file (rootPath(m).concat('/runtime/RuleBodies.java'), false, 'UTF-8')]
+package generated.[pkg(m)/].runtime;
+
+public final class RuleBodies {
+
+    private RuleBodies() {
+    }
+
+[for (v : ValidationRule | m.validationRules)]
+    public static final String [v.name.toUpper()/]_EXPRESSION = """
+[v.expression/]
+    """;
+
+    public static final String [v.name.toUpper()/]_IMPLEMENTATION = """
+[v.implementationId/]
+    """;
+
+[/for]
+[for (a : AutomationRule | m.automationRules)]
+[for (ac : Action | a.actions)]
+    public static final String [a.name.toUpper()/]_[ac.name.toUpper()/]_BODY = """
+[ac.message/]
+    """;
+
+[/for]
+[/for]
+}
+[/file]
+[/template]
+
+[template public generateDomain(m : RefModel)]
+[generateDomainEnums(m)/]
+[generateDomainUser(m)/]
+[generateDomainContextType(m)/]
+[generateDomainAuthorizationRule(m)/]
+[generateDomainValidationRule(m)/]
+[generateDomainModerationPolicy(m)/]
+[generateDomainAutomationCondition(m)/]
+[generateDomainAutomationAction(m)/]
+[generateDomainAutomationRule(m)/]
+[generateDomainVerificationPolicy(m)/]
+[generateDomainSortingPolicy(m)/]
+[for (rt : ResourceType | m.resourceTypes)]
+[generateDomainResource(m, rt)/]
+[/for]
+[/template]
+
+[template public generateDomainEnums(m : RefModel)]
+[file (domainEnumsPath(m).concat('/UserKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum UserKind {
+    GENERIC,
+    BUYER,
+    SELLER,
+    CREATOR,
+    MODERATOR
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ContextKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ContextKind {
+    GLOBAL,
+    COMMUNITY,
+    CHANNEL,
+    CATALOG
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/PrimitiveType.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum PrimitiveType {
+    TEXT,
+    NUMBER,
+    BOOLEAN,
+    DATE,
+    DATETIME,
+    IMAGE,
+    VIDEO,
+    URL
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/FeedbackKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum FeedbackKind {
+    COMMENT,
+    REVIEW,
+    REACTION,
+    VOTE,
+    REPORT,
+    SUBSCRIPTION
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/FeedbackSubjectScope.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum FeedbackSubjectScope {
+    RESOURCE_ONLY,
+    FEEDBACK_ONLY,
+    RESOURCE_OR_FEEDBACK
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/FeedbackPolarity.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum FeedbackPolarity {
+    NONE,
+    LIKE_DISLIKE,
+    UP_DOWN
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/FeedbackStatus.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum FeedbackStatus {
+    ENABLED,
+    DISABLED
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/VerificationRequirement.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum VerificationRequirement {
+    NONE,
+    OPTIONAL,
+    REQUIRED
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ValidationKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ValidationKind {
+    AUTOMATIC,
+    MANUAL
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/RuleSeverity.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum RuleSeverity {
+    INFO,
+    WARNING,
+    ERROR
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ModerationMode.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ModerationMode {
+    AUTOMATIC,
+    MANUAL,
+    HYBRID
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/TriggerEvent.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum TriggerEvent {
+    ON_RESOURCE_CREATE,
+    ON_RESOURCE_UPDATE,
+    ON_RESOURCE_DELETE,
+    ON_FEEDBACK_CREATE,
+    ON_FEEDBACK_UPDATE,
+    ON_FEEDBACK_DELETE,
+    ON_REPORT_SUBMITTED,
+    ON_REPORT_THRESHOLD,
+    ON_MANUAL_REQUEST
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ModerationDecision.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ModerationDecision {
+    APPROVED,
+    FLAGGED,
+    HIDDEN,
+    REMOVED,
+    BLOCKED,
+    REJECTED
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ActionKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ActionKind {
+    READ,
+    CREATE,
+    UPDATE,
+    DELETE,
+    COMMENT,
+    RATE,
+    VOTE,
+    REPORT,
+    SUBSCRIBE,
+    MODERATE,
+    VALIDATE
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ConditionOperator.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ConditionOperator {
+    CONTAINS_KEYWORDS,
+    NOT_CONTAINS_KEYWORDS,
+    MATCH_REGEX,
+    NOT_MATCH_REGEX,
+    HAS_PROPERTY,
+    NOT_HAS_PROPERTY,
+    HAS_SPECIFIC_PROPERTY,
+    NOT_HAS_SPECIFIC_PROPERTY
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/ActionResultKind.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum ActionResultKind {
+    DISPLAY_MESSAGE,
+    FLAG_CONTENT,
+    HIDE_CONTENT,
+    REMOVE_CONTENT,
+    BLOCK_SUBMISSION,
+    NOTIFY_MODERATOR,
+    AUTO_APPROVE,
+    AUTO_REJECT
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/SortCriterion.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum SortCriterion {
+    DATE,
+    VALUE,
+    RELEVANCE
+}
+[/file]
+
+[file (domainEnumsPath(m).concat('/SortDirection.java'), false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+
+public enum SortDirection {
+    ASC,
+    DESC
+}
+[/file]
+[/template]
+
+[template public generateDomainUser(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/Generated').concat(baseName(m)).concat('User.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].UserKind;
+
+@MappedSuperclass
+public abstract class Generated[baseName(m)/]User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 80)
+    private String username;
+
+    @Column(nullable = false, length = 200)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserKind kind;
+
+    @Column(nullable = false)
+    private LocalDate registrationDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserKind getKind() {
+        return kind;
+    }
+
+    public void setKind(UserKind kind) {
+        this.kind = kind;
+    }
+
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainContextType(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedContextType.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].ContextKind;
+
+@MappedSuperclass
+public abstract class GeneratedContextType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ContextKind kind;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ContextKind getKind() {
+        return kind;
+    }
+
+    public void setKind(ContextKind kind) {
+        this.kind = kind;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainAuthorizationRule(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedAuthorizationRule.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].ActionKind;
+import [domainEnumsPackage(m)/].UserKind;
+
+@MappedSuperclass
+public abstract class GeneratedAuthorizationRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ActionKind allowedAction;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserKind actorKind;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "context_id")
+    private GeneratedContextType context;
+
+    @Column(name = "resource_target", length = 120)
+    private String resourceTarget;
+
+    @Column(name = "feedback_target", length = 120)
+    private String feedbackTarget;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ActionKind getAllowedAction() {
+        return allowedAction;
+    }
+
+    public void setAllowedAction(ActionKind allowedAction) {
+        this.allowedAction = allowedAction;
+    }
+
+    public UserKind getActorKind() {
+        return actorKind;
+    }
+
+    public void setActorKind(UserKind actorKind) {
+        this.actorKind = actorKind;
+    }
+
+    public GeneratedContextType getContext() {
+        return context;
+    }
+
+    public void setContext(GeneratedContextType context) {
+        this.context = context;
+    }
+
+    public String getResourceTarget() {
+        return resourceTarget;
+    }
+
+    public void setResourceTarget(String resourceTarget) {
+        this.resourceTarget = resourceTarget;
+    }
+
+    public String getFeedbackTarget() {
+        return feedbackTarget;
+    }
+
+    public void setFeedbackTarget(String feedbackTarget) {
+        this.feedbackTarget = feedbackTarget;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainValidationRule(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedValidationRule.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].RuleSeverity;
+import [domainEnumsPackage(m)/].ValidationKind;
+
+@MappedSuperclass
+public abstract class GeneratedValidationRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ValidationKind kind;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private RuleSeverity severity;
+
+    @Column(nullable = false, length = 2000)
+    private String expression;
+
+    @Column(nullable = false, length = 2000)
+    private String implementationId;
+
+    @Column(name = "applies_to_resource", length = 120)
+    private String appliesToResource;
+
+    @Column(name = "applies_to_feedback", length = 120)
+    private String appliesToFeedback;
+
+    @Column(name = "invoked_by", length = 120)
+    private String invokedBy;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ValidationKind getKind() {
+        return kind;
+    }
+
+    public void setKind(ValidationKind kind) {
+        this.kind = kind;
+    }
+
+    public RuleSeverity getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(RuleSeverity severity) {
+        this.severity = severity;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
+
+    public String getImplementationId() {
+        return implementationId;
+    }
+
+    public void setImplementationId(String implementationId) {
+        this.implementationId = implementationId;
+    }
+
+    public String getAppliesToResource() {
+        return appliesToResource;
+    }
+
+    public void setAppliesToResource(String appliesToResource) {
+        this.appliesToResource = appliesToResource;
+    }
+
+    public String getAppliesToFeedback() {
+        return appliesToFeedback;
+    }
+
+    public void setAppliesToFeedback(String appliesToFeedback) {
+        this.appliesToFeedback = appliesToFeedback;
+    }
+
+    public String getInvokedBy() {
+        return invokedBy;
+    }
+
+    public void setInvokedBy(String invokedBy) {
+        this.invokedBy = invokedBy;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainModerationPolicy(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedModerationPolicy.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].ModerationDecision;
+import [domainEnumsPackage(m)/].ModerationMode;
+import [domainEnumsPackage(m)/].TriggerEvent;
+import [domainEnumsPackage(m)/].UserKind;
+
+@MappedSuperclass
+public abstract class GeneratedModerationPolicy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ModerationMode mode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private TriggerEvent trigger;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ModerationDecision decision;
+
+    @Column(name = "monitors_resource", length = 120)
+    private String monitorsResource;
+
+    @Column(name = "monitors_feedback", length = 120)
+    private String monitorsFeedback;
+
+    @ElementCollection
+    private List<UserKind> executedBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "context_id")
+    private GeneratedContextType inContext;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ModerationMode getMode() {
+        return mode;
+    }
+
+    public void setMode(ModerationMode mode) {
+        this.mode = mode;
+    }
+
+    public TriggerEvent getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(TriggerEvent trigger) {
+        this.trigger = trigger;
+    }
+
+    public ModerationDecision getDecision() {
+        return decision;
+    }
+
+    public void setDecision(ModerationDecision decision) {
+        this.decision = decision;
+    }
+
+    public String getMonitorsResource() {
+        return monitorsResource;
+    }
+
+    public void setMonitorsResource(String monitorsResource) {
+        this.monitorsResource = monitorsResource;
+    }
+
+    public String getMonitorsFeedback() {
+        return monitorsFeedback;
+    }
+
+    public void setMonitorsFeedback(String monitorsFeedback) {
+        this.monitorsFeedback = monitorsFeedback;
+    }
+
+    public List<UserKind> getExecutedBy() {
+        return executedBy;
+    }
+
+    public void setExecutedBy(List<UserKind> executedBy) {
+        this.executedBy = executedBy;
+    }
+
+    public GeneratedContextType getInContext() {
+        return inContext;
+    }
+
+    public void setInContext(GeneratedContextType inContext) {
+        this.inContext = inContext;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainAutomationCondition(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedAutomationCondition.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].ConditionOperator;
+
+@MappedSuperclass
+public abstract class GeneratedAutomationCondition {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private ConditionOperator operator;
+
+    @Column(nullable = false, length = 120)
+    private String attribute;
+
+    @ElementCollection
+    private List<String> values;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id")
+    private GeneratedAutomationRule rule;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ConditionOperator getOperator() {
+        return operator;
+    }
+
+    public void setOperator(ConditionOperator operator) {
+        this.operator = operator;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(List<String> values) {
+        this.values = values;
+    }
+
+    public GeneratedAutomationRule getRule() {
+        return rule;
+    }
+
+    public void setRule(GeneratedAutomationRule rule) {
+        this.rule = rule;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainAutomationAction(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedAutomationAction.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].ActionResultKind;
+
+@MappedSuperclass
+public abstract class GeneratedAutomationAction {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private ActionResultKind kind;
+
+    @Column(nullable = false, length = 2000)
+    private String message;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rule_id")
+    private GeneratedAutomationRule rule;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ActionResultKind getKind() {
+        return kind;
+    }
+
+    public void setKind(ActionResultKind kind) {
+        this.kind = kind;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public GeneratedAutomationRule getRule() {
+        return rule;
+    }
+
+    public void setRule(GeneratedAutomationRule rule) {
+        this.rule = rule;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainAutomationRule(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedAutomationRule.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToMany;
+import [domainEnumsPackage(m)/].TriggerEvent;
+
+@MappedSuperclass
+public abstract class GeneratedAutomationRule {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private TriggerEvent trigger;
+
+    @Column(name = "context_resource", length = 120)
+    private String contextResource;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "context_id")
+    private GeneratedContextType inContext;
+
+    @Column(name = "on_feedback", length = 120)
+    private String onFeedback;
+
+    @Column(name = "uses_validation", length = 120)
+    private String usesValidation;
+
+    @OneToMany(mappedBy = "rule")
+    private List<GeneratedAutomationCondition> conditions;
+
+    @OneToMany(mappedBy = "rule")
+    private List<GeneratedAutomationAction> actions;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public TriggerEvent getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(TriggerEvent trigger) {
+        this.trigger = trigger;
+    }
+
+    public String getContextResource() {
+        return contextResource;
+    }
+
+    public void setContextResource(String contextResource) {
+        this.contextResource = contextResource;
+    }
+
+    public GeneratedContextType getInContext() {
+        return inContext;
+    }
+
+    public void setInContext(GeneratedContextType inContext) {
+        this.inContext = inContext;
+    }
+
+    public String getOnFeedback() {
+        return onFeedback;
+    }
+
+    public void setOnFeedback(String onFeedback) {
+        this.onFeedback = onFeedback;
+    }
+
+    public String getUsesValidation() {
+        return usesValidation;
+    }
+
+    public void setUsesValidation(String usesValidation) {
+        this.usesValidation = usesValidation;
+    }
+
+    public List<GeneratedAutomationCondition> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<GeneratedAutomationCondition> conditions) {
+        this.conditions = conditions;
+    }
+
+    public List<GeneratedAutomationAction> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<GeneratedAutomationAction> actions) {
+        this.actions = actions;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainVerificationPolicy(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedVerificationPolicy.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].TriggerEvent;
+import [domainEnumsPackage(m)/].ValidationKind;
+
+@MappedSuperclass
+public abstract class GeneratedVerificationPolicy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private ValidationKind mode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private TriggerEvent appliesWhen;
+
+    @Column(nullable = false, length = 120)
+    private String verifies;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ValidationKind getMode() {
+        return mode;
+    }
+
+    public void setMode(ValidationKind mode) {
+        this.mode = mode;
+    }
+
+    public TriggerEvent getAppliesWhen() {
+        return appliesWhen;
+    }
+
+    public void setAppliesWhen(TriggerEvent appliesWhen) {
+        this.appliesWhen = appliesWhen;
+    }
+
+    public String getVerifies() {
+        return verifies;
+    }
+
+    public void setVerifies(String verifies) {
+        this.verifies = verifies;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainSortingPolicy(m : RefModel)]
+[file (domainGeneratedPath(m).concat('/GeneratedSortingPolicy.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import [domainEnumsPackage(m)/].SortCriterion;
+import [domainEnumsPackage(m)/].SortDirection;
+
+@MappedSuperclass
+public abstract class GeneratedSortingPolicy {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private SortCriterion criterion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private SortDirection direction;
+
+    @Column(name = "applies_to_resource", length = 120)
+    private String appliesToResource;
+
+    @Column(name = "applies_to_feedback", length = 120)
+    private String appliesToFeedback;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "context_id")
+    private GeneratedContextType inContext;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SortCriterion getCriterion() {
+        return criterion;
+    }
+
+    public void setCriterion(SortCriterion criterion) {
+        this.criterion = criterion;
+    }
+
+    public SortDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(SortDirection direction) {
+        this.direction = direction;
+    }
+
+    public String getAppliesToResource() {
+        return appliesToResource;
+    }
+
+    public void setAppliesToResource(String appliesToResource) {
+        this.appliesToResource = appliesToResource;
+    }
+
+    public String getAppliesToFeedback() {
+        return appliesToFeedback;
+    }
+
+    public void setAppliesToFeedback(String appliesToFeedback) {
+        this.appliesToFeedback = appliesToFeedback;
+    }
+
+    public GeneratedContextType getInContext() {
+        return inContext;
+    }
+
+    public void setInContext(GeneratedContextType inContext) {
+        this.inContext = inContext;
+    }
+}
+[/file]
+[/template]
+
+[template public generateDomainResource(m : RefModel, rt : ResourceType)]
+[file (domainGeneratedPath(m).concat('/Generated').concat(rt.name).concat('.java'), false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class Generated[rt.name/] {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+[if (a.multiValued)]
+    @ElementCollection
+    private List<[javaType(a.type, false)/]> [a.name/];
+[else]
+    @Column(nullable = [a.required/])
+    private [javaType(a.type, false)/] [a.name/];
+[/if]
+
+[/for]
+[for (r : ResourceRelation | m.resourceRelations->select(r | r.target = rt))]
+    @ManyToOne(fetch = FetchType.LAZY[if (isRequiredCard(r.sourceCardinality))], optional = false[/if])
+    @JoinColumn(name = "[relationFieldName(r)/]_id"[if (isRequiredCard(r.sourceCardinality))], nullable = false[/if])
+    private Generated[r.source.name/] [relationFieldName(r)/];
+
+[/for]
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+    public [javaType(a.type, a.multiValued)/] get[upperFirst(a.name)/]() {
+        return this.[a.name/];
+    }
+
+    public void set[upperFirst(a.name)/]([javaType(a.type, a.multiValued)/] [a.name/]) {
+        this.[a.name/] = [a.name/];
+    }
+
+[/for]
+[for (r : ResourceRelation | m.resourceRelations->select(r | r.target = rt))]
+    public Generated[r.source.name/] get[upperFirst(relationFieldName(r))/]() {
+        return [relationFieldName(r)/];
+    }
+
+    public void set[upperFirst(relationFieldName(r))/](Generated[r.source.name/] [relationFieldName(r)/]) {
+        this.[relationFieldName(r)/] = [relationFieldName(r)/];
+    }
+
+[/for]
+}
+[/file]
+[/template]
+
+[template public generateReadme(m : RefModel)]
+# [baseName(m)/] generated output
+
+This folder was generated from the `[baseName(m)/]` ENORM model version `[m.version/]`.
+
+## Generated files
+- `src/generated/[pkg(m)/]/[baseName(m)/]Application.java`
+- `src/generated/[pkg(m)/]/model/Users.java`
+- `src/generated/[pkg(m)/]/model/Resources.java`
+- `src/generated/[pkg(m)/]/model/Contexts.java`
+- `src/generated/[pkg(m)/]/model/Relations.java`
+- `src/generated/[pkg(m)/]/model/Feedback.java`
+- `src/generated/[pkg(m)/]/governance/[baseName(m)/]Governance.java`
+- `src/generated/[pkg(m)/]/runtime/RuleBodies.java`
+
+## Runtime profile
+`[runtimeProfile(m)/]`
+
+## Notes
+This single Acceleo module supports Amazon, Reddit, and YouTube by reading the same ENORM metamodel and the corresponding instance models.
+[/file]
+[/template]

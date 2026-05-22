@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:description="http://www.eclipse.org/sirius/description/1.1.0"
+    xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0"
+    xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0"
+    xmlns:enorm="http://www.example.org/enorm"
+    xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation"
+    xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0"
+    xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis uid="_YouTubeAnalysis" selectedViews="_YouTubeView" version="15.4.1.202403191723">
+    <semanticResources>YouTube.enorm</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_YouTubeView">
+      <viewpoint xmi:type="description:Viewpoint" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_YouTubeDiagramDesc" name="YouTube" repPath="#_YouTubeDiagram" changeId="1778855408003">
+        <description xmi:type="description_1:DiagramDescription" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']"/>
+        <target xmi:type="enorm:RefModel" href="YouTube.enorm#/"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_YouTubeDiagram">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_YouTubeDiagramAnn" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_YouTubeDiagramNotation" type="Sirius" element="_YouTubeDiagram" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_YouTubeDiagramStyle"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_YouTubeDiagramStyleRegistry" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_YouTubeDiagramStyleRegistryData"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_YouTubeDiagramFilter"/>
+    <activatedLayers xmi:type="description_1:Layer" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer"/>
+    <target xmi:type="enorm:RefModel" href="YouTube.enorm#/"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

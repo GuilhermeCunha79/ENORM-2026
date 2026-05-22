@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:enorm="http://www.example.org/enorm"
+    xmi:id="reddit_ref_model"
+    name="Reddit"
+    version="3.2">
+
+  <!-- User types -->
+  <userTypes xmi:id="ut_user" name="User" kind="GENERIC"/>
+  <userTypes xmi:id="ut_moderator" name="Moderator" kind="MODERATOR" superTypes="ut_user"/>
+
+  <!-- Resource types -->
+  <resourceTypes xmi:id="rt_subreddit" name="Subreddit" supportsMedia="false">
+    <attributes xmi:id="attr_subreddit_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_subreddit_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_subreddit_description" name="description" type="TEXT" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_content" name="Content" supportsMedia="true">
+    <attributes xmi:id="attr_content_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_post" name="Post" supportsMedia="true" superTypes="rt_content">
+    <attributes xmi:id="attr_post_title" name="title" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_body" name="body" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_post_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_supports_vote" name="supportsVote" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_supports_report" name="supportsReport" type="BOOLEAN" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_comment" name="Comment" supportsMedia="true" superTypes="rt_content">
+    <attributes xmi:id="attr_comment_body" name="body" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_supports_vote" name="supportsVote" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_supports_report" name="supportsReport" type="BOOLEAN" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_media_attachment" name="MediaAttachment" supportsMedia="true">
+    <attributes xmi:id="attr_media_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_media_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_media_url" name="url" type="URL" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_community_rule" name="CommunityRule" supportsMedia="false">
+    <attributes xmi:id="attr_community_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_community_rule_title" name="title" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_community_rule_description" name="description" type="TEXT" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_participation_policy" name="ParticipationPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_participation_policy_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_participation_policy_action" name="action" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_participation_policy_allowed_when" name="allowedWhen" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_content_validation_rule" name="ContentValidationRule" supportsMedia="false">
+    <attributes xmi:id="attr_content_validation_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_target" name="target" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_severity" name="severity" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_condition" name="condition" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_post_moderation_check" name="PostModerationCheck" supportsMedia="false">
+    <attributes xmi:id="attr_post_mod_check_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_mod_check_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_mod_check_result" name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_mod_check_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_comment_moderation_check" name="CommentModerationCheck" supportsMedia="false">
+    <attributes xmi:id="attr_comment_mod_check_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_check_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_check_result" name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_check_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_vote" name="Vote" supportsMedia="false">
+    <attributes xmi:id="attr_vote_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_vote_value" name="value" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_vote_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_report" name="Report" supportsMedia="false">
+    <attributes xmi:id="attr_report_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_reason" name="reason" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_subscription" name="Subscription" supportsMedia="false">
+    <attributes xmi:id="attr_subscription_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_subscription_date" name="date" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <!-- Contexts -->
+  <contextTypes xmi:id="ctx_subreddit_community" name="SubredditCommunity" kind="COMMUNITY"
+      contains="rt_subreddit rt_post rt_comment rt_media_attachment rt_community_rule rt_participation_policy rt_content_validation_rule rt_subscription"/>
+
+  <contextTypes xmi:id="ctx_content_channel" name="ContentChannel" kind="CHANNEL"
+      contains="rt_post rt_comment rt_media_attachment rt_post_moderation_check rt_comment_moderation_check rt_vote rt_report"/>
+
+  <contextTypes xmi:id="ctx_platform_global" name="RedditPlatform" kind="GLOBAL"
+      contains="rt_subreddit rt_post rt_comment rt_participation_policy rt_content_validation_rule rt_post_moderation_check rt_comment_moderation_check rt_vote rt_report rt_subscription"/>
+
+  <!-- Resource relations -->
+  <resourceRelations xmi:id="rr_subreddit_contains_posts" name="subredditContainsPosts"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_subreddit" target="rt_post"/>
+
+  <resourceRelations xmi:id="rr_subreddit_has_community_rules" name="subredditHasCommunityRules"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_subreddit" target="rt_community_rule"/>
+
+  <resourceRelations xmi:id="rr_subreddit_enforces_participation_policies" name="subredditEnforcesParticipationPolicies"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_subreddit" target="rt_participation_policy"/>
+
+  <resourceRelations xmi:id="rr_subreddit_validates_content" name="subredditValidatesContent"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_subreddit" target="rt_content_validation_rule"/>
+
+  <resourceRelations xmi:id="rr_comment_on_post" name="commentOnPost"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment" target="rt_post"/>
+
+  <resourceRelations xmi:id="rr_comment_replies_to_comment" name="commentRepliesToComment"
+      sourceCardinality="0..1" targetCardinality="*" containment="false" recursive="true"
+      source="rt_comment" target="rt_comment"/>
+
+  <resourceRelations xmi:id="rr_comment_has_attachments" name="commentHasMediaAttachments"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_comment" target="rt_media_attachment"/>
+
+  <resourceRelations xmi:id="rr_post_checked_by" name="postCheckedByModerationCheck"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_post" target="rt_post_moderation_check"/>
+
+  <resourceRelations xmi:id="rr_comment_checked_by" name="commentCheckedByModerationCheck"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_comment" target="rt_comment_moderation_check"/>
+
+  <resourceRelations xmi:id="rr_vote_on_content" name="voteOnContent"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_vote" target="rt_content"/>
+
+  <resourceRelations xmi:id="rr_report_on_content" name="reportOnContent"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_content"/>
+
+  <resourceRelations xmi:id="rr_subscription_on_subreddit" name="subscriptionOnSubreddit"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_subscription" target="rt_subreddit"/>
+
+  <!-- Feedback types -->
+  <feedbackTypes xmi:id="ft_comment_on_post" name="PostComment" kind="COMMENT"
+      subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsText="true"
+      allowsMedia="true" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_reply_comment" name="ReplyComment" kind="COMMENT"
+      subjectScope="FEEDBACK_ONLY" hasRating="false" recursive="true" allowsText="true"
+      allowsMedia="true" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_vote" name="Vote" kind="VOTE"
+      subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="false" allowsText="false"
+      allowsMedia="false" polarity="UP_DOWN"/>
+
+  <feedbackTypes xmi:id="ft_report" name="Report" kind="REPORT"
+      subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="false" allowsText="true"
+      allowsMedia="false" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_subscription" name="SubredditSubscription" kind="SUBSCRIPTION"
+      subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false" allowsText="false"
+      allowsMedia="false" polarity="NONE"/>
+
+  <!-- Feedback definitions -->
+  <feedbackDefinitions xmi:id="fd_post_comment" name="CommentOnPost"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="false" type="ft_comment_on_post" subjectResource="rt_post"
+      author="ut_user">
+    <policy xmi:id="fp_post_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_reply_comment" name="ReplyToComment"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="false" type="ft_reply_comment" author="ut_user"
+      subjectFeedback="fd_post_comment">
+    <policy xmi:id="fp_reply_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_vote_on_content" name="VoteOnContent"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="true" type="ft_vote" author="ut_user" subjectResource="rt_content">
+    <policy xmi:id="fp_vote_on_content" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_vote_on_comment" name="VoteOnComment"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="true" type="ft_vote" author="ut_user" subjectFeedback="fd_post_comment">
+    <policy xmi:id="fp_vote_on_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_report_content" name="ReportContent"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="false" type="ft_report" author="ut_user" subjectResource="rt_content">
+    <policy xmi:id="fp_report_content" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_report_comment" name="ReportComment"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="false" type="ft_report" author="ut_user" subjectFeedback="fd_post_comment">
+    <policy xmi:id="fp_report_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_subreddit_subscription" name="SubscribeToSubreddit"
+      requiresVerifiedContext="false" verificationRequirement="NONE"
+      uniquePerAuthorTarget="true" type="ft_subscription" author="ut_user" subjectResource="rt_subreddit">
+    <policy xmi:id="fp_subreddit_subscription" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <!-- Authorization rules -->
+  <authorizationRules xmi:id="ar_user_read_subreddit" name="UserReadSubreddit"
+      allowedAction="READ" actor="ut_user" context="ctx_subreddit_community" resourceTarget="rt_subreddit"/>
+
+  <authorizationRules xmi:id="ar_user_create_post_comment" name="UserCreateCommentOnPost"
+      allowedAction="COMMENT" actor="ut_user" context="ctx_content_channel" resourceTarget="rt_post"
+      feedbackTarget="fd_post_comment"/>
+
+  <authorizationRules xmi:id="ar_user_reply_comment" name="UserReplyToComment"
+      allowedAction="COMMENT" actor="ut_user" context="ctx_content_channel" resourceTarget="rt_comment"
+      feedbackTarget="fd_reply_comment"/>
+
+  <authorizationRules xmi:id="ar_user_vote_content" name="UserVoteContent"
+      allowedAction="VOTE" actor="ut_user" context="ctx_content_channel" resourceTarget="rt_content"
+      feedbackTarget="fd_vote_on_content"/>
+
+  <authorizationRules xmi:id="ar_user_report_content" name="UserReportContent"
+      allowedAction="REPORT" actor="ut_user" context="ctx_content_channel" resourceTarget="rt_content"
+      feedbackTarget="fd_report_content"/>
+
+  <authorizationRules xmi:id="ar_user_subscribe_subreddit" name="UserSubscribeSubreddit"
+      allowedAction="SUBSCRIBE" actor="ut_user" context="ctx_subreddit_community" resourceTarget="rt_subreddit"
+      feedbackTarget="fd_subreddit_subscription"/>
+
+  <authorizationRules xmi:id="ar_moderator_moderate_post" name="ModeratorModeratePost"
+      allowedAction="MODERATE" actor="ut_moderator" context="ctx_platform_global" resourceTarget="rt_post"/>
+
+  <authorizationRules xmi:id="ar_moderator_moderate_comment" name="ModeratorModerateComment"
+      allowedAction="MODERATE" actor="ut_moderator" context="ctx_platform_global" resourceTarget="rt_comment"/>
+
+  <authorizationRules xmi:id="ar_moderator_validate_content" name="ModeratorValidateContent"
+      allowedAction="VALIDATE" actor="ut_moderator" context="ctx_platform_global" resourceTarget="rt_content"/>
+
+  <!-- Validation rules -->
+  <validationRules xmi:id="vr_post_content_policy" name="PostContentPolicyCheck"
+      kind="AUTOMATIC" severity="WARNING"
+      expression="Validate post content against subreddit rules, keyword screens, and platform-level moderation heuristics."
+      implementationId="impl: let body = lower(coalesce(attr_post_body,'')); let title = lower(coalesce(attr_post_title,'')); let risky = containsAny(title + ' ' + body, ['spam','offensive','banned-link']); if risky then create PostModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set post.status='UNDER_REVIEW'; notify moderator with subreddit id, post id, and matched terms; return WARNING; else return OK; end" appliesToResource="rt_post"
+      invokedBy="auto_post_content_screening"/>
+
+  <validationRules xmi:id="vr_comment_content_policy" name="CommentContentPolicyCheck"
+      kind="AUTOMATIC" severity="WARNING"
+      expression="Validate comment content against subreddit rules and abusive-language moderation patterns."
+      implementationId="impl: let body = lower(trim(attr_comment_body)); let risky = containsAny(body, ['spam','offensive','abuse']); if risky then create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set comment.status='UNDER_REVIEW'; notify moderator with comment id and matched terms; return WARNING; else return OK; end" appliesToResource="rt_comment"
+      invokedBy="auto_comment_content_screening"/>
+
+  <validationRules xmi:id="vr_report_threshold" name="ReportThresholdEscalation"
+      kind="AUTOMATIC" severity="ERROR"
+      expression="Validate whether report volume crossed the moderation threshold and the content must be hidden pending review."
+      implementationId="impl: if hasFlag('report-threshold-reached') then set content.visibility='HIDDEN'; create threshold escalation record; notify moderator queue with report summary; return ERROR; else return OK; end" appliesToFeedback="fd_report_content"
+      invokedBy="auto_report_threshold_escalation"/>
+
+  <!-- Moderation policies -->
+  <moderationPolicies xmi:id="mp_post_moderation" name="PostModerationPolicy"
+      mode="HYBRID" trigger="ON_RESOURCE_CREATE" decision="FLAGGED"
+      monitorsResource="rt_post" executedBy="ut_moderator" inContext="ctx_platform_global"/>
+
+  <moderationPolicies xmi:id="mp_comment_moderation" name="CommentModerationPolicy"
+      mode="HYBRID" trigger="ON_RESOURCE_CREATE" decision="FLAGGED"
+      monitorsResource="rt_comment" executedBy="ut_moderator" inContext="ctx_platform_global"/>
+
+  <moderationPolicies xmi:id="mp_report_moderation" name="ReportModerationPolicy"
+      mode="MANUAL" trigger="ON_REPORT_THRESHOLD" decision="HIDDEN"
+      monitorsResource="rt_content" monitorsFeedback="fd_report_content" executedBy="ut_moderator"
+      inContext="ctx_platform_global"/>
+
+  <!-- Automation rules -->
+  <automationRules xmi:id="auto_post_content_screening" name="AutoPostContentScreening"
+      trigger="ON_RESOURCE_CREATE" context="rt_post" inContext="ctx_content_channel"
+      onFeedback="fd_post_comment" uses="vr_post_content_policy">
+    <conditions xmi:id="cond_post_body_present" name="PostBodyPresent"
+        operator="HAS_PROPERTY" attribute="attr_post_body">
+      <children xmi:id="condval_post_body_present" value="body"/>
+    </conditions>
+    <conditions xmi:id="cond_post_keywords" name="PostContainsRiskKeywords"
+        operator="CONTAINS_KEYWORDS" attribute="attr_post_body">
+      <children xmi:id="condval_post_spam" value="spam"/>
+      <children xmi:id="condval_post_offensive" value="offensive"/>
+      <children xmi:id="condval_post_banned" value="banned-link"/>
+    </conditions>
+    <actions xmi:id="act_flag_post" name="FlagPost"
+        kind="FLAG_CONTENT" message="impl: set post.status='UNDER_REVIEW'; create PostModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); keep post visible only to moderators until review completes."/>
+    <actions xmi:id="act_notify_post_mod" name="NotifyPostModerator"
+        kind="NOTIFY_MODERATOR" message="impl: send moderation event with subreddit id, post id, title, body excerpt, author id, and matched policy keywords."/>
+  </automationRules>
+
+  <automationRules xmi:id="auto_comment_content_screening" name="AutoCommentContentScreening"
+      trigger="ON_RESOURCE_CREATE" context="rt_comment" inContext="ctx_content_channel"
+      onFeedback="fd_post_comment" uses="vr_comment_content_policy">
+    <conditions xmi:id="cond_comment_body_present" name="CommentBodyPresent"
+        operator="HAS_PROPERTY" attribute="attr_comment_body">
+      <children xmi:id="condval_comment_body_present" value="body"/>
+    </conditions>
+    <conditions xmi:id="cond_comment_keywords" name="CommentContainsRiskKeywords"
+        operator="CONTAINS_KEYWORDS" attribute="attr_comment_body">
+      <children xmi:id="condval_comment_spam" value="spam"/>
+      <children xmi:id="condval_comment_offensive" value="offensive"/>
+      <children xmi:id="condval_comment_abuse" value="abuse"/>
+    </conditions>
+    <actions xmi:id="act_flag_comment" name="FlagComment"
+        kind="FLAG_CONTENT" message="impl: set comment.status='UNDER_REVIEW'; create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); collapse comment for regular users until moderator decision."/>
+    <actions xmi:id="act_notify_comment_mod" name="NotifyCommentModerator"
+        kind="NOTIFY_MODERATOR" message="impl: send moderator notification with subreddit id, comment id, parent target, author id, and matched rule keywords."/>
+  </automationRules>
+
+  <automationRules xmi:id="auto_report_threshold_escalation" name="AutoReportThresholdEscalation"
+      trigger="ON_REPORT_THRESHOLD" context="rt_content" inContext="ctx_platform_global"
+      onFeedback="fd_report_content" uses="vr_report_threshold">
+    <conditions xmi:id="cond_report_threshold_met" name="ReportThresholdMet"
+        operator="HAS_SPECIFIC_PROPERTY" attribute="attr_content_id">
+      <children xmi:id="condval_report_threshold" value="report-threshold-reached"/>
+    </conditions>
+    <actions xmi:id="act_hide_content" name="HideReportedContent"
+        kind="HIDE_CONTENT" message="impl: set content.visibility='HIDDEN'; remove item from ranking pipelines; persist audit record explaining threshold-based hide action."/>
+    <actions xmi:id="act_notify_threshold_mod" name="NotifyThresholdModerator"
+        kind="NOTIFY_MODERATOR" message="impl: send escalation packet with content id, subreddit id, report count, recent reports, and audit trail reference."/>
+  </automationRules>
+
+  <!-- Verification policy -->
+  <verificationPolicies xmi:id="vp_moderator_review_reports" name="ModeratorReviewReports"
+      mode="MANUAL" appliesWhen="ON_REPORT_SUBMITTED" verifies="fd_report_content"/>
+
+  <!-- Sorting policies -->
+  <sortingPolicies xmi:id="sp_posts_newest" name="PostsNewestFirst"
+      criterion="DATE" direction="DESC" appliesToResource="rt_post" inContext="ctx_subreddit_community"/>
+
+  <sortingPolicies xmi:id="sp_content_relevance" name="ContentByRelevance"
+      criterion="RELEVANCE" direction="DESC" appliesToResource="rt_content" inContext="ctx_content_channel"/>
+
+  <sortingPolicies xmi:id="sp_content_value" name="ContentByScore"
+      criterion="VALUE" direction="DESC" appliesToResource="rt_content" inContext="ctx_platform_global"/>
+
+</enorm:RefModel>

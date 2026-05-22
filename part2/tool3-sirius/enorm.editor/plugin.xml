@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated enorm -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="enorm.presentation.EnormModelWizardID"
+            name="%_UI_EnormModelWizard_label"
+            class="enorm.presentation.EnormModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/EnormModelFile.gif">
+         <description>%_UI_EnormModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated enorm -->
+      <editor
+            id="enorm.presentation.EnormEditorID"
+            name="%_UI_EnormEditor_label"
+            icon="icons/full/obj16/EnormModelFile.gif"
+            extensions="enorm"
+            class="enorm.presentation.EnormEditor"
+            contributorClass="enorm.presentation.EnormActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
