@@ -1,0 +1,1 @@
+package generated.youTube.domain.enums; public enum ValidationKind { AUTOMATIC, MANUAL }
