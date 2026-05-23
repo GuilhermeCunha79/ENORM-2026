@@ -1,0 +1,1 @@
+package generated.reddit.domain.enums; public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }

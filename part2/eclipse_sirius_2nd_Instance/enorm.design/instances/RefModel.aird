@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:enorm="http://www.example.org/enorm" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis uid="_CiflwFBiEfGqu9QEFHfclQ" selectedViews="_EBmoEFBiEfGqu9QEFHfclQ" version="15.4.1.202403191723">
+    <semanticResources>RefModel.enorm</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" uid="_EBmoEFBiEfGqu9QEFHfclQ">
+      <viewpoint xmi:type="description:Viewpoint" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_MLRd4FBiEfGqu9QEFHfclQ" name="RefModel" repPath="#_MLNMcFBiEfGqu9QEFHfclQ" changeId="1778855408001">
+        <description xmi:type="description_1:DiagramDescription" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']"/>
+        <target xmi:type="enorm:RefModel" href="RefModel.enorm#/"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram uid="_MLNMcFBiEfGqu9QEFHfclQ">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_MLSE8FBiEfGqu9QEFHfclQ" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_MLSE8VBiEfGqu9QEFHfclQ" type="Sirius" element="_MLNMcFBiEfGqu9QEFHfclQ" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_MLSE8lBiEfGqu9QEFHfclQ"/>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" uid="_MLhVgFBiEfGqu9QEFHfclQ" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" uid="_MLhVgVBiEfGqu9QEFHfclQ"/>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" uid="_MLNMcVBiEfGqu9QEFHfclQ"/>
+    <activatedLayers xmi:type="description_1:Layer" href="../description/enorm.odesign#//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer"/>
+    <target xmi:type="enorm:RefModel" href="RefModel.enorm#/"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:enorm="http://www.example.org/enorm"
+    xmi:id="amazonModel"
+    name="Amazon"
+    version="3.0">
+
+  <!-- User types -->
+  <userTypes xmi:id="user" name="User" kind="GENERIC"/>
+  <userTypes xmi:id="buyer" name="Buyer" kind="BUYER" superTypes="user"/>
+  <userTypes xmi:id="seller" name="Seller" kind="SELLER" superTypes="user"/>
+  <userTypes xmi:id="moderator" name="Moderator" kind="MODERATOR" superTypes="user"/>
+
+  <!-- Resource types -->
+  <resourceTypes xmi:id="product" name="Product" supportsMedia="true">
+    <attributes xmi:id="attr_product_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_product_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_product_description" name="description" type="TEXT" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="order" name="Order" supportsMedia="false">
+    <attributes xmi:id="attr_order_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_order_date" name="date" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="orderItem" name="OrderItem" supportsMedia="false">
+    <attributes xmi:id="attr_orderItem_quantity" name="quantity" type="NUMBER" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="productReview" name="ProductReview" supportsMedia="true">
+    <attributes xmi:id="attr_productReview_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_rating" name="rating" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_text" name="text" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_creationDate" name="creationDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_verifiedPurchase" name="verifiedPurchase" type="BOOLEAN" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="mediaAttachment" name="MediaAttachment" supportsMedia="true">
+    <attributes xmi:id="attr_mediaAttachment_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_mediaAttachment_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_mediaAttachment_url" name="url" type="URL" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="helpfulVote" name="HelpfulVote" supportsMedia="false">
+    <attributes xmi:id="attr_helpfulVote_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_helpfulVote_value" name="value" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_helpfulVote_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="verificationProcess" name="VerificationProcess" supportsMedia="false">
+    <attributes xmi:id="attr_verification_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verification_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verification_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verification_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="reviewPolicyResource" name="ReviewPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_reviewPolicy_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewPolicy_requiresVerifiedPurchase" name="requiresVerifiedPurchase" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewPolicy_verificationRequirement" name="verificationRequirement" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewPolicy_oneReviewPerOrderItem" name="oneReviewPerOrderItem" type="BOOLEAN" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="reviewModerationCheck" name="ReviewModerationCheck" supportsMedia="false">
+    <attributes xmi:id="attr_reviewModeration_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewModeration_reason" name="reason" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewModeration_result" name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewModeration_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="ratingPolicy" name="RatingPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_ratingPolicy_minValue" name="minValue" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_ratingPolicy_maxValue" name="maxValue" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_ratingPolicy_step" name="step" type="NUMBER" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <!-- Resource relations -->
+  <resourceRelations
+      xmi:id="rel_order_contains_items"
+      name="orderContainsItems"
+      sourceCardinality="1"
+      targetCardinality="*"
+      containment="true"
+      recursive="false"
+      source="order"
+      target="orderItem"/>
+
+  <resourceRelations
+      xmi:id="rel_orderItem_product"
+      name="orderItemProduct"
+      sourceCardinality="*"
+      targetCardinality="1"
+      containment="false"
+      recursive="false"
+      source="orderItem"
+      target="product"/>
+
+  <resourceRelations
+      xmi:id="rel_product_reviews"
+      name="productReceivesReviews"
+      sourceCardinality="1"
+      targetCardinality="*"
+      containment="false"
+      recursive="false"
+      source="product"
+      target="productReview"/>
+
+  <resourceRelations
+      xmi:id="rel_review_attachments"
+      name="reviewHasAttachments"
+      sourceCardinality="1"
+      targetCardinality="*"
+      containment="true"
+      recursive="false"
+      source="productReview"
+      target="mediaAttachment"/>
+
+  <resourceRelations
+      xmi:id="rel_product_review_policy"
+      name="productUsesReviewPolicy"
+      sourceCardinality="1"
+      targetCardinality="1"
+      containment="true"
+      recursive="false"
+      source="product"
+      target="reviewPolicyResource"/>
+
+  <resourceRelations
+      xmi:id="rel_review_verification"
+      name="reviewHasVerification"
+      sourceCardinality="0..1"
+      targetCardinality="1"
+      containment="true"
+      recursive="false"
+      source="productReview"
+      target="verificationProcess"/>
+
+  <resourceRelations
+      xmi:id="rel_review_moderation_checks"
+      name="reviewHasModerationChecks"
+      sourceCardinality="1"
+      targetCardinality="*"
+      containment="true"
+      recursive="false"
+      source="productReview"
+      target="reviewModerationCheck"/>
+
+  <resourceRelations
+      xmi:id="rel_review_votes"
+      name="reviewHasVotes"
+      sourceCardinality="1"
+      targetCardinality="*"
+      containment="true"
+      recursive="false"
+      source="productReview"
+      target="helpfulVote"/>
+
+  <resourceRelations
+      xmi:id="rel_review_uses_rating_policy"
+      name="reviewUsesRatingPolicy"
+      sourceCardinality="*"
+      targetCardinality="1"
+      containment="false"
+      recursive="false"
+      source="productReview"
+      target="ratingPolicy"/>
+
+  <resourceRelations
+      xmi:id="rel_review_constrained_by_policy"
+      name="reviewConstrainedByPolicy"
+      sourceCardinality="*"
+      targetCardinality="1"
+      containment="false"
+      recursive="false"
+      source="productReview"
+      target="reviewPolicyResource"/>
+
+  <resourceRelations
+      xmi:id="rel_vote_on_review"
+      name="helpfulVoteOnReview"
+      sourceCardinality="*"
+      targetCardinality="1"
+      containment="false"
+      recursive="false"
+      source="helpfulVote"
+      target="productReview"/>
+
+  <!-- Contexts -->
+  <contextTypes
+      xmi:id="amazonCatalog"
+      name="AmazonCatalog"
+      kind="CATALOG"
+      contains="product order orderItem productReview mediaAttachment helpfulVote reviewPolicyResource ratingPolicy"/>
+
+  <contextTypes
+      xmi:id="moderationBackoffice"
+      name="ModerationBackoffice"
+      kind="GLOBAL"
+      contains="productReview reviewModerationCheck verificationProcess"/>
+
+  <!-- Feedback types -->
+  <feedbackTypes
+      xmi:id="reviewType"
+      name="Review"
+      kind="REVIEW"
+      subjectScope="RESOURCE_ONLY"
+      hasRating="true"
+      recursive="false"
+      allowsText="true"
+      allowsMedia="true"
+      polarity="NONE"/>
+
+  <feedbackTypes
+      xmi:id="helpfulVoteType"
+      name="HelpfulVote"
+      kind="VOTE"
+      subjectScope="FEEDBACK_ONLY"
+      hasRating="false"
+      recursive="false"
+      allowsText="false"
+      allowsMedia="false"
+      polarity="UP_DOWN"/>
+
+  <!-- Feedback definitions -->
+  <feedbackDefinitions
+      xmi:id="productReviewDefinition"
+      name="ProductReview"
+      requiresVerifiedContext="true"
+      verificationRequirement="REQUIRED"
+      uniquePerAuthorTarget="true"
+      type="reviewType"
+      subjectResource="product"
+      author="buyer">
+    <policy status="ENABLED"/>
+    <rating minValue="1.0" maxValue="5.0" step="1.0"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions
+      xmi:id="helpfulVoteDefinition"
+      name="HelpfulVoteOnReview"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="true"
+      type="helpfulVoteType"
+      author="user"
+      subjectFeedback="productReviewDefinition">
+    <policy status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <!-- Authorization rules -->
+  <authorizationRules
+      xmi:id="auth_buyer_read_product"
+      name="BuyerReadProduct"
+      allowedAction="READ"
+      actor="buyer"
+      context="amazonCatalog"
+      resourceTarget="product"/>
+
+  <authorizationRules
+      xmi:id="auth_buyer_create_review"
+      name="BuyerCreateProductReview"
+      allowedAction="CREATE"
+      actor="buyer"
+      context="amazonCatalog"
+      resourceTarget="product"
+      feedbackTarget="productReviewDefinition"/>
+
+  <authorizationRules
+      xmi:id="auth_user_vote_review"
+      name="UserVoteHelpful"
+      allowedAction="VOTE"
+      actor="user"
+      context="amazonCatalog"
+      resourceTarget="product"
+      feedbackTarget="helpfulVoteDefinition"/>
+
+  <authorizationRules
+      xmi:id="auth_moderator_moderate_review"
+      name="ModeratorModerateReview"
+      allowedAction="MODERATE"
+      actor="moderator"
+      context="moderationBackoffice"
+      resourceTarget="product"
+      feedbackTarget="productReviewDefinition"/>
+
+  <!-- Validation rule -->
+  <validationRules
+      xmi:id="val_review_content_check"
+      name="ReviewContentCheck"
+      kind="AUTOMATIC"
+      severity="WARNING"
+      expression="Validate review text by normalizing content, checking risky keywords, and deciding whether to flag or approve the review body."
+      implementationId="impl: let reviewText = lower(trim(attr_productReview_text)); let isRisky = containsAny(reviewText, ['spam','abuse','off-topic','incentivized']); if isRisky then create ReviewModerationCheck(reason='keyword-match', result='FLAGGED', timestamp=now()); set review.status='UNDER_REVIEW'; notify moderator with review id, buyer id, and matched terms; return WARNING; else set review.status='APPROVED'; return OK; end"
+      appliesToFeedback="productReviewDefinition"
+      invokedBy="auto_review_content_check"/>
+
+  <!-- Moderation policy -->
+  <moderationPolicies
+      xmi:id="mod_review_on_create"
+      name="ReviewModerationOnCreate"
+      mode="HYBRID"
+      trigger="ON_FEEDBACK_CREATE"
+      decision="FLAGGED"
+      monitorsResource="product"
+      monitorsFeedback="productReviewDefinition"
+      executedBy="moderator"
+      inContext="moderationBackoffice"/>
+
+  <!-- Automation rule -->
+  <automationRules
+      xmi:id="auto_review_content_check"
+      name="AutoReviewContentCheck"
+      trigger="ON_FEEDBACK_CREATE"
+      context="product"
+      inContext="amazonCatalog"
+      onFeedback="productReviewDefinition"
+      uses="val_review_content_check">
+    <conditions
+        xmi:id="cond_review_text_keywords"
+        name="ReviewTextKeywordScreening"
+        operator="CONTAINS_KEYWORDS"
+        attribute="attr_productReview_text">
+      <children value="spam"/>
+      <children value="abuse"/>
+      <children value="off-topic"/>
+      <children value="incentivized"/>
+    </conditions>
+    <actions
+        xmi:id="act_flag_review"
+        name="FlagSuspiciousReview"
+        kind="FLAG_CONTENT"
+        message="impl: set review.status='UNDER_REVIEW'; create ReviewModerationCheck(reason='keyword-match', result='FLAGGED'); attach moderation timestamp; persist review for manual moderation queue."/>
+    <actions
+        xmi:id="act_notify_moderator"
+        name="NotifyModerator"
+        kind="NOTIFY_MODERATOR"
+        message="impl: publish moderation event containing review id, product id, buyer id, normalized text, matched keywords, and creation timestamp to moderator inbox."/>
+  </automationRules>
+
+  <!-- Verification policy -->
+  <verificationPolicies
+      xmi:id="verify_purchase_review"
+      name="VerifiedPurchaseCheck"
+      mode="AUTOMATIC"
+      appliesWhen="ON_FEEDBACK_CREATE"
+      verifies="productReviewDefinition"/>
+
+  <!-- Sorting policies -->
+  <sortingPolicies
+      xmi:id="sort_reviews_newest"
+      name="NewestReviews"
+      criterion="DATE"
+      direction="DESC"
+      appliesToFeedback="productReviewDefinition"
+      inContext="amazonCatalog"/>
+
+  <sortingPolicies
+      xmi:id="sort_reviews_relevant"
+      name="MostRelevantReviews"
+      criterion="RELEVANCE"
+      direction="DESC"
+      appliesToFeedback="productReviewDefinition"
+      inContext="amazonCatalog"/>
+
+</enorm:RefModel>

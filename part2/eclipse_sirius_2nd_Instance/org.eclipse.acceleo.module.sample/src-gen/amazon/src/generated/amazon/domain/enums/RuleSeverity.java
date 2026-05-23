@@ -1,0 +1,1 @@
+package generated.amazon.domain.enums; public enum RuleSeverity { INFO, WARNING, ERROR }

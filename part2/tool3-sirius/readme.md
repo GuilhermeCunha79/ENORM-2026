@@ -1,7 +1,18 @@
-# EDOM Project, Part 2, Tool 3
+# Acceleo generator
 
-In this folder you should add **all** artifacts developed for part 2 of the ENORM Project, related to tool 3.
+This module generates a minimal Java backend skeleton per ENORM RefModel.
 
-You should also include in this file the report for this part of the project (only for tool 3).
+## Entry template
+- `src/org/eclipse/acceleo/module/sample/common/generate.mtl`
+- Entry point: `generateElement(RefModel)`
 
-**Note:** If for some reason you need to bypass these guidelines please ask for directions with your teacher and **always** state the exceptions in your commits and issues in bitbucket.
+## Output layout
+Generated files are placed under `generated-backends/<appName>` in the chosen output folder.
+
+## Run (Eclipse)
+1. Right-click an `.enorm` model file.
+2. Run As -> Acceleo Application.
+3. Select `org.eclipse.acceleo.module.sample.common.generate` and the `generateElement` template.
+4. Choose an output folder in your workspace.
+
+This will generate one backend folder for each model run (Amazon, Reddit, YouTube).

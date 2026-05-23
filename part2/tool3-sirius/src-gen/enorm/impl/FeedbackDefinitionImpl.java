@@ -1,0 +1,772 @@
+/**
+ */
+package enorm.impl;
+
+import enorm.EnormPackage;
+import enorm.FeedbackDefinition;
+import enorm.FeedbackPolicy;
+import enorm.FeedbackType;
+import enorm.RatingPolicy;
+import enorm.ResourceType;
+import enorm.UserType;
+
+import enorm.VerificationRequirement;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
+/**
+ * <!-- begin-user-doc -->
+ * An implementation of the model object '<em><b>Feedback Definition</b></em>'.
+ * <!-- end-user-doc -->
+ * <p>
+ * The following features are implemented:
+ * </p>
+ * <ul>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#isRequiresVerifiedContext <em>Requires Verified Context</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getVerificationRequirement <em>Verification Requirement</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#isUniquePerAuthorTarget <em>Unique Per Author Target</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getType <em>Type</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getSubjectResource <em>Subject Resource</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getAuthor <em>Author</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getSubjectFeedback <em>Subject Feedback</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getPolicy <em>Policy</em>}</li>
+ *   <li>{@link enorm.impl.FeedbackDefinitionImpl#getRating <em>Rating</em>}</li>
+ * </ul>
+ *
+ * @generated
+ */
+public class FeedbackDefinitionImpl extends MinimalEObjectImpl.Container implements FeedbackDefinition {
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isRequiresVerifiedContext() <em>Requires Verified Context</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRequiresVerifiedContext()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean REQUIRES_VERIFIED_CONTEXT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isRequiresVerifiedContext() <em>Requires Verified Context</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isRequiresVerifiedContext()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean requiresVerifiedContext = REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVerificationRequirement()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final VerificationRequirement VERIFICATION_REQUIREMENT_EDEFAULT = VerificationRequirement.NONE;
+
+	/**
+	 * The cached value of the '{@link #getVerificationRequirement() <em>Verification Requirement</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getVerificationRequirement()
+	 * @generated
+	 * @ordered
+	 */
+	protected VerificationRequirement verificationRequirement = VERIFICATION_REQUIREMENT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUniquePerAuthorTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean UNIQUE_PER_AUTHOR_TARGET_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isUniquePerAuthorTarget() <em>Unique Per Author Target</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isUniquePerAuthorTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean uniquePerAuthorTarget = UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected FeedbackType type;
+
+	/**
+	 * The cached value of the '{@link #getSubjectResource() <em>Subject Resource</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSubjectResource()
+	 * @generated
+	 * @ordered
+	 */
+	protected ResourceType subjectResource;
+
+	/**
+	 * The cached value of the '{@link #getAuthor() <em>Author</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAuthor()
+	 * @generated
+	 * @ordered
+	 */
+	protected UserType author;
+
+	/**
+	 * The cached value of the '{@link #getSubjectFeedback() <em>Subject Feedback</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSubjectFeedback()
+	 * @generated
+	 * @ordered
+	 */
+	protected FeedbackDefinition subjectFeedback;
+
+	/**
+	 * The cached value of the '{@link #getPolicy() <em>Policy</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPolicy()
+	 * @generated
+	 * @ordered
+	 */
+	protected FeedbackPolicy policy;
+
+	/**
+	 * The cached value of the '{@link #getRating() <em>Rating</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRating()
+	 * @generated
+	 * @ordered
+	 */
+	protected RatingPolicy rating;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected FeedbackDefinitionImpl() {
+		super();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	protected EClass eStaticClass() {
+		return EnormPackage.Literals.FEEDBACK_DEFINITION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__NAME, oldName,
+					name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isRequiresVerifiedContext() {
+		return requiresVerifiedContext;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setRequiresVerifiedContext(boolean newRequiresVerifiedContext) {
+		boolean oldRequiresVerifiedContext = requiresVerifiedContext;
+		requiresVerifiedContext = newRequiresVerifiedContext;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT, oldRequiresVerifiedContext,
+					requiresVerifiedContext));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public VerificationRequirement getVerificationRequirement() {
+		return verificationRequirement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setVerificationRequirement(VerificationRequirement newVerificationRequirement) {
+		VerificationRequirement oldVerificationRequirement = verificationRequirement;
+		verificationRequirement = newVerificationRequirement == null ? VERIFICATION_REQUIREMENT_EDEFAULT
+				: newVerificationRequirement;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT, oldVerificationRequirement,
+					verificationRequirement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isUniquePerAuthorTarget() {
+		return uniquePerAuthorTarget;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setUniquePerAuthorTarget(boolean newUniquePerAuthorTarget) {
+		boolean oldUniquePerAuthorTarget = uniquePerAuthorTarget;
+		uniquePerAuthorTarget = newUniquePerAuthorTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET, oldUniquePerAuthorTarget,
+					uniquePerAuthorTarget));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public FeedbackType getType() {
+		if (type != null && type.eIsProxy()) {
+			InternalEObject oldType = (InternalEObject) type;
+			type = (FeedbackType) eResolveProxy(oldType);
+			if (type != oldType) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EnormPackage.FEEDBACK_DEFINITION__TYPE,
+							oldType, type));
+			}
+		}
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeedbackType basicGetType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setType(FeedbackType newType) {
+		FeedbackType oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__TYPE, oldType,
+					type));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ResourceType getSubjectResource() {
+		if (subjectResource != null && subjectResource.eIsProxy()) {
+			InternalEObject oldSubjectResource = (InternalEObject) subjectResource;
+			subjectResource = (ResourceType) eResolveProxy(oldSubjectResource);
+			if (subjectResource != oldSubjectResource) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE, oldSubjectResource, subjectResource));
+			}
+		}
+		return subjectResource;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ResourceType basicGetSubjectResource() {
+		return subjectResource;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSubjectResource(ResourceType newSubjectResource) {
+		ResourceType oldSubjectResource = subjectResource;
+		subjectResource = newSubjectResource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE,
+					oldSubjectResource, subjectResource));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public UserType getAuthor() {
+		if (author != null && author.eIsProxy()) {
+			InternalEObject oldAuthor = (InternalEObject) author;
+			author = (UserType) eResolveProxy(oldAuthor);
+			if (author != oldAuthor) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EnormPackage.FEEDBACK_DEFINITION__AUTHOR,
+							oldAuthor, author));
+			}
+		}
+		return author;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public UserType basicGetAuthor() {
+		return author;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAuthor(UserType newAuthor) {
+		UserType oldAuthor = author;
+		author = newAuthor;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__AUTHOR, oldAuthor,
+					author));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public FeedbackDefinition getSubjectFeedback() {
+		if (subjectFeedback != null && subjectFeedback.eIsProxy()) {
+			InternalEObject oldSubjectFeedback = (InternalEObject) subjectFeedback;
+			subjectFeedback = (FeedbackDefinition) eResolveProxy(oldSubjectFeedback);
+			if (subjectFeedback != oldSubjectFeedback) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK, oldSubjectFeedback, subjectFeedback));
+			}
+		}
+		return subjectFeedback;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public FeedbackDefinition basicGetSubjectFeedback() {
+		return subjectFeedback;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSubjectFeedback(FeedbackDefinition newSubjectFeedback) {
+		FeedbackDefinition oldSubjectFeedback = subjectFeedback;
+		subjectFeedback = newSubjectFeedback;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK,
+					oldSubjectFeedback, subjectFeedback));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public FeedbackPolicy getPolicy() {
+		return policy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetPolicy(FeedbackPolicy newPolicy, NotificationChain msgs) {
+		FeedbackPolicy oldPolicy = policy;
+		policy = newPolicy;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__POLICY, oldPolicy, newPolicy);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPolicy(FeedbackPolicy newPolicy) {
+		if (newPolicy != policy) {
+			NotificationChain msgs = null;
+			if (policy != null)
+				msgs = ((InternalEObject) policy).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - EnormPackage.FEEDBACK_DEFINITION__POLICY, null, msgs);
+			if (newPolicy != null)
+				msgs = ((InternalEObject) newPolicy).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - EnormPackage.FEEDBACK_DEFINITION__POLICY, null, msgs);
+			msgs = basicSetPolicy(newPolicy, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__POLICY, newPolicy,
+					newPolicy));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public RatingPolicy getRating() {
+		return rating;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetRating(RatingPolicy newRating, NotificationChain msgs) {
+		RatingPolicy oldRating = rating;
+		rating = newRating;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					EnormPackage.FEEDBACK_DEFINITION__RATING, oldRating, newRating);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setRating(RatingPolicy newRating) {
+		if (newRating != rating) {
+			NotificationChain msgs = null;
+			if (rating != null)
+				msgs = ((InternalEObject) rating).eInverseRemove(this,
+						EOPPOSITE_FEATURE_BASE - EnormPackage.FEEDBACK_DEFINITION__RATING, null, msgs);
+			if (newRating != null)
+				msgs = ((InternalEObject) newRating).eInverseAdd(this,
+						EOPPOSITE_FEATURE_BASE - EnormPackage.FEEDBACK_DEFINITION__RATING, null, msgs);
+			msgs = basicSetRating(newRating, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnormPackage.FEEDBACK_DEFINITION__RATING, newRating,
+					newRating));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case EnormPackage.FEEDBACK_DEFINITION__POLICY:
+			return basicSetPolicy(null, msgs);
+		case EnormPackage.FEEDBACK_DEFINITION__RATING:
+			return basicSetRating(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eGet(int featureID, boolean resolve, boolean coreType) {
+		switch (featureID) {
+		case EnormPackage.FEEDBACK_DEFINITION__NAME:
+			return getName();
+		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+			return isRequiresVerifiedContext();
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			return getVerificationRequirement();
+		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+			return isUniquePerAuthorTarget();
+		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
+			if (resolve)
+				return getType();
+			return basicGetType();
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+			if (resolve)
+				return getSubjectResource();
+			return basicGetSubjectResource();
+		case EnormPackage.FEEDBACK_DEFINITION__AUTHOR:
+			if (resolve)
+				return getAuthor();
+			return basicGetAuthor();
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+			if (resolve)
+				return getSubjectFeedback();
+			return basicGetSubjectFeedback();
+		case EnormPackage.FEEDBACK_DEFINITION__POLICY:
+			return getPolicy();
+		case EnormPackage.FEEDBACK_DEFINITION__RATING:
+			return getRating();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eSet(int featureID, Object newValue) {
+		switch (featureID) {
+		case EnormPackage.FEEDBACK_DEFINITION__NAME:
+			setName((String) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+			setRequiresVerifiedContext((Boolean) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			setVerificationRequirement((VerificationRequirement) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+			setUniquePerAuthorTarget((Boolean) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
+			setType((FeedbackType) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+			setSubjectResource((ResourceType) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__AUTHOR:
+			setAuthor((UserType) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+			setSubjectFeedback((FeedbackDefinition) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__POLICY:
+			setPolicy((FeedbackPolicy) newValue);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__RATING:
+			setRating((RatingPolicy) newValue);
+			return;
+		}
+		super.eSet(featureID, newValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void eUnset(int featureID) {
+		switch (featureID) {
+		case EnormPackage.FEEDBACK_DEFINITION__NAME:
+			setName(NAME_EDEFAULT);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+			setRequiresVerifiedContext(REQUIRES_VERIFIED_CONTEXT_EDEFAULT);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			setVerificationRequirement(VERIFICATION_REQUIREMENT_EDEFAULT);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+			setUniquePerAuthorTarget(UNIQUE_PER_AUTHOR_TARGET_EDEFAULT);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
+			setType((FeedbackType) null);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+			setSubjectResource((ResourceType) null);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__AUTHOR:
+			setAuthor((UserType) null);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+			setSubjectFeedback((FeedbackDefinition) null);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__POLICY:
+			setPolicy((FeedbackPolicy) null);
+			return;
+		case EnormPackage.FEEDBACK_DEFINITION__RATING:
+			setRating((RatingPolicy) null);
+			return;
+		}
+		super.eUnset(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean eIsSet(int featureID) {
+		switch (featureID) {
+		case EnormPackage.FEEDBACK_DEFINITION__NAME:
+			return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+		case EnormPackage.FEEDBACK_DEFINITION__REQUIRES_VERIFIED_CONTEXT:
+			return requiresVerifiedContext != REQUIRES_VERIFIED_CONTEXT_EDEFAULT;
+		case EnormPackage.FEEDBACK_DEFINITION__VERIFICATION_REQUIREMENT:
+			return verificationRequirement != VERIFICATION_REQUIREMENT_EDEFAULT;
+		case EnormPackage.FEEDBACK_DEFINITION__UNIQUE_PER_AUTHOR_TARGET:
+			return uniquePerAuthorTarget != UNIQUE_PER_AUTHOR_TARGET_EDEFAULT;
+		case EnormPackage.FEEDBACK_DEFINITION__TYPE:
+			return type != null;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_RESOURCE:
+			return subjectResource != null;
+		case EnormPackage.FEEDBACK_DEFINITION__AUTHOR:
+			return author != null;
+		case EnormPackage.FEEDBACK_DEFINITION__SUBJECT_FEEDBACK:
+			return subjectFeedback != null;
+		case EnormPackage.FEEDBACK_DEFINITION__POLICY:
+			return policy != null;
+		case EnormPackage.FEEDBACK_DEFINITION__RATING:
+			return rating != null;
+		}
+		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", requiresVerifiedContext: ");
+		result.append(requiresVerifiedContext);
+		result.append(", verificationRequirement: ");
+		result.append(verificationRequirement);
+		result.append(", uniquePerAuthorTarget: ");
+		result.append(uniquePerAuthorTarget);
+		result.append(')');
+		return result.toString();
+	}
+
+} //FeedbackDefinitionImpl

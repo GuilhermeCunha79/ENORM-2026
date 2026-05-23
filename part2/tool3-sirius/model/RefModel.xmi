@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:enorm="http://www.example.org/enorm"
+    xsi:schemaLocation="http://www.example.org/enorm enorm.ecore"
+    xmi:id="refmodel"
+    name="ENORM Sample"
+    version="1.0">
+
+    <userTypes xmi:id="user_generic" name="GenericUser" kind="GENERIC"/>
+    <userTypes xmi:id="user_buyer" name="Buyer" kind="BUYER" superTypes="user_generic"/>
+    <userTypes xmi:id="user_seller" name="Seller" kind="SELLER" superTypes="user_generic"/>
+    <userTypes xmi:id="user_creator" name="Creator" kind="CREATOR" superTypes="user_generic"/>
+    <userTypes xmi:id="user_moderator" name="Moderator" kind="MODERATOR" superTypes="user_generic"/>
+
+    <resourceTypes xmi:id="resource_post" name="Post" supportsMedia="true">
+        <attributes xmi:id="attr_post_title" name="title" type="TEXT" required="true" multiValued="false"/>
+        <attributes xmi:id="attr_post_body" name="body" type="TEXT" required="true" multiValued="false"/>
+        <attributes xmi:id="attr_post_created" name="createdAt" type="DATETIME" required="true" multiValued="false"/>
+    </resourceTypes>
+    <resourceTypes xmi:id="resource_comment" name="Comment" supportsMedia="false">
+        <attributes xmi:id="attr_comment_text" name="text" type="TEXT" required="true" multiValued="false"/>
+        <attributes xmi:id="attr_comment_created" name="createdAt" type="DATETIME" required="true" multiValued="false"/>
+    </resourceTypes>
+    <resourceTypes xmi:id="resource_image" name="Image" supportsMedia="true" superTypes="resource_post">
+        <attributes xmi:id="attr_image_url" name="url" type="URL" required="true" multiValued="false"/>
+        <attributes xmi:id="attr_image_width" name="width" type="NUMBER" required="true" multiValued="false"/>
+        <attributes xmi:id="attr_image_height" name="height" type="NUMBER" required="true" multiValued="false"/>
+    </resourceTypes>
+
+    <contextTypes xmi:id="context_global" name="Global" kind="GLOBAL" contains="resource_post resource_comment"/>
+    <contextTypes xmi:id="context_community" name="Community" kind="COMMUNITY" contains="resource_post resource_comment"/>
+
+    <resourceRelations xmi:id="relation_post_comment"
+        name="PostHasComments"
+        sourceCardinality="1"
+        targetCardinality="*"
+        containment="true"
+        recursive="false"
+        source="resource_post"
+        target="resource_comment"/>
+
+    <feedbackTypes xmi:id="feedback_comment" name="CommentFeedback" kind="COMMENT"
+        subjectScope="RESOURCE_OR_FEEDBACK" hasRating="false" recursive="true"
+        allowsText="true" allowsMedia="false" polarity="NONE"/>
+    <feedbackTypes xmi:id="feedback_vote" name="VoteFeedback" kind="VOTE"
+        subjectScope="RESOURCE_ONLY" hasRating="false" recursive="false"
+        allowsText="false" allowsMedia="false" polarity="UP_DOWN"/>
+    <feedbackTypes xmi:id="feedback_review" name="ReviewFeedback" kind="REVIEW"
+        subjectScope="RESOURCE_ONLY" hasRating="true" recursive="false"
+        allowsText="true" allowsMedia="true" polarity="LIKE_DISLIKE"/>
+
+    <feedbackDefinitions xmi:id="fd_comment_post"
+        name="PostComment"
+        requiresVerifiedContext="false"
+        verificationRequirement="NONE"
+        uniquePerAuthorTarget="false"
+        type="feedback_comment"
+        subjectResource="resource_post"
+        author="user_generic">
+        <policy status="ENABLED"/>
+    </feedbackDefinitions>
+
+    <feedbackDefinitions xmi:id="fd_review_post"
+        name="PostReview"
+        requiresVerifiedContext="true"
+        verificationRequirement="REQUIRED"
+        uniquePerAuthorTarget="true"
+        type="feedback_review"
+        subjectResource="resource_post"
+        author="user_buyer">
+        <policy status="ENABLED"/>
+        <rating minValue="1.0" maxValue="5.0" step="1.0"/>
+    </feedbackDefinitions>
+
+    <feedbackDefinitions xmi:id="fd_vote_post"
+        name="PostVote"
+        requiresVerifiedContext="false"
+        verificationRequirement="OPTIONAL"
+        uniquePerAuthorTarget="false"
+        type="feedback_vote"
+        subjectResource="resource_post"
+        author="user_generic"/>
+
+    <feedbackDefinitions xmi:id="fd_reply_comment"
+        name="CommentReply"
+        requiresVerifiedContext="false"
+        verificationRequirement="NONE"
+        uniquePerAuthorTarget="false"
+        type="feedback_comment"
+        subjectFeedback="fd_comment_post"
+        author="user_generic">
+        <policy status="ENABLED"/>
+    </feedbackDefinitions>
+
+    <validationRules xmi:id="vr_no_empty_title"
+        name="NoEmptyTitle"
+        kind="AUTOMATIC"
+        severity="ERROR"
+        expression="title != ''"
+        implementationId="expr"
+        appliesToResource="resource_post"
+        invokedBy="ar_auto_moderation"/>
+
+    <validationRules xmi:id="vr_comment_length"
+        name="CommentHasText"
+        kind="AUTOMATIC"
+        severity="WARNING"
+        expression="text != ''"
+        implementationId="expr"
+        appliesToFeedback="fd_comment_post"
+        invokedBy="ar_feedback_guard"/>
+
+    <automationRules xmi:id="ar_auto_moderation"
+        name="AutoModerateOnCreate"
+        trigger="ON_RESOURCE_CREATE"
+        context="resource_post"
+        inContext="context_global"
+        uses="vr_no_empty_title">
+        <conditions name="TitleHasText" operator="NOT_CONTAINS_KEYWORDS" attribute="attr_post_title">
+            <children value=""/>
+        </conditions>
+        <actions name="ApproveContent" kind="AUTO_APPROVE" message="Auto-approved by rule"/>
+    </automationRules>
+
+    <automationRules xmi:id="ar_feedback_guard"
+        name="AutoGuardOnFeedback"
+        trigger="ON_FEEDBACK_CREATE"
+        onFeedback="fd_comment_post"
+        inContext="context_community"
+        uses="vr_comment_length">
+        <conditions name="CommentHasText" operator="MATCH_REGEX" attribute="attr_comment_text">
+            <children value=".+"/>
+        </conditions>
+        <actions name="FlagEmpty" kind="FLAG_CONTENT" message="Empty feedback content"/>
+    </automationRules>
+
+    <moderationPolicies xmi:id="mp_review_posts"
+        name="PostModeration"
+        mode="HYBRID"
+        trigger="ON_RESOURCE_CREATE"
+        decision="APPROVED"
+        monitorsResource="resource_post"
+        executedBy="user_moderator"
+        inContext="context_community"/>
+
+    <moderationPolicies xmi:id="mp_review_comments"
+        name="CommentModeration"
+        mode="MANUAL"
+        trigger="ON_FEEDBACK_CREATE"
+        decision="FLAGGED"
+        monitorsFeedback="fd_comment_post"
+        executedBy="user_moderator"
+        inContext="context_community"/>
+
+    <authorizationRules xmi:id="auth_create_post"
+        name="CreatePost"
+        allowedAction="CREATE"
+        actor="user_creator"
+        context="context_community"
+        resourceTarget="resource_post"/>
+
+    <authorizationRules xmi:id="auth_comment_post"
+        name="CommentPost"
+        allowedAction="COMMENT"
+        actor="user_generic"
+        context="context_community"
+        resourceTarget="resource_post"
+        feedbackTarget="fd_comment_post"/>
+
+    <authorizationRules xmi:id="auth_rate_post"
+        name="RatePost"
+        allowedAction="RATE"
+        actor="user_buyer"
+        context="context_community"
+        resourceTarget="resource_post"
+        feedbackTarget="fd_review_post"/>
+
+    <verificationPolicies xmi:id="ver_policy_review"
+        name="VerifiedReview"
+        mode="AUTOMATIC"
+        appliesWhen="ON_FEEDBACK_CREATE"
+        verifies="fd_review_post"/>
+
+    <sortingPolicies xmi:id="sort_newest_posts"
+        name="NewestPosts"
+        criterion="DATE"
+        direction="DESC"
+        appliesToResource="resource_post"
+        inContext="context_global"/>
+
+    <sortingPolicies xmi:id="sort_best_reviews"
+        name="BestReviews"
+        criterion="VALUE"
+        direction="DESC"
+        appliesToFeedback="fd_review_post"
+        inContext="context_community"/>
+
+</enorm:RefModel>

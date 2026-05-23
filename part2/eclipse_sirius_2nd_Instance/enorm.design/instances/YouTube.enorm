@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enorm:RefModel
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:enorm="http://www.example.org/enorm"
+    xmi:id="youtube_ref_model"
+    name="YouTube"
+    version="3.2">
+
+  <!-- User types -->
+  <userTypes xmi:id="ut_user" name="User" kind="GENERIC"/>
+  <userTypes xmi:id="ut_creator" name="Creator" kind="CREATOR" superTypes="ut_user"/>
+  <userTypes xmi:id="ut_moderator" name="Moderator" kind="MODERATOR" superTypes="ut_user"/>
+
+  <!-- Resource types -->
+  <resourceTypes xmi:id="rt_channel" name="Channel" supportsMedia="true">
+    <attributes xmi:id="attr_channel_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_channel_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_channel_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_channel_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_content" name="Content" supportsMedia="true">
+    <attributes xmi:id="attr_content_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_status" name="status" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_video" name="Video" supportsMedia="true" superTypes="rt_content">
+    <attributes xmi:id="attr_video_title" name="title" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_video_upload_date" name="uploadDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_duration" name="duration" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_comment_status" name="commentStatus" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_comment" name="Comment" supportsMedia="false" superTypes="rt_content">
+    <attributes xmi:id="attr_comment_text" name="text" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_like" name="Like" supportsMedia="false">
+    <attributes xmi:id="attr_like_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_value" name="value" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_like_history" name="LikeHistory" supportsMedia="false">
+    <attributes xmi:id="attr_like_history_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_history_action" name="action" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_history_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_report" name="Report" supportsMedia="false">
+    <attributes xmi:id="attr_report_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_reason" name="reason" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_subscription" name="Subscription" supportsMedia="false">
+    <attributes xmi:id="attr_subscription_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_subscription_date" name="date" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_channel_permission_policy" name="ChannelPermissionPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_channel_permission_policy_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_channel_permission_policy_action" name="action" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_channel_permission_policy_allowed_for" name="allowedFor" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_content_validation_rule" name="ContentValidationRule" supportsMedia="false">
+    <attributes xmi:id="attr_content_validation_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_rule_target" name="target" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_rule_policy_type" name="policyType" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_content_validation_rule_severity" name="severity" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_video_moderation_check" name="VideoModerationCheck" supportsMedia="false">
+    <attributes xmi:id="attr_video_mod_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_mod_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_mod_result" name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_mod_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_comment_moderation_check" name="CommentModerationCheck" supportsMedia="false">
+    <attributes xmi:id="attr_comment_mod_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_type" name="type" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_result" name="result" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_comment_settings_change" name="CommentSettingsChange" supportsMedia="false">
+    <attributes xmi:id="attr_comment_settings_change_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_settings_new_status" name="newStatus" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_settings_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <!-- Contexts -->
+  <contextTypes xmi:id="ctx_channel" name="ChannelSpace" kind="CHANNEL"
+      contains="rt_channel rt_video rt_comment rt_like rt_like_history rt_comment_settings_change rt_subscription rt_channel_permission_policy"/>
+
+  <contextTypes xmi:id="ctx_global" name="PlatformGlobal" kind="GLOBAL"
+      contains="rt_channel rt_content rt_video rt_comment rt_video_moderation_check rt_comment_moderation_check rt_report rt_content_validation_rule rt_like"/>
+
+  <contextTypes xmi:id="ctx_community" name="CreatorCommunity" kind="COMMUNITY"
+      contains="rt_channel rt_video rt_comment rt_subscription"/>
+
+  <!-- Resource relations -->
+  <resourceRelations xmi:id="rr_channel_contains_video" name="channelContainsVideo"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_channel" target="rt_video"/>
+
+  <resourceRelations xmi:id="rr_video_has_comments" name="videoHasComments"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_video" target="rt_comment"/>
+
+  <resourceRelations xmi:id="rr_comment_replies_to_comment" name="commentRepliesToComment"
+      sourceCardinality="0..1" targetCardinality="*" containment="false" recursive="true"
+      source="rt_comment" target="rt_comment"/>
+
+  <resourceRelations xmi:id="rr_video_checked_by" name="videoCheckedByModerationCheck"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_video" target="rt_video_moderation_check"/>
+
+  <resourceRelations xmi:id="rr_comment_checked_by" name="commentCheckedByModerationCheck"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_comment" target="rt_comment_moderation_check"/>
+
+  <resourceRelations xmi:id="rr_comment_settings_on_video" name="commentSettingsChangeOnVideo"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment_settings_change" target="rt_video"/>
+
+  <resourceRelations xmi:id="rr_like_on_content" name="likeOnContent"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like" target="rt_content"/>
+
+  <resourceRelations xmi:id="rr_report_on_content" name="reportOnContent"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_content"/>
+
+  <resourceRelations xmi:id="rr_subscription_on_channel" name="subscriptionOnChannel"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_subscription" target="rt_channel"/>
+
+  <resourceRelations xmi:id="rr_channel_policy" name="channelHasPermissionPolicy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_channel_permission_policy" target="rt_channel"/>
+
+  <resourceRelations xmi:id="rr_video_validated_by" name="videoValidatedBy"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_video" target="rt_content_validation_rule"/>
+
+  <resourceRelations xmi:id="rr_comment_validated_by" name="commentValidatedBy"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="rt_comment" target="rt_content_validation_rule"/>
+
+  <resourceRelations xmi:id="rr_like_history_on_content" name="likeHistoryOnContent"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like_history" target="rt_content"/>
+
+  <!-- Feedback types -->
+  <feedbackTypes xmi:id="ft_video_comment" name="VideoCommentType"
+      kind="COMMENT" subjectScope="RESOURCE_ONLY" hasRating="false"
+      recursive="false" allowsText="true" allowsMedia="false" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_reply_comment" name="ReplyCommentType"
+      kind="COMMENT" subjectScope="FEEDBACK_ONLY" hasRating="false"
+      recursive="true" allowsText="true" allowsMedia="false" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_like_reaction" name="LikeReactionType"
+      kind="REACTION" subjectScope="RESOURCE_ONLY" hasRating="false"
+      recursive="false" allowsText="false" allowsMedia="false" polarity="LIKE_DISLIKE"/>
+
+  <feedbackTypes xmi:id="ft_report" name="ReportType"
+      kind="REPORT" subjectScope="RESOURCE_ONLY" hasRating="false"
+      recursive="false" allowsText="true" allowsMedia="false" polarity="NONE"/>
+
+  <feedbackTypes xmi:id="ft_subscription" name="ChannelSubscriptionType"
+      kind="SUBSCRIPTION" subjectScope="RESOURCE_ONLY" hasRating="false"
+      recursive="false" allowsText="false" allowsMedia="false" polarity="NONE"/>
+
+  <!-- Feedback definitions -->
+  <feedbackDefinitions xmi:id="fd_video_comment" name="CommentOnVideo"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="false"
+      type="ft_video_comment"
+      subjectResource="rt_video"
+      author="ut_user">
+    <policy xmi:id="fp_video_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_reply_comment" name="ReplyToComment"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="false"
+      type="ft_reply_comment"
+      author="ut_user"
+      subjectFeedback="fd_video_comment">
+    <policy xmi:id="fp_reply_comment" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_like_on_content" name="LikeOnContent"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="true"
+      type="ft_like_reaction"
+      subjectResource="rt_content"
+      author="ut_user">
+    <policy xmi:id="fp_like_on_content" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_report_content" name="ReportContent"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="false"
+      type="ft_report"
+      subjectResource="rt_content"
+      author="ut_user">
+    <policy xmi:id="fp_report_content" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <feedbackDefinitions xmi:id="fd_subscribe_channel" name="SubscribeToChannel"
+      requiresVerifiedContext="false"
+      verificationRequirement="NONE"
+      uniquePerAuthorTarget="true"
+      type="ft_subscription"
+      subjectResource="rt_channel"
+      author="ut_user">
+    <policy xmi:id="fp_subscribe_channel" status="ENABLED"/>
+  </feedbackDefinitions>
+
+  <!-- Authorization rules -->
+  <authorizationRules xmi:id="ar_user_read_channel" name="UserReadChannel"
+      allowedAction="READ"
+      actor="ut_user"
+      context="ctx_channel"
+      resourceTarget="rt_channel"/>
+
+  <authorizationRules xmi:id="ar_creator_create_video" name="CreatorCreateVideo"
+      allowedAction="CREATE"
+      actor="ut_creator"
+      context="ctx_channel"
+      resourceTarget="rt_video"/>
+
+  <authorizationRules xmi:id="ar_creator_update_video" name="CreatorUpdateVideo"
+      allowedAction="UPDATE"
+      actor="ut_creator"
+      context="ctx_channel"
+      resourceTarget="rt_video"/>
+
+  <authorizationRules xmi:id="ar_user_comment_video" name="UserCommentVideo"
+      allowedAction="COMMENT"
+      actor="ut_user"
+      context="ctx_channel"
+      resourceTarget="rt_video"
+      feedbackTarget="fd_video_comment"/>
+
+  <authorizationRules xmi:id="ar_user_reply_comment" name="UserReplyComment"
+      allowedAction="COMMENT"
+      actor="ut_user"
+      context="ctx_channel"
+      resourceTarget="rt_comment"
+      feedbackTarget="fd_reply_comment"/>
+
+  <authorizationRules xmi:id="ar_user_react_content" name="UserReactContent"
+      allowedAction="VOTE"
+      actor="ut_user"
+      context="ctx_channel"
+      resourceTarget="rt_content"
+      feedbackTarget="fd_like_on_content"/>
+
+  <authorizationRules xmi:id="ar_user_report_content" name="UserReportContent"
+      allowedAction="REPORT"
+      actor="ut_user"
+      context="ctx_global"
+      resourceTarget="rt_content"
+      feedbackTarget="fd_report_content"/>
+
+  <authorizationRules xmi:id="ar_user_subscribe_channel" name="UserSubscribeChannel"
+      allowedAction="SUBSCRIBE"
+      actor="ut_user"
+      context="ctx_channel"
+      resourceTarget="rt_channel"
+      feedbackTarget="fd_subscribe_channel"/>
+
+  <authorizationRules xmi:id="ar_moderator_moderate_video" name="ModeratorModerateVideo"
+      allowedAction="MODERATE"
+      actor="ut_moderator"
+      context="ctx_global"
+      resourceTarget="rt_video"/>
+
+  <authorizationRules xmi:id="ar_moderator_moderate_comment" name="ModeratorModerateComment"
+      allowedAction="MODERATE"
+      actor="ut_moderator"
+      context="ctx_global"
+      resourceTarget="rt_comment"/>
+
+  <authorizationRules xmi:id="ar_moderator_validate_content" name="ModeratorValidateContent"
+      allowedAction="VALIDATE"
+      actor="ut_moderator"
+      context="ctx_global"
+      resourceTarget="rt_content"/>
+
+  <!-- Validation rules -->
+  <validationRules xmi:id="vr_video_copyright" name="VideoCopyrightValidation"
+      kind="AUTOMATIC"
+      severity="ERROR"
+      expression="Validate uploaded video metadata for copyright-risk indicators before publication."
+      implementationId="impl: let desc = lower(coalesce(attr_video_description,'')); let title = lower(coalesce(attr_video_title,'')); let risky = containsAny(desc + ' ' + title, ['copyright','reupload','unlicensed']); if risky then create VideoModerationCheck(type='COPYRIGHT', result='FLAGGED', timestamp=now()); set video.status='UNDER_REVIEW'; notify moderator with video id and matched terms; return ERROR; else set video.status='READY'; return OK; end"
+      appliesToResource="rt_video"
+      invokedBy="auto_video_copyright_check"/>
+
+  <validationRules xmi:id="vr_video_guidelines" name="VideoCommunityGuidelinesValidation"
+      kind="AUTOMATIC"
+      severity="WARNING"
+      expression="Validate video lifecycle fields and status transitions against platform community-guidelines rules."
+      implementationId="impl: require attr_content_status; if matches(attr_content_status,'REMOVED') then return WARNING; end; if trim(coalesce(attr_video_description,'')) = '' then emit creator warning 'Description should be present'; end; if attr_video_comment_status not in ['OPEN','HELD','DISABLED'] then set video.status='UNDER_REVIEW'; notify moderator; end; return OK"
+      appliesToResource="rt_video"
+      invokedBy="auto_video_guidelines_check"/>
+
+  <validationRules xmi:id="vr_comment_policy" name="CommentPolicyValidation"
+      kind="AUTOMATIC"
+      severity="WARNING"
+      expression="Validate comment text against spam, toxicity, and blocked-term moderation rules."
+      implementationId="impl: let text = lower(trim(attr_comment_text)); let risky = containsAny(text, ['spam','toxicity','blocked-word']); if risky then create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set comment.status='UNDER_REVIEW'; notify moderator with comment id and matched terms; return WARNING; else return OK; end"
+      appliesToFeedback="fd_video_comment"
+      invokedBy="auto_comment_moderation_check"/>
+
+  <validationRules xmi:id="vr_report_threshold" name="ReportThresholdValidation"
+      kind="AUTOMATIC"
+      severity="ERROR"
+      expression="Validate whether reported content reached the moderation threshold and must be escalated immediately."
+      implementationId="impl: if attr_content_status = 'UNDER_REVIEW' then hide content; create moderation escalation record; notify moderator queue; return ERROR; else return OK; end"
+      appliesToFeedback="fd_report_content"
+      invokedBy="auto_report_escalation"/>
+
+  <!-- Moderation policies -->
+  <moderationPolicies xmi:id="mp_video_creation" name="VideoCreationModeration"
+      mode="HYBRID"
+      trigger="ON_RESOURCE_CREATE"
+      decision="FLAGGED"
+      monitorsResource="rt_video"
+      executedBy="ut_moderator"
+      inContext="ctx_global"/>
+
+  <moderationPolicies xmi:id="mp_comment_creation" name="CommentCreationModeration"
+      mode="HYBRID"
+      trigger="ON_FEEDBACK_CREATE"
+      decision="FLAGGED"
+      monitorsResource="rt_video"
+      monitorsFeedback="fd_video_comment"
+      executedBy="ut_moderator"
+      inContext="ctx_channel"/>
+
+  <moderationPolicies xmi:id="mp_report_escalation" name="ReportedContentModeration"
+      mode="MANUAL"
+      trigger="ON_REPORT_THRESHOLD"
+      decision="HIDDEN"
+      monitorsResource="rt_content"
+      monitorsFeedback="fd_report_content"
+      executedBy="ut_moderator"
+      inContext="ctx_global"/>
+
+  <!-- Automation rules -->
+  <automationRules xmi:id="auto_video_copyright_check" name="AutoVideoCopyrightCheck"
+      trigger="ON_RESOURCE_CREATE"
+      context="rt_video"
+      inContext="ctx_channel"
+      uses="vr_video_copyright">
+    <conditions xmi:id="cond_video_description_exists" name="VideoDescriptionExists"
+        operator="HAS_PROPERTY"
+        attribute="attr_video_description">
+      <children xmi:id="cv_video_description_exists" value="description"/>
+    </conditions>
+    <conditions xmi:id="cond_video_copyright_keywords" name="VideoContainsCopyrightRiskKeywords"
+        operator="CONTAINS_KEYWORDS"
+        attribute="attr_video_description">
+      <children xmi:id="cv_video_kw_copyright" value="copyright"/>
+      <children xmi:id="cv_video_kw_reupload" value="reupload"/>
+      <children xmi:id="cv_video_kw_unlicensed" value="unlicensed"/>
+    </conditions>
+    <actions xmi:id="act_video_flag" name="FlagVideo"
+        kind="FLAG_CONTENT"
+        message="impl: set video.status='UNDER_REVIEW'; create VideoModerationCheck(type='COPYRIGHT', result='FLAGGED', timestamp=now()); attach moderation reason to video state."/>
+    <actions xmi:id="act_video_notify_mod" name="NotifyModeratorAboutVideo"
+        kind="NOTIFY_MODERATOR"
+        message="impl: send moderation notification with channel id, video id, title, description excerpt, and matched copyright-risk keywords."/>
+  </automationRules>
+
+  <automationRules xmi:id="auto_video_guidelines_check" name="AutoVideoGuidelinesCheck"
+      trigger="ON_RESOURCE_UPDATE"
+      context="rt_video"
+      inContext="ctx_channel"
+      uses="vr_video_guidelines">
+    <conditions xmi:id="cond_video_status_present" name="VideoStatusPresent"
+        operator="HAS_SPECIFIC_PROPERTY"
+        attribute="attr_content_status">
+      <children xmi:id="cv_video_status_present" value="status"/>
+    </conditions>
+    <conditions xmi:id="cond_video_status_not_removed" name="VideoStatusNotRemoved"
+        operator="NOT_MATCH_REGEX"
+        attribute="attr_content_status">
+      <children xmi:id="cv_video_status_not_removed" value="REMOVED"/>
+    </conditions>
+    <actions xmi:id="act_video_display_message" name="WarnCreator"
+        kind="DISPLAY_MESSAGE"
+        message="impl: display creator warning when description is missing, status transition is invalid, or comment settings conflict with platform rules."/>
+  </automationRules>
+
+  <automationRules xmi:id="auto_comment_moderation_check" name="AutoCommentModerationCheck"
+      trigger="ON_FEEDBACK_CREATE"
+      context="rt_comment"
+      inContext="ctx_channel"
+      onFeedback="fd_video_comment"
+      uses="vr_comment_policy">
+    <conditions xmi:id="cond_comment_text_exists" name="CommentTextExists"
+        operator="HAS_PROPERTY"
+        attribute="attr_comment_text">
+      <children xmi:id="cv_comment_text_exists" value="text"/>
+    </conditions>
+    <conditions xmi:id="cond_comment_risky_terms" name="CommentContainsRiskyTerms"
+        operator="CONTAINS_KEYWORDS"
+        attribute="attr_comment_text">
+      <children xmi:id="cv_comment_kw_spam" value="spam"/>
+      <children xmi:id="cv_comment_kw_toxic" value="toxicity"/>
+      <children xmi:id="cv_comment_kw_blocked" value="blocked-word"/>
+    </conditions>
+    <actions xmi:id="act_comment_flag" name="FlagComment"
+        kind="FLAG_CONTENT"
+        message="impl: set comment.status='UNDER_REVIEW'; create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); keep comment hidden until moderator decision."/>
+    <actions xmi:id="act_comment_notify_mod" name="NotifyModeratorAboutComment"
+        kind="NOTIFY_MODERATOR"
+        message="impl: publish moderator event with comment id, video id, author id, normalized text, and policy terms that triggered the check."/>
+  </automationRules>
+
+  <automationRules xmi:id="auto_report_escalation" name="AutoReportEscalation"
+      trigger="ON_REPORT_THRESHOLD"
+      context="rt_content"
+      inContext="ctx_global"
+      onFeedback="fd_report_content"
+      uses="vr_report_threshold">
+    <conditions xmi:id="cond_report_threshold_reached" name="ReportThresholdReached"
+        operator="HAS_SPECIFIC_PROPERTY"
+        attribute="attr_content_status">
+      <children xmi:id="cv_report_threshold_reached" value="UNDER_REVIEW"/>
+    </conditions>
+    <actions xmi:id="act_hide_reported_content" name="HideReportedContent"
+        kind="HIDE_CONTENT"
+        message="impl: set content.visibility='HIDDEN'; persist escalation record; freeze recommendation exposure until moderator resolution."/>
+    <actions xmi:id="act_notify_report_mod" name="NotifyModeratorAboutReportedContent"
+        kind="NOTIFY_MODERATOR"
+        message="impl: send escalation packet containing content id, report count, threshold rule, last status, and moderation history summary."/>
+  </automationRules>
+
+  <!-- Verification policies -->
+  <verificationPolicies xmi:id="vp_report_review" name="ReportReviewVerification"
+      mode="MANUAL"
+      appliesWhen="ON_REPORT_SUBMITTED"
+      verifies="fd_report_content"/>
+
+  <verificationPolicies xmi:id="vp_comment_review" name="CommentModerationVerification"
+      mode="AUTOMATIC"
+      appliesWhen="ON_FEEDBACK_CREATE"
+      verifies="fd_video_comment"/>
+
+  <!-- Sorting policies -->
+  <sortingPolicies xmi:id="sp_channel_latest_videos" name="ChannelLatestVideos"
+      criterion="DATE"
+      direction="DESC"
+      appliesToResource="rt_video"
+      inContext="ctx_channel"/>
+
+  <sortingPolicies xmi:id="sp_channel_relevant_content" name="ChannelRelevantContent"
+      criterion="RELEVANCE"
+      direction="DESC"
+      appliesToResource="rt_content"
+      inContext="ctx_channel"/>
+
+  <sortingPolicies xmi:id="sp_global_high_value_content" name="GlobalHighValueContent"
+      criterion="VALUE"
+      direction="DESC"
+      appliesToResource="rt_content"
+      inContext="ctx_global"/>
+
+</enorm:RefModel>
