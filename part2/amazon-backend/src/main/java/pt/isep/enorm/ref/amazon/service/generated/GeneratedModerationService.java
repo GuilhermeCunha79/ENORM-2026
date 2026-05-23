@@ -84,7 +84,7 @@ public abstract class GeneratedModerationService {
         ReviewStatus previousStatus = review.getStatus();
         ReviewModerationDecision decision = decideReview(review);
 
-        review.setStatus(decision.status());
+        review.setStatus(decision.getStatus());
         productReviewRepository.save(review);
 
         return new ReviewModerationSimulationResult(
@@ -92,8 +92,8 @@ public abstract class GeneratedModerationService {
             moderator.getUsername(),
             previousStatus.name(),
             review.getStatus().name(),
-            decision.decision(),
-            decision.explanation()
+            decision.getDecision(),
+            decision.getExplanation()
         );
     }
 
@@ -115,6 +115,27 @@ public abstract class GeneratedModerationService {
         }
     }
 
-    protected record ReviewModerationDecision(ReviewStatus status, String decision, String explanation) {
+    protected static final class ReviewModerationDecision {
+        private final ReviewStatus status;
+        private final String decision;
+        private final String explanation;
+
+        protected ReviewModerationDecision(ReviewStatus status, String decision, String explanation) {
+            this.status = status;
+            this.decision = decision;
+            this.explanation = explanation;
+        }
+
+        protected ReviewStatus getStatus() {
+            return status;
+        }
+
+        protected String getDecision() {
+            return decision;
+        }
+
+        protected String getExplanation() {
+            return explanation;
+        }
     }
 }

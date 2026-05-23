@@ -39,13 +39,13 @@ public abstract class GeneratedAuthenticationService {
     public AuthenticationResult register(YoutubeUser request) {
         Credentials credentials = validateRequest(request);
 
-        if (youtubeUserRepository.existsByUsername(credentials.username())) {
+        if (youtubeUserRepository.existsByUsername(credentials.getUsername())) {
             throw new IllegalStateException("Username already exists.");
         }
 
         YoutubeUser user = new YoutubeUser();
-        user.setUsername(credentials.username());
-        user.setPassword(passwordEncoder.encode(credentials.password()));
+        user.setUsername(credentials.getUsername());
+        user.setPassword(passwordEncoder.encode(credentials.getPassword()));
         user.setRole(Role.GENERIC);
         user.setRegistrationDate(LocalDate.now());
 
@@ -58,11 +58,11 @@ public abstract class GeneratedAuthenticationService {
         Credentials credentials = validateRequest(request);
 
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(credentials.username(), credentials.password())
+            new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
         );
 
-        YoutubeUser user = youtubeUserRepository.findByUsername(credentials.username())
-            .orElseThrow(() -> new ResourceNotFoundException("User '%s' was not found.".formatted(credentials.username())));
+        YoutubeUser user = youtubeUserRepository.findByUsername(credentials.getUsername())
+            .orElseThrow(() -> new ResourceNotFoundException("User '%s' was not found.".formatted(credentials.getUsername())));
 
         return toAuthenticationResult(user);
     }
@@ -87,7 +87,22 @@ public abstract class GeneratedAuthenticationService {
         return new Credentials(username.trim(), password);
     }
 
-    private record Credentials(String username, String password) {
+    private static final class Credentials {
+        private final String username;
+        private final String password;
+
+        private Credentials(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        private String getUsername() {
+            return username;
+        }
+
+        private String getPassword() {
+            return password;
+        }
     }
 
     private AuthenticationResult toAuthenticationResult(YoutubeUser user) {

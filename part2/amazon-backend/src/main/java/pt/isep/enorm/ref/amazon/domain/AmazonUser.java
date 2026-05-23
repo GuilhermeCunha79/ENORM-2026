@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import pt.isep.enorm.ref.amazon.domain.enums.Role;
 import pt.isep.enorm.ref.amazon.domain.generated.GeneratedAmazonUser;
 
 @Entity(name = "AmazonUser")
@@ -21,11 +20,11 @@ public class AmazonUser extends GeneratedAmazonUser implements UserDetails {
 	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Role role = getRole();
-		if (role == Role.BUYER) {
+		pt.isep.enorm.ref.amazon.domain.enums.Role role = getRole();
+		if (role == pt.isep.enorm.ref.amazon.domain.enums.Role.BUYER) {
 			return List.of(
 				new SimpleGrantedAuthority("ROLE_" + role.name()),
-				new SimpleGrantedAuthority("ROLE_" + Role.GENERIC.name())
+				new SimpleGrantedAuthority("ROLE_" + pt.isep.enorm.ref.amazon.domain.enums.Role.GENERIC.name())
 			);
 		}
 		return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

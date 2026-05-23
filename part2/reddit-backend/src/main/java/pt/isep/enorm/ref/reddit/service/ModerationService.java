@@ -71,8 +71,8 @@ public class ModerationService extends GeneratedModerationService {
 
         Post post = loadPost(postId);
         PostDecision decision = decidePost(post.getTitle() + " " + post.getDescription());
-        PostModerationCheck check = savePostCheck(moderator, post, decision.type(), decision.result());
-        post.setStatus(decision.status());
+        PostModerationCheck check = savePostCheck(moderator, post, decision.getType(), decision.getResult());
+        post.setStatus(decision.getStatus());
         postRepository.save(post);
 
         return new ModerationSimulationResult(
@@ -80,10 +80,10 @@ public class ModerationService extends GeneratedModerationService {
             post.getId(),
             check.getId(),
             null,
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             post.getStatus().name(),
-            decision.explanation()
+            decision.getExplanation()
         );
     }
 
@@ -93,8 +93,8 @@ public class ModerationService extends GeneratedModerationService {
 
         Comment comment = loadComment(commentId);
         CommentDecision decision = decideComment(comment.getText());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.type(), decision.result());
-        comment.setStatus(decision.status());
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
+        comment.setStatus(decision.getStatus());
         commentRepository.save(comment);
 
         return new ModerationSimulationResult(
@@ -102,10 +102,10 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             null,
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             comment.getStatus().name(),
-            decision.explanation()
+            decision.getExplanation()
         );
     }
 
@@ -132,10 +132,10 @@ public class ModerationService extends GeneratedModerationService {
     private ModerationSimulationResult simulatePostReport(RedditUser moderator, Report report) {
         Post post = report.getPost();
         PostDecision decision = decidePost(post.getTitle() + " " + post.getDescription() + " " + report.getReason());
-        PostModerationCheck check = savePostCheck(moderator, post, decision.type(), decision.result());
+        PostModerationCheck check = savePostCheck(moderator, post, decision.getType(), decision.getResult());
 
-        post.setStatus(decision.status());
-        report.setStatus(decision.status() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        post.setStatus(decision.getStatus());
+        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
 
         postRepository.save(post);
         reportRepository.save(report);
@@ -145,20 +145,20 @@ public class ModerationService extends GeneratedModerationService {
             post.getId(),
             check.getId(),
             report.getId(),
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             post.getStatus().name(),
-            "Report review: " + decision.explanation()
+            "Report review: " + decision.getExplanation()
         );
     }
 
     private ModerationSimulationResult simulateCommentReport(RedditUser moderator, Report report) {
         Comment comment = report.getComment();
         CommentDecision decision = decideComment(comment.getText() + " " + report.getReason());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.type(), decision.result());
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
 
-        comment.setStatus(decision.status());
-        report.setStatus(decision.status() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        comment.setStatus(decision.getStatus());
+        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
 
         commentRepository.save(comment);
         reportRepository.save(report);
@@ -168,10 +168,10 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             report.getId(),
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             comment.getStatus().name(),
-            "Report review: " + decision.explanation()
+            "Report review: " + decision.getExplanation()
         );
     }
 
@@ -316,22 +316,88 @@ public class ModerationService extends GeneratedModerationService {
             .orElseThrow(() -> new ResourceNotFoundException("Comment '%s' was not found.".formatted(commentId)));
     }
 
-    private record PostDecision(
-        PostModerationType type,
-        PostModerationResult result,
-        ContentStatus status,
-        String signal,
-        String explanation
-    ) {
+    private static final class PostDecision {
+        private final PostModerationType type;
+        private final PostModerationResult result;
+        private final ContentStatus status;
+        private final String signal;
+        private final String explanation;
+
+        private PostDecision(
+            PostModerationType type,
+            PostModerationResult result,
+            ContentStatus status,
+            String signal,
+            String explanation
+        ) {
+            this.type = type;
+            this.result = result;
+            this.status = status;
+            this.signal = signal;
+            this.explanation = explanation;
+        }
+
+        private PostModerationType getType() {
+            return type;
+        }
+
+        private PostModerationResult getResult() {
+            return result;
+        }
+
+        private ContentStatus getStatus() {
+            return status;
+        }
+
+        private String getSignal() {
+            return signal;
+        }
+
+        private String getExplanation() {
+            return explanation;
+        }
     }
 
-    private record CommentDecision(
-        CommentModerationType type,
-        CommentModerationResult result,
-        ContentStatus status,
-        String signal,
-        String explanation
-    ) {
+    private static final class CommentDecision {
+        private final CommentModerationType type;
+        private final CommentModerationResult result;
+        private final ContentStatus status;
+        private final String signal;
+        private final String explanation;
+
+        private CommentDecision(
+            CommentModerationType type,
+            CommentModerationResult result,
+            ContentStatus status,
+            String signal,
+            String explanation
+        ) {
+            this.type = type;
+            this.result = result;
+            this.status = status;
+            this.signal = signal;
+            this.explanation = explanation;
+        }
+
+        private CommentModerationType getType() {
+            return type;
+        }
+
+        private CommentModerationResult getResult() {
+            return result;
+        }
+
+        private ContentStatus getStatus() {
+            return status;
+        }
+
+        private String getSignal() {
+            return signal;
+        }
+
+        private String getExplanation() {
+            return explanation;
+        }
     }
 }
 

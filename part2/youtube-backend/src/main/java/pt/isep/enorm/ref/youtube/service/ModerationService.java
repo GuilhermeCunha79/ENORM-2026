@@ -71,8 +71,8 @@ public class ModerationService extends GeneratedModerationService {
 
         Video video = loadVideo(videoId);
         VideoDecision decision = decideVideo(video.getTitle() + " " + video.getDescription());
-        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.type(), decision.result());
-        video.setStatus(decision.status());
+        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.getType(), decision.getResult());
+        video.setStatus(decision.getStatus());
         videoRepository.save(video);
 
         return new ModerationSimulationResult(
@@ -80,10 +80,10 @@ public class ModerationService extends GeneratedModerationService {
             video.getId(),
             check.getId(),
             null,
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             video.getStatus().name(),
-            decision.explanation()
+            decision.getExplanation()
         );
     }
 
@@ -93,8 +93,8 @@ public class ModerationService extends GeneratedModerationService {
 
         Comment comment = loadComment(commentId);
         CommentDecision decision = decideComment(comment.getText());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.type(), decision.result());
-        comment.setStatus(decision.status());
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
+        comment.setStatus(decision.getStatus());
         commentRepository.save(comment);
 
         return new ModerationSimulationResult(
@@ -102,10 +102,10 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             null,
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             comment.getStatus().name(),
-            decision.explanation()
+            decision.getExplanation()
         );
     }
 
@@ -132,10 +132,10 @@ public class ModerationService extends GeneratedModerationService {
     private ModerationSimulationResult simulateVideoReport(YoutubeUser moderator, Report report) {
         Video video = report.getVideo();
         VideoDecision decision = decideVideo(video.getTitle() + " " + video.getDescription() + " " + report.getReason());
-        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.type(), decision.result());
+        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.getType(), decision.getResult());
 
-        video.setStatus(decision.status());
-        report.setStatus(decision.status() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        video.setStatus(decision.getStatus());
+        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
 
         videoRepository.save(video);
         reportRepository.save(report);
@@ -145,20 +145,20 @@ public class ModerationService extends GeneratedModerationService {
             video.getId(),
             check.getId(),
             report.getId(),
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             video.getStatus().name(),
-            "Report review: " + decision.explanation()
+            "Report review: " + decision.getExplanation()
         );
     }
 
     private ModerationSimulationResult simulateCommentReport(YoutubeUser moderator, Report report) {
         Comment comment = report.getComment();
         CommentDecision decision = decideComment(comment.getText() + " " + report.getReason());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.type(), decision.result());
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
 
-        comment.setStatus(decision.status());
-        report.setStatus(decision.status() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        comment.setStatus(decision.getStatus());
+        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
 
         commentRepository.save(comment);
         reportRepository.save(report);
@@ -168,10 +168,10 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             report.getId(),
-            decision.signal(),
-            decision.result().name(),
+            decision.getSignal(),
+            decision.getResult().name(),
             comment.getStatus().name(),
-            "Report review: " + decision.explanation()
+            "Report review: " + decision.getExplanation()
         );
     }
 
@@ -316,22 +316,88 @@ public class ModerationService extends GeneratedModerationService {
             .orElseThrow(() -> new ResourceNotFoundException("Comment '%s' was not found.".formatted(commentId)));
     }
 
-    private record VideoDecision(
-        VideoModerationType type,
-        VideoModerationResult result,
-        ContentStatus status,
-        String signal,
-        String explanation
-    ) {
+    private static final class VideoDecision {
+        private final VideoModerationType type;
+        private final VideoModerationResult result;
+        private final ContentStatus status;
+        private final String signal;
+        private final String explanation;
+
+        private VideoDecision(
+            VideoModerationType type,
+            VideoModerationResult result,
+            ContentStatus status,
+            String signal,
+            String explanation
+        ) {
+            this.type = type;
+            this.result = result;
+            this.status = status;
+            this.signal = signal;
+            this.explanation = explanation;
+        }
+
+        private VideoModerationType getType() {
+            return type;
+        }
+
+        private VideoModerationResult getResult() {
+            return result;
+        }
+
+        private ContentStatus getStatus() {
+            return status;
+        }
+
+        private String getSignal() {
+            return signal;
+        }
+
+        private String getExplanation() {
+            return explanation;
+        }
     }
 
-    private record CommentDecision(
-        CommentModerationType type,
-        CommentModerationResult result,
-        ContentStatus status,
-        String signal,
-        String explanation
-    ) {
+    private static final class CommentDecision {
+        private final CommentModerationType type;
+        private final CommentModerationResult result;
+        private final ContentStatus status;
+        private final String signal;
+        private final String explanation;
+
+        private CommentDecision(
+            CommentModerationType type,
+            CommentModerationResult result,
+            ContentStatus status,
+            String signal,
+            String explanation
+        ) {
+            this.type = type;
+            this.result = result;
+            this.status = status;
+            this.signal = signal;
+            this.explanation = explanation;
+        }
+
+        private CommentModerationType getType() {
+            return type;
+        }
+
+        private CommentModerationResult getResult() {
+            return result;
+        }
+
+        private ContentStatus getStatus() {
+            return status;
+        }
+
+        private String getSignal() {
+            return signal;
+        }
+
+        private String getExplanation() {
+            return explanation;
+        }
     }
 }
 

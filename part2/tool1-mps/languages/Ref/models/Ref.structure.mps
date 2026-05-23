@@ -11,6 +11,7 @@
     <language id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure">
       <concept id="3348158742936976480" name="jetbrains.mps.lang.structure.structure.EnumerationMemberDeclaration" flags="ng" index="25R33">
         <property id="1421157252384165432" name="memberId" index="3tVfz5" />
+        <property id="672037151186491528" name="presentation" index="1L1pqM" />
       </concept>
       <concept id="3348158742936976479" name="jetbrains.mps.lang.structure.structure.EnumerationDeclaration" flags="ng" index="25R3W">
         <reference id="1075010451642646892" name="defaultMember" index="1H5jkz" />
@@ -605,22 +606,27 @@
     <node concept="25R33" id="7vG6G7pFVDM" role="25R1y">
       <property role="3tVfz5" value="8641311204900321906" />
       <property role="TrG5h" value="TEXT" />
+      <property role="1L1pqM" value="String" />
     </node>
     <node concept="25R33" id="7vG6G7pFVDN" role="25R1y">
       <property role="3tVfz5" value="8641311204900321907" />
       <property role="TrG5h" value="NUMBER" />
+      <property role="1L1pqM" value="BigDecimal" />
     </node>
     <node concept="25R33" id="7vG6G7pFVDO" role="25R1y">
       <property role="3tVfz5" value="8641311204900321908" />
       <property role="TrG5h" value="BOOLEAN" />
+      <property role="1L1pqM" value="boolean" />
     </node>
     <node concept="25R33" id="7vG6G7pFVDP" role="25R1y">
       <property role="3tVfz5" value="8641311204900321909" />
       <property role="TrG5h" value="DATE" />
+      <property role="1L1pqM" value="LocalDate" />
     </node>
     <node concept="25R33" id="7vG6G7pFVDQ" role="25R1y">
       <property role="3tVfz5" value="8641311204900321910" />
       <property role="TrG5h" value="DATETIME" />
+      <property role="1L1pqM" value="Instant" />
     </node>
     <node concept="25R33" id="7vG6G7pFVDR" role="25R1y">
       <property role="3tVfz5" value="8641311204900321911" />
