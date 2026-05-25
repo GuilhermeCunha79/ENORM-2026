@@ -5,6 +5,10 @@
 [query public pkg(m : RefModel) : String = m.name.toLowerFirst() /]
 [query public rootPath(m : RefModel) : String = 'src/generated/' + pkg(m) /]
 [query public basePackage(m : RefModel) : String = 'generated.' + pkg(m) /]
+[query public apiPackage(m : RefModel) : String = basePackage(m) + '.api' /]
+[query public dtoPackage(m : RefModel) : String = basePackage(m) + '.dto' /]
+[query public servicePackage(m : RefModel) : String = basePackage(m) + '.service' /]
+[query public repositoryPackage(m : RefModel) : String = basePackage(m) + '.repository' /]
 [query public domainPackage(m : RefModel) : String = basePackage(m) + '.domain' /]
 [query public domainGeneratedPackage(m : RefModel) : String = domainPackage(m) + '.generated' /]
 [query public domainEnumsPackage(m : RefModel) : String = domainPackage(m) + '.enums' /]
@@ -12,261 +16,210 @@
 [query public domainGeneratedPath(m : RefModel) : String = domainRootPath(m) + '/generated' /]
 [query public domainEnumsPath(m : RefModel) : String = domainRootPath(m) + '/enums' /]
 
-[query public isOptional(card : String) : Boolean = card = '0..1' or card = '0..*' /]
 [query public isMany(card : String) : Boolean = card = '*' or card = '0..*' or card = '1..*' /]
 [query public shouldSkipAttribute(a : Attribute) : Boolean = a.name = 'id' or a.name = 'Id' /]
-[query public fieldSuffix(r : ResourceRelation) : String = if isMany(r.targetCardinality) then 's' else '' endif /]
-[query public relationSourceFieldName(r : ResourceRelation) : String = if r.recursive then if isMany(r.targetCardinality) then 'children' else 'child' endif else r.target.name.toLowerFirst() + fieldSuffix(r) endif /]
-[query public relationTargetFieldName(r : ResourceRelation) : String = if r.recursive then 'parent' else r.source.name.toLowerFirst() endif /]
-
-[query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else if p = PrimitiveType::IMAGE then 'String' else if p = PrimitiveType::VIDEO then 'String' else 'String' endif endif endif endif endif endif endif endif /]
+[query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else 'String' endif endif endif endif endif endif /]
 [query public javaType(p : PrimitiveType, multi : Boolean) : String = if multi then 'List<' + baseJavaType(p) + '>' else baseJavaType(p) endif /]
-[query public runtimeProfile(m : RefModel) : String = if m.name = 'Amazon' then 'catalog-commerce' else if m.name = 'Reddit' then 'community-platform' else if m.name = 'YouTube' then 'media-platform' else 'generic-platform' endif endif endif /]
-[query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '"' + r.name + '"' endif /]
-[query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '"' + c.name + '"' endif /]
-[query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '"' + f.name + '"' endif /]
-[query public qAutomation(a : AutomationRule) : String = if a.oclIsUndefined() then 'null' else '"' + a.name + '"' endif /]
 [query public qText(s : String) : String = if s.oclIsUndefined() then 'null' else '"' + s + '"' endif /]
+[query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '"' + r.name + '"' endif /]
+[query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '"' + f.name + '"' endif /]
+[query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '"' + c.name + '"' endif /]
+
+[comment
+  `context` is a reserved keyword in OCL/Acceleo, so accessing a metamodel feature named
+  `context` (e.g., `a.context`) can fail to parse.
+  We therefore retrieve it reflectively via eGet(getEStructuralFeature('context')).
+/]
+[query public qAuthorizationContext(a : AuthorizationRule) : String =
+    let eo : ecore::EObject = a.oclAsType(ecore::EObject) in
+    let f : ecore::EStructuralFeature = if eo.oclIsUndefined() then null else eo.eClass().getEStructuralFeature('context') endif in
+    if f.oclIsUndefined() then 'null'
+    else qContext(eo.eGet(f).oclAsType(ContextType))
+    endif
+/]
+[query public resourcePath(rt : ResourceType) : String = rt.name.toLowerFirst() + 's' /]
+[query public relationEndpoint(r : ResourceRelation) : String = r.name.toLowerFirst() /]
+[query public relationField(r : ResourceRelation) : String = if r.recursive then 'children' else r.target.name.toLowerFirst() + (if isMany(r.targetCardinality) then 's' else '' endif) endif /]
+[query public runtimeProfile(m : RefModel) : String = if m.name = 'Amazon' then 'catalog-commerce' else if m.name = 'Reddit' then 'community-discussion' else if m.name = 'YouTube' then 'media-feedback' else 'generic-feedback' endif endif endif /]
+[query public scenarioSummary(m : RefModel) : String = if m.name = 'YouTube' then 'Evaluated resources are videos; users comment videos, react with like/dislike, comments may thread, comments can be reported, and comments are commonly sorted by date or value.' else if m.name = 'Amazon' then 'Evaluated resources are bought products; users evaluate products with a five-star scale, text, optional photos/videos, and a verification process that may be manual or automatic.' else if m.name = 'Reddit' then 'Users post in topic forums, reply in threads, upvote/downvote posts and comments, report posts and comments, and each topic has rules, moderators, and automation support.' else 'Generated feedback REST API.' endif endif endif /]
 [query public feedbackTargetKind(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then 'RESOURCE' else if not d.subjectFeedback.oclIsUndefined() then 'FEEDBACK' else 'NONE' endif endif /]
 [query public feedbackTargetName(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then d.subjectResource.name else if not d.subjectFeedback.oclIsUndefined() then d.subjectFeedback.name else '' endif endif /]
-[query public constName(s : String) : String = s.toUpper() /]
+[query public constName(s : String) : String = s.toUpper().replaceAll('[^A-Z0-9]+', '_') /]
 
 [template public generateElement(m : RefModel)]
 [comment @main/]
 [generateApplication(m)/]
-[generateUsers(m)/]
-[generateResources(m)/]
-[generateContexts(m)/]
-[generateRelations(m)/]
-[generateFeedback(m)/]
+[generateReadme(m)/]
+[generateModelViews(m)/]
 [generateGovernance(m)/]
 [generateRuleBodies(m)/]
 [generateDomain(m)/]
+[for (rt : ResourceType | m.resourceTypes)]
+[generateDto(m, rt)/]
+[generateRepository(m, rt)/]
+[generateService(m, rt)/]
+[generateController(m, rt)/]
+[generateDomainResource(m, rt)/]
+[/for]
 [/template]
 
 [template public generateApplication(m : RefModel)]
 [file (rootPath(m) + '/' + baseName(m) + 'Application.java', false, 'UTF-8')]
-package generated.[pkg(m)/];
+package [basePackage(m)/];
 
-import generated.[pkg(m)/].governance.[baseName(m)/]Governance;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public final class [baseName(m)/]Application {
-public static final String MODEL_NAME = "[baseName(m)/]";
-public static final String MODEL_VERSION = "[m.version/]";
-public static final String RUNTIME_PROFILE = "[runtimeProfile(m)/]";
+@SpringBootApplication
+public class [baseName(m)/]Application {
 
-private [baseName(m)/]Application() {
-}
+    public static final String MODEL_NAME = "[m.name/]";
+    public static final String MODEL_VERSION = "[m.version/]";
+    public static final String RUNTIME_PROFILE = "[runtimeProfile(m)/]";
 
-public static [baseName(m)/]Governance governance() {
-return new [baseName(m)/]Governance();
-}
+    public static void main(String args) {
+        SpringApplication.run([baseName(m)/]Application.class, args);
+    }
 }
 [/file]
 [/template]
 
-[template public generateUsers(m : RefModel)]
-[file (rootPath(m) + '/model/Users.java', false, 'UTF-8')]
-package generated.[pkg(m)/].model;
+[template public generateReadme(m : RefModel)]
+[file (rootPath(m) + '/README-REST.txt', false, 'UTF-8')]
+REF-generated REST backend scaffold
+Model: [m.name/] [m.version/]
+Profile: [runtimeProfile(m)/]
 
-import java.util.List;
+Scope restriction:
+This generator must only expose behavior that is explicitly present in the provided domain model and REF scenario text.
+No extra platform behavior should be inferred beyond those artifacts.
 
-public final class Users {
-private Users() {
-}
+Scenario summary:
+[scenarioSummary(m)/]
 
-public record UserTypeSpec(String name, String kind, List<String> superTypes) {}
-
-public static List<UserTypeSpec> all() {
-return List.of(
-[for (u : UserType | m.userTypes) separator(',')]
-new UserTypeSpec("[u.name/]", "[u.kind/]", List.of([for (s : UserType | u.superTypes) separator(', ')]"[s.name/]"[/for]))
+Generated endpoints:
+[for (rt : ResourceType | m.resourceTypes)]- /api/[resourcePath(rt)/]
 [/for]
-);
-}
-}
 [/file]
 [/template]
 
-[template public generateResources(m : RefModel)]
+[template public generateModelViews(m : RefModel)]
 [file (rootPath(m) + '/model/Resources.java', false, 'UTF-8')]
-package generated.[pkg(m)/].model;
+package [basePackage(m)/].model;
 
 import java.util.List;
 
 public final class Resources {
-private Resources() {
-}
+    private Resources() {
+    }
 
 [for (rt : ResourceType | m.resourceTypes)]
-public static final class [rt.name/] {
-public static final String TYPE = "[rt.name/]";
-public static final boolean SUPPORTS_MEDIA = [rt.supportsMedia/];
-[if (rt.superTypes->notEmpty())]
-public static final List<String> SUPER_TYPES = List.of([for (s : ResourceType | rt.superTypes) separator(', ')]"[s.name/]"[/for]);
-[/if]
-[for (a : Attribute | rt.attributes)]
-private [javaType(a.type, a.multiValued)/] [a.name/];
+    public record [rt.name/]Spec(String type, boolean supportsMedia, List<String> superTypes, String restPath) {}
 [/for]
-}
-[/for]
+
+    public static List<Object> all() {
+        return List.of(
+[for (rt : ResourceType | m.resourceTypes) separator(',\n')]
+                new [rt.name/]Spec("[rt.name/]", [rt.supportsMedia/], List.of([for (st : ResourceType | rt.superTypes) separator(', ')]"[st.name/]"[/for]), "/api/[resourcePath(rt)/]")[/for]
+        );
+    }
 }
 [/file]
-[/template]
 
-[template public generateContexts(m : RefModel)]
-[file (rootPath(m) + '/model/Contexts.java', false, 'UTF-8')]
-package generated.[pkg(m)/].model;
-
-import java.util.List;
-
-public final class Contexts {
-private Contexts() {
-}
-
-public record ContextSpec(String name, String kind, List<String> contains) {}
-
-public static List<ContextSpec> all() {
-return List.of(
-[for (c : ContextType | m.contextTypes) separator(',')]
-new ContextSpec("[c.name/]", "[c.kind/]", List.of([for (r : ResourceType | c.contains) separator(', ')]"[r.name/]"[/for]))
-[/for]
-);
-}
-}
-[/file]
-[/template]
-
-[template public generateRelations(m : RefModel)]
-[file (rootPath(m) + '/model/Relations.java', false, 'UTF-8')]
-package generated.[pkg(m)/].model;
-
-import java.util.List;
-
-public final class Relations {
-private Relations() {
-}
-
-public record RelationSpec(String name, String sourceCardinality, String targetCardinality, boolean containment, boolean recursive, String source, String target) {}
-
-public static List<RelationSpec> all() {
-return List.of(
-[for (r : ResourceRelation | m.resourceRelations) separator(',')]
-new RelationSpec("[r.name/]", "[r.sourceCardinality/]", "[r.targetCardinality/]", [r.containment/], [r.recursive/], "[r.source.name/]", "[r.target.name/]")
-[/for]
-);
-}
-}
-[/file]
-[/template]
-
-[template public generateFeedback(m : RefModel)]
 [file (rootPath(m) + '/model/Feedback.java', false, 'UTF-8')]
-package generated.[pkg(m)/].model;
+package [basePackage(m)/].model;
 
 import java.util.List;
 
 public final class Feedback {
-private Feedback() {
-}
+    private Feedback() {
+    }
 
-public record FeedbackTypeSpec(String name, String kind, String subjectScope, boolean hasRating, boolean recursive, boolean allowsText, boolean allowsMedia, String polarity) {}
-public record FeedbackDefinitionSpec(String name, boolean requiresVerifiedContext, String verificationRequirement, boolean uniquePerAuthorTarget, String type, String targetKind, String targetName, String author, String policyStatus, String ratingMin, String ratingMax, String ratingStep) {}
+    public record FeedbackTypeSpec(String name, String kind, String subjectScope, boolean hasRating, boolean recursive, boolean allowsText, boolean allowsMedia, String polarity) {}
+    public record FeedbackDefinitionSpec(String name, boolean requiresVerifiedContext, String verificationRequirement, boolean uniquePerAuthorTarget, String targetKind, String targetName, String endpoint) {}
 
-public static List<FeedbackTypeSpec> types() {
-return List.of(
-[for (t : FeedbackType | m.feedbackTypes) separator(',')]
-new FeedbackTypeSpec("[t.name/]", "[t.kind/]", "[t.subjectScope/]", [t.hasRating/], [t.recursive/], [t.allowsText/], [t.allowsMedia/], "[t.polarity/]")
-[/for]
-);
-}
+    public static List<FeedbackTypeSpec> types() {
+        return List.of(
+[for (t : FeedbackType | m.feedbackTypes) separator(',\n')]
+                new FeedbackTypeSpec("[t.name/]", "[t.kind/]", "[t.subjectScope/]", [t.hasRating/], [t.recursive/], [t.allowsText/], [t.allowsMedia/], "[t.polarity/]")[/for]
+        );
+    }
 
-public static List<FeedbackDefinitionSpec> definitions() {
-return List.of(
-[for (d : FeedbackDefinition | m.feedbackDefinitions) separator(',')]
-new FeedbackDefinitionSpec("[d.name/]", [d.requiresVerifiedContext/], "[d.verificationRequirement/]", [d.uniquePerAuthorTarget/], "[d.type.name/]", "[feedbackTargetKind(d)/]", "[feedbackTargetName(d)/]", "[d.author.name/]", [if (d.policy.oclIsUndefined())]null[else]"[d.policy.status/]"[/if], [if (d.rating.oclIsUndefined())]null[else]"[d.rating.minValue/]"[/if], [if (d.rating.oclIsUndefined())]null[else]"[d.rating.maxValue/]"[/if], [if (d.rating.oclIsUndefined())]null[else]"[d.rating.step/]"[/if])
-[/for]
-);
-}
+    public static List<FeedbackDefinitionSpec> definitions() {
+        return List.of(
+[for (d : FeedbackDefinition | m.feedbackDefinitions) separator(',\n')]
+                new FeedbackDefinitionSpec("[d.name/]", [d.requiresVerifiedContext/], "[d.verificationRequirement/]", [d.uniquePerAuthorTarget/], "[feedbackTargetKind(d)/]", "[feedbackTargetName(d)/]", "/api/feedback/[d.name.toLowerFirst()/]")[/for]
+        );
+    }
 }
 [/file]
 [/template]
 
 [template public generateGovernance(m : RefModel)]
 [file (rootPath(m) + '/governance/' + baseName(m) + 'Governance.java', false, 'UTF-8')]
-package generated.[pkg(m)/].governance;
+package [basePackage(m)/].governance;
 
 import java.util.List;
 
 public final class [baseName(m)/]Governance {
-private [baseName(m)/]Governance() {
-}
+    private [baseName(m)/]Governance() {
+    }
 
-public record AuthorizationSpec(String name, String allowedAction, String actor, String appContext, String resourceTarget, String feedbackTarget) {}
-public record ValidationSpec(String name, String kind, String severity, String expression, String implementationBody, String appliesToResource, String appliesToFeedback, String invokedBy) {}
-public record ModerationPolicySpec(String name, String mode, String trigger, String decision, String monitorsResource, String monitorsFeedback, List<String> executedBy, String inContext) {}
-public record VerificationPolicySpec(String name, String mode, String appliesWhen, String verifies) {}
-public record SortingPolicySpec(String name, String criterion, String direction, String appliesToResource, String appliesToFeedback, String inContext) {}
+    public record AuthorizationSpec(String name, String action, String actor, String context, String resourceTarget, String feedbackTarget) {}
+    public record ValidationSpec(String name, String kind, String severity, String appliesToResource, String appliesToFeedback) {}
+    public record ModerationPolicySpec(String name, String mode, String trigger, String decision, String monitorsResource, String monitorsFeedback) {}
+    public record VerificationPolicySpec(String name, String mode, String appliesWhen, String verifies) {}
+    public record SortingPolicySpec(String name, String criterion, String direction, String appliesToResource, String appliesToFeedback, String inContext) {}
 
-public static List<AuthorizationSpec> authorizations() {
-return List.of(
-[for (a : AuthorizationRule | m.authorizationRules) separator(',')]
-new AuthorizationSpec("[a.name/]", "[a.allowedAction/]", "[a.actor.name/]", [qContext(a.context)/], "[a.resourceTarget.name/]", [qFeedback(a.feedbackTarget)/])
-[/for]
-);
-}
+    public static List<AuthorizationSpec> authorizations() {
+        return List.of(
+[for (a : AuthorizationRule | m.authorizationRules) separator(',\n')]
+                new AuthorizationSpec("[a.name/]", "[a.allowedAction/]", "[a.actor.name/]", [qAuthorizationContext(a)/], "[a.resourceTarget.name/]", [qFeedback(a.feedbackTarget)/])[/for]
+        );
+    }
 
-public static List<ValidationSpec> validations() {
-return List.of(
-[for (v : ValidationRule | m.validationRules) separator(',')]
-new ValidationSpec("[v.name/]", "[v.kind/]", "[v.severity/]", [qText(v.expression)/], [qText(v.implementationId)/], [qResource(v.appliesToResource)/], [qFeedback(v.appliesToFeedback)/], [qAutomation(v.invokedBy)/])
-[/for]
-);
-}
+    public static List<ValidationSpec> validations() {
+        return List.of(
+[for (v : ValidationRule | m.validationRules) separator(',\n')]
+                new ValidationSpec("[v.name/]", "[v.kind/]", "[v.severity/]", [qResource(v.appliesToResource)/], [qFeedback(v.appliesToFeedback)/])[/for]
+        );
+    }
 
-public static List<ModerationPolicySpec> moderationPolicies() {
-return List.of(
-[for (p : ModerationPolicy | m.moderationPolicies) separator(',')]
-new ModerationPolicySpec("[p.name/]", "[p.mode/]", "[p.trigger/]", "[p.decision/]", [qResource(p.monitorsResource)/], [qFeedback(p.monitorsFeedback)/], List.of([for (u : UserType | p.executedBy) separator(', ')]"[u.name/]"[/for]), [qContext(p.inContext)/])
-[/for]
-);
-}
+    public static List<ModerationPolicySpec> moderationPolicies() {
+        return List.of(
+[for (p : ModerationPolicy | m.moderationPolicies) separator(',\n')]
+                new ModerationPolicySpec("[p.name/]", "[p.mode/]", "[p.trigger/]", "[p.decision/]", [qResource(p.monitorsResource)/], [qFeedback(p.monitorsFeedback)/])[/for]
+        );
+    }
 
-public static List<VerificationPolicySpec> verificationPolicies() {
-return List.of(
-[for (v : VerificationPolicy | m.verificationPolicies) separator(',')]
-new VerificationPolicySpec("[v.name/]", "[v.mode/]", "[v.appliesWhen/]", "[v.verifies.name/]")
-[/for]
-);
-}
+    public static List<VerificationPolicySpec> verificationPolicies() {
+        return List.of(
+[for (v : VerificationPolicy | m.verificationPolicies) separator(',\n')]
+                new VerificationPolicySpec("[v.name/]", "[v.mode/]", "[v.appliesWhen/]", "[v.verifies.name/]")[/for]
+        );
+    }
 
-public static List<SortingPolicySpec> sortingPolicies() {
-return List.of(
-[for (s : SortingPolicy | m.sortingPolicies) separator(',')]
-new SortingPolicySpec("[s.name/]", "[s.criterion/]", "[s.direction/]", [qResource(s.appliesToResource)/], [qFeedback(s.appliesToFeedback)/], [qContext(s.inContext)/])
-[/for]
-);
-}
+    public static List<SortingPolicySpec> sortingPolicies() {
+        return List.of(
+[for (s : SortingPolicy | m.sortingPolicies) separator(',\n')]
+                new SortingPolicySpec("[s.name/]", "[s.criterion/]", "[s.direction/]", [qResource(s.appliesToResource)/], [qFeedback(s.appliesToFeedback)/], [qContext(s.inContext)/])[/for]
+        );
+    }
 }
 [/file]
 [/template]
 
 [template public generateRuleBodies(m : RefModel)]
 [file (rootPath(m) + '/runtime/RuleBodies.java', false, 'UTF-8')]
-package generated.[pkg(m)/].runtime;
+package [basePackage(m)/].runtime;
 
 public final class RuleBodies {
-private RuleBodies() {
-}
+    private RuleBodies() {
+    }
 
 [for (v : ValidationRule | m.validationRules)]
-public static final String [constName(v.name)/]_EXPRESSION = [qText(v.expression)/];
-public static final String [constName(v.name)/]_IMPLEMENTATION = [qText(v.implementationId)/];
-[/for]
-[for (a : AutomationRule | m.automationRules)]
-[for (ac : Action | a.actions)]
-public static final String [constName(a.name)/]_[constName(ac.name)/]_BODY = [qText(ac.message)/];
-[/for]
+    public static final String [constName(v.name)/]_EXPRESSION = [qText(v.expression)/];
+    public static final String [constName(v.name)/]_IMPLEMENTATION = [qText(v.implementationId)/];
 [/for]
 }
 [/file]
@@ -274,123 +227,20 @@ public static final String [constName(a.name)/]_[constName(ac.name)/]_BODY = [qT
 
 [template public generateDomain(m : RefModel)]
 [generateDomainEnums(m)/]
-[generateDomainContextType(m)/]
-[generateDomainAuthorizationRule(m)/]
-[generateDomainValidationRule(m)/]
-[generateDomainModerationPolicy(m)/]
-[generateDomainVerificationPolicy(m)/]
-[generateDomainSortingPolicy(m)/]
-[for (rt : ResourceType | m.resourceTypes)]
-[generateDomainResource(m, rt)/]
-[/for]
 [/template]
 
 [template public generateDomainEnums(m : RefModel)]
-[file (domainEnumsPath(m) + '/UserKind.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }[/file]
-[file (domainEnumsPath(m) + '/ContextKind.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }[/file]
-[file (domainEnumsPath(m) + '/ValidationKind.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum ValidationKind { AUTOMATIC, MANUAL }[/file]
-[file (domainEnumsPath(m) + '/RuleSeverity.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum RuleSeverity { INFO, WARNING, ERROR }[/file]
-[file (domainEnumsPath(m) + '/ActionKind.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum ActionKind { READ, CREATE, UPDATE, DELETE, COMMENT, RATE, VOTE, REPORT, SUBSCRIBE, MODERATE, VALIDATE }[/file]
-[file (domainEnumsPath(m) + '/ModerationMode.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }[/file]
-[file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }[/file]
-[file (domainEnumsPath(m) + '/TriggerEvent.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum TriggerEvent { ON_RESOURCE_CREATE, ON_RESOURCE_UPDATE, ON_RESOURCE_DELETE, ON_FEEDBACK_CREATE, ON_FEEDBACK_UPDATE, ON_FEEDBACK_DELETE, ON_REPORT_SUBMITTED, ON_REPORT_THRESHOLD, ON_MANUAL_REQUEST }[/file]
-[file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum SortCriterion { DATE, VALUE, RELEVANCE }[/file]
-[file (domainEnumsPath(m) + '/SortDirection.java', false, 'UTF-8')]package [domainEnumsPackage(m)/]; public enum SortDirection { ASC, DESC }[/file]
-[/template]
-
-[template public generateDomainContextType(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedContextType.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-public abstract class GeneratedContextType {
-private Long id;
-private String name;
-private String kind;
-}
+[file (domainEnumsPath(m) + '/ActionKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ActionKind { READ, CREATE, UPDATE, DELETE, COMMENT, RATE, VOTE, REPORT, SUBSCRIBE, MODERATE, VALIDATE }
 [/file]
-[/template]
-
-[template public generateDomainAuthorizationRule(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedAuthorizationRule.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-public abstract class GeneratedAuthorizationRule {
-private Long id;
-private String name;
-private String allowedAction;
-private String actorKind;
-private String context;
-private String resourceTarget;
-private String feedbackTarget;
-}
+[file (domainEnumsPath(m) + '/SortDirection.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortDirection { ASC, DESC }
 [/file]
-[/template]
-
-[template public generateDomainValidationRule(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedValidationRule.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-public abstract class GeneratedValidationRule {
-private Long id;
-private String name;
-private String kind;
-private String severity;
-private String expression;
-private String implementationId;
-private String appliesToResource;
-private String appliesToFeedback;
-private String invokedBy;
-}
-[/file]
-[/template]
-
-[template public generateDomainModerationPolicy(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedModerationPolicy.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-import java.util.List;
-
-public abstract class GeneratedModerationPolicy {
-private Long id;
-private String name;
-private String mode;
-private String trigger;
-private String decision;
-private String monitorsResource;
-private String monitorsFeedback;
-private List<String> executedBy;
-private String inContext;
-}
-[/file]
-[/template]
-
-[template public generateDomainVerificationPolicy(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedVerificationPolicy.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-public abstract class GeneratedVerificationPolicy {
-private Long id;
-private String name;
-private String mode;
-private String appliesWhen;
-private String verifies;
-}
-[/file]
-[/template]
-
-[template public generateDomainSortingPolicy(m : RefModel)]
-[file (domainGeneratedPath(m) + '/GeneratedSortingPolicy.java', false, 'UTF-8')]
-package [domainGeneratedPackage(m)/];
-
-public abstract class GeneratedSortingPolicy {
-private Long id;
-private String name;
-private String criterion;
-private String direction;
-private String appliesToResource;
-private String appliesToFeedback;
-private String inContext;
-}
+[file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortCriterion { DATE, VALUE, RELEVANCE }
 [/file]
 [/template]
 
@@ -404,19 +254,274 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Generated[rt.name/] [if (rt.superTypes->notEmpty())]extends Generated[rt.superTypes->first().name/][/if] {
+public abstract class Generated[rt.name/] [if (rt.superTypes->notEmpty())]
+extends Generated[rt.superTypes->first().name/]
+[/if] {
 [if (rt.superTypes->isEmpty())]
-private Long id;
+    private Long internalId;
 [/if]
 [for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
-private [javaType(a.type, a.multiValued)/] [a.name/][if (a.multiValued)] = new ArrayList<[baseJavaType(a.type)/]>()[/if];
+    private [javaType(a.type, a.multiValued)/] [a.name/][if (a.multiValued)] = new ArrayList<>()[/if];
 [/for]
+}
+[/file]
+[/template]
+
+[template public generateDto(m : RefModel, rt : ResourceType)]
+[file (rootPath(m) + '/dto/' + rt.name + 'Dto.java', false, 'UTF-8')]
+package [dtoPackage(m)/];
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record [rt.name/]Dto(
+        String id[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , [javaType(a.type, a.multiValued)/] [a.name/][/for]
+) {}
+[/file]
+[/template]
+
+[template public generateRepository(m : RefModel, rt : ResourceType)]
+[file (rootPath(m) + '/repository/' + rt.name + 'Repository.java', false, 'UTF-8')]
+package [repositoryPackage(m)/];
+
+import [dtoPackage(m)/].[rt.name/]Dto;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class [rt.name/]Repository {
+    private final Map<String, [rt.name/]Dto> store = new LinkedHashMap<>();
+
+    public List<[rt.name/]Dto> findAll() {
+        return List.copyOf(store.values());
+    }
+
+    public Optional<[rt.name/]Dto> findById(String id) {
+        return Optional.ofNullable(store.get(id));
+    }
+
+    public [rt.name/]Dto save([rt.name/]Dto dto) {
+        store.put(dto.id(), dto);
+        return dto;
+    }
+
+    public void delete(String id) {
+        store.remove(id);
+    }
+}
+[/file]
+[/template]
+
+[template public generateService(m : RefModel, rt : ResourceType)]
+[file (rootPath(m) + '/service/' + rt.name + 'Service.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [dtoPackage(m)/].[rt.name/]Dto;
+import [repositoryPackage(m)/].[rt.name/]Repository;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+@Service
+public class [rt.name/]Service {
+    private final [rt.name/]Repository repository;
+
+    public [rt.name/]Service([rt.name/]Repository repository) {
+        this.repository = repository;
+    }
+
+    public List<[rt.name/]Dto> list() {
+        return repository.findAll();
+    }
+
+    public [rt.name/]Dto get(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found"));
+    }
+
+    public [rt.name/]Dto create([rt.name/]Dto dto) {
+[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+        validateAmazonReview(dto);
+[/if]
+        return repository.save(dto);
+    }
+
+    public [rt.name/]Dto update(String id, [rt.name/]Dto dto) {
+        get(id);
+        return repository.save(new [rt.name/]Dto(id[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , dto.[a.name/]()[/for]));
+    }
+
+    public void delete(String id) {
+        get(id);
+        repository.delete(id);
+    }
+[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+
+    private void validateAmazonReview(ProductReviewDto dto) {
+        if (dto.rating() == null || dto.rating() < 1.0 || dto.rating() > 5.0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must respect the 1..5 five-star scale");
+        }
+    }
+[/if]
+}
+[/file]
+[/template]
+
+[template public generateController(m : RefModel, rt : ResourceType)]
+[file (rootPath(m) + '/api/' + rt.name + 'Controller.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import [dtoPackage(m)/].[rt.name/]Dto;
+import [servicePackage(m)/].[rt.name/]Service;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/[resourcePath(rt)/]")
+public class [rt.name/]Controller {
+    private final [rt.name/]Service service;
+
+    public [rt.name/]Controller([rt.name/]Service service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<[rt.name/]Dto> list() {
+        return service.list();
+    }
+
+    @GetMapping("/{id}")
+    public [rt.name/]Dto get(@PathVariable String id) {
+        return service.get(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public [rt.name/]Dto create(@RequestBody [rt.name/]Dto dto) {
+        return service.create(dto);
+    }
+
+    @PutMapping("/{id}")
+    public [rt.name/]Dto update(@PathVariable String id, @RequestBody [rt.name/]Dto dto) {
+        return service.update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        service.delete(id);
+    }
 [for (r : ResourceRelation | m.resourceRelations->select(r | r.source = rt))]
-private [if (isMany(r.targetCardinality))]List<Generated[r.target.name/]>[else]Generated[r.target.name/][/if] [relationSourceFieldName(r)/][if (isMany(r.targetCardinality))] = new ArrayList<Generated[r.target.name/]>()[/if];
+
+    @GetMapping("/{id}/[relationEndpoint(r)/]")
+    public String [relationField(r)/](@PathVariable String id) {
+        service.get(id);
+        return "Generated relation endpoint for [r.name/]";
+    }
 [/for]
-[for (r : ResourceRelation | m.resourceRelations->select(r | r.target = rt))]
-private Generated[r.source.name/] [relationTargetFieldName(r)/];
-[/for]
+[if (m.name = 'YouTube' and rt.name = 'Video')]
+
+    @PostMapping("/{id}/comments")
+    public String commentOnVideo(@PathVariable String id) {
+        service.get(id);
+        return "Create comment on video";
+    }
+
+    @PostMapping("/{id}/likes")
+    public String reactToVideo(@PathVariable String id) {
+        service.get(id);
+        return "Like or dislike video";
+    }
+[/if]
+[if (m.name = 'YouTube' and rt.name = 'Comment')]
+
+    @PostMapping("/{id}/replies")
+    public String replyToComment(@PathVariable String id) {
+        service.get(id);
+        return "Reply to comment thread";
+    }
+
+    @PostMapping("/{id}/reports")
+    public String reportComment(@PathVariable String id) {
+        service.get(id);
+        return "Report comment";
+    }
+[/if]
+[if (m.name = 'Amazon' and rt.name = 'Product')]
+
+    @PostMapping("/{id}/reviews")
+    public String reviewProduct(@PathVariable String id) {
+        service.get(id);
+        return "Create product review";
+    }
+[/if]
+[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+
+    @PostMapping("/{id}/votes")
+    public String helpfulVote(@PathVariable String id) {
+        service.get(id);
+        return "Vote review as helpful or not helpful";
+    }
+
+    @PostMapping("/{id}/verification")
+    public String verifyReview(@PathVariable String id) {
+        service.get(id);
+        return "Start or update review verification process";
+    }
+[/if]
+[if (m.name = 'Reddit' and rt.name = 'Subreddit')]
+
+    @PostMapping("/{id}/posts")
+    public String createPost(@PathVariable String id) {
+        service.get(id);
+        return "Create post in subreddit";
+    }
+[/if]
+[if (m.name = 'Reddit' and (rt.name = 'Post' or rt.name = 'Comment'))]
+
+    @PostMapping("/{id}/votes")
+    public String vote(@PathVariable String id) {
+        service.get(id);
+        return "Upvote or downvote content";
+    }
+
+    @PostMapping("/{id}/reports")
+    public String report(@PathVariable String id) {
+        service.get(id);
+        return "Report content";
+    }
+[/if]
+[if (m.name = 'Reddit' and rt.name = 'Post')]
+
+    @PostMapping("/{id}/comments")
+    public String commentOnPost(@PathVariable String id) {
+        service.get(id);
+        return "Reply to post";
+    }
+[/if]
+[if (m.name = 'Reddit' and rt.name = 'Comment')]
+
+    @PostMapping("/{id}/replies")
+    public String replyToComment(@PathVariable String id) {
+        service.get(id);
+        return "Reply to comment thread";
+    }
+[/if]
 }
 [/file]
 [/template]

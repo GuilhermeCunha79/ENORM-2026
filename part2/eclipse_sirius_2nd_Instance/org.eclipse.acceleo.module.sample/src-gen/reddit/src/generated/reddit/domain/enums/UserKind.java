@@ -1,1 +1,0 @@
-package generated.reddit.domain.enums; public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }

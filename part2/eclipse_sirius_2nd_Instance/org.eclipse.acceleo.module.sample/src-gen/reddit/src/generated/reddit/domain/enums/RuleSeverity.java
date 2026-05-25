@@ -1,1 +1,0 @@
-package generated.reddit.domain.enums; public enum RuleSeverity { INFO, WARNING, ERROR }

@@ -1,1 +1,0 @@
-package generated.amazon.domain.enums; public enum ValidationKind { AUTOMATIC, MANUAL }

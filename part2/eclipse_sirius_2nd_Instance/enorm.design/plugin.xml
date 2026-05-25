@@ -2,6 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin>
   <extension point="org.eclipse.sirius.componentization">
-    <component class="enorm.design.Activator" id="enorm.design" name="%viewpointName"/>
+    <component class="enorm.design.Activator"
+               id="enorm.design"
+	       name="enorm">
+    </component>
   </extension>
 </plugin>

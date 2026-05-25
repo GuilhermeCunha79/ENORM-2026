@@ -1,0 +1,2 @@
+package generated.reddit.domain.enums;
+public enum SortCriterion { DATE, VALUE, RELEVANCE }
