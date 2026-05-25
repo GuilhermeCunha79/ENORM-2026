@@ -24,6 +24,19 @@
 [query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '"' + r.name + '"' endif /]
 [query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '"' + f.name + '"' endif /]
 [query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '"' + c.name + '"' endif /]
+
+[comment
+  `context` is a reserved keyword in OCL/Acceleo, so accessing a metamodel feature named
+  `context` (e.g., `a.context`) can fail to parse.
+  We therefore retrieve it reflectively via eGet(getEStructuralFeature('context')).
+/]
+[query public qAuthorizationContext(a : AuthorizationRule) : String =
+    let eo : ecore::EObject = a.oclAsType(ecore::EObject) in
+    let f : ecore::EStructuralFeature = if eo.oclIsUndefined() then null else eo.eClass().getEStructuralFeature('context') endif in
+    if f.oclIsUndefined() then 'null'
+    else qContext(eo.eGet(f).oclAsType(ContextType))
+    endif
+/]
 [query public resourcePath(rt : ResourceType) : String = rt.name.toLowerFirst() + 's' /]
 [query public relationEndpoint(r : ResourceRelation) : String = r.name.toLowerFirst() /]
 [query public relationField(r : ResourceRelation) : String = if r.recursive then 'children' else r.target.name.toLowerFirst() + (if isMany(r.targetCardinality) then 's' else '' endif) endif /]
@@ -161,7 +174,7 @@ public final class [baseName(m)/]Governance {
     public static List<AuthorizationSpec> authorizations() {
         return List.of(
 [for (a : AuthorizationRule | m.authorizationRules) separator(',\n')]
-                new AuthorizationSpec("[a.name/]", "[a.allowedAction/]", "[a.actor.name/]", [qContext(a.context)/], "[a.resourceTarget.name/]", [qFeedback(a.feedbackTarget)/])[/for]
+                new AuthorizationSpec("[a.name/]", "[a.allowedAction/]", "[a.actor.name/]", [qAuthorizationContext(a)/], "[a.resourceTarget.name/]", [qFeedback(a.feedbackTarget)/])[/for]
         );
     }
 

@@ -1,1 +1,0 @@
-package generated.reddit.domain.enums; public enum ValidationKind { AUTOMATIC, MANUAL }

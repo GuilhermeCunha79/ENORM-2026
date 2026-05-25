@@ -14,15 +14,15 @@ public final class RedditGovernance {
 
     public static List<AuthorizationSpec> authorizations() {
         return List.of(
-                new AuthorizationSpec("UserReadSubreddit", "READ", "User", , "Subreddit", null),
-                new AuthorizationSpec("UserCreateCommentOnPost", "COMMENT", "User", , "Post", "CommentOnPost"),
-                new AuthorizationSpec("UserReplyToComment", "COMMENT", "User", , "Comment", "ReplyToComment"),
-                new AuthorizationSpec("UserVoteContent", "VOTE", "User", , "Content", "VoteOnContent"),
-                new AuthorizationSpec("UserReportContent", "REPORT", "User", , "Content", "ReportContent"),
-                new AuthorizationSpec("UserSubscribeSubreddit", "SUBSCRIBE", "User", , "Subreddit", "SubscribeToSubreddit"),
-                new AuthorizationSpec("ModeratorModeratePost", "MODERATE", "Moderator", , "Post", null),
-                new AuthorizationSpec("ModeratorModerateComment", "MODERATE", "Moderator", , "Comment", null),
-                new AuthorizationSpec("ModeratorValidateContent", "VALIDATE", "Moderator", , "Content", null)        );
+                new AuthorizationSpec("UserReadSubreddit", "READ", "User", "SubredditCommunity", "Subreddit", null),
+                new AuthorizationSpec("UserCreateCommentOnPost", "COMMENT", "User", "ContentChannel", "Post", "CommentOnPost"),
+                new AuthorizationSpec("UserReplyToComment", "COMMENT", "User", "ContentChannel", "Comment", "ReplyToComment"),
+                new AuthorizationSpec("UserVoteContent", "VOTE", "User", "ContentChannel", "Content", "VoteOnContent"),
+                new AuthorizationSpec("UserReportContent", "REPORT", "User", "ContentChannel", "Content", "ReportContent"),
+                new AuthorizationSpec("UserSubscribeSubreddit", "SUBSCRIBE", "User", "SubredditCommunity", "Subreddit", "SubscribeToSubreddit"),
+                new AuthorizationSpec("ModeratorModeratePost", "MODERATE", "Moderator", "RedditPlatform", "Post", null),
+                new AuthorizationSpec("ModeratorModerateComment", "MODERATE", "Moderator", "RedditPlatform", "Comment", null),
+                new AuthorizationSpec("ModeratorValidateContent", "VALIDATE", "Moderator", "RedditPlatform", "Content", null)        );
     }
 
     public static List<ValidationSpec> validations() {

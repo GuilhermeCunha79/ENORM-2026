@@ -1,1 +1,0 @@
-package generated.youTube.domain.enums; public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }

@@ -1,1 +1,0 @@
-package generated.youTube.domain.enums; public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }

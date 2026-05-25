@@ -1,1 +1,0 @@
-package generated.amazon.domain.enums; public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }

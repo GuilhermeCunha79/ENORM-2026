@@ -14,17 +14,17 @@ public final class YouTubeGovernance {
 
     public static List<AuthorizationSpec> authorizations() {
         return List.of(
-                new AuthorizationSpec("UserReadChannel", "READ", "User", , "Channel", null),
-                new AuthorizationSpec("CreatorCreateVideo", "CREATE", "Creator", , "Video", null),
-                new AuthorizationSpec("CreatorUpdateVideo", "UPDATE", "Creator", , "Video", null),
-                new AuthorizationSpec("UserCommentVideo", "COMMENT", "User", , "Video", "CommentOnVideo"),
-                new AuthorizationSpec("UserReplyComment", "COMMENT", "User", , "Comment", "ReplyToComment"),
-                new AuthorizationSpec("UserReactContent", "VOTE", "User", , "Content", "LikeOnContent"),
-                new AuthorizationSpec("UserReportContent", "REPORT", "User", , "Content", "ReportContent"),
-                new AuthorizationSpec("UserSubscribeChannel", "SUBSCRIBE", "User", , "Channel", "SubscribeToChannel"),
-                new AuthorizationSpec("ModeratorModerateVideo", "MODERATE", "Moderator", , "Video", null),
-                new AuthorizationSpec("ModeratorModerateComment", "MODERATE", "Moderator", , "Comment", null),
-                new AuthorizationSpec("ModeratorValidateContent", "VALIDATE", "Moderator", , "Content", null)        );
+                new AuthorizationSpec("UserReadChannel", "READ", "User", "ChannelSpace", "Channel", null),
+                new AuthorizationSpec("CreatorCreateVideo", "CREATE", "Creator", "ChannelSpace", "Video", null),
+                new AuthorizationSpec("CreatorUpdateVideo", "UPDATE", "Creator", "ChannelSpace", "Video", null),
+                new AuthorizationSpec("UserCommentVideo", "COMMENT", "User", "ChannelSpace", "Video", "CommentOnVideo"),
+                new AuthorizationSpec("UserReplyComment", "COMMENT", "User", "ChannelSpace", "Comment", "ReplyToComment"),
+                new AuthorizationSpec("UserReactContent", "VOTE", "User", "ChannelSpace", "Content", "LikeOnContent"),
+                new AuthorizationSpec("UserReportContent", "REPORT", "User", "PlatformGlobal", "Content", "ReportContent"),
+                new AuthorizationSpec("UserSubscribeChannel", "SUBSCRIBE", "User", "ChannelSpace", "Channel", "SubscribeToChannel"),
+                new AuthorizationSpec("ModeratorModerateVideo", "MODERATE", "Moderator", "PlatformGlobal", "Video", null),
+                new AuthorizationSpec("ModeratorModerateComment", "MODERATE", "Moderator", "PlatformGlobal", "Comment", null),
+                new AuthorizationSpec("ModeratorValidateContent", "VALIDATE", "Moderator", "PlatformGlobal", "Content", null)        );
     }
 
     public static List<ValidationSpec> validations() {

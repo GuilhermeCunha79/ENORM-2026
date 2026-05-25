@@ -14,10 +14,10 @@ public final class AmazonGovernance {
 
     public static List<AuthorizationSpec> authorizations() {
         return List.of(
-                new AuthorizationSpec("BuyerReadProduct", "READ", "Buyer", , "Product", null),
-                new AuthorizationSpec("BuyerCreateProductReview", "CREATE", "Buyer", , "Product", "ProductReview"),
-                new AuthorizationSpec("UserVoteHelpful", "VOTE", "User", , "Product", "HelpfulVoteOnReview"),
-                new AuthorizationSpec("ModeratorModerateReview", "MODERATE", "Moderator", , "Product", "ProductReview")        );
+                new AuthorizationSpec("BuyerReadProduct", "READ", "Buyer", "AmazonCatalog", "Product", null),
+                new AuthorizationSpec("BuyerCreateProductReview", "CREATE", "Buyer", "AmazonCatalog", "Product", "ProductReview"),
+                new AuthorizationSpec("UserVoteHelpful", "VOTE", "User", "AmazonCatalog", "Product", "HelpfulVoteOnReview"),
+                new AuthorizationSpec("ModeratorModerateReview", "MODERATE", "Moderator", "ModerationBackoffice", "Product", "ProductReview")        );
     }
 
     public static List<ValidationSpec> validations() {
