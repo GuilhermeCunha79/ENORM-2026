@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.eclipse.acceleo.module.sample
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.acceleo.module.sample.Activator
 Bundle-Vendor: Eclipse Modeling Project
-Export-Package: org.eclipse.acceleo.module.sample.common
 Require-Bundle: org.eclipse.core.runtime, 
  enorm, 
  org.eclipse.emf.ecore,

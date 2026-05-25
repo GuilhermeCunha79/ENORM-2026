@@ -1,0 +1,2 @@
+package generated.youTube.domain.enums;
+public enum SortDirection { ASC, DESC }

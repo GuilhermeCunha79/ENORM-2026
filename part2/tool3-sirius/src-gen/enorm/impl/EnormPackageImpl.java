@@ -40,8 +40,8 @@ import enorm.UserType;
 import enorm.ValidationKind;
 import enorm.ValidationRule;
 import enorm.VerificationPolicy;
-
 import enorm.VerificationRequirement;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;

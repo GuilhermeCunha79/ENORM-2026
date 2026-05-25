@@ -9,8 +9,8 @@ import enorm.FeedbackType;
 import enorm.RatingPolicy;
 import enorm.ResourceType;
 import enorm.UserType;
-
 import enorm.VerificationRequirement;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 

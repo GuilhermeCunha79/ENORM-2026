@@ -4,6 +4,7 @@
     <semanticResources>enorm.ecore</semanticResources>
     <semanticResources>enorm.genmodel</semanticResources>
     <semanticResources>RefModel.xmi</semanticResources>
+    <semanticResources>../plugin.xml</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_InOoUDkJEfGNddhepx4zaA">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_UoDVYFBAEfGEXquLU6_ATg" name="enorm" repPath="#_Un3vMFBAEfGEXquLU6_ATg" changeId="1778843299272">
