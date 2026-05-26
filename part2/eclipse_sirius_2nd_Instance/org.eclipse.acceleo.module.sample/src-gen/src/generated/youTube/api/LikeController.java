@@ -49,10 +49,4 @@ public class LikeController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/likeOnContent")
-    public String content(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for likeOnContent";
-    }
 }

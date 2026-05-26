@@ -49,10 +49,4 @@ public class OrderItemController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/orderItemProduct")
-    public String product(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for orderItemProduct";
-    }
 }

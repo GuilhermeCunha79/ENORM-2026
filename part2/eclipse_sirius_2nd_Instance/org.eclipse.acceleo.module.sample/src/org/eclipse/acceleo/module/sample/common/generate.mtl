@@ -24,19 +24,7 @@
 [query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '"' + r.name + '"' endif /]
 [query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '"' + f.name + '"' endif /]
 [query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '"' + c.name + '"' endif /]
-
-[comment
-  `context` is a reserved keyword in OCL/Acceleo, so accessing a metamodel feature named
-  `context` (e.g., `a.context`) can fail to parse.
-  We therefore retrieve it reflectively via eGet(getEStructuralFeature('context')).
-/]
-[query public qAuthorizationContext(a : AuthorizationRule) : String =
-    let eo : ecore::EObject = a.oclAsType(ecore::EObject) in
-    let f : ecore::EStructuralFeature = if eo.oclIsUndefined() then null else eo.eClass().getEStructuralFeature('context') endif in
-    if f.oclIsUndefined() then 'null'
-    else qContext(eo.eGet(f).oclAsType(ContextType))
-    endif
-/]
+[query public qAuthorizationContext(a : AuthorizationRule) : String = let eo : ecore::EObject = a.oclAsType(ecore::EObject) in let f : ecore::EStructuralFeature = if eo.oclIsUndefined() then null else eo.eClass().getEStructuralFeature('context') endif in if f.oclIsUndefined() then 'null' else qContext(eo.eGet(f).oclAsType(ContextType)) endif /]
 [query public resourcePath(rt : ResourceType) : String = rt.name.toLowerFirst() + 's' /]
 [query public relationEndpoint(r : ResourceRelation) : String = r.name.toLowerFirst() /]
 [query public relationField(r : ResourceRelation) : String = if r.recursive then 'children' else r.target.name.toLowerFirst() + (if isMany(r.targetCardinality) then 's' else '' endif) endif /]
@@ -45,6 +33,7 @@
 [query public feedbackTargetKind(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then 'RESOURCE' else if not d.subjectFeedback.oclIsUndefined() then 'FEEDBACK' else 'NONE' endif endif /]
 [query public feedbackTargetName(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then d.subjectResource.name else if not d.subjectFeedback.oclIsUndefined() then d.subjectFeedback.name else '' endif endif /]
 [query public constName(s : String) : String = s.toUpper().replaceAll('[^A-Z0-9]+', '_') /]
+[query public serverPort(m : RefModel) : String = if m.name = 'Amazon' then '8081' else if m.name = 'YouTube' then '8082' else if m.name = 'Reddit' then '8083' else '8080' endif endif endif /]
 
 [template public generateElement(m : RefModel)]
 [comment @main/]
@@ -54,12 +43,16 @@
 [generateGovernance(m)/]
 [generateRuleBodies(m)/]
 [generateDomain(m)/]
+[generateInfra(m)/]
+[generateSharedControllers(m)/]
+[generateAppSpecificControllers(m)/]
 [for (rt : ResourceType | m.resourceTypes)]
 [generateDto(m, rt)/]
 [generateRepository(m, rt)/]
 [generateService(m, rt)/]
 [generateController(m, rt)/]
 [generateDomainResource(m, rt)/]
+[generateDomainEntity(m, rt)/]
 [/for]
 [/template]
 
@@ -84,11 +77,26 @@ public class [baseName(m)/]Application {
 [/file]
 [/template]
 
+[template public generateInfra(m : RefModel)]
+[file (rootPath(m) + '/resources/application.properties', false, 'UTF-8')]
+server.port=[serverPort(m)/]
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+spring.datasource.url=jdbc:h2:mem:[pkg(m)/];DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.open-in-view=false
+[/file]
+[/template]
+
 [template public generateReadme(m : RefModel)]
 [file (rootPath(m) + '/README-REST.txt', false, 'UTF-8')]
 REF-generated REST backend scaffold
 Model: [m.name/] [m.version/]
 Profile: [runtimeProfile(m)/]
+Port: [serverPort(m)/]
 
 Scope restriction:
 This generator must only expose behavior that is explicitly present in the provided domain model and REF scenario text.
@@ -98,8 +106,116 @@ Scenario summary:
 [scenarioSummary(m)/]
 
 Generated endpoints:
-[for (rt : ResourceType | m.resourceTypes)]- /api/[resourcePath(rt)/]
-[/for]
+[if (m.name = 'Amazon')]- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/contexts
+- GET /api/contexts/{contextId}
+- POST /api/contexts
+- PUT /api/contexts/{contextId}
+- DELETE /api/contexts/{contextId}
+- GET /api/products
+- POST /api/products
+- GET /api/products/{productId}/average-rating
+- POST /api/products/{productId}/reviews
+- POST /api/reviews
+- GET /api/comments?productId={productId}
+- GET /api/comments/{commentId}
+- POST /api/comments?productId={productId}
+- PUT /api/comments/{commentId}
+- DELETE /api/comments/{commentId}
+- GET /api/comments/{commentId}/votes
+- POST /api/comments/{commentId}/votes
+- DELETE /api/comments/{commentId}/votes/{voteId}
+- POST /api/moderation/reviews/{reviewId}/simulate
+- POST /api/moderation/reviews/simulate
+- GET /h2-console
+[/if][if (m.name = 'Reddit')]- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/subreddits
+- GET /api/subreddits/{subredditId}
+- POST /api/subreddits
+- PUT /api/subreddits/{subredditId}
+- DELETE /api/subreddits/{subredditId}
+- GET /api/posts?subredditId={subredditId}
+- GET /api/posts/{postId}
+- POST /api/subreddits/{subredditId}/posts
+- PUT /api/posts/{postId}
+- DELETE /api/posts/{postId}
+- GET /api/comments?postId={postId}
+- GET /api/comments/{commentId}
+- POST /api/posts/{postId}/comments
+- PUT /api/comments/{commentId}
+- DELETE /api/comments/{commentId}
+- GET /api/votes?postId={postId}
+- GET /api/votes?commentId={commentId}
+- POST /api/votes?postId={postId}
+- POST /api/votes?commentId={commentId}
+- DELETE /api/votes/{voteId}
+- GET /api/subscriptions?userId={userId}
+- POST /api/subscriptions/{subredditId}
+- DELETE /api/subscriptions/{subscriptionId}
+- GET /api/policies/subreddits/{subredditId}/permissions
+- POST /api/policies/subreddits/{subredditId}/permissions
+- GET /api/policies/subreddits/{subredditId}/sorting
+- POST /api/policies/subreddits/{subredditId}/sorting
+- GET /api/policies/validation-rules?postId={postId}&commentId={commentId}
+- POST /api/policies/validation-rules?postId={postId}&commentId={commentId}
+- GET /api/reports?status={status}
+- POST /api/reports?postId={postId}
+- POST /api/reports?commentId={commentId}
+- GET /api/moderation/posts/{postId}/checks
+- POST /api/moderation/posts/{postId}/checks
+- GET /api/moderation/comments/{commentId}/checks
+- POST /api/moderation/comments/{commentId}/checks
+- POST /api/moderation/posts/{postId}/comment-status?status={status}
+- POST /api/moderation/posts/{postId}/simulate
+- POST /api/moderation/comments/{commentId}/simulate
+- POST /api/moderation/reports/simulate
+- GET /h2-console
+[/if][if (m.name = 'YouTube')]- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/channels
+- GET /api/channels/{channelId}
+- POST /api/channels
+- PUT /api/channels/{channelId}
+- DELETE /api/channels/{channelId}
+- GET /api/videos?channelId={channelId}
+- GET /api/videos/{videoId}
+- POST /api/channels/{channelId}/videos
+- PUT /api/videos/{videoId}
+- DELETE /api/videos/{videoId}
+- GET /api/comments?videoId={videoId}
+- GET /api/comments/{commentId}
+- POST /api/videos/{videoId}/comments
+- PUT /api/comments/{commentId}
+- DELETE /api/comments/{commentId}
+- GET /api/likes?videoId={videoId}
+- GET /api/likes?commentId={commentId}
+- POST /api/likes?videoId={videoId}
+- POST /api/likes?commentId={commentId}
+- DELETE /api/likes/{likeId}
+- GET /api/subscriptions?userId={userId}
+- POST /api/subscriptions/{channelId}
+- DELETE /api/subscriptions/{subscriptionId}
+- GET /api/policies/channels/{channelId}/permissions
+- POST /api/policies/channels/{channelId}/permissions
+- GET /api/policies/channels/{channelId}/sorting
+- POST /api/policies/channels/{channelId}/sorting
+- GET /api/policies/validation-rules?videoId={videoId}&commentId={commentId}
+- POST /api/policies/validation-rules?videoId={videoId}&commentId={commentId}
+- GET /api/reports?status={status}
+- POST /api/reports?videoId={videoId}
+- POST /api/reports?commentId={commentId}
+- GET /api/moderation/videos/{videoId}/checks
+- POST /api/moderation/videos/{videoId}/checks
+- GET /api/moderation/comments/{commentId}/checks
+- POST /api/moderation/comments/{commentId}/checks
+- POST /api/moderation/videos/{videoId}/comment-status?status={status}
+- POST /api/moderation/videos/{videoId}/simulate
+- POST /api/moderation/comments/{commentId}/simulate
+- POST /api/moderation/reports/simulate
+- GET /h2-console
+[/if]
 [/file]
 [/template]
 
@@ -227,20 +343,29 @@ public final class RuleBodies {
 
 [template public generateDomain(m : RefModel)]
 [generateDomainEnums(m)/]
+[generateJpaConverters(m)/]
 [/template]
 
-[template public generateDomainEnums(m : RefModel)]
-[file (domainEnumsPath(m) + '/ActionKind.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum ActionKind { READ, CREATE, UPDATE, DELETE, COMMENT, RATE, VOTE, REPORT, SUBSCRIBE, MODERATE, VALIDATE }
-[/file]
-[file (domainEnumsPath(m) + '/SortDirection.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum SortDirection { ASC, DESC }
-[/file]
-[file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum SortCriterion { DATE, VALUE, RELEVANCE }
+[template public generateJpaConverters(m : RefModel)]
+[file (domainRootPath(m) + '/UriAttributeConverter.java', false, 'UTF-8')]
+package [domainPackage(m)/];
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import java.net.URI;
+
+@Converter(autoApply = true)
+public class UriAttributeConverter implements AttributeConverter<URI, String> {
+    @Override
+    public String convertToDatabaseColumn(URI attribute) {
+        return attribute == null ? null : attribute.toString();
+    }
+
+    @Override
+    public URI convertToEntityAttribute(String dbData) {
+        return dbData == null ? null : URI.create(dbData);
+    }
+}
 [/file]
 [/template]
 
@@ -248,37 +373,62 @@ public enum SortCriterion { DATE, VALUE, RELEVANCE }
 [file (domainGeneratedPath(m) + '/Generated' + rt.name + '.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Generated[rt.name/] [if (rt.superTypes->notEmpty())]
-extends Generated[rt.superTypes->first().name/]
-[/if] {
+@MappedSuperclass
+public abstract class Generated[rt.name/][if (rt.superTypes->notEmpty())] extends Generated[rt.superTypes->first().name/][/if] {
 [if (rt.superTypes->isEmpty())]
-    private Long internalId;
+    @Id
+    @Column(nullable = false, updatable = false)
+    private String id;
 [/if]
 [for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+[if (a.multiValued)]
+    @ElementCollection
+[/if]
     private [javaType(a.type, a.multiValued)/] [a.name/][if (a.multiValued)] = new ArrayList<>()[/if];
+[/for]
+
+[if (rt.superTypes->isEmpty())]
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+[/if]
+[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+    public [javaType(a.type, a.multiValued)/] get[a.name.toUpperFirst()/]() {
+        return [a.name/];
+    }
+
+    public void set[a.name.toUpperFirst()/]([javaType(a.type, a.multiValued)/] [a.name/]) {
+        this.[a.name/] = [a.name/];
+    }
 [/for]
 }
 [/file]
 [/template]
 
-[template public generateDto(m : RefModel, rt : ResourceType)]
-[file (rootPath(m) + '/dto/' + rt.name + 'Dto.java', false, 'UTF-8')]
-package [dtoPackage(m)/];
+[template public generateDomainEntity(m : RefModel, rt : ResourceType)]
+[file (domainRootPath(m) + '/' + rt.name + '.java', false, 'UTF-8')]
+package [domainPackage(m)/];
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.persistence.Entity;
+import [domainGeneratedPackage(m)/].Generated[rt.name/];
 
-public record [rt.name/]Dto(
-        String id[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , [javaType(a.type, a.multiValued)/] [a.name/][/for]
-) {}
+@Entity
+public class [rt.name/] extends Generated[rt.name/] {
+}
 [/file]
 [/template]
 
@@ -286,33 +436,12 @@ public record [rt.name/]Dto(
 [file (rootPath(m) + '/repository/' + rt.name + 'Repository.java', false, 'UTF-8')]
 package [repositoryPackage(m)/];
 
-import [dtoPackage(m)/].[rt.name/]Dto;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import [domainPackage(m)/].[rt.name/];
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class [rt.name/]Repository {
-    private final Map<String, [rt.name/]Dto> store = new LinkedHashMap<>();
-
-    public List<[rt.name/]Dto> findAll() {
-        return List.copyOf(store.values());
-    }
-
-    public Optional<[rt.name/]Dto> findById(String id) {
-        return Optional.ofNullable(store.get(id));
-    }
-
-    public [rt.name/]Dto save([rt.name/]Dto dto) {
-        store.put(dto.id(), dto);
-        return dto;
-    }
-
-    public void delete(String id) {
-        store.remove(id);
-    }
+public interface [rt.name/]Repository extends JpaRepository<[rt.name/], String> {
 }
 [/file]
 [/template]
@@ -321,12 +450,18 @@ public class [rt.name/]Repository {
 [file (rootPath(m) + '/service/' + rt.name + 'Service.java', false, 'UTF-8')]
 package [servicePackage(m)/];
 
+import [domainPackage(m)/].[rt.name/];
 import [dtoPackage(m)/].[rt.name/]Dto;
 import [repositoryPackage(m)/].[rt.name/]Repository;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+import [dtoPackage(m)/].ProductReviewDto;
+[/if]
 
 @Service
 public class [rt.name/]Service {
@@ -337,11 +472,14 @@ public class [rt.name/]Service {
     }
 
     public List<[rt.name/]Dto> list() {
-        return repository.findAll();
+        return repository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     public [rt.name/]Dto get(String id) {
         return repository.findById(id)
+                .map(this::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found"));
     }
 
@@ -349,17 +487,40 @@ public class [rt.name/]Service {
 [if (m.name = 'Amazon' and rt.name = 'ProductReview')]
         validateAmazonReview(dto);
 [/if]
-        return repository.save(dto);
+        [rt.name/] entity = toEntity(dto);
+        if (entity.getId() == null || entity.getId().isBlank()) {
+            entity.setId(UUID.randomUUID().toString());
+        }
+        return toDto(repository.save(entity));
     }
 
     public [rt.name/]Dto update(String id, [rt.name/]Dto dto) {
-        get(id);
-        return repository.save(new [rt.name/]Dto(id[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , dto.[a.name/]()[/for]));
+        [rt.name/] entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found"));
+[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+        entity.set[a.name.toUpperFirst()/](dto.[a.name/]());
+[/for]
+        return toDto(repository.save(entity));
     }
 
     public void delete(String id) {
-        get(id);
-        repository.delete(id);
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found");
+        }
+        repository.deleteById(id);
+    }
+
+    private [rt.name/] toEntity([rt.name/]Dto dto) {
+        [rt.name/] entity = new [rt.name/]();
+        entity.setId(dto.id());
+[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
+        entity.set[a.name.toUpperFirst()/](dto.[a.name/]());
+[/for]
+        return entity;
+    }
+
+    private [rt.name/]Dto toDto([rt.name/] entity) {
+        return new [rt.name/]Dto(entity.getId()[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , entity.get[a.name.toUpperFirst()/]()[/for]);
     }
 [if (m.name = 'Amazon' and rt.name = 'ProductReview')]
 
@@ -426,102 +587,683 @@ public class [rt.name/]Controller {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-[for (r : ResourceRelation | m.resourceRelations->select(r | r.source = rt))]
+}
+[/file]
+[/template]
 
-    @GetMapping("/{id}/[relationEndpoint(r)/]")
-    public String [relationField(r)/](@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for [r.name/]";
-    }
-[/for]
-[if (m.name = 'YouTube' and rt.name = 'Video')]
+[template public generateSharedControllers(m : RefModel)]
+[file (rootPath(m) + '/api/AuthController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
 
-    @PostMapping("/{id}/comments")
-    public String commentOnVideo(@PathVariable String id) {
-        service.get(id);
-        return "Create comment on video";
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> register(@RequestBody Map<String, Object> payload) {
+        return Map.of("status", "registered", "model", "[m.name/]");
     }
 
-    @PostMapping("/{id}/likes")
-    public String reactToVideo(@PathVariable String id) {
-        service.get(id);
-        return "Like or dislike video";
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody Map<String, Object> payload) {
+        return Map.of("status", "authenticated", "model", "[m.name/]");
     }
+}
+[/file]
+
+[file (rootPath(m) + '/api/ContextController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/contexts")
+public class ContextController {
+
+    @GetMapping
+    public List<String> list() {
+        return List.of([for (c : ContextType | m.contextTypes) separator(', ')]"[c.name/]"[/for]);
+    }
+
+    @GetMapping("/{contextId}")
+    public Map<String, String> get(@PathVariable String contextId) {
+        return Map.of("contextId", contextId, "model", "[m.name/]");
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@RequestBody Map<String, Object> payload) {
+        return payload;
+    }
+
+    @PutMapping("/{contextId}")
+    public Map<String, Object> update(@PathVariable String contextId, @RequestBody Map<String, Object> payload) {
+        return payload;
+    }
+
+    @DeleteMapping("/{contextId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String contextId) {
+    }
+}
+[/file]
+[/template]
+
+[template public generateAppSpecificControllers(m : RefModel)]
+[if (m.name = 'Amazon')]
+[generateAmazonControllers(m)/]
 [/if]
-[if (m.name = 'YouTube' and rt.name = 'Comment')]
-
-    @PostMapping("/{id}/replies")
-    public String replyToComment(@PathVariable String id) {
-        service.get(id);
-        return "Reply to comment thread";
-    }
-
-    @PostMapping("/{id}/reports")
-    public String reportComment(@PathVariable String id) {
-        service.get(id);
-        return "Report comment";
-    }
+[if (m.name = 'Reddit')]
+[generateRedditControllers(m)/]
 [/if]
-[if (m.name = 'Amazon' and rt.name = 'Product')]
-
-    @PostMapping("/{id}/reviews")
-    public String reviewProduct(@PathVariable String id) {
-        service.get(id);
-        return "Create product review";
-    }
+[if (m.name = 'YouTube')]
+[generateYouTubeControllers(m)/]
 [/if]
-[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+[/template]
 
-    @PostMapping("/{id}/votes")
-    public String helpfulVote(@PathVariable String id) {
-        service.get(id);
-        return "Vote review as helpful or not helpful";
+[template public generateAmazonControllers(m : RefModel)]
+[file (rootPath(m) + '/api/ProductApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductApiController {
+
+    @GetMapping
+    public List<String> list() { return List.of(); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+
+    @GetMapping("/{productId}/average-rating")
+    public Map<String, Object> averageRating(@PathVariable String productId) {
+        return Map.of("productId", productId, "averageRating", 0.0);
     }
 
-    @PostMapping("/{id}/verification")
-    public String verifyReview(@PathVariable String id) {
-        service.get(id);
-        return "Start or update review verification process";
+    @PostMapping("/{productId}/reviews")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> createReview(@PathVariable String productId, @RequestBody Map<String, Object> payload) {
+        return Map.of("productId", productId, "status", "review-created");
     }
-[/if]
-[if (m.name = 'Reddit' and rt.name = 'Subreddit')]
+}
+[/file]
 
-    @PostMapping("/{id}/posts")
-    public String createPost(@PathVariable String id) {
-        service.get(id);
-        return "Create post in subreddit";
-    }
-[/if]
-[if (m.name = 'Reddit' and (rt.name = 'Post' or rt.name = 'Comment'))]
+[file (rootPath(m) + '/api/ReviewApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
 
-    @PostMapping("/{id}/votes")
-    public String vote(@PathVariable String id) {
-        service.get(id);
-        return "Upvote or downvote content";
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/reviews")
+public class ReviewApiController {
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+}
+[/file]
+
+[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/comments")
+public class CommentApiController {
+
+    @GetMapping
+    public List<String> list(@RequestParam(required = false) String productId) { return List.of(); }
+
+    @GetMapping("/{commentId}")
+    public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@RequestParam(required = false) String productId, @RequestBody Map<String, Object> payload) { return payload; }
+
+    @PutMapping("/{commentId}")
+    public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+
+    @DeleteMapping("/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String commentId) {}
+
+    @GetMapping("/{commentId}/votes")
+    public List<String> votes(@PathVariable String commentId) { return List.of(); }
+
+    @PostMapping("/{commentId}/votes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createVote(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "vote-created"); }
+
+    @DeleteMapping("/{commentId}/votes/{voteId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteVote(@PathVariable String commentId, @PathVariable String voteId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.Map;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/moderation")
+public class ModerationController {
+
+    @PostMapping("/reviews/{reviewId}/simulate")
+    public Map<String, String> simulateReview(@PathVariable String reviewId, @RequestBody(required = false) Map<String, Object> payload) {
+        return Map.of("reviewId", reviewId, "status", "simulation-executed");
     }
 
-    @PostMapping("/{id}/reports")
-    public String report(@PathVariable String id) {
-        service.get(id);
-        return "Report content";
+    @PostMapping("/reviews/simulate")
+    public Map<String, String> simulateReviews(@RequestBody(required = false) Map<String, Object> payload) {
+        return Map.of("status", "simulation-executed");
     }
-[/if]
-[if (m.name = 'Reddit' and rt.name = 'Post')]
+}
+[/file]
+[/template]
 
-    @PostMapping("/{id}/comments")
-    public String commentOnPost(@PathVariable String id) {
-        service.get(id);
-        return "Reply to post";
-    }
-[/if]
-[if (m.name = 'Reddit' and rt.name = 'Comment')]
+[template public generateRedditControllers(m : RefModel)]
+[file (rootPath(m) + '/api/SubredditApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
 
-    @PostMapping("/{id}/replies")
-    public String replyToComment(@PathVariable String id) {
-        service.get(id);
-        return "Reply to comment thread";
-    }
-[/if]
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/subreddits")
+public class SubredditApiController {
+    @GetMapping public List<String> list() { return List.of(); }
+    @GetMapping("/{subredditId}") public Map<String, String> get(@PathVariable String subredditId) { return Map.of("subredditId", subredditId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    @PutMapping("/{subredditId}") public Map<String, Object> update(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{subredditId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subredditId) {}
+
+    @PostMapping("/{subredditId}/posts")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createPost(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return Map.of("subredditId", subredditId, "status", "post-created"); }
+}
+[/file]
+
+[file (rootPath(m) + '/api/PostApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/posts")
+public class PostApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String subredditId) { return List.of(); }
+    @GetMapping("/{postId}") public Map<String, String> get(@PathVariable String postId) { return Map.of("postId", postId); }
+    @PutMapping("/{postId}") public Map<String, Object> update(@PathVariable String postId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{postId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String postId) {}
+
+    @PostMapping("/{postId}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> comment(@PathVariable String postId, @RequestBody Map<String, Object> payload) { return Map.of("postId", postId, "status", "comment-created"); }
+}
+[/file]
+
+[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/comments")
+public class CommentApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String postId) { return List.of(); }
+    @GetMapping("/{commentId}") public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
+    @PutMapping("/{commentId}") public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/VoteApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/votes")
+public class VoteApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return List.of(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{voteId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String voteId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/SubscriptionApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/subscriptions")
+public class SubscriptionApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String userId) { return List.of(); }
+    @PostMapping("/{subredditId}") @ResponseStatus(HttpStatus.CREATED) public Map<String, String> create(@PathVariable String subredditId) { return Map.of("subredditId", subredditId, "status", "subscription-created"); }
+    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/PolicyApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/policies")
+public class PolicyApiController {
+    @GetMapping("/subreddits/{subredditId}/permissions") public List<String> permissions(@PathVariable String subredditId) { return List.of(); }
+    @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
+    @GetMapping("/subreddits/{subredditId}/sorting") public List<String> sorting(@PathVariable String subredditId) { return List.of(); }
+    @PostMapping("/subreddits/{subredditId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
+    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return List.of(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+}
+[/file]
+
+[file (rootPath(m) + '/api/ReportApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/reports")
+public class ReportApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String status) { return List.of(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+}
+[/file]
+
+[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/moderation")
+public class ModerationController {
+    @GetMapping("/posts/{postId}/checks") public List<String> postChecks(@PathVariable String postId) { return List.of(); }
+    @PostMapping("/posts/{postId}/checks") public Map<String, String> createPostCheck(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("postId", postId, "status", "check-created"); }
+    @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }
+    @PostMapping("/comments/{commentId}/checks") public Map<String, String> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "check-created"); }
+    @PostMapping("/posts/{postId}/comment-status") public Map<String, String> changeCommentStatus(@PathVariable String postId, @RequestParam String status) { return Map.of("postId", postId, "status", status); }
+    @PostMapping("/posts/{postId}/simulate") public Map<String, String> simulatePost(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("postId", postId, "status", "simulation-executed"); }
+    @PostMapping("/comments/{commentId}/simulate") public Map<String, String> simulateComment(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "simulation-executed"); }
+    @PostMapping("/reports/simulate") public Map<String, String> simulateReports(@RequestBody(required = false) Map<String, Object> payload) { return Map.of("status", "simulation-executed"); }
+}
+[/file]
+[/template]
+
+[template public generateYouTubeControllers(m : RefModel)]
+[file (rootPath(m) + '/api/ChannelApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/channels")
+public class ChannelApiController {
+    @GetMapping public List<String> list() { return List.of(); }
+    @GetMapping("/{channelId}") public Map<String, String> get(@PathVariable String channelId) { return Map.of("channelId", channelId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    @PutMapping("/{channelId}") public Map<String, Object> update(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{channelId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String channelId) {}
+
+    @PostMapping("/{channelId}/videos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> createVideo(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return Map.of("channelId", channelId, "status", "video-created"); }
+}
+[/file]
+
+[file (rootPath(m) + '/api/VideoApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/videos")
+public class VideoApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String channelId) { return List.of(); }
+    @GetMapping("/{videoId}") public Map<String, String> get(@PathVariable String videoId) { return Map.of("videoId", videoId); }
+    @PutMapping("/{videoId}") public Map<String, Object> update(@PathVariable String videoId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{videoId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String videoId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/comments")
+public class CommentApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String videoId) { return List.of(); }
+    @GetMapping("/{commentId}") public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestBody Map<String, Object> payload) { return payload; }
+    @PutMapping("/{commentId}") public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/VideoCommentApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/videos")
+public class VideoCommentApiController {
+    @PostMapping("/{videoId}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> create(@PathVariable String videoId, @RequestBody Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "comment-created"); }
+}
+[/file]
+
+[file (rootPath(m) + '/api/LikeApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/likes")
+public class LikeApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return List.of(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    @DeleteMapping("/{likeId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String likeId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/SubscriptionApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/subscriptions")
+public class SubscriptionApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String userId) { return List.of(); }
+    @PostMapping("/{channelId}") @ResponseStatus(HttpStatus.CREATED) public Map<String, String> create(@PathVariable String channelId) { return Map.of("channelId", channelId, "status", "subscription-created"); }
+    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) {}
+}
+[/file]
+
+[file (rootPath(m) + '/api/PolicyApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/policies")
+public class PolicyApiController {
+    @GetMapping("/channels/{channelId}/permissions") public List<String> permissions(@PathVariable String channelId) { return List.of(); }
+    @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
+    @GetMapping("/channels/{channelId}/sorting") public List<String> sorting(@PathVariable String channelId) { return List.of(); }
+    @PostMapping("/channels/{channelId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
+    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return List.of(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+}
+[/file]
+
+[file (rootPath(m) + '/api/ReportApiController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/reports")
+public class ReportApiController {
+    @GetMapping public List<String> list(@RequestParam(required = false) String status) { return List.of(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+}
+[/file]
+
+[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
+package [apiPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/moderation")
+public class ModerationController {
+    @GetMapping("/videos/{videoId}/checks") public List<String> videoChecks(@PathVariable String videoId) { return List.of(); }
+    @PostMapping("/videos/{videoId}/checks") public Map<String, String> createVideoCheck(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "check-created"); }
+    @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }
+    @PostMapping("/comments/{commentId}/checks") public Map<String, String> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "check-created"); }
+    @PostMapping("/videos/{videoId}/comment-status") public Map<String, String> changeCommentStatus(@PathVariable String videoId, @RequestParam String status) { return Map.of("videoId", videoId, "status", status); }
+    @PostMapping("/videos/{videoId}/simulate") public Map<String, String> simulateVideo(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "simulation-executed"); }
+    @PostMapping("/comments/{commentId}/simulate") public Map<String, String> simulateComment(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "simulation-executed"); }
+    @PostMapping("/reports/simulate") public Map<String, String> simulateReports(@RequestBody(required = false) Map<String, Object> payload) { return Map.of("status", "simulation-executed"); }
 }
 [/file]
 [/template]

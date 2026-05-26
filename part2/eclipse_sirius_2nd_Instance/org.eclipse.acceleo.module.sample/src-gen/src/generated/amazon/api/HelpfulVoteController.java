@@ -49,10 +49,4 @@ public class HelpfulVoteController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/helpfulVoteOnReview")
-    public String productReview(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for helpfulVoteOnReview";
-    }
 }

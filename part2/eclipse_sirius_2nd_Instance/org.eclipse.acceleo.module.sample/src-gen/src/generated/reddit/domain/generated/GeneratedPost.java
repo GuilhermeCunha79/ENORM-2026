@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GeneratedPostextends GeneratedContent
- {
+public abstract class GeneratedPost extends GeneratedContent {
     private String title;
     private String body;
     private String type;

@@ -49,46 +49,4 @@ public class CommentController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/commentOnPost")
-    public String post(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentOnPost";
-    }
-
-    @GetMapping("/{id}/commentRepliesToComment")
-    public String children(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentRepliesToComment";
-    }
-
-    @GetMapping("/{id}/commentHasMediaAttachments")
-    public String mediaAttachments(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentHasMediaAttachments";
-    }
-
-    @GetMapping("/{id}/commentCheckedByModerationCheck")
-    public String commentModerationChecks(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentCheckedByModerationCheck";
-    }
-
-    @PostMapping("/{id}/votes")
-    public String vote(@PathVariable String id) {
-        service.get(id);
-        return "Upvote or downvote content";
-    }
-
-    @PostMapping("/{id}/reports")
-    public String report(@PathVariable String id) {
-        service.get(id);
-        return "Report content";
-    }
-
-    @PostMapping("/{id}/replies")
-    public String replyToComment(@PathVariable String id) {
-        service.get(id);
-        return "Reply to comment thread";
-    }
 }

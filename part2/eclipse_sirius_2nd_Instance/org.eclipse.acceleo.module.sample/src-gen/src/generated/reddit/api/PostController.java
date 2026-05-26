@@ -49,28 +49,4 @@ public class PostController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/postCheckedByModerationCheck")
-    public String postModerationChecks(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for postCheckedByModerationCheck";
-    }
-
-    @PostMapping("/{id}/votes")
-    public String vote(@PathVariable String id) {
-        service.get(id);
-        return "Upvote or downvote content";
-    }
-
-    @PostMapping("/{id}/reports")
-    public String report(@PathVariable String id) {
-        service.get(id);
-        return "Report content";
-    }
-
-    @PostMapping("/{id}/comments")
-    public String commentOnPost(@PathVariable String id) {
-        service.get(id);
-        return "Reply to post";
-    }
 }

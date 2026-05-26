@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GeneratedCommentextends GeneratedContent
- {
+public abstract class GeneratedComment extends GeneratedContent {
     private String body;
     private Boolean supportsVote;
     private Boolean supportsReport;

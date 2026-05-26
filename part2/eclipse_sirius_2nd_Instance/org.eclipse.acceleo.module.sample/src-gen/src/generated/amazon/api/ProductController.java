@@ -49,22 +49,4 @@ public class ProductController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/productReceivesReviews")
-    public String productReviews(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for productReceivesReviews";
-    }
-
-    @GetMapping("/{id}/productUsesReviewPolicy")
-    public String reviewPolicy(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for productUsesReviewPolicy";
-    }
-
-    @PostMapping("/{id}/reviews")
-    public String reviewProduct(@PathVariable String id) {
-        service.get(id);
-        return "Create product review";
-    }
 }

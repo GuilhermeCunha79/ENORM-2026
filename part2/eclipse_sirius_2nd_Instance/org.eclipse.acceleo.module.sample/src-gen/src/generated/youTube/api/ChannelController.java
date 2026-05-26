@@ -49,10 +49,4 @@ public class ChannelController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/channelContainsVideo")
-    public String videos(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for channelContainsVideo";
-    }
 }
