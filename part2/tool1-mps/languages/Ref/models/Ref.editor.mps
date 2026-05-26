@@ -1444,7 +1444,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="1C9VCjy_L3v">
-    <ref role="1XX52x" to="2rvu:77Q8YzgwKZ9" resolve="Condition" />
+    <ref role="1XX52x" to="2rvu:77Q8YzgwKZ9" resolve="AutomationCondition" />
     <node concept="3EZMnI" id="1C9VCjy_L3x" role="2wV5jI">
       <node concept="l2Vlx" id="1C9VCjy_L3y" role="2iSdaV" />
       <node concept="3F0ifn" id="1C9VCj$pj6M" role="3EZMnx">
@@ -1499,7 +1499,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="1C9VCjzvnqR">
-    <ref role="1XX52x" to="2rvu:1C9VCjyCBvV" resolve="ConditionKeywords" />
+    <ref role="1XX52x" to="2rvu:1C9VCjyCBvV" resolve="ConditionValue" />
     <node concept="3EZMnI" id="1C9VCjzvnqT" role="2wV5jI">
       <node concept="l2Vlx" id="1C9VCjzvnqU" role="2iSdaV" />
       <node concept="3F0ifn" id="1C9VCjzvnr7" role="3EZMnx">
@@ -1514,7 +1514,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="1C9VCj$iZMx">
-    <ref role="1XX52x" to="2rvu:77Q8YzgwKZx" resolve="Action" />
+    <ref role="1XX52x" to="2rvu:77Q8YzgwKZx" resolve="AutomationAction" />
     <node concept="3EZMnI" id="1C9VCj$iZMz" role="2wV5jI">
       <node concept="l2Vlx" id="1C9VCj$iZM$" role="2iSdaV" />
       <node concept="3F0ifn" id="1C9VCj$pj6Q" role="3EZMnx">

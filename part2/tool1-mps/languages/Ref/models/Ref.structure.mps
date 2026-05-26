@@ -502,14 +502,14 @@
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="conditions" />
       <property role="20lbJX" value="fLJekj6/_1__n" />
-      <ref role="20lvS9" node="77Q8YzgwKZ9" resolve="Condition" />
+      <ref role="20lvS9" node="77Q8YzgwKZ9" resolve="AutomationCondition" />
     </node>
     <node concept="1TJgyj" id="77Q8YzgwKZZ" role="1TKVEi">
       <property role="IQ2ns" value="8211790453394313215" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="actions" />
       <property role="20lbJX" value="fLJekj6/_1__n" />
-      <ref role="20lvS9" node="77Q8YzgwKZx" resolve="Action" />
+      <ref role="20lvS9" node="77Q8YzgwKZx" resolve="AutomationAction" />
     </node>
   </node>
   <node concept="1TIwiD" id="3nWBi3h36US">
@@ -1053,7 +1053,7 @@
   </node>
   <node concept="1TIwiD" id="77Q8YzgwKZ9">
     <property role="EcuMT" value="8211790453394313161" />
-    <property role="TrG5h" value="Condition" />
+    <property role="TrG5h" value="AutomationCondition" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="77Q8YzgwKZa" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
@@ -1074,7 +1074,7 @@
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="keywords" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="1C9VCjyCBvV" resolve="ConditionKeywords" />
+      <ref role="20lvS9" node="1C9VCjyCBvV" resolve="ConditionValue" />
     </node>
   </node>
   <node concept="25R3W" id="77Q8YzgwKZg">
@@ -1112,7 +1112,7 @@
   </node>
   <node concept="1TIwiD" id="77Q8YzgwKZx">
     <property role="EcuMT" value="8211790453394313185" />
-    <property role="TrG5h" value="Action" />
+    <property role="TrG5h" value="AutomationAction" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="77Q8YzgwKZy" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
@@ -1166,7 +1166,7 @@
   </node>
   <node concept="1TIwiD" id="1C9VCjyCBvV">
     <property role="EcuMT" value="1876292974281914363" />
-    <property role="TrG5h" value="ConditionKeywords" />
+    <property role="TrG5h" value="ConditionValue" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="1C9VCjyCBvW" role="1TKVEl">
       <property role="IQ2nx" value="1876292974281914364" />

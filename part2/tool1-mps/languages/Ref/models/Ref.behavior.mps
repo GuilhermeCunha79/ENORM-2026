@@ -1936,7 +1936,7 @@
                   <node concept="3cpWsn" id="77Q8YzlXfta" role="1Duv9x">
                     <property role="TrG5h" value="cond" />
                     <node concept="3Tqbb2" id="77Q8YzmvFK5" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="Condition" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="AutomationCondition" />
                     </node>
                   </node>
                   <node concept="3clFbS" id="77Q8YzlXfsP" role="2LFqv$">
@@ -2030,7 +2030,7 @@
                       <node concept="3cpWsn" id="1C9VCjyS4q$" role="1Duv9x">
                         <property role="TrG5h" value="kw" />
                         <node concept="3Tqbb2" id="1C9VCjyVRLQ" role="1tU5fm">
-                          <ref role="ehGHo" to="2rvu:1C9VCjyCBvV" resolve="ConditionKeywords" />
+                          <ref role="ehGHo" to="2rvu:1C9VCjyCBvV" resolve="ConditionValue" />
                         </node>
                       </node>
                       <node concept="3clFbS" id="1C9VCjyS4qt" role="2LFqv$">
@@ -2093,7 +2093,7 @@
                   <node concept="3cpWsn" id="77Q8YzlXftx" role="1Duv9x">
                     <property role="TrG5h" value="act" />
                     <node concept="3Tqbb2" id="77Q8YzmwyOh" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="Action" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="AutomationAction" />
                     </node>
                   </node>
                   <node concept="3clFbS" id="77Q8YzlXfth" role="2LFqv$">
@@ -4577,7 +4577,7 @@
                       <node concept="3cpWsn" id="1C9VCjyY_F5" role="1Duv9x">
                         <property role="TrG5h" value="kw" />
                         <node concept="3Tqbb2" id="1C9VCjz1QXu" role="1tU5fm">
-                          <ref role="ehGHo" to="2rvu:1C9VCjyCBvV" resolve="ConditionKeywords" />
+                          <ref role="ehGHo" to="2rvu:1C9VCjyCBvV" resolve="ConditionValue" />
                         </node>
                       </node>
                       <node concept="3clFbS" id="1C9VCjyY_EY" role="2LFqv$">
@@ -4692,7 +4692,7 @@
                   <node concept="3cpWsn" id="77Q8YzgT2EX" role="1Duv9x">
                     <property role="TrG5h" value="cond" />
                     <node concept="3Tqbb2" id="77Q8YzgTXuA" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="Condition" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="AutomationCondition" />
                     </node>
                   </node>
                   <node concept="2OqwBi" id="77Q8YzgXCN8" role="1DdaDG">
@@ -4777,7 +4777,7 @@
                   <node concept="3cpWsn" id="77Q8YzhHq_S" role="1Duv9x">
                     <property role="TrG5h" value="act" />
                     <node concept="3Tqbb2" id="77Q8YzhImXf" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="Action" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="AutomationAction" />
                     </node>
                   </node>
                   <node concept="2OqwBi" id="77Q8YzhMcXB" role="1DdaDG">
@@ -6118,7 +6118,7 @@
                   <node concept="3cpWsn" id="77Q8YzioL$S" role="1Duv9x">
                     <property role="TrG5h" value="cond" />
                     <node concept="3Tqbb2" id="77Q8Yzj0eRy" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="Condition" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZ9" resolve="AutomationCondition" />
                     </node>
                   </node>
                   <node concept="3clFbS" id="77Q8YzioL$G" role="2LFqv$">
@@ -6181,7 +6181,7 @@
                   <node concept="3cpWsn" id="77Q8YzioL_b" role="1Duv9x">
                     <property role="TrG5h" value="act" />
                     <node concept="3Tqbb2" id="77Q8Yzjdmev" role="1tU5fm">
-                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="Action" />
+                      <ref role="ehGHo" to="2rvu:77Q8YzgwKZx" resolve="AutomationAction" />
                     </node>
                   </node>
                   <node concept="3clFbS" id="77Q8YzioL$Z" role="2LFqv$">
