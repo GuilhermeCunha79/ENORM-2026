@@ -49,34 +49,4 @@ public class CommentController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/commentRepliesToComment")
-    public String children(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentRepliesToComment";
-    }
-
-    @GetMapping("/{id}/commentCheckedByModerationCheck")
-    public String commentModerationChecks(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentCheckedByModerationCheck";
-    }
-
-    @GetMapping("/{id}/commentValidatedBy")
-    public String contentValidationRules(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentValidatedBy";
-    }
-
-    @PostMapping("/{id}/replies")
-    public String replyToComment(@PathVariable String id) {
-        service.get(id);
-        return "Reply to comment thread";
-    }
-
-    @PostMapping("/{id}/reports")
-    public String reportComment(@PathVariable String id) {
-        service.get(id);
-        return "Report comment";
-    }
 }

@@ -49,10 +49,4 @@ public class SubscriptionController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/subscriptionOnSubreddit")
-    public String subreddit(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for subscriptionOnSubreddit";
-    }
 }

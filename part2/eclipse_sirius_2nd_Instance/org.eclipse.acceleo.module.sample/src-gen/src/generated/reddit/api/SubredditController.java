@@ -49,34 +49,4 @@ public class SubredditController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/subredditContainsPosts")
-    public String posts(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for subredditContainsPosts";
-    }
-
-    @GetMapping("/{id}/subredditHasCommunityRules")
-    public String communityRules(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for subredditHasCommunityRules";
-    }
-
-    @GetMapping("/{id}/subredditEnforcesParticipationPolicies")
-    public String participationPolicys(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for subredditEnforcesParticipationPolicies";
-    }
-
-    @GetMapping("/{id}/subredditValidatesContent")
-    public String contentValidationRules(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for subredditValidatesContent";
-    }
-
-    @PostMapping("/{id}/posts")
-    public String createPost(@PathVariable String id) {
-        service.get(id);
-        return "Create post in subreddit";
-    }
 }

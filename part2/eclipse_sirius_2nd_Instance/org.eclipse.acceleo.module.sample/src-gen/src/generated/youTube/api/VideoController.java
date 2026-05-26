@@ -49,34 +49,4 @@ public class VideoController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/videoHasComments")
-    public String comments(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for videoHasComments";
-    }
-
-    @GetMapping("/{id}/videoCheckedByModerationCheck")
-    public String videoModerationChecks(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for videoCheckedByModerationCheck";
-    }
-
-    @GetMapping("/{id}/videoValidatedBy")
-    public String contentValidationRules(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for videoValidatedBy";
-    }
-
-    @PostMapping("/{id}/comments")
-    public String commentOnVideo(@PathVariable String id) {
-        service.get(id);
-        return "Create comment on video";
-    }
-
-    @PostMapping("/{id}/likes")
-    public String reactToVideo(@PathVariable String id) {
-        service.get(id);
-        return "Like or dislike video";
-    }
 }

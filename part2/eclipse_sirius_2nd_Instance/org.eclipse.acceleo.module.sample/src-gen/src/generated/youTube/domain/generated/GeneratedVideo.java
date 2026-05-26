@@ -6,8 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GeneratedVideoextends GeneratedContent
- {
+public abstract class GeneratedVideo extends GeneratedContent {
     private String title;
     private String description;
     private LocalDate uploadDate;

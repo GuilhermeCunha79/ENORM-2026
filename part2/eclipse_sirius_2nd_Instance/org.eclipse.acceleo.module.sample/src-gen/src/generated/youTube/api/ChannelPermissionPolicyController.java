@@ -49,10 +49,4 @@ public class ChannelPermissionPolicyController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/channelHasPermissionPolicy")
-    public String channel(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for channelHasPermissionPolicy";
-    }
 }

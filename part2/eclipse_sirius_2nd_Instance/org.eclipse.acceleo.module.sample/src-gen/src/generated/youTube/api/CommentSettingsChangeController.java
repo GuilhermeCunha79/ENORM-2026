@@ -49,10 +49,4 @@ public class CommentSettingsChangeController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/commentSettingsChangeOnVideo")
-    public String video(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for commentSettingsChangeOnVideo";
-    }
 }

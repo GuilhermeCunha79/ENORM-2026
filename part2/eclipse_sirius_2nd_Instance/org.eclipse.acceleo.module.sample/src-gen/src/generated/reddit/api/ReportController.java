@@ -49,10 +49,4 @@ public class ReportController {
     public void delete(@PathVariable String id) {
         service.delete(id);
     }
-
-    @GetMapping("/{id}/reportOnContent")
-    public String content(@PathVariable String id) {
-        service.get(id);
-        return "Generated relation endpoint for reportOnContent";
-    }
 }
