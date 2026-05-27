@@ -26,7 +26,7 @@ import pt.isep.enorm.ref.reddit.repository.PostModerationCheckRepository;
 import pt.isep.enorm.ref.reddit.repository.PostRepository;
 import pt.isep.enorm.ref.reddit.repository.ReportRepository;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
-import pt.isep.enorm.ref.reddit.service.projection.ModerationSimulationResult;
+// Simulation removed: no projection return types
 import pt.isep.enorm.ref.reddit.web.error.ResourceNotFoundException;
 
 @Service
@@ -65,114 +65,31 @@ public class ModerationService extends GeneratedModerationService {
         this.reportRepository = reportRepository;
     }
 
+    // Simulation APIs removed; add manual approve helpers instead.
     @Transactional
-    public ModerationSimulationResult simulatePostModeration(RedditUser moderator, Long postId) {
+    public void approvePost(RedditUser moderator, Long postId) {
         ensureModerator(moderator);
-
         Post post = loadPost(postId);
-        PostDecision decision = decidePost(post.getTitle() + " " + post.getDescription());
-        PostModerationCheck check = savePostCheck(moderator, post, decision.getType(), decision.getResult());
-        post.setStatus(decision.getStatus());
+        post.setStatus(ContentStatus.ACTIVE);
         postRepository.save(post);
-
-        return new ModerationSimulationResult(
-            "POST",
-            post.getId(),
-            check.getId(),
-            null,
-            decision.getSignal(),
-            decision.getResult().name(),
-            post.getStatus().name(),
-            decision.getExplanation()
-        );
     }
 
     @Transactional
-    public ModerationSimulationResult simulateCommentModeration(RedditUser moderator, Long commentId) {
+    public void approveComment(RedditUser moderator, Long commentId) {
         ensureModerator(moderator);
-
         Comment comment = loadComment(commentId);
-        CommentDecision decision = decideComment(comment.getText());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
-        comment.setStatus(decision.getStatus());
+        comment.setStatus(ContentStatus.ACTIVE);
         commentRepository.save(comment);
-
-        return new ModerationSimulationResult(
-            "COMMENT",
-            comment.getId(),
-            check.getId(),
-            null,
-            decision.getSignal(),
-            decision.getResult().name(),
-            comment.getStatus().name(),
-            decision.getExplanation()
-        );
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulatePendingReports(RedditUser moderator) {
+    public void approveReport(RedditUser moderator, Long reportId) {
         ensureModerator(moderator);
-
-        return reportRepository.findByStatus(ReportStatus.PENDING)
-            .stream()
-            .map(report -> simulateReportReview(moderator, report))
-            .toList();
-    }
-
-    private ModerationSimulationResult simulateReportReview(RedditUser moderator, Report report) {
+        Report report = reportRepository.findById(reportId)
+            .orElseThrow(() -> new ResourceNotFoundException("Report '%s' was not found.".formatted(reportId)));
         report.setReviewedBy(moderator);
-
-        if (report.getPost() != null) {
-            return simulatePostReport(moderator, report);
-        }
-
-        return simulateCommentReport(moderator, report);
-    }
-
-    private ModerationSimulationResult simulatePostReport(RedditUser moderator, Report report) {
-        Post post = report.getPost();
-        PostDecision decision = decidePost(post.getTitle() + " " + post.getDescription() + " " + report.getReason());
-        PostModerationCheck check = savePostCheck(moderator, post, decision.getType(), decision.getResult());
-
-        post.setStatus(decision.getStatus());
-        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
-
-        postRepository.save(post);
+        report.setStatus(ReportStatus.REVIEWED);
         reportRepository.save(report);
-
-        return new ModerationSimulationResult(
-            "POST",
-            post.getId(),
-            check.getId(),
-            report.getId(),
-            decision.getSignal(),
-            decision.getResult().name(),
-            post.getStatus().name(),
-            "Report review: " + decision.getExplanation()
-        );
-    }
-
-    private ModerationSimulationResult simulateCommentReport(RedditUser moderator, Report report) {
-        Comment comment = report.getComment();
-        CommentDecision decision = decideComment(comment.getText() + " " + report.getReason());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
-
-        comment.setStatus(decision.getStatus());
-        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
-
-        commentRepository.save(comment);
-        reportRepository.save(report);
-
-        return new ModerationSimulationResult(
-            "COMMENT",
-            comment.getId(),
-            check.getId(),
-            report.getId(),
-            decision.getSignal(),
-            decision.getResult().name(),
-            comment.getStatus().name(),
-            "Report review: " + decision.getExplanation()
-        );
     }
 
     private PostModerationCheck savePostCheck(

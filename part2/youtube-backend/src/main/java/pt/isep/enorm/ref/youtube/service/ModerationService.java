@@ -26,7 +26,7 @@ import pt.isep.enorm.ref.youtube.repository.ReportRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoModerationCheckRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoRepository;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
-import pt.isep.enorm.ref.youtube.service.projection.ModerationSimulationResult;
+// Simulation removed: no projection return types
 import pt.isep.enorm.ref.youtube.web.error.ResourceNotFoundException;
 
 @Service
@@ -65,114 +65,31 @@ public class ModerationService extends GeneratedModerationService {
         this.reportRepository = reportRepository;
     }
 
+    // Simulation APIs removed; add manual approve helpers instead.
     @Transactional
-    public ModerationSimulationResult simulateVideoModeration(YoutubeUser moderator, Long videoId) {
+    public void approveVideo(YoutubeUser moderator, Long videoId) {
         ensureModerator(moderator);
-
-        Video video = loadVideo(videoId);
-        VideoDecision decision = decideVideo(video.getTitle() + " " + video.getDescription());
-        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.getType(), decision.getResult());
-        video.setStatus(decision.getStatus());
-        videoRepository.save(video);
-
-        return new ModerationSimulationResult(
-            "VIDEO",
-            video.getId(),
-            check.getId(),
-            null,
-            decision.getSignal(),
-            decision.getResult().name(),
-            video.getStatus().name(),
-            decision.getExplanation()
-        );
+        Video v = loadVideo(videoId);
+        v.setStatus(ContentStatus.ACTIVE);
+        videoRepository.save(v);
     }
 
     @Transactional
-    public ModerationSimulationResult simulateCommentModeration(YoutubeUser moderator, Long commentId) {
+    public void approveComment(YoutubeUser moderator, Long commentId) {
         ensureModerator(moderator);
-
-        Comment comment = loadComment(commentId);
-        CommentDecision decision = decideComment(comment.getText());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
-        comment.setStatus(decision.getStatus());
-        commentRepository.save(comment);
-
-        return new ModerationSimulationResult(
-            "COMMENT",
-            comment.getId(),
-            check.getId(),
-            null,
-            decision.getSignal(),
-            decision.getResult().name(),
-            comment.getStatus().name(),
-            decision.getExplanation()
-        );
+        Comment c = loadComment(commentId);
+        c.setStatus(ContentStatus.ACTIVE);
+        commentRepository.save(c);
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulatePendingReports(YoutubeUser moderator) {
+    public void approveReport(YoutubeUser moderator, Long reportId) {
         ensureModerator(moderator);
-
-        return reportRepository.findByStatus(ReportStatus.PENDING)
-            .stream()
-            .map(report -> simulateReportReview(moderator, report))
-            .toList();
-    }
-
-    private ModerationSimulationResult simulateReportReview(YoutubeUser moderator, Report report) {
+        Report report = reportRepository.findById(reportId)
+            .orElseThrow(() -> new ResourceNotFoundException("Report '%s' was not found.".formatted(reportId)));
         report.setReviewedBy(moderator);
-
-        if (report.getVideo() != null) {
-            return simulateVideoReport(moderator, report);
-        }
-
-        return simulateCommentReport(moderator, report);
-    }
-
-    private ModerationSimulationResult simulateVideoReport(YoutubeUser moderator, Report report) {
-        Video video = report.getVideo();
-        VideoDecision decision = decideVideo(video.getTitle() + " " + video.getDescription() + " " + report.getReason());
-        VideoModerationCheck check = saveVideoCheck(moderator, video, decision.getType(), decision.getResult());
-
-        video.setStatus(decision.getStatus());
-        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
-
-        videoRepository.save(video);
+        report.setStatus(ReportStatus.REVIEWED);
         reportRepository.save(report);
-
-        return new ModerationSimulationResult(
-            "VIDEO",
-            video.getId(),
-            check.getId(),
-            report.getId(),
-            decision.getSignal(),
-            decision.getResult().name(),
-            video.getStatus().name(),
-            "Report review: " + decision.getExplanation()
-        );
-    }
-
-    private ModerationSimulationResult simulateCommentReport(YoutubeUser moderator, Report report) {
-        Comment comment = report.getComment();
-        CommentDecision decision = decideComment(comment.getText() + " " + report.getReason());
-        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision.getType(), decision.getResult());
-
-        comment.setStatus(decision.getStatus());
-        report.setStatus(decision.getStatus() == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
-
-        commentRepository.save(comment);
-        reportRepository.save(report);
-
-        return new ModerationSimulationResult(
-            "COMMENT",
-            comment.getId(),
-            check.getId(),
-            report.getId(),
-            decision.getSignal(),
-            decision.getResult().name(),
-            comment.getStatus().name(),
-            "Report review: " + decision.getExplanation()
-        );
     }
 
     private VideoModerationCheck saveVideoCheck(

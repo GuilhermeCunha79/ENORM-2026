@@ -9,7 +9,6 @@ import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.domain.ProductReview;
 import pt.isep.enorm.ref.amazon.domain.enums.ReviewStatus;
 import pt.isep.enorm.ref.amazon.repository.ProductReviewRepository;
-import pt.isep.enorm.ref.amazon.service.projection.ReviewModerationSimulationResult;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
 
 @Transactional(readOnly = true)
@@ -32,22 +31,13 @@ public abstract class GeneratedModerationService {
         this.productReviewRepository = productReviewRepository;
     }
 
+    // Simulation APIs removed. Use manual approval helpers or background job.
     @Transactional
-    public ReviewModerationSimulationResult simulateReviewModeration(AmazonUser moderator, Long reviewId) {
+    public void approveReview(AmazonUser moderator, Long reviewId) {
         ensureModerator(moderator);
-
         ProductReview review = loadReview(reviewId);
-        return moderateReview(moderator, review);
-    }
-
-    @Transactional
-    public List<ReviewModerationSimulationResult> simulatePendingReviews(AmazonUser moderator) {
-        ensureModerator(moderator);
-
-        return productReviewRepository.findByStatus(ReviewStatus.PENDING)
-            .stream()
-            .map(review -> moderateReview(moderator, review))
-            .toList();
+        review.setStatus(ReviewStatus.APPROVED);
+        productReviewRepository.save(review);
     }
 
     protected ReviewModerationDecision decideReview(ProductReview review) {
@@ -80,22 +70,7 @@ public abstract class GeneratedModerationService {
         return DEFAULT_REJECTION_SIGNALS;
     }
 
-    private ReviewModerationSimulationResult moderateReview(AmazonUser moderator, ProductReview review) {
-        ReviewStatus previousStatus = review.getStatus();
-        ReviewModerationDecision decision = decideReview(review);
-
-        review.setStatus(decision.getStatus());
-        productReviewRepository.save(review);
-
-        return new ReviewModerationSimulationResult(
-            review.getId(),
-            moderator.getUsername(),
-            previousStatus.name(),
-            review.getStatus().name(),
-            decision.getDecision(),
-            decision.getExplanation()
-        );
-    }
+    // moderateReview (simulation return type) removed.
 
     private ProductReview loadReview(Long reviewId) {
         return productReviewRepository.findById(reviewId)

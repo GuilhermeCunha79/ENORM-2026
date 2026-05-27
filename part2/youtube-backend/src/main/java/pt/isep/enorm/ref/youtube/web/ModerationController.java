@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
 import pt.isep.enorm.ref.youtube.service.ModerationService;
-import pt.isep.enorm.ref.youtube.service.projection.ModerationSimulationResult;
+// Simulation endpoints removed; no projection import
 import pt.isep.enorm.ref.youtube.web.generated.GeneratedModerationController;
 
 @RestController
@@ -26,27 +26,6 @@ public class ModerationController extends GeneratedModerationController {
         this.moderationService = moderationService;
     }
 
-    @PostMapping("/moderation/videos/{videoId}/simulate")
-    public ResponseEntity<ModerationSimulationResult> simulateVideoModeration(
-        @AuthenticationPrincipal YoutubeUser currentUser,
-        @PathVariable Long videoId
-    ) {
-        ModerationSimulationResult result = moderationService.simulateVideoModeration(currentUser, videoId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
-    }
-
-    @PostMapping("/moderation/comments/{commentId}/simulate")
-    public ResponseEntity<ModerationSimulationResult> simulateCommentModeration(
-        @AuthenticationPrincipal YoutubeUser currentUser,
-        @PathVariable Long commentId
-    ) {
-        ModerationSimulationResult result = moderationService.simulateCommentModeration(currentUser, commentId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
-    }
-
-    @PostMapping("/moderation/reports/simulate")
-    public List<ModerationSimulationResult> simulatePendingReports(@AuthenticationPrincipal YoutubeUser currentUser) {
-        return moderationService.simulatePendingReports(currentUser);
-    }
+    // Simulation endpoints removed; moderation is background-only and manual approves are available via service methods.
 }
 
