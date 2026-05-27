@@ -3,10 +3,10 @@
 
 [query public baseName(m : RefModel) : String = m.name /]
 [query public pkg(m : RefModel) : String = m.name.toLowerFirst() /]
-[query public rootPath(m : RefModel) : String = 'src/generated/' + pkg(m) /]
+[query public projectRoot(m : RefModel) : String = 'src/generated/' + pkg(m) /]
+[query public rootPath(m : RefModel) : String = projectRoot(m) + '/src/main/java/' + basePackage(m).replaceAll('\\.', '/') /]
 [query public basePackage(m : RefModel) : String = 'generated.' + pkg(m) /]
 [query public apiPackage(m : RefModel) : String = basePackage(m) + '.api' /]
-[query public dtoPackage(m : RefModel) : String = basePackage(m) + '.dto' /]
 [query public servicePackage(m : RefModel) : String = basePackage(m) + '.service' /]
 [query public repositoryPackage(m : RefModel) : String = basePackage(m) + '.repository' /]
 [query public domainPackage(m : RefModel) : String = basePackage(m) + '.domain' /]
@@ -18,12 +18,15 @@
 
 [query public isMany(card : String) : Boolean = card = '*' or card = '0..*' or card = '1..*' /]
 [query public shouldSkipAttribute(a : Attribute) : Boolean = a.name = 'id' or a.name = 'Id' /]
+[query public sqlColumnName(name : String) : String = if name = 'value' then 'value_col' else if name = 'timestamp' then 'timestamp_col' else if name = 'date' then 'date_col' else if name = 'order' then 'order_col' else if name = 'user' then 'user_col' else if name = 'group' then 'group_col' else if name = 'key' then 'key_col' else name endif endif endif endif endif endif endif /]
+[query public sqlTableName(name : String) : String = if name = 'Order' then 'orders' else if name = 'User' then 'users' else if name = 'Group' then 'groups' else if name = 'Key' then 'keys_table' else name.toLowerFirst() endif endif endif endif /]
+[query public hasAppSpecificCrud(m : RefModel, rt : ResourceType) : Boolean = if m.name = 'Reddit' then rt.name = 'Subreddit' or rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Vote' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'YouTube' then rt.name = 'Channel' or rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Like' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'Amazon' then rt.name = 'Product' or rt.name = 'Comment' else false endif endif endif /]
 [query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else 'String' endif endif endif endif endif endif /]
 [query public javaType(p : PrimitiveType, multi : Boolean) : String = if multi then 'List<' + baseJavaType(p) + '>' else baseJavaType(p) endif /]
-[query public qText(s : String) : String = if s.oclIsUndefined() then 'null' else '"' + s + '"' endif /]
-[query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '"' + r.name + '"' endif /]
-[query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '"' + f.name + '"' endif /]
-[query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '"' + c.name + '"' endif /]
+[query public qText(s : String) : String = if s.oclIsUndefined() then 'null' else '\"' + s + '\"' endif /]
+[query public qResource(r : ResourceType) : String = if r.oclIsUndefined() then 'null' else '\"' + r.name + '\"' endif /]
+[query public qFeedback(f : FeedbackDefinition) : String = if f.oclIsUndefined() then 'null' else '\"' + f.name + '\"' endif /]
+[query public qContext(c : ContextType) : String = if c.oclIsUndefined() then 'null' else '\"' + c.name + '\"' endif /]
 [query public qAuthorizationContext(a : AuthorizationRule) : String = let eo : ecore::EObject = a.oclAsType(ecore::EObject) in let f : ecore::EStructuralFeature = if eo.oclIsUndefined() then null else eo.eClass().getEStructuralFeature('context') endif in if f.oclIsUndefined() then 'null' else qContext(eo.eGet(f).oclAsType(ContextType)) endif /]
 [query public resourcePath(rt : ResourceType) : String = rt.name.toLowerFirst() + 's' /]
 [query public relationEndpoint(r : ResourceRelation) : String = r.name.toLowerFirst() /]
@@ -47,10 +50,11 @@
 [generateSharedControllers(m)/]
 [generateAppSpecificControllers(m)/]
 [for (rt : ResourceType | m.resourceTypes)]
-[generateDto(m, rt)/]
+[if (not hasAppSpecificCrud(m, rt))]
 [generateRepository(m, rt)/]
 [generateService(m, rt)/]
 [generateController(m, rt)/]
+[/if]
 [generateDomainResource(m, rt)/]
 [generateDomainEntity(m, rt)/]
 [/for]
@@ -70,7 +74,7 @@ public class [baseName(m)/]Application {
     public static final String MODEL_VERSION = "[m.version/]";
     public static final String RUNTIME_PROFILE = "[runtimeProfile(m)/]";
 
-    public static void main(String args) {
+    public static void main(String... args) {
         SpringApplication.run([baseName(m)/]Application.class, args);
     }
 }
@@ -78,7 +82,7 @@ public class [baseName(m)/]Application {
 [/template]
 
 [template public generateInfra(m : RefModel)]
-[file (rootPath(m) + '/resources/application.properties', false, 'UTF-8')]
+[file (projectRoot(m) + '/src/main/resources/application.properties', false, 'UTF-8')]
 server.port=[serverPort(m)/]
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
@@ -89,10 +93,71 @@ spring.datasource.password=
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.open-in-view=false
 [/file]
+[file (projectRoot(m) + '/pom.xml', false, 'UTF-8')]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>[basePackage(m)/]</groupId>
+    <artifactId>[baseName(m)/]-backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>[baseName(m)/] REST Backend</name>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.6</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+[/file]
 [/template]
 
 [template public generateReadme(m : RefModel)]
-[file (rootPath(m) + '/README-REST.txt', false, 'UTF-8')]
+[file (projectRoot(m) + '/README-REST.txt', false, 'UTF-8')]
 REF-generated REST backend scaffold
 Model: [m.name/] [m.version/]
 Profile: [runtimeProfile(m)/]
@@ -346,6 +411,9 @@ public final class RuleBodies {
 [generateJpaConverters(m)/]
 [/template]
 
+[template public generateDomainEnums(m : RefModel)]
+[/template]
+
 [template public generateJpaConverters(m : RefModel)]
 [file (domainRootPath(m) + '/UriAttributeConverter.java', false, 'UTF-8')]
 package [domainPackage(m)/];
@@ -387,13 +455,14 @@ import java.util.List;
 public abstract class Generated[rt.name/][if (rt.superTypes->notEmpty())] extends Generated[rt.superTypes->first().name/][/if] {
 [if (rt.superTypes->isEmpty())]
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private String id;
 [/if]
 [for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
 [if (a.multiValued)]
     @ElementCollection
 [/if]
+    @Column(name = "[sqlColumnName(a.name)/]")
     private [javaType(a.type, a.multiValued)/] [a.name/][if (a.multiValued)] = new ArrayList<>()[/if];
 [/for]
 
@@ -424,9 +493,11 @@ public abstract class Generated[rt.name/][if (rt.superTypes->notEmpty())] extend
 package [domainPackage(m)/];
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import [domainGeneratedPackage(m)/].Generated[rt.name/];
 
 @Entity
+@Table(name = "[sqlTableName(rt.name)/]")
 public class [rt.name/] extends Generated[rt.name/] {
 }
 [/file]
@@ -451,7 +522,6 @@ public interface [rt.name/]Repository extends JpaRepository<[rt.name/], String> 
 package [servicePackage(m)/];
 
 import [domainPackage(m)/].[rt.name/];
-import [dtoPackage(m)/].[rt.name/]Dto;
 import [repositoryPackage(m)/].[rt.name/]Repository;
 import java.util.List;
 import java.util.UUID;
@@ -459,9 +529,6 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
-import [dtoPackage(m)/].ProductReviewDto;
-[/if]
 
 @Service
 public class [rt.name/]Service {
@@ -471,36 +538,33 @@ public class [rt.name/]Service {
         this.repository = repository;
     }
 
-    public List<[rt.name/]Dto> list() {
+    public List<[rt.name/]> list() {
         return repository.findAll().stream()
-                .map(this::toDto)
                 .collect(Collectors.toList());
     }
 
-    public [rt.name/]Dto get(String id) {
+    public [rt.name/] get(String id) {
         return repository.findById(id)
-                .map(this::toDto)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found"));
     }
 
-    public [rt.name/]Dto create([rt.name/]Dto dto) {
+    public [rt.name/] create([rt.name/] entity) {
 [if (m.name = 'Amazon' and rt.name = 'ProductReview')]
-        validateAmazonReview(dto);
+        validateAmazonReview(entity);
 [/if]
-        [rt.name/] entity = toEntity(dto);
         if (entity.getId() == null || entity.getId().isBlank()) {
             entity.setId(UUID.randomUUID().toString());
         }
-        return toDto(repository.save(entity));
+        return repository.save(entity);
     }
 
-    public [rt.name/]Dto update(String id, [rt.name/]Dto dto) {
-        [rt.name/] entity = repository.findById(id)
+    public [rt.name/] update(String id, [rt.name/] entity) {
+        [rt.name/] current = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[rt.name/] not found"));
 [for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
-        entity.set[a.name.toUpperFirst()/](dto.[a.name/]());
+        current.set[a.name.toUpperFirst()/](entity.get[a.name.toUpperFirst()/]());
 [/for]
-        return toDto(repository.save(entity));
+        return repository.save(current);
     }
 
     public void delete(String id) {
@@ -510,22 +574,10 @@ public class [rt.name/]Service {
         repository.deleteById(id);
     }
 
-    private [rt.name/] toEntity([rt.name/]Dto dto) {
-        [rt.name/] entity = new [rt.name/]();
-        entity.setId(dto.id());
-[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
-        entity.set[a.name.toUpperFirst()/](dto.[a.name/]());
-[/for]
-        return entity;
-    }
-
-    private [rt.name/]Dto toDto([rt.name/] entity) {
-        return new [rt.name/]Dto(entity.getId()[for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))] , entity.get[a.name.toUpperFirst()/]()[/for]);
-    }
 [if (m.name = 'Amazon' and rt.name = 'ProductReview')]
 
-    private void validateAmazonReview(ProductReviewDto dto) {
-        if (dto.rating() == null || dto.rating() < 1.0 || dto.rating() > 5.0) {
+    private void validateAmazonReview(ProductReview entity) {
+        if (entity.getRating() == null || entity.getRating() < 1.0 || entity.getRating() > 5.0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must respect the 1..5 five-star scale");
         }
     }
@@ -538,7 +590,7 @@ public class [rt.name/]Service {
 [file (rootPath(m) + '/api/' + rt.name + 'Controller.java', false, 'UTF-8')]
 package [apiPackage(m)/];
 
-import [dtoPackage(m)/].[rt.name/]Dto;
+import [domainPackage(m)/].[rt.name/];
 import [servicePackage(m)/].[rt.name/]Service;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -562,24 +614,24 @@ public class [rt.name/]Controller {
     }
 
     @GetMapping
-    public List<[rt.name/]Dto> list() {
+    public List<[rt.name/]> list() {
         return service.list();
     }
 
     @GetMapping("/{id}")
-    public [rt.name/]Dto get(@PathVariable String id) {
+    public [rt.name/] get(@PathVariable String id) {
         return service.get(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public [rt.name/]Dto create(@RequestBody [rt.name/]Dto dto) {
-        return service.create(dto);
+    public [rt.name/] create(@RequestBody [rt.name/] entity) {
+        return service.create(entity);
     }
 
     @PutMapping("/{id}")
-    public [rt.name/]Dto update(@PathVariable String id, @RequestBody [rt.name/]Dto dto) {
-        return service.update(id, dto);
+    public [rt.name/] update(@PathVariable String id, @RequestBody [rt.name/] entity) {
+        return service.update(id, entity);
     }
 
     @DeleteMapping("/{id}")
@@ -891,7 +943,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
