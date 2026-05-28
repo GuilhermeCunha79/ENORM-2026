@@ -26,6 +26,8 @@ import pt.isep.enorm.ref.reddit.repository.PostModerationCheckRepository;
 import pt.isep.enorm.ref.reddit.repository.PostRepository;
 import pt.isep.enorm.ref.reddit.repository.ReportRepository;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ActionSpec;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ConditionSpec;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationDecision;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationMode;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.TriggerEvent;
@@ -197,13 +199,14 @@ public class ModerationService extends GeneratedModerationService {
         String normalized = normalize(content);
         List<String> matches = new ArrayList<>();
 
-        if (GeneratedModerationModel.CONDITION_OPERATOR != GeneratedModerationModel.ConditionOperator.CONTAINS_KEYWORDS) {
-            return matches;
-        }
-
-        for (String keyword : GeneratedModerationModel.BLOCKED_KEYWORDS) {
-            if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
-                matches.add(keyword);
+        for (ConditionSpec condition : GeneratedModerationModel.CONDITIONS) {
+            if (condition.getOperator() != GeneratedModerationModel.ConditionOperator.CONTAINS_KEYWORDS) {
+                continue;
+            }
+            for (String keyword : condition.getValues()) {
+                if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
+                    matches.add(keyword);
+                }
             }
         }
 
@@ -213,6 +216,11 @@ public class ModerationService extends GeneratedModerationService {
     private ContentStatus statusFor(ModerationDecision decision) {
         if (decision == ModerationDecision.APPROVED) {
             return ContentStatus.ACTIVE;
+        }
+
+        ActionSpec action = primaryAction();
+        if (action != null && action.getKind() == GeneratedModerationModel.ActionKind.FLAG_CONTENT) {
+            return ContentStatus.FLAGGED;
         }
 
         if (GeneratedModerationModel.POLICY_MODE == ModerationMode.MANUAL) {
@@ -244,18 +252,35 @@ public class ModerationService extends GeneratedModerationService {
 
     private String explanation(List<String> matches, String checkType, String decision) {
         if (matches.isEmpty()) {
-            return "No " + GeneratedModerationModel.CONDITION_NAME
+            return "No " + conditionNames()
                 + " match; content approved by " + GeneratedModerationModel.POLICY_NAME + ".";
         }
 
+        ActionSpec action = primaryAction();
+        String actionName = action == null ? "NoAction" : action.getName();
+        String actionKind = action == null ? "NONE" : action.getKind().name();
+        String actionMessage = action == null ? "" : "; message: " + action.getMessage();
+
         return GeneratedModerationModel.AUTOMATION_RULE_NAME
             + " (" + GeneratedModerationModel.AUTOMATION_TRIGGER + ") matched " + matches
-            + "; " + GeneratedModerationModel.ACTION_NAME
-            + " uses " + GeneratedModerationModel.ACTION_KIND
+            + "; " + actionName
+            + " uses " + actionKind
             + "; " + GeneratedModerationModel.POLICY_NAME
             + " records " + checkType
             + " as " + decision
+            + actionMessage
             + ".";
+    }
+
+    private ActionSpec primaryAction() {
+        return GeneratedModerationModel.ACTIONS.isEmpty() ? null : GeneratedModerationModel.ACTIONS.get(0);
+    }
+
+    private String conditionNames() {
+        return GeneratedModerationModel.CONDITIONS.stream()
+            .map(ConditionSpec::getName)
+            .toList()
+            .toString();
     }
 
     private ModerationSimulationResult skipped(

@@ -9,11 +9,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.domain.ProductReview;
+import pt.isep.enorm.ref.amazon.domain.enums.ConditionOperator;
 import pt.isep.enorm.ref.amazon.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.amazon.domain.enums.ModerationMode;
 import pt.isep.enorm.ref.amazon.domain.enums.ReviewStatus;
 import pt.isep.enorm.ref.amazon.repository.ProductReviewRepository;
 import pt.isep.enorm.ref.amazon.service.generated.GeneratedModerationModel;
+import pt.isep.enorm.ref.amazon.service.generated.GeneratedModerationModel.ActionSpec;
+import pt.isep.enorm.ref.amazon.service.generated.GeneratedModerationModel.ConditionSpec;
 import pt.isep.enorm.ref.amazon.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.amazon.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.amazon.web.error.ResourceNotFoundException;
@@ -81,9 +84,12 @@ public class ModerationService extends GeneratedModerationService {
 
     private List<String> findMatchedKeywords(ProductReview review) {
         List<String> matches = new ArrayList<>();
-        if (GeneratedModerationModel.CONDITION_OPERATOR.name().equals("CONTAINS_KEYWORDS")) {
-            String normalized = normalize(contentForCondition(review));
-            for (String keyword : GeneratedModerationModel.BLOCKED_KEYWORDS) {
+        String normalized = normalize(contentForCondition(review));
+        for (ConditionSpec condition : GeneratedModerationModel.CONDITIONS) {
+            if (condition.getOperator() != ConditionOperator.CONTAINS_KEYWORDS) {
+                continue;
+            }
+            for (String keyword : condition.getValues()) {
                 if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
                     matches.add(keyword);
                 }
@@ -99,6 +105,15 @@ public class ModerationService extends GeneratedModerationService {
     private ReviewStatus statusFor(ModerationDecision decision) {
         if (decision == ModerationDecision.APPROVED) {
             return ReviewStatus.APPROVED;
+        }
+
+        ActionSpec action = primaryAction();
+        if (action != null) {
+            return switch (action.getKind()) {
+                case AUTO_APPROVE -> ReviewStatus.APPROVED;
+                case AUTO_REJECT, REMOVE_CONTENT, BLOCK_SUBMISSION -> ReviewStatus.REJECTED;
+                case FLAG_CONTENT, HIDE_CONTENT, DISPLAY_MESSAGE, NOTIFY_MODERATOR -> ReviewStatus.PENDING;
+            };
         }
 
         if (GeneratedModerationModel.POLICY_MODE == ModerationMode.MANUAL) {
@@ -119,18 +134,35 @@ public class ModerationService extends GeneratedModerationService {
         ModerationDecision decision
     ) {
         if (matches.isEmpty()) {
-            return "No " + GeneratedModerationModel.CONDITION_NAME
+            return "No " + conditionNames()
                 + " match; " + GeneratedModerationModel.POLICY_NAME
                 + " approved review from " + previousStatus + " to " + newStatus + ".";
         }
 
+        ActionSpec action = primaryAction();
+        String actionName = action == null ? "NoAction" : action.getName();
+        String actionKind = action == null ? "NONE" : action.getKind().name();
+        String actionMessage = action == null ? "" : "; message: " + action.getMessage();
+
         return GeneratedModerationModel.AUTOMATION_RULE_NAME
             + " (" + GeneratedModerationModel.AUTOMATION_TRIGGER + ") matched " + matches
-            + "; " + GeneratedModerationModel.ACTION_NAME
-            + " uses " + GeneratedModerationModel.ACTION_KIND
+            + "; " + actionName
+            + " uses " + actionKind
             + "; " + GeneratedModerationModel.POLICY_NAME
             + " decision is " + decision
+            + actionMessage
             + ".";
+    }
+
+    private ActionSpec primaryAction() {
+        return GeneratedModerationModel.ACTIONS.isEmpty() ? null : GeneratedModerationModel.ACTIONS.get(0);
+    }
+
+    private String conditionNames() {
+        return GeneratedModerationModel.CONDITIONS.stream()
+            .map(ConditionSpec::getName)
+            .toList()
+            .toString();
     }
 
     private ModerationSimulationResult skipped(ProductReview review) {

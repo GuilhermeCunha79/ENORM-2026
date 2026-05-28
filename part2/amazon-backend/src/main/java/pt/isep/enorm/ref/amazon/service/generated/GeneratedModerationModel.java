@@ -22,13 +22,75 @@ public final class GeneratedModerationModel {
 
     public static final String AUTOMATION_RULE_NAME = "AutoReviewContentCheck";
     public static final TriggerEvent AUTOMATION_TRIGGER = TriggerEvent.ON_FEEDBACK_CREATE;
-    public static final String CONDITION_NAME = "ReviewTextKeywordScreening";
-    public static final ConditionOperator CONDITION_OPERATOR = ConditionOperator.CONTAINS_KEYWORDS;
-    public static final String CONDITION_ATTRIBUTE = "text";
-    public static final List<String> BLOCKED_KEYWORDS = List.of("spam", "abuse", "off-topic", "incentivized");
-    public static final String ACTION_NAME = "FlagSuspiciousReview";
-    public static final ActionResultKind ACTION_KIND = ActionResultKind.FLAG_CONTENT;
-    public static final String ACTION_MESSAGE = "set review.status='UNDER_REVIEW'; create ReviewModerationCheck(reason='keyword-match', result='FLAGGED')";
+    public static final List<ConditionSpec> CONDITIONS = List.of(
+        new ConditionSpec(
+            "ReviewTextKeywordScreening",
+            ConditionOperator.CONTAINS_KEYWORDS,
+            "text",
+            List.of("spam", "abuse", "off-topic", "incentivized")
+        )
+    );
+    public static final List<ActionSpec> ACTIONS = List.of(
+        new ActionSpec(
+            "FlagSuspiciousReview",
+            ActionResultKind.FLAG_CONTENT,
+            "set review.status='UNDER_REVIEW'; create ReviewModerationCheck(reason='keyword-match', result='FLAGGED')"
+        )
+    );
+
+    public static final class ConditionSpec {
+        private final String name;
+        private final ConditionOperator operator;
+        private final String attribute;
+        private final List<String> values;
+
+        public ConditionSpec(String name, ConditionOperator operator, String attribute, List<String> values) {
+            this.name = name;
+            this.operator = operator;
+            this.attribute = attribute;
+            this.values = values;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ConditionOperator getOperator() {
+            return operator;
+        }
+
+        public String getAttribute() {
+            return attribute;
+        }
+
+        public List<String> getValues() {
+            return values;
+        }
+    }
+
+    public static final class ActionSpec {
+        private final String name;
+        private final ActionResultKind kind;
+        private final String message;
+
+        public ActionSpec(String name, ActionResultKind kind, String message) {
+            this.name = name;
+            this.kind = kind;
+            this.message = message;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ActionResultKind getKind() {
+            return kind;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
 
     private GeneratedModerationModel() {
     }
