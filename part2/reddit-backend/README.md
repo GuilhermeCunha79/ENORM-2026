@@ -143,7 +143,7 @@ Moderation endpoints require a `MODERATOR` token. For local testing, promote a u
 UPDATE users SET role = 'MODERATOR' WHERE username = 'viewer1';
 ```
 
-The backend simulates moderation with deterministic keyword signals:
+The backend simulates moderation using keyword lists and decisions defined in `refdsl/reddit.refdsl`:
 
 - posts: copyright signals remove content, spam flags content, harmful-content signals move it to `UNDER_REVIEW`;
 - comments: blocked words and toxicity hide/remove comments, spam flags comments;

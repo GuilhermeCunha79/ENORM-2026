@@ -1,8 +1,10 @@
 package pt.isep.enorm.ref.reddit.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +16,8 @@ import pt.isep.enorm.ref.reddit.domain.PostModerationCheck;
 import pt.isep.enorm.ref.reddit.domain.RedditUser;
 import pt.isep.enorm.ref.reddit.domain.Report;
 import pt.isep.enorm.ref.reddit.domain.enums.CommentModerationResult;
-import pt.isep.enorm.ref.reddit.domain.enums.CommentModerationType;
 import pt.isep.enorm.ref.reddit.domain.enums.ContentStatus;
 import pt.isep.enorm.ref.reddit.domain.enums.PostModerationResult;
-import pt.isep.enorm.ref.reddit.domain.enums.PostModerationType;
 import pt.isep.enorm.ref.reddit.domain.enums.ReportStatus;
 import pt.isep.enorm.ref.reddit.repository.CommentModerationCheckRepository;
 import pt.isep.enorm.ref.reddit.repository.CommentRepository;
@@ -25,17 +25,16 @@ import pt.isep.enorm.ref.reddit.repository.CommunityRuleRepository;
 import pt.isep.enorm.ref.reddit.repository.PostModerationCheckRepository;
 import pt.isep.enorm.ref.reddit.repository.PostRepository;
 import pt.isep.enorm.ref.reddit.repository.ReportRepository;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationDecision;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationMode;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.TriggerEvent;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
-// Simulation removed: no projection return types
+import pt.isep.enorm.ref.reddit.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.reddit.web.error.ResourceNotFoundException;
 
 @Service
 public class ModerationService extends GeneratedModerationService {
-
-    private static final List<String> COPYRIGHT_SIGNALS = List.of("copyright", "pirated", "full movie", "leaked");
-    private static final List<String> SPAM_SIGNALS = List.of("spam", "click here", "free money", "buy now", "promo");
-    private static final List<String> TOXICITY_SIGNALS = List.of("hate", "kill", "idiot", "abuse", "harassment");
-    private static final List<String> BLOCKED_WORD_SIGNALS = List.of("blockedword", "forbidden", "malware");
 
     private final PostModerationCheckRepository postModerationCheckRepository;
     private final CommentModerationCheckRepository commentModerationCheckRepository;
@@ -65,7 +64,6 @@ public class ModerationService extends GeneratedModerationService {
         this.reportRepository = reportRepository;
     }
 
-    // Simulation APIs removed; add manual approve helpers instead.
     @Transactional
     public void approvePost(RedditUser moderator, Long postId) {
         ensureModerator(moderator);
@@ -92,14 +90,242 @@ public class ModerationService extends GeneratedModerationService {
         reportRepository.save(report);
     }
 
+    @Transactional
+    public ModerationSimulationResult simulatePostModeration(RedditUser moderator, Long postId) {
+        ensureModerator(moderator);
+        Post post = loadPost(postId);
+        Optional<Report> report = findPendingPostReport(postId);
+
+        if (!isPolicyTriggerMatched(report.isPresent())) {
+            return skipped("POST", post.getId(), post.getStatus(), report.orElse(null));
+        }
+
+        return moderatePost(moderator, post, report.orElse(null));
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateCommentModeration(RedditUser moderator, Long commentId) {
+        ensureModerator(moderator);
+        Comment comment = loadComment(commentId);
+        Optional<Report> report = findPendingCommentReport(commentId);
+
+        if (!isPolicyTriggerMatched(report.isPresent())) {
+            return skipped("COMMENT", comment.getId(), comment.getStatus(), report.orElse(null));
+        }
+
+        return moderateComment(moderator, comment, report.orElse(null));
+    }
+
+    @Transactional
+    public List<ModerationSimulationResult> simulateReportModeration(RedditUser moderator) {
+        ensureModerator(moderator);
+        List<ModerationSimulationResult> results = new ArrayList<>();
+
+        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+            if (report.getPost() != null) {
+                results.add(moderatePost(moderator, report.getPost(), report));
+            } else if (report.getComment() != null) {
+                results.add(moderateComment(moderator, report.getComment(), report));
+            }
+        }
+
+        return results;
+    }
+
+    private ModerationSimulationResult moderatePost(RedditUser moderator, Post post, Report report) {
+        List<String> matches = findMatchedKeywords(post.getTitle() + " " + post.getDescription());
+        PostModerationResult decision = matches.isEmpty()
+            ? PostModerationResult.APPROVED
+            : postResultFor(GeneratedModerationModel.POLICY_DECISION);
+        ContentStatus status = matches.isEmpty()
+            ? ContentStatus.ACTIVE
+            : statusFor(GeneratedModerationModel.POLICY_DECISION);
+
+        post.setStatus(status);
+        postRepository.save(post);
+
+        PostModerationCheck check = savePostCheck(moderator, post, decision);
+        closeReport(report, moderator, status);
+
+        return result(
+            "POST",
+            post.getId(),
+            check.getId(),
+            report,
+            decision.name(),
+            status,
+            matches,
+            explanation(matches, GeneratedModerationModel.POST_CHECK_TYPE.name(), decision.name())
+        );
+    }
+
+    private ModerationSimulationResult moderateComment(RedditUser moderator, Comment comment, Report report) {
+        List<String> matches = findMatchedKeywords(comment.getText());
+        CommentModerationResult decision = matches.isEmpty()
+            ? CommentModerationResult.APPROVED
+            : commentResultFor(GeneratedModerationModel.POLICY_DECISION);
+        ContentStatus status = matches.isEmpty()
+            ? ContentStatus.ACTIVE
+            : statusFor(GeneratedModerationModel.POLICY_DECISION);
+
+        comment.setStatus(status);
+        commentRepository.save(comment);
+
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision);
+        closeReport(report, moderator, status);
+
+        return result(
+            "COMMENT",
+            comment.getId(),
+            check.getId(),
+            report,
+            decision.name(),
+            status,
+            matches,
+            explanation(matches, GeneratedModerationModel.COMMENT_CHECK_TYPE.name(), decision.name())
+        );
+    }
+
+    private boolean isPolicyTriggerMatched(boolean hasPendingReport) {
+        if (GeneratedModerationModel.POLICY_TRIGGER == TriggerEvent.ON_REPORT_THRESHOLD) {
+            return hasPendingReport;
+        }
+        return true;
+    }
+
+    private List<String> findMatchedKeywords(String content) {
+        String normalized = normalize(content);
+        List<String> matches = new ArrayList<>();
+
+        if (GeneratedModerationModel.CONDITION_OPERATOR != GeneratedModerationModel.ConditionOperator.CONTAINS_KEYWORDS) {
+            return matches;
+        }
+
+        for (String keyword : GeneratedModerationModel.BLOCKED_KEYWORDS) {
+            if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
+                matches.add(keyword);
+            }
+        }
+
+        return matches;
+    }
+
+    private ContentStatus statusFor(ModerationDecision decision) {
+        if (decision == ModerationDecision.APPROVED) {
+            return ContentStatus.ACTIVE;
+        }
+
+        if (GeneratedModerationModel.POLICY_MODE == ModerationMode.MANUAL) {
+            return ContentStatus.UNDER_REVIEW;
+        }
+
+        if (decision == ModerationDecision.FLAGGED) {
+            return ContentStatus.FLAGGED;
+        }
+
+        return ContentStatus.REMOVED;
+    }
+
+    private PostModerationResult postResultFor(ModerationDecision decision) {
+        return switch (decision) {
+            case APPROVED -> PostModerationResult.APPROVED;
+            case FLAGGED -> PostModerationResult.FLAGGED;
+            default -> PostModerationResult.BLOCKED;
+        };
+    }
+
+    private CommentModerationResult commentResultFor(ModerationDecision decision) {
+        return switch (decision) {
+            case APPROVED -> CommentModerationResult.APPROVED;
+            case FLAGGED -> CommentModerationResult.FLAGGED;
+            default -> CommentModerationResult.HIDDEN;
+        };
+    }
+
+    private String explanation(List<String> matches, String checkType, String decision) {
+        if (matches.isEmpty()) {
+            return "No " + GeneratedModerationModel.CONDITION_NAME
+                + " match; content approved by " + GeneratedModerationModel.POLICY_NAME + ".";
+        }
+
+        return GeneratedModerationModel.AUTOMATION_RULE_NAME
+            + " (" + GeneratedModerationModel.AUTOMATION_TRIGGER + ") matched " + matches
+            + "; " + GeneratedModerationModel.ACTION_NAME
+            + " uses " + GeneratedModerationModel.ACTION_KIND
+            + "; " + GeneratedModerationModel.POLICY_NAME
+            + " records " + checkType
+            + " as " + decision
+            + ".";
+    }
+
+    private ModerationSimulationResult skipped(
+        String targetType,
+        Long targetId,
+        ContentStatus status,
+        Report report
+    ) {
+        return result(
+            targetType,
+            targetId,
+            null,
+            report,
+            "SKIPPED",
+            status,
+            List.of(),
+            GeneratedModerationModel.POLICY_NAME + " skipped because "
+                + GeneratedModerationModel.POLICY_TRIGGER + " did not match."
+        );
+    }
+
+    private ModerationSimulationResult result(
+        String targetType,
+        Long targetId,
+        Long checkId,
+        Report report,
+        String decision,
+        ContentStatus status,
+        List<String> matches,
+        String explanation
+    ) {
+        return new ModerationSimulationResult(
+            targetType,
+            targetId,
+            checkId,
+            report == null ? null : report.getId(),
+            GeneratedModerationModel.POLICY_TRIGGER.name(),
+            GeneratedModerationModel.POLICY_MODE.name(),
+            decision,
+            status.name(),
+            matches,
+            explanation
+        );
+    }
+
+    private void closeReport(Report report, RedditUser moderator, ContentStatus status) {
+        if (report == null) {
+            return;
+        }
+
+        report.setReviewedBy(moderator);
+        report.setStatus(status == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    private Optional<Report> findPendingPostReport(Long postId) {
+        return reportRepository.findFirstByPostIdAndStatusOrderByTimestampDesc(postId, ReportStatus.PENDING);
+    }
+
+    private Optional<Report> findPendingCommentReport(Long commentId) {
+        return reportRepository.findFirstByCommentIdAndStatusOrderByTimestampDesc(commentId, ReportStatus.PENDING);
+    }
+
     private PostModerationCheck savePostCheck(
         RedditUser moderator,
         Post post,
-        PostModerationType type,
         PostModerationResult result
     ) {
         PostModerationCheck check = new PostModerationCheck();
-        check.setType(type);
+        check.setType(GeneratedModerationModel.POST_CHECK_TYPE);
         check.setResult(result);
         check.setTimestamp(Instant.now());
         check.setPost(post);
@@ -110,104 +336,15 @@ public class ModerationService extends GeneratedModerationService {
     private CommentModerationCheck saveCommentCheck(
         RedditUser moderator,
         Comment comment,
-        CommentModerationType type,
         CommentModerationResult result
     ) {
         CommentModerationCheck check = new CommentModerationCheck();
-        check.setType(type);
+        check.setType(GeneratedModerationModel.COMMENT_CHECK_TYPE);
         check.setResult(result);
         check.setTimestamp(Instant.now());
         check.setComment(comment);
         check.setReviewedBy(moderator);
         return commentModerationCheckRepository.save(check);
-    }
-
-    private PostDecision decidePost(String text) {
-        String normalized = normalize(text);
-
-        if (containsAny(normalized, COPYRIGHT_SIGNALS)) {
-            return new PostDecision(
-                PostModerationType.COPYRIGHT,
-                PostModerationResult.BLOCKED,
-                ContentStatus.REMOVED,
-                "copyright-risk",
-                "Copyright-related signal found; simulated action removes the post."
-            );
-        }
-
-        if (containsAny(normalized, SPAM_SIGNALS)) {
-            return new PostDecision(
-                PostModerationType.SPAM,
-                PostModerationResult.FLAGGED,
-                ContentStatus.FLAGGED,
-                "spam-risk",
-                "Spam-like signal found; simulated action flags the post."
-            );
-        }
-
-        if (containsAny(normalized, TOXICITY_SIGNALS)) {
-            return new PostDecision(
-                PostModerationType.CONTENT,
-                PostModerationResult.FLAGGED,
-                ContentStatus.UNDER_REVIEW,
-                "content-risk",
-                "Potentially harmful content signal found; simulated action sends the post to review."
-            );
-        }
-
-        return new PostDecision(
-            PostModerationType.CONTENT,
-            PostModerationResult.APPROVED,
-            ContentStatus.ACTIVE,
-            "clean",
-            "No moderation signal found; simulated action approves the post."
-        );
-    }
-
-    private CommentDecision decideComment(String text) {
-        String normalized = normalize(text);
-
-        if (containsAny(normalized, BLOCKED_WORD_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.BLOCKED_WORD,
-                CommentModerationResult.HIDDEN,
-                ContentStatus.REMOVED,
-                "blocked-word",
-                "Blocked word signal found; simulated action hides the comment."
-            );
-        }
-
-        if (containsAny(normalized, TOXICITY_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.TOXICITY,
-                CommentModerationResult.HIDDEN,
-                ContentStatus.REMOVED,
-                "toxicity-risk",
-                "Toxicity signal found; simulated action hides the comment."
-            );
-        }
-
-        if (containsAny(normalized, SPAM_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.SPAM,
-                CommentModerationResult.FLAGGED,
-                ContentStatus.FLAGGED,
-                "spam-risk",
-                "Spam-like signal found; simulated action flags the comment."
-            );
-        }
-
-        return new CommentDecision(
-            CommentModerationType.SPAM,
-            CommentModerationResult.APPROVED,
-            ContentStatus.ACTIVE,
-            "clean",
-            "No moderation signal found; simulated action approves the comment."
-        );
-    }
-
-    private boolean containsAny(String text, List<String> signals) {
-        return signals.stream().anyMatch(text::contains);
     }
 
     private String normalize(String text) {
@@ -221,6 +358,10 @@ public class ModerationService extends GeneratedModerationService {
         if (moderator == null) {
             throw new IllegalArgumentException("Moderator is required.");
         }
+        if (moderator.getRole() == null
+            || !GeneratedModerationModel.POLICY_EXECUTED_BY.equalsIgnoreCase(moderator.getRole().name())) {
+            throw new IllegalArgumentException("Moderation policy requires " + GeneratedModerationModel.POLICY_EXECUTED_BY + ".");
+        }
     }
 
     private Post loadPost(Long postId) {
@@ -232,91 +373,4 @@ public class ModerationService extends GeneratedModerationService {
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new ResourceNotFoundException("Comment '%s' was not found.".formatted(commentId)));
     }
-
-    private static final class PostDecision {
-        private final PostModerationType type;
-        private final PostModerationResult result;
-        private final ContentStatus status;
-        private final String signal;
-        private final String explanation;
-
-        private PostDecision(
-            PostModerationType type,
-            PostModerationResult result,
-            ContentStatus status,
-            String signal,
-            String explanation
-        ) {
-            this.type = type;
-            this.result = result;
-            this.status = status;
-            this.signal = signal;
-            this.explanation = explanation;
-        }
-
-        private PostModerationType getType() {
-            return type;
-        }
-
-        private PostModerationResult getResult() {
-            return result;
-        }
-
-        private ContentStatus getStatus() {
-            return status;
-        }
-
-        private String getSignal() {
-            return signal;
-        }
-
-        private String getExplanation() {
-            return explanation;
-        }
-    }
-
-    private static final class CommentDecision {
-        private final CommentModerationType type;
-        private final CommentModerationResult result;
-        private final ContentStatus status;
-        private final String signal;
-        private final String explanation;
-
-        private CommentDecision(
-            CommentModerationType type,
-            CommentModerationResult result,
-            ContentStatus status,
-            String signal,
-            String explanation
-        ) {
-            this.type = type;
-            this.result = result;
-            this.status = status;
-            this.signal = signal;
-            this.explanation = explanation;
-        }
-
-        private CommentModerationType getType() {
-            return type;
-        }
-
-        private CommentModerationResult getResult() {
-            return result;
-        }
-
-        private ContentStatus getStatus() {
-            return status;
-        }
-
-        private String getSignal() {
-            return signal;
-        }
-
-        private String getExplanation() {
-            return explanation;
-        }
-    }
 }
-
-
-

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pt.isep.enorm.ref.reddit.domain.RedditUser;
 import pt.isep.enorm.ref.reddit.service.ModerationService;
-// Simulation endpoints removed; no projection import
+import pt.isep.enorm.ref.reddit.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.reddit.web.generated.GeneratedModerationController;
 
 @RestController
@@ -26,6 +26,30 @@ public class ModerationController extends GeneratedModerationController {
         this.moderationService = moderationService;
     }
 
-    // Simulation endpoints removed; moderation is background-only and manual approves are available via service methods.
+    @PostMapping("/moderation/posts/{postId}/simulate")
+    public ResponseEntity<ModerationSimulationResult> simulatePostModeration(
+        @AuthenticationPrincipal RedditUser currentUser,
+        @PathVariable Long postId
+    ) {
+        ModerationSimulationResult result = moderationService.simulatePostModeration(currentUser, postId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PostMapping("/moderation/comments/{commentId}/simulate")
+    public ResponseEntity<ModerationSimulationResult> simulateCommentModeration(
+        @AuthenticationPrincipal RedditUser currentUser,
+        @PathVariable Long commentId
+    ) {
+        ModerationSimulationResult result = moderationService.simulateCommentModeration(currentUser, commentId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @PostMapping("/moderation/reports/simulate")
+    public ResponseEntity<List<ModerationSimulationResult>> simulateReports(
+        @AuthenticationPrincipal RedditUser currentUser
+    ) {
+        List<ModerationSimulationResult> results = moderationService.simulateReportModeration(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(results);
+    }
 }
 

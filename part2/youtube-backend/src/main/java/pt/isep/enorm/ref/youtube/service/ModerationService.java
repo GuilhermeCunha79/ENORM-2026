@@ -1,6 +1,7 @@
 package pt.isep.enorm.ref.youtube.service;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,28 +15,25 @@ import pt.isep.enorm.ref.youtube.domain.Video;
 import pt.isep.enorm.ref.youtube.domain.VideoModerationCheck;
 import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
 import pt.isep.enorm.ref.youtube.domain.enums.CommentModerationResult;
-import pt.isep.enorm.ref.youtube.domain.enums.CommentModerationType;
 import pt.isep.enorm.ref.youtube.domain.enums.ContentStatus;
 import pt.isep.enorm.ref.youtube.domain.enums.ReportStatus;
+import pt.isep.enorm.ref.youtube.domain.enums.Role;
 import pt.isep.enorm.ref.youtube.domain.enums.VideoModerationResult;
-import pt.isep.enorm.ref.youtube.domain.enums.VideoModerationType;
 import pt.isep.enorm.ref.youtube.repository.CommentModerationCheckRepository;
 import pt.isep.enorm.ref.youtube.repository.CommentRepository;
 import pt.isep.enorm.ref.youtube.repository.CommentSettingsChangeRepository;
 import pt.isep.enorm.ref.youtube.repository.ReportRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoModerationCheckRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoRepository;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationDecision;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationMode;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
-// Simulation removed: no projection return types
+import pt.isep.enorm.ref.youtube.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.youtube.web.error.ResourceNotFoundException;
 
 @Service
 public class ModerationService extends GeneratedModerationService {
-
-    private static final List<String> COPYRIGHT_SIGNALS = List.of("copyright", "pirated", "full movie", "leaked");
-    private static final List<String> SPAM_SIGNALS = List.of("spam", "click here", "free money", "buy now", "promo");
-    private static final List<String> TOXICITY_SIGNALS = List.of("hate", "kill", "idiot", "abuse", "harassment");
-    private static final List<String> BLOCKED_WORD_SIGNALS = List.of("blockedword", "forbidden", "malware");
 
     private final VideoModerationCheckRepository videoModerationCheckRepository;
     private final CommentModerationCheckRepository commentModerationCheckRepository;
@@ -65,21 +63,20 @@ public class ModerationService extends GeneratedModerationService {
         this.reportRepository = reportRepository;
     }
 
-    // Simulation APIs removed; add manual approve helpers instead.
     @Transactional
     public void approveVideo(YoutubeUser moderator, Long videoId) {
         ensureModerator(moderator);
-        Video v = loadVideo(videoId);
-        v.setStatus(ContentStatus.ACTIVE);
-        videoRepository.save(v);
+        Video video = loadVideo(videoId);
+        video.setStatus(ContentStatus.ACTIVE);
+        videoRepository.save(video);
     }
 
     @Transactional
     public void approveComment(YoutubeUser moderator, Long commentId) {
         ensureModerator(moderator);
-        Comment c = loadComment(commentId);
-        c.setStatus(ContentStatus.ACTIVE);
-        commentRepository.save(c);
+        Comment comment = loadComment(commentId);
+        comment.setStatus(ContentStatus.ACTIVE);
+        commentRepository.save(comment);
     }
 
     @Transactional
@@ -92,14 +89,247 @@ public class ModerationService extends GeneratedModerationService {
         reportRepository.save(report);
     }
 
-    private VideoModerationCheck saveVideoCheck(
-        YoutubeUser moderator,
-        Video video,
-        VideoModerationType type,
-        VideoModerationResult result
+    @Transactional
+    public ModerationSimulationResult simulateVideoModeration(YoutubeUser moderator, Long videoId) {
+        ensureModerator(moderator);
+        return moderateVideo(moderator, loadVideo(videoId));
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateCommentModeration(YoutubeUser moderator, Long commentId) {
+        ensureModerator(moderator);
+        return moderateComment(moderator, loadComment(commentId));
+    }
+
+    @Transactional
+    public List<ModerationSimulationResult> simulateReportModeration(YoutubeUser moderator) {
+        ensureModerator(moderator);
+        List<ModerationSimulationResult> results = new ArrayList<>();
+
+        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+            if (report.getVideo() != null) {
+                results.add(moderateReportedVideo(moderator, report));
+            } else if (report.getComment() != null) {
+                results.add(moderateReportedComment(moderator, report));
+            }
+        }
+
+        return results;
+    }
+
+    private ModerationSimulationResult moderateVideo(YoutubeUser moderator, Video video) {
+        List<String> matches = findMatchedKeywords(
+            video.getTitle() + " " + video.getDescription(),
+            GeneratedModerationModel.VIDEO_BLOCKED_KEYWORDS
+        );
+        VideoModerationResult decision = matches.isEmpty()
+            ? VideoModerationResult.APPROVED
+            : GeneratedModerationModel.VIDEO_DECISION_ON_MATCH;
+        ContentStatus status = matches.isEmpty()
+            ? ContentStatus.ACTIVE
+            : statusFor(GeneratedModerationModel.VIDEO_POLICY_DECISION, GeneratedModerationModel.VIDEO_POLICY_MODE);
+
+        video.setStatus(status);
+        videoRepository.save(video);
+
+        VideoModerationCheck check = saveVideoCheck(moderator, video, decision);
+
+        return result(
+            "VIDEO",
+            video.getId(),
+            check.getId(),
+            null,
+            GeneratedModerationModel.VIDEO_POLICY_TRIGGER.name(),
+            GeneratedModerationModel.VIDEO_POLICY_MODE.name(),
+            decision.name(),
+            status,
+            matches,
+            explanation(
+                GeneratedModerationModel.VIDEO_AUTOMATION_RULE_NAME,
+                GeneratedModerationModel.VIDEO_ACTION_NAME,
+                GeneratedModerationModel.VIDEO_ACTION_KIND.name(),
+                GeneratedModerationModel.VIDEO_POLICY_NAME,
+                matches,
+                decision.name()
+            )
+        );
+    }
+
+    private ModerationSimulationResult moderateComment(YoutubeUser moderator, Comment comment) {
+        List<String> matches = findMatchedKeywords(comment.getText(), GeneratedModerationModel.COMMENT_BLOCKED_KEYWORDS);
+        CommentModerationResult decision = matches.isEmpty()
+            ? CommentModerationResult.APPROVED
+            : GeneratedModerationModel.COMMENT_DECISION_ON_MATCH;
+        ContentStatus status = matches.isEmpty()
+            ? ContentStatus.ACTIVE
+            : statusFor(GeneratedModerationModel.COMMENT_POLICY_DECISION, GeneratedModerationModel.COMMENT_POLICY_MODE);
+
+        comment.setStatus(status);
+        commentRepository.save(comment);
+
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, decision);
+
+        return result(
+            "COMMENT",
+            comment.getId(),
+            check.getId(),
+            null,
+            GeneratedModerationModel.COMMENT_POLICY_TRIGGER.name(),
+            GeneratedModerationModel.COMMENT_POLICY_MODE.name(),
+            decision.name(),
+            status,
+            matches,
+            explanation(
+                GeneratedModerationModel.COMMENT_AUTOMATION_RULE_NAME,
+                GeneratedModerationModel.COMMENT_ACTION_NAME,
+                GeneratedModerationModel.COMMENT_ACTION_KIND.name(),
+                GeneratedModerationModel.COMMENT_POLICY_NAME,
+                matches,
+                decision.name()
+            )
+        );
+    }
+
+    private ModerationSimulationResult moderateReportedVideo(YoutubeUser moderator, Report report) {
+        Video video = report.getVideo();
+        ContentStatus status = statusFor(
+            GeneratedModerationModel.REPORT_POLICY_DECISION,
+            GeneratedModerationModel.REPORT_POLICY_MODE
+        );
+
+        video.setStatus(status);
+        videoRepository.save(video);
+
+        VideoModerationCheck check = saveVideoCheck(moderator, video, VideoModerationResult.BLOCKED);
+        closeReport(report, moderator, status);
+
+        return result(
+            "VIDEO",
+            video.getId(),
+            check.getId(),
+            report,
+            GeneratedModerationModel.REPORT_POLICY_TRIGGER.name(),
+            GeneratedModerationModel.REPORT_POLICY_MODE.name(),
+            GeneratedModerationModel.REPORT_POLICY_DECISION.name(),
+            status,
+            List.of(),
+            GeneratedModerationModel.REPORT_AUTOMATION_RULE_NAME
+                + " applies " + GeneratedModerationModel.REPORT_ACTION_NAME
+                + " using " + GeneratedModerationModel.REPORT_ACTION_KIND
+                + "; " + GeneratedModerationModel.REPORT_POLICY_NAME
+                + " records decision " + GeneratedModerationModel.REPORT_POLICY_DECISION
+                + "."
+        );
+    }
+
+    private ModerationSimulationResult moderateReportedComment(YoutubeUser moderator, Report report) {
+        Comment comment = report.getComment();
+        ContentStatus status = statusFor(
+            GeneratedModerationModel.REPORT_POLICY_DECISION,
+            GeneratedModerationModel.REPORT_POLICY_MODE
+        );
+
+        comment.setStatus(status);
+        commentRepository.save(comment);
+
+        CommentModerationCheck check = saveCommentCheck(moderator, comment, CommentModerationResult.HIDDEN);
+        closeReport(report, moderator, status);
+
+        return result(
+            "COMMENT",
+            comment.getId(),
+            check.getId(),
+            report,
+            GeneratedModerationModel.REPORT_POLICY_TRIGGER.name(),
+            GeneratedModerationModel.REPORT_POLICY_MODE.name(),
+            GeneratedModerationModel.REPORT_POLICY_DECISION.name(),
+            status,
+            List.of(),
+            GeneratedModerationModel.REPORT_AUTOMATION_RULE_NAME
+                + " applies " + GeneratedModerationModel.REPORT_ACTION_NAME
+                + " using " + GeneratedModerationModel.REPORT_ACTION_KIND
+                + "; " + GeneratedModerationModel.REPORT_POLICY_NAME
+                + " records decision " + GeneratedModerationModel.REPORT_POLICY_DECISION
+                + "."
+        );
+    }
+
+    private List<String> findMatchedKeywords(String content, List<String> keywords) {
+        String normalized = normalize(content);
+        List<String> matches = new ArrayList<>();
+        for (String keyword : keywords) {
+            if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
+                matches.add(keyword);
+            }
+        }
+        return matches;
+    }
+
+    private ContentStatus statusFor(ModerationDecision decision, ModerationMode mode) {
+        if (decision == ModerationDecision.APPROVED) {
+            return ContentStatus.ACTIVE;
+        }
+        if (decision == ModerationDecision.FLAGGED) {
+            return mode == ModerationMode.MANUAL ? ContentStatus.UNDER_REVIEW : ContentStatus.FLAGGED;
+        }
+        return ContentStatus.REMOVED;
+    }
+
+    private String explanation(
+        String automationRule,
+        String actionName,
+        String actionKind,
+        String policyName,
+        List<String> matches,
+        String decision
     ) {
+        if (matches.isEmpty()) {
+            return "No generated keyword condition matched; " + policyName + " approved content.";
+        }
+        return automationRule
+            + " matched " + matches
+            + "; " + actionName
+            + " uses " + actionKind
+            + "; " + policyName
+            + " records decision " + decision
+            + ".";
+    }
+
+    private ModerationSimulationResult result(
+        String targetType,
+        Long targetId,
+        Long checkId,
+        Report report,
+        String trigger,
+        String mode,
+        String decision,
+        ContentStatus status,
+        List<String> matches,
+        String explanation
+    ) {
+        return new ModerationSimulationResult(
+            targetType,
+            targetId,
+            checkId,
+            report == null ? null : report.getId(),
+            trigger,
+            mode,
+            decision,
+            status.name(),
+            matches,
+            explanation
+        );
+    }
+
+    private void closeReport(Report report, YoutubeUser moderator, ContentStatus status) {
+        report.setReviewedBy(moderator);
+        report.setStatus(status == ContentStatus.REMOVED ? ReportStatus.REMOVED : ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    private VideoModerationCheck saveVideoCheck(YoutubeUser moderator, Video video, VideoModerationResult result) {
         VideoModerationCheck check = new VideoModerationCheck();
-        check.setType(type);
+        check.setType(GeneratedModerationModel.VIDEO_CHECK_TYPE);
         check.setResult(result);
         check.setTimestamp(Instant.now());
         check.setVideo(video);
@@ -107,107 +337,14 @@ public class ModerationService extends GeneratedModerationService {
         return videoModerationCheckRepository.save(check);
     }
 
-    private CommentModerationCheck saveCommentCheck(
-        YoutubeUser moderator,
-        Comment comment,
-        CommentModerationType type,
-        CommentModerationResult result
-    ) {
+    private CommentModerationCheck saveCommentCheck(YoutubeUser moderator, Comment comment, CommentModerationResult result) {
         CommentModerationCheck check = new CommentModerationCheck();
-        check.setType(type);
+        check.setType(GeneratedModerationModel.COMMENT_CHECK_TYPE);
         check.setResult(result);
         check.setTimestamp(Instant.now());
         check.setComment(comment);
         check.setReviewedBy(moderator);
         return commentModerationCheckRepository.save(check);
-    }
-
-    private VideoDecision decideVideo(String text) {
-        String normalized = normalize(text);
-
-        if (containsAny(normalized, COPYRIGHT_SIGNALS)) {
-            return new VideoDecision(
-                VideoModerationType.COPYRIGHT,
-                VideoModerationResult.BLOCKED,
-                ContentStatus.REMOVED,
-                "copyright-risk",
-                "Copyright-related signal found; simulated action removes the video."
-            );
-        }
-
-        if (containsAny(normalized, SPAM_SIGNALS)) {
-            return new VideoDecision(
-                VideoModerationType.SPAM,
-                VideoModerationResult.FLAGGED,
-                ContentStatus.FLAGGED,
-                "spam-risk",
-                "Spam-like signal found; simulated action flags the video."
-            );
-        }
-
-        if (containsAny(normalized, TOXICITY_SIGNALS)) {
-            return new VideoDecision(
-                VideoModerationType.CONTENT,
-                VideoModerationResult.FLAGGED,
-                ContentStatus.UNDER_REVIEW,
-                "content-risk",
-                "Potentially harmful content signal found; simulated action sends the video to review."
-            );
-        }
-
-        return new VideoDecision(
-            VideoModerationType.CONTENT,
-            VideoModerationResult.APPROVED,
-            ContentStatus.ACTIVE,
-            "clean",
-            "No moderation signal found; simulated action approves the video."
-        );
-    }
-
-    private CommentDecision decideComment(String text) {
-        String normalized = normalize(text);
-
-        if (containsAny(normalized, BLOCKED_WORD_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.BLOCKED_WORD,
-                CommentModerationResult.HIDDEN,
-                ContentStatus.REMOVED,
-                "blocked-word",
-                "Blocked word signal found; simulated action hides the comment."
-            );
-        }
-
-        if (containsAny(normalized, TOXICITY_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.TOXICITY,
-                CommentModerationResult.HIDDEN,
-                ContentStatus.REMOVED,
-                "toxicity-risk",
-                "Toxicity signal found; simulated action hides the comment."
-            );
-        }
-
-        if (containsAny(normalized, SPAM_SIGNALS)) {
-            return new CommentDecision(
-                CommentModerationType.SPAM,
-                CommentModerationResult.FLAGGED,
-                ContentStatus.FLAGGED,
-                "spam-risk",
-                "Spam-like signal found; simulated action flags the comment."
-            );
-        }
-
-        return new CommentDecision(
-            CommentModerationType.SPAM,
-            CommentModerationResult.APPROVED,
-            ContentStatus.ACTIVE,
-            "clean",
-            "No moderation signal found; simulated action approves the comment."
-        );
-    }
-
-    private boolean containsAny(String text, List<String> signals) {
-        return signals.stream().anyMatch(text::contains);
     }
 
     private String normalize(String text) {
@@ -221,6 +358,9 @@ public class ModerationService extends GeneratedModerationService {
         if (moderator == null) {
             throw new IllegalArgumentException("Moderator is required.");
         }
+        if (moderator.getRole() != Role.MODERATOR) {
+            throw new IllegalArgumentException("Moderation policies require MODERATOR.");
+        }
     }
 
     private Video loadVideo(Long videoId) {
@@ -232,89 +372,4 @@ public class ModerationService extends GeneratedModerationService {
         return commentRepository.findById(commentId)
             .orElseThrow(() -> new ResourceNotFoundException("Comment '%s' was not found.".formatted(commentId)));
     }
-
-    private static final class VideoDecision {
-        private final VideoModerationType type;
-        private final VideoModerationResult result;
-        private final ContentStatus status;
-        private final String signal;
-        private final String explanation;
-
-        private VideoDecision(
-            VideoModerationType type,
-            VideoModerationResult result,
-            ContentStatus status,
-            String signal,
-            String explanation
-        ) {
-            this.type = type;
-            this.result = result;
-            this.status = status;
-            this.signal = signal;
-            this.explanation = explanation;
-        }
-
-        private VideoModerationType getType() {
-            return type;
-        }
-
-        private VideoModerationResult getResult() {
-            return result;
-        }
-
-        private ContentStatus getStatus() {
-            return status;
-        }
-
-        private String getSignal() {
-            return signal;
-        }
-
-        private String getExplanation() {
-            return explanation;
-        }
-    }
-
-    private static final class CommentDecision {
-        private final CommentModerationType type;
-        private final CommentModerationResult result;
-        private final ContentStatus status;
-        private final String signal;
-        private final String explanation;
-
-        private CommentDecision(
-            CommentModerationType type,
-            CommentModerationResult result,
-            ContentStatus status,
-            String signal,
-            String explanation
-        ) {
-            this.type = type;
-            this.result = result;
-            this.status = status;
-            this.signal = signal;
-            this.explanation = explanation;
-        }
-
-        private CommentModerationType getType() {
-            return type;
-        }
-
-        private CommentModerationResult getResult() {
-            return result;
-        }
-
-        private ContentStatus getStatus() {
-            return status;
-        }
-
-        private String getSignal() {
-            return signal;
-        }
-
-        private String getExplanation() {
-            return explanation;
-        }
-    }
 }
-
