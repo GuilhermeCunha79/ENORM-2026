@@ -21,11 +21,11 @@
         <reference id="4749802104983637088" name="appliesToResource" index="l6meT" />
         <reference id="4749802104983637090" name="inContext" index="l6meV" />
       </concept>
-      <concept id="8211790453394313185" name="Ref.structure.Action" flags="ng" index="2xtiK9">
+      <concept id="8211790453394313185" name="Ref.structure.AutomationAction" flags="ng" index="2xtiK9">
         <property id="8211790453394313209" name="kind" index="2xtiKh" />
         <property id="8211790453394313210" name="message" index="2xtiKi" />
       </concept>
-      <concept id="8211790453394313161" name="Ref.structure.Condition" flags="ng" index="2xtiKx">
+      <concept id="8211790453394313161" name="Ref.structure.AutomationCondition" flags="ng" index="2xtiKx">
         <reference id="1362352576491186694" name="field" index="1ms6pP" />
         <child id="1876292974281914365" name="keywords" index="3SET_T" />
       </concept>
@@ -130,7 +130,7 @@
         <child id="8641311204900368822" name="attribute" index="2In6HR" />
         <child id="746375748528706428" name="superType" index="3UnFIP" />
       </concept>
-      <concept id="1876292974281914363" name="Ref.structure.ConditionKeywords" flags="ng" index="3SET_Z">
+      <concept id="1876292974281914363" name="Ref.structure.ConditionValue" flags="ng" index="3SET_Z">
         <property id="1876292974281914364" name="word" index="3SET_S" />
       </concept>
       <concept id="746375748528706422" name="Ref.structure.ResourceTypeSuperType" flags="ng" index="3UnFIZ">
@@ -318,10 +318,6 @@
       <node concept="3UnFIZ" id="12pq0dfEGg5" role="3UnFIP">
         <ref role="3UnFIL" node="47EFX_nz$Pu" resolve="Order" />
       </node>
-      <node concept="2IgU2X" id="47EFX_nz$Pr" role="2In6HR">
-        <property role="TrG5h" value="Id" />
-        <property role="2IgU2Y" value="true" />
-      </node>
       <node concept="2IgU2X" id="47EFX_nz$Ps" role="2In6HR">
         <property role="TrG5h" value="Name" />
         <property role="2IgU2Y" value="true" />
@@ -337,10 +333,6 @@
     </node>
     <node concept="3$Wff$" id="47EFX_nz$Pu" role="2IgU2D">
       <property role="TrG5h" value="Order" />
-      <node concept="2IgU2X" id="47EFX_nz$Pv" role="2In6HR">
-        <property role="TrG5h" value="Id" />
-        <property role="2IgU2Y" value="true" />
-      </node>
       <node concept="2IgU2X" id="47EFX_nz$Pw" role="2In6HR">
         <property role="TrG5h" value="Date" />
         <property role="2IgU2Z" value="7vG6G7pFVDP/DATE" />
@@ -358,10 +350,6 @@
     <node concept="3$Wff$" id="47EFX_nz$PF" role="2IgU2D">
       <property role="TrG5h" value="CommentReview" />
       <property role="1LQjoB" value="true" />
-      <node concept="2IgU2X" id="47EFX_nz$PG" role="2In6HR">
-        <property role="TrG5h" value="Id" />
-        <property role="2IgU2Y" value="true" />
-      </node>
       <node concept="2IgU2X" id="47EFX_nz$PH" role="2In6HR">
         <property role="TrG5h" value="Text" />
         <property role="2IgU2Y" value="true" />

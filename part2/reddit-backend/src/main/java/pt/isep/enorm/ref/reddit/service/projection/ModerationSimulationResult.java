@@ -1,5 +1,7 @@
 package pt.isep.enorm.ref.reddit.service.projection;
 
+import java.util.List;
+
 public class ModerationSimulationResult {
     private final String targetType;
     private final Long targetId;
@@ -9,7 +11,7 @@ public class ModerationSimulationResult {
     private final String mode;
     private final String decision;
     private final String status;
-    private final java.util.List<String> matchedKeywords;
+    private final List<String> matchedKeywords;
     private final String explanation;
 
     public ModerationSimulationResult(
@@ -21,7 +23,7 @@ public class ModerationSimulationResult {
         String mode,
         String decision,
         String status,
-        java.util.List<String> matchedKeywords,
+        List<String> matchedKeywords,
         String explanation
     ) {
         this.targetType = targetType;
@@ -68,7 +70,7 @@ public class ModerationSimulationResult {
         return status;
     }
 
-    public java.util.List<String> getMatchedKeywords() {
+    public List<String> getMatchedKeywords() {
         return matchedKeywords;
     }
 
