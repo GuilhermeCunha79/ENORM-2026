@@ -31,6 +31,11 @@ Generated endpoints:
 - GET /api/comments/{commentId}/votes
 - POST /api/comments/{commentId}/votes
 - DELETE /api/comments/{commentId}/votes/{voteId}
+- GET /api/orders
+- GET /api/orders/{orderId}
+- POST /api/orders
+- PUT /api/orders/{orderId}
+- DELETE /api/orders/{orderId}
 - POST /api/moderation/reviews/{reviewId}/simulate
 - POST /api/moderation/reviews/simulate
 - GET /h2-console

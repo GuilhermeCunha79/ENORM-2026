@@ -6,21 +6,28 @@
 [query public projectRoot(m : RefModel) : String = 'src/generated/' + pkg(m) /]
 [query public rootPath(m : RefModel) : String = projectRoot(m) + '/src/main/java/' + basePackage(m).replaceAll('\\.', '/') /]
 [query public basePackage(m : RefModel) : String = 'generated.' + pkg(m) /]
-[query public apiPackage(m : RefModel) : String = basePackage(m) + '.api' /]
+[query public webPackage(m : RefModel) : String = basePackage(m) + '.web' /]
+[query public webGeneratedPackage(m : RefModel) : String = webPackage(m) + '.generated' /]
 [query public servicePackage(m : RefModel) : String = basePackage(m) + '.service' /]
+[query public serviceGeneratedPackage(m : RefModel) : String = servicePackage(m) + '.generated' /]
 [query public repositoryPackage(m : RefModel) : String = basePackage(m) + '.repository' /]
+[query public repositoryGeneratedPackage(m : RefModel) : String = repositoryPackage(m) + '.generated' /]
 [query public domainPackage(m : RefModel) : String = basePackage(m) + '.domain' /]
 [query public domainGeneratedPackage(m : RefModel) : String = domainPackage(m) + '.generated' /]
 [query public domainEnumsPackage(m : RefModel) : String = domainPackage(m) + '.enums' /]
 [query public domainRootPath(m : RefModel) : String = rootPath(m) + '/domain' /]
 [query public domainGeneratedPath(m : RefModel) : String = domainRootPath(m) + '/generated' /]
 [query public domainEnumsPath(m : RefModel) : String = domainRootPath(m) + '/enums' /]
+[query public webPath(m : RefModel) : String = rootPath(m) + '/web' /]
+[query public webGeneratedPath(m : RefModel) : String = webPath(m) + '/generated' /]
+[query public serviceGeneratedPath(m : RefModel) : String = rootPath(m) + '/service/generated' /]
+[query public repositoryGeneratedPath(m : RefModel) : String = rootPath(m) + '/repository/generated' /]
 
 [query public isMany(card : String) : Boolean = card = '*' or card = '0..*' or card = '1..*' /]
 [query public shouldSkipAttribute(a : Attribute) : Boolean = a.name = 'id' or a.name = 'Id' /]
 [query public sqlColumnName(name : String) : String = if name = 'value' then 'value_col' else if name = 'timestamp' then 'timestamp_col' else if name = 'date' then 'date_col' else if name = 'order' then 'order_col' else if name = 'user' then 'user_col' else if name = 'group' then 'group_col' else if name = 'key' then 'key_col' else name endif endif endif endif endif endif endif /]
-[query public sqlTableName(name : String) : String = if name = 'Order' then 'orders' else if name = 'User' then 'users' else if name = 'Group' then 'groups' else if name = 'Key' then 'keys_table' else name.toLowerFirst() endif endif endif endif /]
-[query public hasAppSpecificCrud(m : RefModel, rt : ResourceType) : Boolean = if m.name = 'Reddit' then rt.name = 'Subreddit' or rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Vote' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'YouTube' then rt.name = 'Channel' or rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Like' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'Amazon' then rt.name = 'Product' or rt.name = 'Comment' else false endif endif endif /]
+[query public sqlTableName(name : String) : String = if name = 'Order' then 'orders' else if name = 'User' then 'users' else if name = 'Group' then 'groups' else if name = 'Key' then 'keys_table' else if name = 'Like' then 'likes_table' else name.toLowerFirst() endif endif endif endif endif /]
+[query public hasAppSpecificCrud(m : RefModel, rt : ResourceType) : Boolean = if m.name = 'Reddit' then rt.name = 'Subreddit' or rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Vote' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'YouTube' then rt.name = 'Channel' or rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Like' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'Amazon' then rt.name = 'Product' or rt.name = 'Review' or rt.name = 'Comment' or rt.name = 'HelpfulVote' or rt.name = 'Order' else false endif endif endif /]
 [query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else 'String' endif endif endif endif endif endif /]
 [query public javaType(p : PrimitiveType, multi : Boolean) : String = if multi then 'List<' + baseJavaType(p) + '>' else baseJavaType(p) endif /]
 [query public qText(s : String) : String = if s.oclIsUndefined() then 'null' else '\"' + s + '\"' endif /]
@@ -47,12 +54,12 @@
 [generateRuleBodies(m)/]
 [generateDomain(m)/]
 [generateInfra(m)/]
-[generateSharedControllers(m)/]
+[generateSharedWebLayer(m)/]
 [generateAppSpecificControllers(m)/]
 [for (rt : ResourceType | m.resourceTypes)]
-[if (not hasAppSpecificCrud(m, rt))]
 [generateRepository(m, rt)/]
 [generateService(m, rt)/]
+[if (not hasAppSpecificCrud(m, rt))]
 [generateController(m, rt)/]
 [/if]
 [generateDomainResource(m, rt)/]
@@ -191,6 +198,11 @@ Generated endpoints:
 - GET /api/comments/{commentId}/votes
 - POST /api/comments/{commentId}/votes
 - DELETE /api/comments/{commentId}/votes/{voteId}
+- GET /api/orders
+- GET /api/orders/{orderId}
+- POST /api/orders
+- PUT /api/orders/{orderId}
+- DELETE /api/orders/{orderId}
 - POST /api/moderation/reviews/{reviewId}/simulate
 - POST /api/moderation/reviews/simulate
 - GET /h2-console
@@ -504,25 +516,26 @@ public class [rt.name/] extends Generated[rt.name/] {
 [/template]
 
 [template public generateRepository(m : RefModel, rt : ResourceType)]
-[file (rootPath(m) + '/repository/' + rt.name + 'Repository.java', false, 'UTF-8')]
-package [repositoryPackage(m)/];
+[file (repositoryGeneratedPath(m) + '/Generated' + rt.name + 'Repository.java', false, 'UTF-8')]
+package [repositoryGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[rt.name/];
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface [rt.name/]Repository extends JpaRepository<[rt.name/], String> {
+public interface Generated[rt.name/]Repository extends JpaRepository<[rt.name/], String> {
 }
 [/file]
 [/template]
 
+
 [template public generateService(m : RefModel, rt : ResourceType)]
-[file (rootPath(m) + '/service/' + rt.name + 'Service.java', false, 'UTF-8')]
-package [servicePackage(m)/];
+[file (serviceGeneratedPath(m) + '/Generated' + rt.name + 'Service.java', false, 'UTF-8')]
+package [serviceGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[rt.name/];
-import [repositoryPackage(m)/].[rt.name/]Repository;
+import [repositoryGeneratedPackage(m)/].Generated[rt.name/]Repository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -531,10 +544,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class [rt.name/]Service {
-    private final [rt.name/]Repository repository;
+public class Generated[rt.name/]Service {
+    protected final Generated[rt.name/]Repository repository;
 
-    public [rt.name/]Service([rt.name/]Repository repository) {
+    public Generated[rt.name/]Service(Generated[rt.name/]Repository repository) {
         this.repository = repository;
     }
 
@@ -587,11 +600,11 @@ public class [rt.name/]Service {
 [/template]
 
 [template public generateController(m : RefModel, rt : ResourceType)]
-[file (rootPath(m) + '/api/' + rt.name + 'Controller.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/Generated' + rt.name + 'Controller.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[rt.name/];
-import [servicePackage(m)/].[rt.name/]Service;
+import [serviceGeneratedPackage(m)/].Generated[rt.name/]Service;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -606,10 +619,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/[resourcePath(rt)/]")
-public class [rt.name/]Controller {
-    private final [rt.name/]Service service;
+public class Generated[rt.name/]Controller {
+    protected final Generated[rt.name/]Service service;
 
-    public [rt.name/]Controller([rt.name/]Service service) {
+    public Generated[rt.name/]Controller(Generated[rt.name/]Service service) {
         this.service = service;
     }
 
@@ -643,9 +656,9 @@ public class [rt.name/]Controller {
 [/file]
 [/template]
 
-[template public generateSharedControllers(m : RefModel)]
-[file (rootPath(m) + '/api/AuthController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[template public generateSharedWebLayer(m : RefModel)]
+[file (webGeneratedPath(m) + '/GeneratedAuthenticationController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -657,7 +670,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class GeneratedAuthenticationController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -672,8 +685,8 @@ public class AuthController {
 }
 [/file]
 
-[file (rootPath(m) + '/api/ContextController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedContextController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -690,7 +703,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/contexts")
-public class ContextController {
+public class GeneratedContextController {
 
     @GetMapping
     public List<String> list() {
@@ -734,11 +747,12 @@ public class ContextController {
 [/template]
 
 [template public generateAmazonControllers(m : RefModel)]
-[file (rootPath(m) + '/api/ProductApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedProductController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Product;
+import [serviceGeneratedPackage(m)/].GeneratedProductService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -750,30 +764,41 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductApiController {
+public class GeneratedProductController {
+
+    private final GeneratedProductService productService;
+
+    public GeneratedProductController(GeneratedProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
-    public List<String> list() { return List.of(); }
+    public List<Product> list() {
+        return productService.list();
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    public Product create(@RequestBody Product product) {
+        return productService.create(product);
+    }
 
     @GetMapping("/{productId}/average-rating")
-    public Map<String, Object> averageRating(@PathVariable String productId) {
-        return Map.of("productId", productId, "averageRating", 0.0);
+    public double averageRating(@PathVariable String productId) {
+        // Placeholder: aggregate over reviews when the review model is wired
+        return 0.0;
     }
 
     @PostMapping("/{productId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> createReview(@PathVariable String productId, @RequestBody Map<String, Object> payload) {
-        return Map.of("productId", productId, "status", "review-created");
+    public void createReview(@PathVariable String productId, @RequestBody Object payload) {
+        // Placeholder: delegate to a review service when available
     }
 }
 [/file]
 
-[file (rootPath(m) + '/api/ReviewApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedReviewController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -785,7 +810,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/reviews")
-public class ReviewApiController {
+public class GeneratedReviewController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -793,8 +818,8 @@ public class ReviewApiController {
 }
 [/file]
 
-[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedCommentController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -812,10 +837,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/comments")
-public class CommentApiController {
+public class GeneratedCommentController {
 
     @GetMapping
-    public List<String> list(@RequestParam(required = false) String productId) { return List.of(); }
+    public List<Map<String, Object>> list(@RequestParam(required = false) String productId) { return List.of(); }
 
     @GetMapping("/{commentId}")
     public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
@@ -829,23 +854,12 @@ public class CommentApiController {
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String commentId) {}
-
-    @GetMapping("/{commentId}/votes")
-    public List<String> votes(@PathVariable String commentId) { return List.of(); }
-
-    @PostMapping("/{commentId}/votes")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createVote(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "vote-created"); }
-
-    @DeleteMapping("/{commentId}/votes/{voteId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVote(@PathVariable String commentId, @PathVariable String voteId) {}
+    public void delete(@PathVariable String commentId) { }
 }
 [/file]
 
-[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.Map;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -856,7 +870,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/moderation")
-public class ModerationController {
+public class GeneratedModerationController {
 
     @PostMapping("/reviews/{reviewId}/simulate")
     public Map<String, String> simulateReview(@PathVariable String reviewId, @RequestBody(required = false) Map<String, Object> payload) {
@@ -869,11 +883,41 @@ public class ModerationController {
     }
 }
 [/file]
-[/template]
 
-[template public generateRedditControllers(m : RefModel)]
-[file (rootPath(m) + '/api/SubredditApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedHelpfulVoteController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/comments/{commentId}/votes")
+public class GeneratedHelpfulVoteController {
+
+    @GetMapping
+    public List<Map<String, Object>> list(@PathVariable String commentId) { return List.of(); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+
+    @DeleteMapping("/{voteId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String commentId, @PathVariable String voteId) { }
+}
+[/file]
+
+[file (webGeneratedPath(m) + '/GeneratedOrderController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -889,25 +933,85 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/orders")
+public class GeneratedOrderController {
+
+    @GetMapping
+    public List<Map<String, Object>> list() { return List.of(); }
+
+    @GetMapping("/{orderId}")
+    public Map<String, String> get(@PathVariable String orderId) { return Map.of("orderId", orderId); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+
+    @PutMapping("/{orderId}")
+    public Map<String, Object> update(@PathVariable String orderId, @RequestBody Map<String, Object> payload) { return payload; }
+
+    @DeleteMapping("/{orderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String orderId) { }
+}
+[/file]
+[/template]
+
+[template public generateRedditControllers(m : RefModel)]
+[file (webGeneratedPath(m) + '/GeneratedSubredditController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
+
+import [domainPackage(m)/].Subreddit;
+import [serviceGeneratedPackage(m)/].GeneratedSubredditService;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
 @RequestMapping("/api/subreddits")
-public class SubredditApiController {
-    @GetMapping public List<String> list() { return List.of(); }
-    @GetMapping("/{subredditId}") public Map<String, String> get(@PathVariable String subredditId) { return Map.of("subredditId", subredditId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
-    @PutMapping("/{subredditId}") public Map<String, Object> update(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{subredditId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subredditId) {}
+public class GeneratedSubredditController {
+    private final GeneratedSubredditService service;
+
+    public GeneratedSubredditController(GeneratedSubredditService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<Subreddit> list() { return service.list(); }
+
+    @GetMapping("/{subredditId}")
+    public Subreddit get(@PathVariable String subredditId) { return service.get(subredditId); }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Subreddit create(@RequestBody Subreddit payload) { return service.create(payload); }
+
+    @PutMapping("/{subredditId}")
+    public Subreddit update(@PathVariable String subredditId, @RequestBody Subreddit payload) { return service.update(subredditId, payload); }
+
+    @DeleteMapping("/{subredditId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String subredditId) { service.delete(subredditId); }
 
     @PostMapping("/{subredditId}/posts")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createPost(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return Map.of("subredditId", subredditId, "status", "post-created"); }
+    public void createPost(@PathVariable String subredditId, @RequestBody Object payload) { }
 }
 [/file]
 
-[file (rootPath(m) + '/api/PostApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedPostController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Post;
+import [serviceGeneratedPackage(m)/].GeneratedPostService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -922,27 +1026,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/posts")
-public class PostApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String subredditId) { return List.of(); }
-    @GetMapping("/{postId}") public Map<String, String> get(@PathVariable String postId) { return Map.of("postId", postId); }
-    @PutMapping("/{postId}") public Map<String, Object> update(@PathVariable String postId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{postId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String postId) {}
+public class GeneratedPostController {
+    private final GeneratedPostService service;
+
+    public GeneratedPostController(GeneratedPostService service) { this.service = service; }
+
+    @GetMapping public List<Post> list(@RequestParam(required = false) String subredditId) { return service.list(); }
+    @GetMapping("/{postId}") public Post get(@PathVariable String postId) { return service.get(postId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Post create(@RequestBody Post payload) { return service.create(payload); }
+    @PutMapping("/{postId}") public Post update(@PathVariable String postId, @RequestBody Post payload) { return service.update(postId, payload); }
+    @DeleteMapping("/{postId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String postId) { service.delete(postId); }
 
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> comment(@PathVariable String postId, @RequestBody Map<String, Object> payload) { return Map.of("postId", postId, "status", "comment-created"); }
+    public void comment(@PathVariable String postId, @RequestBody Object payload) { }
 }
 [/file]
 
-[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedCommentController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Comment;
+import [serviceGeneratedPackage(m)/].GeneratedCommentService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -952,19 +1063,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/comments")
-public class CommentApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String postId) { return List.of(); }
-    @GetMapping("/{commentId}") public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
-    @PutMapping("/{commentId}") public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) {}
+public class GeneratedCommentController {
+    private final GeneratedCommentService service;
+
+    public GeneratedCommentController(GeneratedCommentService service) { this.service = service; }
+
+    @GetMapping public List<Comment> list(@RequestParam(required = false) String postId) { return service.list(); }
+    @GetMapping("/{commentId}") public Comment get(@PathVariable String commentId) { return service.get(commentId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String postId, @RequestBody Comment payload) { return service.create(payload); }
+    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { return service.update(commentId, payload); }
+    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/VoteApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedVoteController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Vote;
+import [serviceGeneratedPackage(m)/].GeneratedVoteService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -978,23 +1095,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/votes")
-public class VoteApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{voteId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String voteId) {}
+public class GeneratedVoteController {
+    private final GeneratedVoteService service;
+
+    public GeneratedVoteController(GeneratedVoteService service) { this.service = service; }
+
+    @GetMapping public List<Vote> list(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Vote create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Vote payload) { return service.create(payload); }
+    @DeleteMapping("/{voteId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String voteId) { service.delete(voteId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/SubscriptionApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedSubscriptionController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Subscription;
+import [serviceGeneratedPackage(m)/].GeneratedSubscriptionService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -1002,15 +1125,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/subscriptions")
-public class SubscriptionApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String userId) { return List.of(); }
-    @PostMapping("/{subredditId}") @ResponseStatus(HttpStatus.CREATED) public Map<String, String> create(@PathVariable String subredditId) { return Map.of("subredditId", subredditId, "status", "subscription-created"); }
-    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) {}
+public class GeneratedSubscriptionController {
+    private final GeneratedSubscriptionService service;
+
+    public GeneratedSubscriptionController(GeneratedSubscriptionService service) { this.service = service; }
+
+    @GetMapping public List<Subscription> list(@RequestParam(required = false) String userId) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Subscription create(@RequestBody Subscription payload) { return service.create(payload); }
+    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) { service.delete(subscriptionId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/PolicyApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedPolicyController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -1026,7 +1153,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/policies")
-public class PolicyApiController {
+public class GeneratedPolicyController {
     @GetMapping("/subreddits/{subredditId}/permissions") public List<String> permissions(@PathVariable String subredditId) { return List.of(); }
     @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
     @GetMapping("/subreddits/{subredditId}/sorting") public List<String> sorting(@PathVariable String subredditId) { return List.of(); }
@@ -1036,11 +1163,12 @@ public class PolicyApiController {
 }
 [/file]
 
-[file (rootPath(m) + '/api/ReportApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedReportController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Report;
+import [serviceGeneratedPackage(m)/].GeneratedReportService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -1052,14 +1180,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/reports")
-public class ReportApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String status) { return List.of(); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+public class GeneratedReportController {
+    private final GeneratedReportService service;
+
+    public GeneratedReportController(GeneratedReportService service) { this.service = service; }
+
+    @GetMapping public List<Report> list(@RequestParam(required = false) String status) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Report create(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Report payload) { return service.create(payload); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -1073,7 +1205,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/moderation")
-public class ModerationController {
+public class GeneratedModerationController {
     @GetMapping("/posts/{postId}/checks") public List<String> postChecks(@PathVariable String postId) { return List.of(); }
     @PostMapping("/posts/{postId}/checks") public Map<String, String> createPostCheck(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("postId", postId, "status", "check-created"); }
     @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }
@@ -1087,11 +1219,12 @@ public class ModerationController {
 [/template]
 
 [template public generateYouTubeControllers(m : RefModel)]
-[file (rootPath(m) + '/api/ChannelApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedChannelController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Channel;
+import [serviceGeneratedPackage(m)/].GeneratedChannelService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1105,28 +1238,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/channels")
-public class ChannelApiController {
-    @GetMapping public List<String> list() { return List.of(); }
-    @GetMapping("/{channelId}") public Map<String, String> get(@PathVariable String channelId) { return Map.of("channelId", channelId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
-    @PutMapping("/{channelId}") public Map<String, Object> update(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{channelId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String channelId) {}
+public class GeneratedChannelController {
+    private final GeneratedChannelService service;
+
+    public GeneratedChannelController(GeneratedChannelService service) { this.service = service; }
+
+    @GetMapping public List<Channel> list() { return service.list(); }
+    @GetMapping("/{channelId}") public Channel get(@PathVariable String channelId) { return service.get(channelId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Channel create(@RequestBody Channel payload) { return service.create(payload); }
+    @PutMapping("/{channelId}") public Channel update(@PathVariable String channelId, @RequestBody Channel payload) { return service.update(channelId, payload); }
+    @DeleteMapping("/{channelId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String channelId) { service.delete(channelId); }
 
     @PostMapping("/{channelId}/videos")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> createVideo(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return Map.of("channelId", channelId, "status", "video-created"); }
+    public void createVideo(@PathVariable String channelId, @RequestBody Object payload) { }
 }
 [/file]
 
-[file (rootPath(m) + '/api/VideoApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedVideoController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Video;
+import [serviceGeneratedPackage(m)/].GeneratedVideoService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1136,16 +1275,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/videos")
-public class VideoApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String channelId) { return List.of(); }
-    @GetMapping("/{videoId}") public Map<String, String> get(@PathVariable String videoId) { return Map.of("videoId", videoId); }
-    @PutMapping("/{videoId}") public Map<String, Object> update(@PathVariable String videoId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{videoId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String videoId) {}
+public class GeneratedVideoController {
+    private final GeneratedVideoService service;
+
+    public GeneratedVideoController(GeneratedVideoService service) { this.service = service; }
+
+    @GetMapping public List<Video> list(@RequestParam(required = false) String channelId) { return service.list(); }
+    @GetMapping("/{videoId}") public Video get(@PathVariable String videoId) { return service.get(videoId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Video create(@RequestBody Video payload) { return service.create(payload); }
+    @PutMapping("/{videoId}") public Video update(@PathVariable String videoId, @RequestBody Video payload) { return service.update(videoId, payload); }
+    @DeleteMapping("/{videoId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String videoId) { service.delete(videoId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/CommentApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedCommentController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -1163,7 +1307,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/comments")
-public class CommentApiController {
+public class GeneratedCommentController {
     @GetMapping public List<String> list(@RequestParam(required = false) String videoId) { return List.of(); }
     @GetMapping("/{commentId}") public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
     @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestBody Map<String, Object> payload) { return payload; }
@@ -1173,7 +1317,7 @@ public class CommentApiController {
 [/file]
 
 [file (rootPath(m) + '/api/VideoCommentApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+package [webGeneratedPackage(m)/];
 
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -1193,11 +1337,12 @@ public class VideoCommentApiController {
 }
 [/file]
 
-[file (rootPath(m) + '/api/LikeApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedLikeController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Like;
+import [serviceGeneratedPackage(m)/].GeneratedLikeService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1211,23 +1356,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/likes")
-public class LikeApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{likeId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String likeId) {}
+public class GeneratedLikeController {
+    private final GeneratedLikeService service;
+
+    public GeneratedLikeController(GeneratedLikeService service) { this.service = service; }
+
+    @GetMapping public List<Like> list(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Like create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Like payload) { return service.create(payload); }
+    @DeleteMapping("/{likeId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String likeId) { service.delete(likeId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/SubscriptionApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedSubscriptionController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Subscription;
+import [serviceGeneratedPackage(m)/].GeneratedSubscriptionService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -1235,15 +1386,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/subscriptions")
-public class SubscriptionApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String userId) { return List.of(); }
-    @PostMapping("/{channelId}") @ResponseStatus(HttpStatus.CREATED) public Map<String, String> create(@PathVariable String channelId) { return Map.of("channelId", channelId, "status", "subscription-created"); }
-    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) {}
+public class GeneratedSubscriptionController {
+    private final GeneratedSubscriptionService service;
+
+    public GeneratedSubscriptionController(GeneratedSubscriptionService service) { this.service = service; }
+
+    @GetMapping public List<Subscription> list(@RequestParam(required = false) String userId) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Subscription create(@RequestBody Subscription payload) { return service.create(payload); }
+    @DeleteMapping("/{subscriptionId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String subscriptionId) { service.delete(subscriptionId); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/PolicyApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedPolicyController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -1259,7 +1414,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/policies")
-public class PolicyApiController {
+public class GeneratedPolicyController {
     @GetMapping("/channels/{channelId}/permissions") public List<String> permissions(@PathVariable String channelId) { return List.of(); }
     @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
     @GetMapping("/channels/{channelId}/sorting") public List<String> sorting(@PathVariable String channelId) { return List.of(); }
@@ -1269,11 +1424,12 @@ public class PolicyApiController {
 }
 [/file]
 
-[file (rootPath(m) + '/api/ReportApiController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedReportController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Report;
+import [serviceGeneratedPackage(m)/].GeneratedReportService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -1285,14 +1441,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/reports")
-public class ReportApiController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String status) { return List.of(); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+public class GeneratedReportController {
+    private final GeneratedReportService service;
+
+    public GeneratedReportController(GeneratedReportService service) { this.service = service; }
+
+    @GetMapping public List<Report> list(@RequestParam(required = false) String status) { return service.list(); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Report create(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Report payload) { return service.create(payload); }
 }
 [/file]
 
-[file (rootPath(m) + '/api/ModerationController.java', false, 'UTF-8')]
-package [apiPackage(m)/];
+[file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
+package [webGeneratedPackage(m)/];
 
 import java.util.List;
 import java.util.Map;
@@ -1306,7 +1466,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/moderation")
-public class ModerationController {
+public class GeneratedModerationController {
     @GetMapping("/videos/{videoId}/checks") public List<String> videoChecks(@PathVariable String videoId) { return List.of(); }
     @PostMapping("/videos/{videoId}/checks") public Map<String, String> createVideoCheck(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "check-created"); }
     @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }

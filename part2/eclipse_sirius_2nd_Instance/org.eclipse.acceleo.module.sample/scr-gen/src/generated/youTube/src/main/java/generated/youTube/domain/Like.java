@@ -5,6 +5,6 @@ import jakarta.persistence.Table;
 import generated.youTube.domain.generated.GeneratedLike;
 
 @Entity
-@Table(name = "like")
+@Table(name = "likes_table")
 public class Like extends GeneratedLike {
 }

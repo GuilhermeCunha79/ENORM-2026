@@ -1,1026 +1,354 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<viewpoint:Group xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:viewpoint="http://www.eclipse.org/sirius/description/1.1.0"
-    xmlns:diagram="http://www.eclipse.org/sirius/diagram/description/1.1.0"
-    xmlns:validation="http://www.eclipse.org/sirius/description/validation/1.1.0"
-    name="enorm">
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:validation="http://www.eclipse.org/sirius/description/validation/1.1.0" name="enorm" version="12.0.0.2017041100">
   <ownedViewpoints name="enorm" modelFileExtension="enorm xmi">
-    <metamodel href="enorm.ecore#/"/>
-    <ownedRepresentations xsi:type="diagram:DiagramDescription"
-        name="RefModel Full Diagram"
-        titleExpression="aql:self.name + ' - ' + self.version"
-        domainClass="enorm.RefModel"
-        enablePopupBars="true">
-      <defaultLayer name="Default">
-        <nodeMappings name="UserType"
-            domainClass="enorm.UserType"
-            semanticCandidatesExpression="feature:userTypes">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.kind.toString() + if self.superTypes->isEmpty() then '' else ' &lt; ' + self.superTypes->collect(s | s.name)->sep(', ') endif"
-              widthComputationExpression="170"
-              heightComputationExpression="42"/>
-        </nodeMappings>
-
-        <nodeMappings name="ContextType"
-            domainClass="enorm.ContextType"
-            semanticCandidatesExpression="feature:contextTypes">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.kind.toString()"
-              widthComputationExpression="180"
-              heightComputationExpression="45"/>
-        </nodeMappings>
-
-        <containerMappings name="ResourceType"
-            domainClass="enorm.ResourceType"
-            semanticCandidatesExpression="feature:resourceTypes"
-            childrenPresentation="List">
-          <subNodeMappings name="Attribute"
-              domainClass="enorm.Attribute"
-              semanticCandidatesExpression="feature:attributes">
-            <style xsi:type="diagram:SquareDescription"
-                labelExpression="aql:self.name + ' : ' + self.type.toString() + if self.required then ' [required]' else '' endif + if self.multiValued then ' [multi]' else '' endif"
-                widthComputationExpression="170"
-                heightComputationExpression="28"/>
-          </subNodeMappings>
-          <style xsi:type="diagram:FlatContainerStyleDescription"
-              labelExpression="aql:self.name + if self.supportsMedia then ' [media]' else '' endif + if self.superTypes->isEmpty() then '' else ' &lt; ' + self.superTypes->collect(s | s.name)->sep(', ') endif"
-              widthComputationExpression="260"
-              heightComputationExpression="155"/>
-        </containerMappings>
-
-        <nodeMappings name="ResourceRelation"
-            domainClass="enorm.ResourceRelation"
-            semanticCandidatesExpression="feature:resourceRelations">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' [' + self.sourceCardinality + ' -> ' + self.targetCardinality + ']' + if self.containment then ' [containment]' else '' endif + if self.recursive then ' [recursive]' else '' endif"
-              widthComputationExpression="250"
-              heightComputationExpression="52"/>
-        </nodeMappings>
-
-        <nodeMappings name="FeedbackType"
-            domainClass="enorm.FeedbackType"
-            semanticCandidatesExpression="feature:feedbackTypes">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.kind.toString() + ' / ' + self.subjectScope.toString() + if self.hasRating then ' [rating]' else '' endif + if self.recursive then ' [recursive]' else '' endif + if self.allowsText then ' [text]' else '' endif + if self.allowsMedia then ' [media]' else '' endif + if self.polarity &lt;&gt; null then ' [' + self.polarity.toString() + ']' else '' endif"
-              widthComputationExpression="290"
-              heightComputationExpression="68"/>
-        </nodeMappings>
-
-        <containerMappings name="FeedbackDefinition"
-            domainClass="enorm.FeedbackDefinition"
-            semanticCandidatesExpression="feature:feedbackDefinitions"
-            childrenPresentation="List">
-          <subNodeMappings name="FeedbackPolicy"
-              domainClass="enorm.FeedbackPolicy"
-              semanticCandidatesExpression="aql:Sequence{self.policy}->excluding(null)">
-            <style xsi:type="diagram:SquareDescription"
-                labelExpression="aql:'policy : ' + self.status.toString()"
-                widthComputationExpression="150"
-                heightComputationExpression="28"/>
-          </subNodeMappings>
-          <subNodeMappings name="RatingPolicy"
-              domainClass="enorm.RatingPolicy"
-              semanticCandidatesExpression="aql:Sequence{self.rating}->excluding(null)">
-            <style xsi:type="diagram:SquareDescription"
-                labelExpression="aql:'rating : ' + self.minValue + '..' + self.maxValue + ' step ' + self.step"
-                widthComputationExpression="190"
-                heightComputationExpression="28"/>
-          </subNodeMappings>
-          <style xsi:type="diagram:FlatContainerStyleDescription"
-              labelExpression="aql:self.name + if self.requiresVerifiedContext then ' [verified=' + self.verificationRequirement.toString() + ']' else '' endif + if self.uniquePerAuthorTarget then ' [unique]' else '' endif"
-              widthComputationExpression="320"
-              heightComputationExpression="130"/>
-        </containerMappings>
-
-        <nodeMappings name="AuthorizationRule"
-            domainClass="enorm.AuthorizationRule"
-            semanticCandidatesExpression="feature:authorizationRules">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.allowedAction.toString()"
-              widthComputationExpression="220"
-              heightComputationExpression="45"/>
-        </nodeMappings>
-
-        <nodeMappings name="ValidationRule"
-            domainClass="enorm.ValidationRule"
-            semanticCandidatesExpression="feature:validationRules">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.kind.toString() + ' / ' + self.severity.toString() + if self.expression.oclIsUndefined() or self.expression = '' then '' else ' / expr=' + self.expression endif + if self.implementationId.oclIsUndefined() or self.implementationId = '' then '' else ' / impl=' + self.implementationId endif"
-              widthComputationExpression="360"
-              heightComputationExpression="70"/>
-        </nodeMappings>
-
-        <nodeMappings name="ModerationPolicy"
-            domainClass="enorm.ModerationPolicy"
-            semanticCandidatesExpression="feature:moderationPolicies">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.mode.toString() + ' / ' + self.trigger.toString() + ' / ' + self.decision.toString()"
-              widthComputationExpression="320"
-              heightComputationExpression="60"/>
-        </nodeMappings>
-
-        <containerMappings name="AutomationRule"
-            domainClass="enorm.AutomationRule"
-            semanticCandidatesExpression="feature:automationRules"
-            childrenPresentation="List">
-          <subNodeMappings name="Condition"
-              domainClass="enorm.Condition"
-              semanticCandidatesExpression="feature:conditions">
-            <subNodeMappings name="ConditionValue"
-                domainClass="enorm.ConditionValue"
-                semanticCandidatesExpression="feature:children">
-              <style xsi:type="diagram:SquareDescription"
-                  labelExpression="feature:value"
-                  widthComputationExpression="110"
-                  heightComputationExpression="24"/>
-            </subNodeMappings>
-            <style xsi:type="diagram:SquareDescription"
-                labelExpression="aql:self.name + ' : ' + self.operator.toString()"
-                widthComputationExpression="220"
-                heightComputationExpression="30"/>
-          </subNodeMappings>
-          <subNodeMappings name="Action"
-              domainClass="enorm.Action"
-              semanticCandidatesExpression="feature:actions">
-            <style xsi:type="diagram:SquareDescription"
-                labelExpression="aql:self.name + ' : ' + self.kind.toString() + if self.message.oclIsUndefined() or self.message = '' then '' else ' / ' + self.message endif"
-                widthComputationExpression="250"
-                heightComputationExpression="30"/>
-          </subNodeMappings>
-          <style xsi:type="diagram:FlatContainerStyleDescription"
-              labelExpression="aql:self.name + ' : ' + self.trigger.toString()"
-              widthComputationExpression="330"
-              heightComputationExpression="170"/>
-        </containerMappings>
-
-        <nodeMappings name="VerificationPolicy"
-            domainClass="enorm.VerificationPolicy"
-            semanticCandidatesExpression="feature:verificationPolicies">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.mode.toString() + ' / ' + self.appliesWhen.toString()"
-              widthComputationExpression="270"
-              heightComputationExpression="48"/>
-        </nodeMappings>
-
-        <nodeMappings name="SortingPolicy"
-            domainClass="enorm.SortingPolicy"
-            semanticCandidatesExpression="feature:sortingPolicies">
-          <style xsi:type="diagram:SquareDescription"
-              labelExpression="aql:self.name + ' : ' + self.criterion.toString() + ' / ' + self.direction.toString()"
-              widthComputationExpression="250"
-              heightComputationExpression="48"/>
-        </nodeMappings>
-
-        <edgeMappings name="UserType.superTypes"
-            domainClass="enorm.UserType"
-            semanticCandidatesExpression="feature:userTypes"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.0"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:superTypes">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="superTypes"/>
-        </edgeMappings>
-
-        <edgeMappings name="ContextType.contains"
-            domainClass="enorm.ContextType"
-            semanticCandidatesExpression="feature:contextTypes"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.1"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:contains">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="contains"/>
-        </edgeMappings>
-
-        <edgeMappings name="ResourceType.superTypes"
-            domainClass="enorm.ResourceType"
-            semanticCandidatesExpression="feature:resourceTypes"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:superTypes">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="superTypes"/>
-        </edgeMappings>
-
-        <edgeMappings name="ResourceRelation.source"
-            domainClass="enorm.ResourceRelation"
-            semanticCandidatesExpression="feature:resourceRelations"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:source">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="source"/>
-        </edgeMappings>
-
-        <edgeMappings name="ResourceRelation.target"
-            domainClass="enorm.ResourceRelation"
-            semanticCandidatesExpression="feature:resourceRelations"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:target">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="target"/>
-        </edgeMappings>
-
-        <edgeMappings name="FeedbackDefinition.type"
-            domainClass="enorm.FeedbackDefinition"
-            semanticCandidatesExpression="feature:feedbackDefinitions"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.3"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:type">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="type"/>
-        </edgeMappings>
-
-        <edgeMappings name="FeedbackDefinition.subjectResource"
-            domainClass="enorm.FeedbackDefinition"
-            semanticCandidatesExpression="feature:feedbackDefinitions"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:subjectResource">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="subjectResource"/>
-        </edgeMappings>
-
-        <edgeMappings name="FeedbackDefinition.author"
-            domainClass="enorm.FeedbackDefinition"
-            semanticCandidatesExpression="feature:feedbackDefinitions"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:author">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="author"/>
-        </edgeMappings>
-
-        <edgeMappings name="FeedbackDefinition.subjectFeedback"
-            domainClass="enorm.FeedbackDefinition"
-            semanticCandidatesExpression="feature:feedbackDefinitions"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:subjectFeedback">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="subjectFeedback"/>
-        </edgeMappings>
-
-        <edgeMappings name="AuthorizationRule.actor"
-            domainClass="enorm.AuthorizationRule"
-            semanticCandidatesExpression="feature:authorizationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.4"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:actor">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="actor"/>
-        </edgeMappings>
-
-        <edgeMappings name="AuthorizationRule.context"
-            domainClass="enorm.AuthorizationRule"
-            semanticCandidatesExpression="feature:authorizationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.4"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:context">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="context"/>
-        </edgeMappings>
-
-        <edgeMappings name="AuthorizationRule.resourceTarget"
-            domainClass="enorm.AuthorizationRule"
-            semanticCandidatesExpression="feature:authorizationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.4"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:resourceTarget">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="resourceTarget"/>
-        </edgeMappings>
-
-        <edgeMappings name="AuthorizationRule.feedbackTarget"
-            domainClass="enorm.AuthorizationRule"
-            semanticCandidatesExpression="feature:authorizationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.4"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:feedbackTarget">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="feedbackTarget"/>
-        </edgeMappings>
-
-        <edgeMappings name="ValidationRule.appliesToResource"
-            domainClass="enorm.ValidationRule"
-            semanticCandidatesExpression="feature:validationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.5"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:appliesToResource">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="appliesToResource"/>
-        </edgeMappings>
-
-        <edgeMappings name="ValidationRule.appliesToFeedback"
-            domainClass="enorm.ValidationRule"
-            semanticCandidatesExpression="feature:validationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.5"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:appliesToFeedback">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="appliesToFeedback"/>
-        </edgeMappings>
-
-        <edgeMappings name="ValidationRule.invokedBy"
-            domainClass="enorm.ValidationRule"
-            semanticCandidatesExpression="feature:validationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.5"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:invokedBy">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="invokedBy"/>
-        </edgeMappings>
-
-        <edgeMappings name="ModerationPolicy.monitorsResource"
-            domainClass="enorm.ModerationPolicy"
-            semanticCandidatesExpression="feature:moderationPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.6"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:monitorsResource">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="monitorsResource"/>
-        </edgeMappings>
-
-        <edgeMappings name="ModerationPolicy.monitorsFeedback"
-            domainClass="enorm.ModerationPolicy"
-            semanticCandidatesExpression="feature:moderationPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.6"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:monitorsFeedback">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="monitorsFeedback"/>
-        </edgeMappings>
-
-        <edgeMappings name="ModerationPolicy.executedBy"
-            domainClass="enorm.ModerationPolicy"
-            semanticCandidatesExpression="feature:moderationPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.6"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:executedBy">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="executedBy"/>
-        </edgeMappings>
-
-        <edgeMappings name="ModerationPolicy.inContext"
-            domainClass="enorm.ModerationPolicy"
-            semanticCandidatesExpression="feature:moderationPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.6"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:inContext">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="inContext"/>
-        </edgeMappings>
-
-        <edgeMappings name="AutomationRule.context"
-            domainClass="enorm.AutomationRule"
-            semanticCandidatesExpression="feature:automationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:context">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="context"/>
-        </edgeMappings>
-
-        <edgeMappings name="AutomationRule.inContext"
-            domainClass="enorm.AutomationRule"
-            semanticCandidatesExpression="feature:automationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:inContext">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="inContext"/>
-        </edgeMappings>
-
-        <edgeMappings name="AutomationRule.onFeedback"
-            domainClass="enorm.AutomationRule"
-            semanticCandidatesExpression="feature:automationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:onFeedback">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="onFeedback"/>
-        </edgeMappings>
-
-        <edgeMappings name="AutomationRule.uses"
-            domainClass="enorm.AutomationRule"
-            semanticCandidatesExpression="feature:automationRules"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.5"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:uses">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="uses"/>
-        </edgeMappings>
-
-        <edgeMappings name="Condition.attribute"
-            domainClass="enorm.Condition"
-            semanticCandidatesExpression="aql:self.automationRules->collect(a | a.conditions)->flatten()"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.2/@subNodeMappings.0"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0/@subNodeMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:attribute">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="attribute"/>
-        </edgeMappings>
-
-        <edgeMappings name="VerificationPolicy.verifies"
-            domainClass="enorm.VerificationPolicy"
-            semanticCandidatesExpression="feature:verificationPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.7"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:verifies">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="verifies"/>
-        </edgeMappings>
-
-        <edgeMappings name="SortingPolicy.appliesToResource"
-            domainClass="enorm.SortingPolicy"
-            semanticCandidatesExpression="feature:sortingPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.8"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.0"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:appliesToResource">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="appliesToResource"/>
-        </edgeMappings>
-
-        <edgeMappings name="SortingPolicy.appliesToFeedback"
-            domainClass="enorm.SortingPolicy"
-            semanticCandidatesExpression="feature:sortingPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.8"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@containerMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:appliesToFeedback">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="appliesToFeedback"/>
-        </edgeMappings>
-
-        <edgeMappings name="SortingPolicy.inContext"
-            domainClass="enorm.SortingPolicy"
-            semanticCandidatesExpression="feature:sortingPolicies"
-            sourceMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.8"
-            targetMapping="//@ownedViewpoints.0/@ownedRepresentations.0/@defaultLayer/@nodeMappings.1"
-            useDomainElement="true"
-            sourceFinderExpression="var:self"
-            targetFinderExpression="feature:inContext">
-          <style xsi:type="diagram:EdgeStyleDescription"
-              centerLabelExpression="inContext"/>
-        </edgeMappings>
-      </defaultLayer>
-
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="RefModel Full Diagram" titleExpression="aql:self.name + ' - ' + self.version" domainClass="enorm.RefModel" enablePopupBars="true">
+      <metamodel href="http://www.example.org/enorm#/"/>
       <validationSet>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C1.1 RefModel name not empty"
-            targetClass="enorm.RefModel"
-            level="ERROR"
-            message="RefModel name must not be empty">
-          <audits expression="aql:not self.name.oclIsUndefined() and self.name &lt;&gt; &apos;&apos;"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C1.1 RefModel name not empty" level="ERROR" message="RefModel name must not be empty" targetClass="enorm.RefModel">
+          <audits expression="aql:not self.name.oclIsUndefined() and self.name &lt;> ''"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C1.2 RefModel uppercase"
-            targetClass="enorm.RefModel"
-            level="WARNING"
-            message="RefModel name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C1.2 RefModel uppercase" level="WARNING" message="RefModel name should start with uppercase" targetClass="enorm.RefModel">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C1.3 RefModel name min length"
-            targetClass="enorm.RefModel"
-            level="ERROR"
-            message="RefModel name must have more than 2 characters">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name.size() &gt; 2"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C1.3 RefModel name min length" level="ERROR" message="RefModel name must have more than 2 characters" targetClass="enorm.RefModel">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name.size() > 2"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C1.4 RefModel version semver"
-            targetClass="enorm.RefModel"
-            level="WARNING"
-            message="Version should follow semantic versioning (e.g., 1.0.0)">
-          <audits expression="aql:self.version.oclIsUndefined() or self.version.matches(&apos;[0-9]+\\.[0-9]+\\.[0-9]+&apos;)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C1.4 RefModel version semver" level="WARNING" message="Version should follow semantic versioning (e.g., 1.0.0)" targetClass="enorm.RefModel">
+          <audits expression="aql:self.version.oclIsUndefined() or self.version.matches('[0-9]+\\.[0-9]+\\.[0-9]+')"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.1 UserType names unique"
-            targetClass="enorm.UserType"
-            level="ERROR"
-            message="UserType names must be unique within the model">
-          <audits expression="aql:self.eContainer().userTypes-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.1 UserType names unique" level="ERROR" message="UserType names must be unique within the model" targetClass="enorm.UserType">
+          <audits expression="aql:self.eContainer().userTypes->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.2 UserType uppercase"
-            targetClass="enorm.UserType"
-            level="WARNING"
-            message="UserType name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.2 UserType uppercase" level="WARNING" message="UserType name should start with uppercase" targetClass="enorm.UserType">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.3 UserType no self superType"
-            targetClass="enorm.UserType"
-            level="ERROR"
-            message="UserType cannot be its own supertype">
-          <audits expression="aql:not self.superTypes-&gt;includes(self)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.3 UserType no self superType" level="ERROR" message="UserType cannot be its own supertype" targetClass="enorm.UserType">
+          <audits expression="aql:not self.superTypes->includes(self)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.4 UserType no cycle"
-            targetClass="enorm.UserType"
-            level="ERROR"
-            message="UserType supertypes must not form a cycle">
-          <audits expression="aql:not self.superTypes-&gt;closure(s | s.superTypes)-&gt;includes(self)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.4 UserType no cycle" level="ERROR" message="UserType supertypes must not form a cycle" targetClass="enorm.UserType">
+          <audits expression="aql:not self.superTypes->closure(s | s.superTypes)->includes(self)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.5 ContextType names unique"
-            targetClass="enorm.ContextType"
-            level="ERROR"
-            message="ContextType names must be unique">
-          <audits expression="aql:self.eContainer().contextTypes-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.5 ContextType names unique" level="ERROR" message="ContextType names must be unique" targetClass="enorm.ContextType">
+          <audits expression="aql:self.eContainer().contextTypes->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C2.6 ContextType uppercase"
-            targetClass="enorm.ContextType"
-            level="WARNING"
-            message="ContextType name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C2.6 ContextType uppercase" level="WARNING" message="ContextType name should start with uppercase" targetClass="enorm.ContextType">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.1 ResourceType names unique"
-            targetClass="enorm.ResourceType"
-            level="ERROR"
-            message="ResourceType names must be unique">
-          <audits expression="aql:self.eContainer().resourceTypes-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.1 ResourceType names unique" level="ERROR" message="ResourceType names must be unique" targetClass="enorm.ResourceType">
+          <audits expression="aql:self.eContainer().resourceTypes->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.2 ResourceType uppercase"
-            targetClass="enorm.ResourceType"
-            level="WARNING"
-            message="ResourceType name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.2 ResourceType uppercase" level="WARNING" message="ResourceType name should start with uppercase" targetClass="enorm.ResourceType">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.3 ResourceType min length"
-            targetClass="enorm.ResourceType"
-            level="ERROR"
-            message="ResourceType name must have more than 2 characters">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name.size() &gt; 2"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.3 ResourceType min length" level="ERROR" message="ResourceType name must have more than 2 characters" targetClass="enorm.ResourceType">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name.size() > 2"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.4 ResourceType no self superType"
-            targetClass="enorm.ResourceType"
-            level="ERROR"
-            message="ResourceType cannot be its own supertype">
-          <audits expression="aql:not self.superTypes-&gt;includes(self)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.4 ResourceType no self superType" level="ERROR" message="ResourceType cannot be its own supertype" targetClass="enorm.ResourceType">
+          <audits expression="aql:not self.superTypes->includes(self)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.5 ResourceType no cycle"
-            targetClass="enorm.ResourceType"
-            level="ERROR"
-            message="ResourceType supertypes must not form a cycle">
-          <audits expression="aql:not self.superTypes-&gt;closure(s | s.superTypes)-&gt;includes(self)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.5 ResourceType no cycle" level="ERROR" message="ResourceType supertypes must not form a cycle" targetClass="enorm.ResourceType">
+          <audits expression="aql:not self.superTypes->closure(s | s.superTypes)->includes(self)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.6 Attribute names unique"
-            targetClass="enorm.Attribute"
-            level="ERROR"
-            message="Attribute names must be unique within ResourceType">
-          <audits expression="aql:self.eContainer().attributes-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.6 Attribute names unique" level="ERROR" message="Attribute names must be unique within ResourceType" targetClass="enorm.Attribute">
+          <audits expression="aql:self.eContainer().attributes->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.7 Attribute lowercase"
-            targetClass="enorm.Attribute"
-            level="WARNING"
-            message="Attribute name should start with lowercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toLower()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.7 Attribute lowercase" level="WARNING" message="Attribute name should start with lowercase" targetClass="enorm.Attribute">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toLower()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.8 ResourceRelation source target different when non-recursive"
-            targetClass="enorm.ResourceRelation"
-            level="ERROR"
-            message="Non-recursive relation cannot have same source and target">
-          <audits expression="aql:self.recursive = true or self.source &lt;&gt; self.target"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.8 ResourceRelation source target different when non-recursive" level="ERROR" message="Non-recursive relation cannot have same source and target" targetClass="enorm.ResourceRelation">
+          <audits expression="aql:self.recursive = true or self.source &lt;> self.target"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C3.9 ResourceRelation names unique"
-            targetClass="enorm.ResourceRelation"
-            level="ERROR"
-            message="ResourceRelation names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().resourceRelations-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C3.9 ResourceRelation names unique" level="ERROR" message="ResourceRelation names must be unique within RefModel" targetClass="enorm.ResourceRelation">
+          <audits expression="aql:self.eContainer().resourceRelations->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.1 FeedbackType names unique"
-            targetClass="enorm.FeedbackType"
-            level="ERROR"
-            message="FeedbackType names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().feedbackTypes-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.1 FeedbackType names unique" level="ERROR" message="FeedbackType names must be unique within RefModel" targetClass="enorm.FeedbackType">
+          <audits expression="aql:self.eContainer().feedbackTypes->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.2 FeedbackType uppercase"
-            targetClass="enorm.FeedbackType"
-            level="WARNING"
-            message="FeedbackType name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.2 FeedbackType uppercase" level="WARNING" message="FeedbackType name should start with uppercase" targetClass="enorm.FeedbackType">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.3 FeedbackDefinition target consistent with scope"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition target must be consistent with subjectScope">
-          <audits expression="aql:(self.type.subjectScope.toString() = &apos;RESOURCE_ONLY&apos; implies (not self.subjectResource.oclIsUndefined() and self.subjectFeedback.oclIsUndefined())) and (self.type.subjectScope.toString() = &apos;FEEDBACK_ONLY&apos; implies (not self.subjectFeedback.oclIsUndefined() and self.subjectResource.oclIsUndefined())) and (self.type.subjectScope.toString() = &apos;RESOURCE_OR_FEEDBACK&apos; implies (not self.subjectResource.oclIsUndefined() or not self.subjectFeedback.oclIsUndefined()))"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.3 FeedbackDefinition target consistent with scope" level="ERROR" message="FeedbackDefinition target must be consistent with subjectScope" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:(self.type.subjectScope.toString() = 'RESOURCE_ONLY' implies (not self.subjectResource.oclIsUndefined() and self.subjectFeedback.oclIsUndefined())) and (self.type.subjectScope.toString() = 'FEEDBACK_ONLY' implies (not self.subjectFeedback.oclIsUndefined() and self.subjectResource.oclIsUndefined())) and (self.type.subjectScope.toString() = 'RESOURCE_OR_FEEDBACK' implies (not self.subjectResource.oclIsUndefined() or not self.subjectFeedback.oclIsUndefined()))"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.4 FeedbackDefinition names unique"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().feedbackDefinitions-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.4 FeedbackDefinition names unique" level="ERROR" message="FeedbackDefinition names must be unique within RefModel" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.eContainer().feedbackDefinitions->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.5 FeedbackDefinition uppercase"
-            targetClass="enorm.FeedbackDefinition"
-            level="WARNING"
-            message="FeedbackDefinition name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.5 FeedbackDefinition uppercase" level="WARNING" message="FeedbackDefinition name should start with uppercase" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.6 FeedbackDefinition author required"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition must have an author">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.6 FeedbackDefinition author required" level="ERROR" message="FeedbackDefinition must have an author" targetClass="enorm.FeedbackDefinition">
           <audits expression="aql:not self.author.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.7 RatingPolicy only when hasRating"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="RatingPolicy can only be set when FeedbackType.hasRating is true">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.7 RatingPolicy only when hasRating" level="ERROR" message="RatingPolicy can only be set when FeedbackType.hasRating is true" targetClass="enorm.FeedbackDefinition">
           <audits expression="aql:self.rating.oclIsUndefined() or self.type.hasRating = true"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.8 RatingPolicy min less than max"
-            targetClass="enorm.RatingPolicy"
-            level="ERROR"
-            message="RatingPolicy minValue must be less than maxValue">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.8 RatingPolicy min less than max" level="ERROR" message="RatingPolicy minValue must be less than maxValue" targetClass="enorm.RatingPolicy">
           <audits expression="aql:self.minValue &lt; self.maxValue"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.9 RatingPolicy step positive and divides range"
-            targetClass="enorm.RatingPolicy"
-            level="WARNING"
-            message="RatingPolicy step must be positive and divide the range evenly">
-          <audits expression="aql:self.step &gt; 0 and ((self.maxValue - self.minValue).mod(self.step) = 0)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.9 RatingPolicy step positive and divides range" level="WARNING" message="RatingPolicy step must be positive and divide the range evenly" targetClass="enorm.RatingPolicy">
+          <audits expression="aql:self.step > 0 and ((self.maxValue - self.minValue).mod(self.step) = 0)"/>
         </ownedRules>
-
-        <!-- FIX 1: C4.10 ADDED — was missing entirely -->
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.10 FeedbackPolicy DISABLED blocks creation"
-            targetClass="enorm.FeedbackDefinition"
-            level="INFO"
-            message="FeedbackDefinition with DISABLED policy will block new feedback creation at runtime">
-          <audits expression="aql:self.policy.oclIsUndefined() or self.policy.status.toString() &lt;&gt; 'DISABLED' or true"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.10 FeedbackPolicy DISABLED blocks creation" message="FeedbackDefinition with DISABLED policy will block new feedback creation at runtime" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.policy.oclIsUndefined() or self.policy.status.toString() &lt;> 'DISABLED' or true"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.11 subjectFeedback same type"
-            targetClass="enorm.FeedbackDefinition"
-            level="WARNING"
-            message="FeedbackDefinition subjectFeedback should be of the same FeedbackType">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.11 subjectFeedback same type" level="WARNING" message="FeedbackDefinition subjectFeedback should be of the same FeedbackType" targetClass="enorm.FeedbackDefinition">
           <audits expression="aql:self.subjectFeedback.oclIsUndefined() or self.subjectFeedback.type = self.type"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C4.12 subjectFeedback not self"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition cannot target itself via subjectFeedback">
-          <audits expression="aql:self.subjectFeedback &lt;&gt; self"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C4.12 subjectFeedback not self" level="ERROR" message="FeedbackDefinition cannot target itself via subjectFeedback" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.subjectFeedback &lt;> self"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.1 ValidationRule target required"
-            targetClass="enorm.ValidationRule"
-            level="ERROR"
-            message="ValidationRule must target at least one element">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.1 ValidationRule target required" level="ERROR" message="ValidationRule must target at least one element" targetClass="enorm.ValidationRule">
           <audits expression="aql:not self.appliesToResource.oclIsUndefined() or not self.appliesToFeedback.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.2 ValidationRule names unique"
-            targetClass="enorm.ValidationRule"
-            level="ERROR"
-            message="ValidationRule names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().validationRules-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.2 ValidationRule names unique" level="ERROR" message="ValidationRule names must be unique within RefModel" targetClass="enorm.ValidationRule">
+          <audits expression="aql:self.eContainer().validationRules->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.3 ValidationRule uppercase"
-            targetClass="enorm.ValidationRule"
-            level="WARNING"
-            message="ValidationRule name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.3 ValidationRule uppercase" level="WARNING" message="ValidationRule name should start with uppercase" targetClass="enorm.ValidationRule">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.4 ValidationRule implementationId min length"
-            targetClass="enorm.ValidationRule"
-            level="WARNING"
-            message="ValidationRule implementationId must have at least 3 characters">
-          <audits expression="aql:self.implementationId.oclIsUndefined() or self.implementationId.size() &gt;= 3"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.4 ValidationRule implementationId min length" level="WARNING" message="ValidationRule implementationId must have at least 3 characters" targetClass="enorm.ValidationRule">
+          <audits expression="aql:self.implementationId.oclIsUndefined() or self.implementationId.size() >= 3"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.5 ValidationRule expression required for AUTOMATIC"
-            targetClass="enorm.ValidationRule"
-            level="ERROR"
-            message="ValidationRule expression must not be empty when kind is AUTOMATIC">
-          <audits expression="aql:self.kind.toString() &lt;&gt; &apos;AUTOMATIC&apos; or (not self.expression.oclIsUndefined() and self.expression &lt;&gt; &apos;&apos;)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.5 ValidationRule expression required for AUTOMATIC" level="ERROR" message="ValidationRule expression must not be empty when kind is AUTOMATIC" targetClass="enorm.ValidationRule">
+          <audits expression="aql:self.kind.toString() &lt;> 'AUTOMATIC' or (not self.expression.oclIsUndefined() and self.expression &lt;> '')"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.6 ModerationPolicy names unique"
-            targetClass="enorm.ModerationPolicy"
-            level="ERROR"
-            message="ModerationPolicy names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().moderationPolicies-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.6 ModerationPolicy names unique" level="ERROR" message="ModerationPolicy names must be unique within RefModel" targetClass="enorm.ModerationPolicy">
+          <audits expression="aql:self.eContainer().moderationPolicies->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.7 ModerationPolicy executedBy required"
-            targetClass="enorm.ModerationPolicy"
-            level="ERROR"
-            message="ModerationPolicy must have executedBy">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.7 ModerationPolicy executedBy required" level="ERROR" message="ModerationPolicy must have executedBy" targetClass="enorm.ModerationPolicy">
           <audits expression="aql:not self.executedBy.oclIsUndefined()"/>
         </ownedRules>
-
-        <!-- FIX 3: C5.8 — removed invalid enum-vs-string comparison -->
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.8 ModerationPolicy trigger required for AUTOMATIC"
-            targetClass="enorm.ModerationPolicy"
-            level="ERROR"
-            message="ModerationPolicy trigger must not be empty when mode is AUTOMATIC">
-          <audits expression="aql:self.mode.toString() &lt;&gt; &apos;AUTOMATIC&apos; or not self.trigger.oclIsUndefined()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.8 ModerationPolicy trigger required for AUTOMATIC" level="ERROR" message="ModerationPolicy trigger must not be empty when mode is AUTOMATIC" targetClass="enorm.ModerationPolicy">
+          <audits expression="aql:self.mode.toString() &lt;> 'AUTOMATIC' or not self.trigger.oclIsUndefined()"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.9 AuthorizationRule actor required"
-            targetClass="enorm.AuthorizationRule"
-            level="ERROR"
-            message="AuthorizationRule must have an actor">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.9 AuthorizationRule actor required" level="ERROR" message="AuthorizationRule must have an actor" targetClass="enorm.AuthorizationRule">
           <audits expression="aql:not self.actor.oclIsUndefined()"/>
         </ownedRules>
-
-        <!-- FIX 5: C5.10 — feedbackTarget is 0..1 in metamodel, only resourceTarget is mandatory -->
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.10 AuthorizationRule both targets required"
-            targetClass="enorm.AuthorizationRule"
-            level="ERROR"
-            message="AuthorizationRule must have a resourceTarget">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.10 AuthorizationRule both targets required" level="ERROR" message="AuthorizationRule must have a resourceTarget" targetClass="enorm.AuthorizationRule">
           <audits expression="aql:not self.resourceTarget.oclIsUndefined()"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.11 AutomationRule names unique"
-            targetClass="enorm.AutomationRule"
-            level="ERROR"
-            message="AutomationRule names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().automationRules-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.11 AutomationRule names unique" level="ERROR" message="AutomationRule names must be unique within RefModel" targetClass="enorm.AutomationRule">
+          <audits expression="aql:self.eContainer().automationRules->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.12 AutomationRule uppercase"
-            targetClass="enorm.AutomationRule"
-            level="WARNING"
-            message="AutomationRule name should start with uppercase">
-          <audits expression="aql:self.name.oclIsUndefined() or self.name = &apos;&apos; or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.12 AutomationRule uppercase" level="WARNING" message="AutomationRule name should start with uppercase" targetClass="enorm.AutomationRule">
+          <audits expression="aql:self.name.oclIsUndefined() or self.name = '' or self.name.substring(1,1) = self.name.substring(1,1).toUpper()"/>
         </ownedRules>
-
-        <!-- FIX 2: C5.13 — trigger is a TriggerEvent enum, not a String; removed invalid &lt;&gt; '' comparison -->
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.13 AutomationRule trigger not empty"
-            targetClass="enorm.AutomationRule"
-            level="ERROR"
-            message="AutomationRule trigger must not be empty">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.13 AutomationRule trigger not empty" level="ERROR" message="AutomationRule trigger must not be empty" targetClass="enorm.AutomationRule">
           <audits expression="aql:not self.trigger.oclIsUndefined()"/>
         </ownedRules>
-
-        <!-- FIX 4: C5.14 REMOVED — AutomationRule has no 'actionDescription' attribute in the metamodel -->
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.15 VerificationPolicy names unique"
-            targetClass="enorm.VerificationPolicy"
-            level="ERROR"
-            message="VerificationPolicy names must be unique within RefModel">
-          <audits expression="aql:self.eContainer().verificationPolicies-&gt;select(x | x.name = self.name)-&gt;size() = 1"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.15 VerificationPolicy names unique" level="ERROR" message="VerificationPolicy names must be unique within RefModel" targetClass="enorm.VerificationPolicy">
+          <audits expression="aql:self.eContainer().verificationPolicies->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C5.16 VerificationPolicy verifies required"
-            targetClass="enorm.VerificationPolicy"
-            level="ERROR"
-            message="VerificationPolicy must verify a FeedbackDefinition">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C5.16 VerificationPolicy verifies required" level="ERROR" message="VerificationPolicy must verify a FeedbackDefinition" targetClass="enorm.VerificationPolicy">
           <audits expression="aql:not self.verifies.oclIsUndefined()"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G1 hasRating requires rating"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition with hasRating=true must define a RatingPolicy">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G1 hasRating requires rating" level="ERROR" message="FeedbackDefinition with hasRating=true must define a RatingPolicy" targetClass="enorm.FeedbackDefinition">
           <audits expression="aql:self.type.hasRating = false or not self.rating.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G2 REVIEW resource only"
-            targetClass="enorm.FeedbackType"
-            level="ERROR"
-            message="REVIEW feedback must use subjectScope=RESOURCE_ONLY">
-          <audits expression="aql:self.kind.toString() &lt;&gt; &apos;REVIEW&apos; or self.subjectScope.toString() = &apos;RESOURCE_ONLY&apos;"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G2 REVIEW resource only" level="ERROR" message="REVIEW feedback must use subjectScope=RESOURCE_ONLY" targetClass="enorm.FeedbackType">
+          <audits expression="aql:self.kind.toString() &lt;> 'REVIEW' or self.subjectScope.toString() = 'RESOURCE_ONLY'"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G3 REACTION VOTE flags"
-            targetClass="enorm.FeedbackType"
-            level="ERROR"
-            message="REACTION/VOTE must have hasRating=false and recursive=false">
-          <audits expression="aql:(self.kind.toString() &lt;&gt; &apos;REACTION&apos; and self.kind.toString() &lt;&gt; &apos;VOTE&apos;) or (self.hasRating = false and self.recursive = false)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G3 REACTION VOTE flags" level="ERROR" message="REACTION/VOTE must have hasRating=false and recursive=false" targetClass="enorm.FeedbackType">
+          <audits expression="aql:(self.kind.toString() &lt;> 'REACTION' and self.kind.toString() &lt;> 'VOTE') or (self.hasRating = false and self.recursive = false)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G3 REACTION VOTE no rating policy"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="REACTION/VOTE feedback cannot define RatingPolicy">
-          <audits expression="aql:((self.type.kind.toString() &lt;&gt; &apos;REACTION&apos;) and (self.type.kind.toString() &lt;&gt; &apos;VOTE&apos;)) or self.rating.oclIsUndefined()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G3 REACTION VOTE no rating policy" level="ERROR" message="REACTION/VOTE feedback cannot define RatingPolicy" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:((self.type.kind.toString() &lt;> 'REACTION') and (self.type.kind.toString() &lt;> 'VOTE')) or self.rating.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G4 SUBSCRIPTION resource only and non recursive"
-            targetClass="enorm.FeedbackType"
-            level="ERROR"
-            message="SUBSCRIPTION feedback must be RESOURCE_ONLY and non-recursive">
-          <audits expression="aql:self.kind.toString() &lt;&gt; &apos;SUBSCRIPTION&apos; or (self.subjectScope.toString() = &apos;RESOURCE_ONLY&apos; and self.recursive = false)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G4 SUBSCRIPTION resource only and non recursive" level="ERROR" message="SUBSCRIPTION feedback must be RESOURCE_ONLY and non-recursive" targetClass="enorm.FeedbackType">
+          <audits expression="aql:self.kind.toString() &lt;> 'SUBSCRIPTION' or (self.subjectScope.toString() = 'RESOURCE_ONLY' and self.recursive = false)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G5 recursive feedback supports feedback targets"
-            targetClass="enorm.FeedbackType"
-            level="ERROR"
-            message="Recursive feedback must allow FEEDBACK targets">
-          <audits expression="aql:self.recursive = false or self.subjectScope.toString() &lt;&gt; &apos;RESOURCE_ONLY&apos;"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G5 recursive feedback supports feedback targets" level="ERROR" message="Recursive feedback must allow FEEDBACK targets" targetClass="enorm.FeedbackType">
+          <audits expression="aql:self.recursive = false or self.subjectScope.toString() &lt;> 'RESOURCE_ONLY'"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G6 RESOURCE_ONLY forbids subjectFeedback"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="RESOURCE_ONLY feedback cannot set subjectFeedback">
-          <audits expression="aql:self.type.subjectScope.toString() &lt;&gt; &apos;RESOURCE_ONLY&apos; or self.subjectFeedback.oclIsUndefined()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G6 RESOURCE_ONLY forbids subjectFeedback" level="ERROR" message="RESOURCE_ONLY feedback cannot set subjectFeedback" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.type.subjectScope.toString() &lt;> 'RESOURCE_ONLY' or self.subjectFeedback.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G7 FEEDBACK_ONLY forbids subjectResource"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FEEDBACK_ONLY feedback cannot set subjectResource">
-          <audits expression="aql:self.type.subjectScope.toString() &lt;&gt; &apos;FEEDBACK_ONLY&apos; or self.subjectResource.oclIsUndefined()"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G7 FEEDBACK_ONLY forbids subjectResource" level="ERROR" message="FEEDBACK_ONLY feedback cannot set subjectResource" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.type.subjectScope.toString() &lt;> 'FEEDBACK_ONLY' or self.subjectResource.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G8 verified context requires verification policy"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="FeedbackDefinition requiring verified context must have a VerificationPolicy">
-          <audits expression="aql:self.requiresVerifiedContext = false or self.eContainer().verificationPolicies-&gt;exists(vp | vp.verifies = self)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G8 verified context requires verification policy" level="ERROR" message="FeedbackDefinition requiring verified context must have a VerificationPolicy" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:self.requiresVerifiedContext = false or self.eContainer().verificationPolicies->exists(vp | vp.verifies = self)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G9 uniquePerAuthorTarget single target"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="uniquePerAuthorTarget requires a single target to avoid ambiguity">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G9 uniquePerAuthorTarget single target" level="ERROR" message="uniquePerAuthorTarget requires a single target to avoid ambiguity" targetClass="enorm.FeedbackDefinition">
           <audits expression="aql:self.uniquePerAuthorTarget = false or self.subjectResource.oclIsUndefined() or self.subjectFeedback.oclIsUndefined()"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G10 AuthorizationRule context contains resourceTarget"
-            targetClass="enorm.AuthorizationRule"
-            level="ERROR"
-            message="AuthorizationRule resourceTarget must belong to the selected context">
-          <audits expression="aql:self.context.oclIsUndefined() or self.resourceTarget.oclIsUndefined() or self.context.contains-&gt;includes(self.resourceTarget)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G10 AuthorizationRule context contains resourceTarget" level="ERROR" message="AuthorizationRule resourceTarget must belong to the selected context" targetClass="enorm.AuthorizationRule">
+          <audits expression="aql:self.context.oclIsUndefined() or self.resourceTarget.oclIsUndefined() or self.context.contains->includes(self.resourceTarget)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G11 ModerationPolicy inContext contains monitorsResource"
-            targetClass="enorm.ModerationPolicy"
-            level="ERROR"
-            message="ModerationPolicy monitorsResource must belong to the selected context">
-          <audits expression="aql:self.inContext.oclIsUndefined() or self.monitorsResource.oclIsUndefined() or self.inContext.contains-&gt;includes(self.monitorsResource)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G11 ModerationPolicy inContext contains monitorsResource" level="ERROR" message="ModerationPolicy monitorsResource must belong to the selected context" targetClass="enorm.ModerationPolicy">
+          <audits expression="aql:self.inContext.oclIsUndefined() or self.monitorsResource.oclIsUndefined() or self.inContext.contains->includes(self.monitorsResource)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G12 AutomationRule inContext contains context"
-            targetClass="enorm.AutomationRule"
-            level="ERROR"
-            message="AutomationRule context resource must belong to the selected context">
-          <audits expression="aql:self.inContext.oclIsUndefined() or self.context.oclIsUndefined() or self.inContext.contains-&gt;includes(self.context)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G12 AutomationRule inContext contains context" level="ERROR" message="AutomationRule context resource must belong to the selected context" targetClass="enorm.AutomationRule">
+          <audits expression="aql:self.inContext.oclIsUndefined() or self.context.oclIsUndefined() or self.inContext.contains->includes(self.context)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G13 Product reviews rating based and policy"
-            targetClass="enorm.FeedbackDefinition"
-            level="ERROR"
-            message="Product reviews must be rating-based and define a RatingPolicy">
-          <audits expression="aql:not (self.type.kind.toString() = &apos;REVIEW&apos; and not self.subjectResource.oclIsUndefined() and self.subjectResource.name = &apos;Product&apos;) or (self.type.hasRating = true and not self.rating.oclIsUndefined())"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G13 Product reviews rating based and policy" level="ERROR" message="Product reviews must be rating-based and define a RatingPolicy" targetClass="enorm.FeedbackDefinition">
+          <audits expression="aql:not (self.type.kind.toString() = 'REVIEW' and not self.subjectResource.oclIsUndefined() and self.subjectResource.name = 'Product') or (self.type.hasRating = true and not self.rating.oclIsUndefined())"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G14 Product rating 1..5 integer"
-            targetClass="enorm.RatingPolicy"
-            level="ERROR"
-            message="Product star rating must use min=1, max=5, step=1">
-          <audits expression="aql:self.eContainer().oclIsKindOf(enorm::FeedbackDefinition) = false or let fd = self.eContainer() in not (fd.type.kind.toString() = &apos;REVIEW&apos; and not fd.subjectResource.oclIsUndefined() and fd.subjectResource.name = &apos;Product&apos;) or (self.minValue = 1 and self.maxValue = 5 and self.step = 1)"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G14 Product rating 1..5 integer" level="ERROR" message="Product star rating must use min=1, max=5, step=1" targetClass="enorm.RatingPolicy">
+          <audits expression="aql:self.eContainer().oclIsKindOf(enorm::FeedbackDefinition) = false or let fd = self.eContainer() in not (fd.type.kind.toString() = 'REVIEW' and not fd.subjectResource.oclIsUndefined() and fd.subjectResource.name = 'Product') or (self.minValue = 1 and self.maxValue = 5 and self.step = 1)"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G15 SortingPolicy DATE requires DATE attribute"
-            targetClass="enorm.SortingPolicy"
-            level="ERROR"
-            message="SortingPolicy with criterion=DATE requires appliesToResource to have at least one DATE attribute">
-          <audits expression="aql:self.criterion.toString() &lt;&gt; &apos;DATE&apos; or (not self.appliesToResource.oclIsUndefined() and self.appliesToResource.attributes-&gt;exists(a | a.type.toString() = &apos;DATE&apos;))"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G15 SortingPolicy DATE requires DATE attribute" level="ERROR" message="SortingPolicy with criterion=DATE requires appliesToResource to have at least one DATE attribute" targetClass="enorm.SortingPolicy">
+          <audits expression="aql:self.criterion.toString() &lt;> 'DATE' or (not self.appliesToResource.oclIsUndefined() and self.appliesToResource.attributes->exists(a | a.type.toString() = 'DATE'))"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="G16 Condition attribute belongs to AutomationRule context"
-            targetClass="enorm.Condition"
-            level="ERROR"
-            message="Condition.attribute must belong to AutomationRule.context">
-          <audits expression="aql:not self.attribute.oclIsUndefined() and (self.eContainer().oclIsUndefined() or self.eContainer().context.oclIsUndefined() or self.eContainer().context.attributes-&gt;includes(self.attribute))"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="G16 Condition attribute belongs to AutomationRule context" level="ERROR" message="Condition.attribute must belong to AutomationRule.context" targetClass="enorm.Condition">
+          <audits expression="aql:not self.attribute.oclIsUndefined() and (self.eContainer().oclIsUndefined() or self.eContainer().context.oclIsUndefined() or self.eContainer().context.attributes->includes(self.attribute))"/>
         </ownedRules>
-
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C6.1 EvolutionRule names unique"
-            targetClass="enorm.EvolutionRule"
-            level="ERROR"
-            message="EvolutionRule names must be unique within RefModel">
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C6.1 EvolutionRule names unique" level="ERROR" message="EvolutionRule names must be unique within RefModel" targetClass="enorm.EvolutionRule">
           <audits expression="aql:self.eContainer().evolutionRules->select(x | x.name = self.name)->size() = 1"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C6.2 EvolutionRule versions differ"
-            targetClass="enorm.EvolutionRule"
-            level="ERROR"
-            message="EvolutionRule fromVersion must be different from toVersion">
-          <audits expression="aql:self.fromVersion.oclIsUndefined() or self.toVersion.oclIsUndefined() or self.fromVersion &lt;&gt; self.toVersion"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C6.2 EvolutionRule versions differ" level="ERROR" message="EvolutionRule fromVersion must be different from toVersion" targetClass="enorm.EvolutionRule">
+          <audits expression="aql:self.fromVersion.oclIsUndefined() or self.toVersion.oclIsUndefined() or self.fromVersion &lt;> self.toVersion"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C6.3 EvolutionRule operations required"
-            targetClass="enorm.EvolutionRule"
-            level="ERROR"
-            message="EvolutionRule must define at least one RefactoringOperation">
-          <audits expression="aql:not self.operations.oclIsUndefined() and self.operations->size() &gt; 0"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C6.3 EvolutionRule operations required" level="ERROR" message="EvolutionRule must define at least one RefactoringOperation" targetClass="enorm.EvolutionRule">
+          <audits expression="aql:not self.operations.oclIsUndefined() and self.operations->size() > 0"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C6.4 RefactoringOperation name not empty"
-            targetClass="enorm.RefactoringOperation"
-            level="ERROR"
-            message="RefactoringOperation name must not be empty">
-          <audits expression="aql:not self.name.oclIsUndefined() and self.name &lt;&gt; ''"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C6.4 RefactoringOperation name not empty" level="ERROR" message="RefactoringOperation name must not be empty" targetClass="enorm.RefactoringOperation">
+          <audits expression="aql:not self.name.oclIsUndefined() and self.name &lt;> ''"/>
         </ownedRules>
-        <ownedRules xsi:type="validation:SemanticValidationRule"
-            name="C6.5 RefactoringOperation scriptId min length"
-            targetClass="enorm.RefactoringOperation"
-            level="WARNING"
-            message="RefactoringOperation scriptId must have at least 3 characters">
-          <audits expression="aql:self.scriptId.oclIsUndefined() or self.scriptId.size() &gt;= 3"/>
+        <ownedRules xsi:type="validation:SemanticValidationRule" name="C6.5 RefactoringOperation scriptId min length" level="WARNING" message="RefactoringOperation scriptId must have at least 3 characters" targetClass="enorm.RefactoringOperation">
+          <audits expression="aql:self.scriptId.oclIsUndefined() or self.scriptId.size() >= 3"/>
         </ownedRules>
       </validationSet>
-
+      <defaultLayer name="Default">
+        <nodeMappings name="UserType" semanticCandidatesExpression="feature:userTypes" domainClass="enorm.UserType">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="ContextType" semanticCandidatesExpression="feature:contextTypes" domainClass="enorm.ContextType">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="ResourceRelation" semanticCandidatesExpression="feature:resourceRelations" domainClass="enorm.ResourceRelation">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="FeedbackType" semanticCandidatesExpression="feature:feedbackTypes" domainClass="enorm.FeedbackType">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="AuthorizationRule" semanticCandidatesExpression="feature:authorizationRules" domainClass="enorm.AuthorizationRule">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="ValidationRule" semanticCandidatesExpression="feature:validationRules" domainClass="enorm.ValidationRule">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="ModerationPolicy" semanticCandidatesExpression="feature:moderationPolicies" domainClass="enorm.ModerationPolicy">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="VerificationPolicy" semanticCandidatesExpression="feature:verificationPolicies" domainClass="enorm.VerificationPolicy">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <nodeMappings name="SortingPolicy" semanticCandidatesExpression="feature:sortingPolicies" domainClass="enorm.SortingPolicy">
+          <style xsi:type="description_1:SquareDescription"/>
+        </nodeMappings>
+        <edgeMappings name="UserType.superTypes" semanticCandidatesExpression="feature:userTypes" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='UserType']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='UserType']" targetFinderExpression="feature:superTypes" sourceFinderExpression="var:self" domainClass="enorm.UserType" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ContextType.contains" semanticCandidatesExpression="feature:contextTypes" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ContextType']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:contains" sourceFinderExpression="var:self" domainClass="enorm.ContextType" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ResourceType.superTypes" semanticCandidatesExpression="feature:resourceTypes" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:superTypes" sourceFinderExpression="var:self" domainClass="enorm.ResourceType" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ResourceRelation.source" semanticCandidatesExpression="feature:resourceRelations" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ResourceRelation']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:source" sourceFinderExpression="var:self" domainClass="enorm.ResourceRelation" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ResourceRelation.target" semanticCandidatesExpression="feature:resourceRelations" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ResourceRelation']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:target" sourceFinderExpression="var:self" domainClass="enorm.ResourceRelation" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="FeedbackDefinition.type" semanticCandidatesExpression="feature:feedbackDefinitions" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='FeedbackType']" targetFinderExpression="feature:type" sourceFinderExpression="var:self" domainClass="enorm.FeedbackDefinition" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="FeedbackDefinition.subjectResource" semanticCandidatesExpression="feature:feedbackDefinitions" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:subjectResource" sourceFinderExpression="var:self" domainClass="enorm.FeedbackDefinition" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="FeedbackDefinition.author" semanticCandidatesExpression="feature:feedbackDefinitions" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='UserType']" targetFinderExpression="feature:author" sourceFinderExpression="var:self" domainClass="enorm.FeedbackDefinition" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="FeedbackDefinition.subjectFeedback" semanticCandidatesExpression="feature:feedbackDefinitions" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:subjectFeedback" sourceFinderExpression="var:self" domainClass="enorm.FeedbackDefinition" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AuthorizationRule.actor" semanticCandidatesExpression="feature:authorizationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='AuthorizationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='UserType']" targetFinderExpression="feature:actor" sourceFinderExpression="var:self" domainClass="enorm.AuthorizationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AuthorizationRule.context" semanticCandidatesExpression="feature:authorizationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='AuthorizationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ContextType']" targetFinderExpression="feature:context" sourceFinderExpression="var:self" domainClass="enorm.AuthorizationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AuthorizationRule.resourceTarget" semanticCandidatesExpression="feature:authorizationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='AuthorizationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:resourceTarget" sourceFinderExpression="var:self" domainClass="enorm.AuthorizationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AuthorizationRule.feedbackTarget" semanticCandidatesExpression="feature:authorizationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='AuthorizationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:feedbackTarget" sourceFinderExpression="var:self" domainClass="enorm.AuthorizationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ValidationRule.appliesToResource" semanticCandidatesExpression="feature:validationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ValidationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:appliesToResource" sourceFinderExpression="var:self" domainClass="enorm.ValidationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ValidationRule.appliesToFeedback" semanticCandidatesExpression="feature:validationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ValidationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:appliesToFeedback" sourceFinderExpression="var:self" domainClass="enorm.ValidationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ValidationRule.invokedBy" semanticCandidatesExpression="feature:validationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ValidationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']" targetFinderExpression="feature:invokedBy" sourceFinderExpression="var:self" domainClass="enorm.ValidationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ModerationPolicy.monitorsResource" semanticCandidatesExpression="feature:moderationPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:monitorsResource" sourceFinderExpression="var:self" domainClass="enorm.ModerationPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ModerationPolicy.monitorsFeedback" semanticCandidatesExpression="feature:moderationPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:monitorsFeedback" sourceFinderExpression="var:self" domainClass="enorm.ModerationPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ModerationPolicy.executedBy" semanticCandidatesExpression="feature:moderationPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='UserType']" targetFinderExpression="feature:executedBy" sourceFinderExpression="var:self" domainClass="enorm.ModerationPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="ModerationPolicy.inContext" semanticCandidatesExpression="feature:moderationPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ModerationPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ContextType']" targetFinderExpression="feature:inContext" sourceFinderExpression="var:self" domainClass="enorm.ModerationPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AutomationRule.context" semanticCandidatesExpression="feature:automationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:context" sourceFinderExpression="var:self" domainClass="enorm.AutomationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AutomationRule.inContext" semanticCandidatesExpression="feature:automationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ContextType']" targetFinderExpression="feature:inContext" sourceFinderExpression="var:self" domainClass="enorm.AutomationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AutomationRule.onFeedback" semanticCandidatesExpression="feature:automationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:onFeedback" sourceFinderExpression="var:self" domainClass="enorm.AutomationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="AutomationRule.uses" semanticCandidatesExpression="feature:automationRules" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ValidationRule']" targetFinderExpression="feature:uses" sourceFinderExpression="var:self" domainClass="enorm.AutomationRule" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="Condition.attribute" semanticCandidatesExpression="aql:self.automationRules->collect(a | a.conditions)->flatten()" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='AutomationRule']/@subNodeMappings[name='Condition']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']/@subNodeMappings[name='Attribute']" targetFinderExpression="feature:attribute" sourceFinderExpression="var:self" domainClass="enorm.Condition" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="VerificationPolicy.verifies" semanticCandidatesExpression="feature:verificationPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='VerificationPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:verifies" sourceFinderExpression="var:self" domainClass="enorm.VerificationPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="SortingPolicy.appliesToResource" semanticCandidatesExpression="feature:sortingPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='ResourceType']" targetFinderExpression="feature:appliesToResource" sourceFinderExpression="var:self" domainClass="enorm.SortingPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="SortingPolicy.appliesToFeedback" semanticCandidatesExpression="feature:sortingPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@containerMappings[name='FeedbackDefinition']" targetFinderExpression="feature:appliesToFeedback" sourceFinderExpression="var:self" domainClass="enorm.SortingPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <edgeMappings name="SortingPolicy.inContext" semanticCandidatesExpression="feature:sortingPolicies" sourceMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='SortingPolicy']" targetMapping="//@ownedViewpoints[name='enorm']/@ownedRepresentations[name='RefModel%20Full%20Diagram']/@defaultLayer/@nodeMappings[name='ContextType']" targetFinderExpression="feature:inContext" sourceFinderExpression="var:self" domainClass="enorm.SortingPolicy" useDomainElement="true">
+          <style xsi:type="description_1:EdgeStyleDescription"/>
+        </edgeMappings>
+        <containerMappings name="ResourceType" semanticCandidatesExpression="feature:resourceTypes" domainClass="enorm.ResourceType" childrenPresentation="List">
+          <style xsi:type="description_1:FlatContainerStyleDescription" labelExpression="feature:name"/>
+          <subNodeMappings name="Attribute" semanticCandidatesExpression="feature:attributes" domainClass="enorm.Attribute">
+            <style xsi:type="description_1:SquareDescription"/>
+          </subNodeMappings>
+        </containerMappings>
+        <containerMappings name="FeedbackDefinition" semanticCandidatesExpression="feature:feedbackDefinitions" domainClass="enorm.FeedbackDefinition" childrenPresentation="List">
+          <style xsi:type="description_1:FlatContainerStyleDescription" labelExpression="feature:name"/>
+          <subNodeMappings name="FeedbackPolicy" semanticCandidatesExpression="aql:Sequence{self.policy}->excluding(null)" domainClass="enorm.FeedbackPolicy">
+            <style xsi:type="description_1:SquareDescription"/>
+          </subNodeMappings>
+          <subNodeMappings name="RatingPolicy" semanticCandidatesExpression="aql:Sequence{self.rating}->excluding(null)" domainClass="enorm.RatingPolicy">
+            <style xsi:type="description_1:SquareDescription"/>
+          </subNodeMappings>
+        </containerMappings>
+        <containerMappings name="AutomationRule" semanticCandidatesExpression="feature:automationRules" domainClass="enorm.AutomationRule" childrenPresentation="List">
+          <style xsi:type="description_1:FlatContainerStyleDescription" labelExpression="feature:name"/>
+          <subNodeMappings name="Condition" semanticCandidatesExpression="feature:conditions" domainClass="enorm.Condition">
+            <style xsi:type="description_1:SquareDescription"/>
+          </subNodeMappings>
+          <subNodeMappings name="Action" semanticCandidatesExpression="feature:actions" domainClass="enorm.Action">
+            <style xsi:type="description_1:SquareDescription"/>
+          </subNodeMappings>
+        </containerMappings>
+      </defaultLayer>
     </ownedRepresentations>
   </ownedViewpoints>
-</viewpoint:Group>
+</description:Group>
