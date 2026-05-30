@@ -1,7 +1,10 @@
 package pt.isep.enorm.ref.youtube.web.generated;
 
 import pt.isep.enorm.ref.youtube.domain.Channel;
+import pt.isep.enorm.ref.youtube.domain.Video;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedChannelService;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedVideoService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/channels")
 public class GeneratedChannelController {
     private final GeneratedChannelService service;
+    private final GeneratedVideoService videoService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedChannelController(GeneratedChannelService service) { this.service = service; }
+    public GeneratedChannelController(GeneratedChannelService service, GeneratedVideoService videoService, GeneratedModerationService moderationService) { this.service = service; this.videoService = videoService; this.moderationService = moderationService; }
 
     @GetMapping public List<Channel> list() { return service.list(); }
     @GetMapping("/{channelId}") public Channel get(@PathVariable String channelId) { return service.get(channelId); }
@@ -29,5 +34,5 @@ public class GeneratedChannelController {
 
     @PostMapping("/{channelId}/videos")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createVideo(@PathVariable String channelId, @RequestBody Object payload) { }
+    public Video createVideo(@PathVariable String channelId, @RequestBody Video payload) { moderationService.moderateVideo(null, payload); return videoService.create(payload); }
 }

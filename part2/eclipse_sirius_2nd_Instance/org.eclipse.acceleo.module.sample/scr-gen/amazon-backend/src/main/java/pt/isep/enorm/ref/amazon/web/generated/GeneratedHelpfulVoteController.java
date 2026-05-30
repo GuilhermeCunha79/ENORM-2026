@@ -1,7 +1,8 @@
 package pt.isep.enorm.ref.amazon.web.generated;
 
+import pt.isep.enorm.ref.amazon.domain.HelpfulVote;
+import pt.isep.enorm.ref.amazon.service.generated.GeneratedHelpfulVoteService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/comments/{commentId}/votes")
 public class GeneratedHelpfulVoteController {
+    private final GeneratedHelpfulVoteService service;
+
+    public GeneratedHelpfulVoteController(GeneratedHelpfulVoteService service) { this.service = service; }
 
     @GetMapping
-    public List<Map<String, Object>> list(@PathVariable String commentId) { return List.of(); }
+    public List<HelpfulVote> list(@PathVariable String commentId) { return service.list(); }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    public HelpfulVote create(@PathVariable String commentId, @RequestBody HelpfulVote payload) { return service.create(payload); }
 
     @DeleteMapping("/{voteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String commentId, @PathVariable String voteId) { }
+    public void delete(@PathVariable String commentId, @PathVariable String voteId) { service.delete(voteId); }
 }

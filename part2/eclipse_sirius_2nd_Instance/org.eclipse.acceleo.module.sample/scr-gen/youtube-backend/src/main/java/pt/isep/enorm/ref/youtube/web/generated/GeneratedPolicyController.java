@@ -1,7 +1,12 @@
 package pt.isep.enorm.ref.youtube.web.generated;
 
+import pt.isep.enorm.ref.youtube.domain.ChannelPermissionPolicy;
+import pt.isep.enorm.ref.youtube.domain.ContentValidationRule;
+import pt.isep.enorm.ref.youtube.domain.SortingPolicy;
+import pt.isep.enorm.ref.youtube.repository.ChannelPermissionPolicyRepository;
+import pt.isep.enorm.ref.youtube.repository.ContentValidationRuleRepository;
+import pt.isep.enorm.ref.youtube.repository.SortingPolicyRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/policies")
 public class GeneratedPolicyController {
-    @GetMapping("/channels/{channelId}/permissions") public List<String> permissions(@PathVariable String channelId) { return List.of(); }
-    @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/channels/{channelId}/sorting") public List<String> sorting(@PathVariable String channelId) { return List.of(); }
-    @PostMapping("/channels/{channelId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    private final ChannelPermissionPolicyRepository channelPermissionPolicyRepository;
+    private final SortingPolicyRepository sortingPolicyRepository;
+    private final ContentValidationRuleRepository contentValidationRuleRepository;
+
+    public GeneratedPolicyController(ChannelPermissionPolicyRepository channelPermissionPolicyRepository, SortingPolicyRepository sortingPolicyRepository, ContentValidationRuleRepository contentValidationRuleRepository) {
+        this.channelPermissionPolicyRepository = channelPermissionPolicyRepository;
+        this.sortingPolicyRepository = sortingPolicyRepository;
+        this.contentValidationRuleRepository = contentValidationRuleRepository;
+    }
+
+    @GetMapping("/channels/{channelId}/permissions") public List<ChannelPermissionPolicy> permissions(@PathVariable String channelId) { return channelPermissionPolicyRepository.findAll(); }
+    @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public ChannelPermissionPolicy createPermission(@PathVariable String channelId, @RequestBody ChannelPermissionPolicy payload) { return channelPermissionPolicyRepository.save(payload); }
+    @GetMapping("/channels/{channelId}/sorting") public List<SortingPolicy> sorting(@PathVariable String channelId) { return sortingPolicyRepository.findAll(); }
+    @PostMapping("/channels/{channelId}/sorting") @ResponseStatus(HttpStatus.CREATED) public SortingPolicy createSorting(@PathVariable String channelId, @RequestBody SortingPolicy payload) { return sortingPolicyRepository.save(payload); }
+    @GetMapping("/validation-rules") public List<ContentValidationRule> validationRules(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return contentValidationRuleRepository.findAll(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public ContentValidationRule createValidationRule(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody ContentValidationRule payload) { return contentValidationRuleRepository.save(payload); }
 }

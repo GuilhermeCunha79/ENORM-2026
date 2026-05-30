@@ -1,7 +1,8 @@
 package pt.isep.enorm.ref.amazon.web.generated;
 
+import pt.isep.enorm.ref.amazon.domain.CommentReview;
+import pt.isep.enorm.ref.amazon.service.generated.GeneratedCommentReviewService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,21 +18,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/comments")
 public class GeneratedCommentReviewController {
+    private final GeneratedCommentReviewService service;
+
+    public GeneratedCommentReviewController(GeneratedCommentReviewService service) { this.service = service; }
 
     @GetMapping
-    public List<Map<String, Object>> list(@RequestParam(required = false) String productId) { return List.of(); }
+    public List<CommentReview> list(@RequestParam(required = false) String productId) { return service.list(); }
 
     @GetMapping("/{commentId}")
-    public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
+    public CommentReview get(@PathVariable String commentId) { return service.get(commentId); }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestParam(required = false) String productId, @RequestBody Map<String, Object> payload) { return payload; }
+    public CommentReview create(@RequestParam(required = false) String productId, @RequestBody CommentReview payload) { return service.create(payload); }
 
     @PutMapping("/{commentId}")
-    public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    public CommentReview update(@PathVariable String commentId, @RequestBody CommentReview payload) { return service.update(commentId, payload); }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String commentId) { }
+    public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }

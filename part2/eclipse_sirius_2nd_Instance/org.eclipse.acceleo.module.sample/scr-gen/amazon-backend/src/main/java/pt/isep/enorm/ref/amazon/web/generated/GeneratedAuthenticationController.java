@@ -1,5 +1,7 @@
 package pt.isep.enorm.ref.amazon.web.generated;
 
+import pt.isep.enorm.ref.amazon.domain.AmazonUser;
+import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,11 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class GeneratedAuthenticationController {
+    private final AmazonUserRepository userRepository;
+
+    public GeneratedAuthenticationController(AmazonUserRepository userRepository) { this.userRepository = userRepository; }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> register(@RequestBody Map<String, Object> payload) {
-        return Map.of("status", "registered", "model", "Amazon");
+    public AmazonUser register(@RequestBody AmazonUser payload) {
+        return userRepository.save(payload);
     }
 
     @PostMapping("/login")

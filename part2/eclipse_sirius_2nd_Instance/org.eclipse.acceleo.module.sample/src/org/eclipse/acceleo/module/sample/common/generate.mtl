@@ -176,129 +176,8 @@ Model: [m.name/] [m.version/]
 Profile: [runtimeProfile(m)/]
 Port: [serverPort(m)/]
 
-Scope restriction:
-This generator must only expose behavior that is explicitly present in the provided domain model and REF scenario text.
-No extra platform behavior should be inferred beyond those artifacts.
-
 Scenario summary:
 [scenarioSummary(m)/]
-
-Generated endpoints:
-[if (baseName(m) = 'Amazon')]- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/contexts
-- GET /api/contexts/{contextId}
-- POST /api/contexts
-- PUT /api/contexts/{contextId}
-- DELETE /api/contexts/{contextId}
-- GET /api/products
-- POST /api/products
-- GET /api/products/{productId}/average-rating
-- POST /api/products/{productId}/reviews
-- POST /api/reviews
-- GET /api/comments?productId={productId}
-- GET /api/comments/{commentId}
-- POST /api/comments?productId={productId}
-- PUT /api/comments/{commentId}
-- DELETE /api/comments/{commentId}
-- GET /api/comments/{commentId}/votes
-- POST /api/comments/{commentId}/votes
-- DELETE /api/comments/{commentId}/votes/{voteId}
-- GET /api/orders
-- GET /api/orders/{orderId}
-- POST /api/orders
-- PUT /api/orders/{orderId}
-- DELETE /api/orders/{orderId}
-- POST /api/moderation/reviews/{reviewId}/simulate
-- POST /api/moderation/reviews/simulate
-- GET /h2-console
-[/if][if (baseName(m) = 'Reddit')]- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/subreddits
-- GET /api/subreddits/{subredditId}
-- POST /api/subreddits
-- PUT /api/subreddits/{subredditId}
-- DELETE /api/subreddits/{subredditId}
-- GET /api/posts?subredditId={subredditId}
-- GET /api/posts/{postId}
-- POST /api/subreddits/{subredditId}/posts
-- PUT /api/posts/{postId}
-- DELETE /api/posts/{postId}
-- GET /api/comments?postId={postId}
-- GET /api/comments/{commentId}
-- POST /api/posts/{postId}/comments
-- PUT /api/comments/{commentId}
-- DELETE /api/comments/{commentId}
-- GET /api/votes?postId={postId}
-- GET /api/votes?commentId={commentId}
-- POST /api/votes?postId={postId}
-- POST /api/votes?commentId={commentId}
-- DELETE /api/votes/{voteId}
-- GET /api/subscriptions?userId={userId}
-- POST /api/subscriptions/{subredditId}
-- DELETE /api/subscriptions/{subscriptionId}
-- GET /api/policies/subreddits/{subredditId}/permissions
-- POST /api/policies/subreddits/{subredditId}/permissions
-- GET /api/policies/subreddits/{subredditId}/sorting
-- POST /api/policies/subreddits/{subredditId}/sorting
-- GET /api/policies/validation-rules?postId={postId}&commentId={commentId}
-- POST /api/policies/validation-rules?postId={postId}&commentId={commentId}
-- GET /api/reports?status={status}
-- POST /api/reports?postId={postId}
-- POST /api/reports?commentId={commentId}
-- GET /api/moderation/posts/{postId}/checks
-- POST /api/moderation/posts/{postId}/checks
-- GET /api/moderation/comments/{commentId}/checks
-- POST /api/moderation/comments/{commentId}/checks
-- POST /api/moderation/posts/{postId}/comment-status?status={status}
-- POST /api/moderation/posts/{postId}/simulate
-- POST /api/moderation/comments/{commentId}/simulate
-- POST /api/moderation/reports/simulate
-- GET /h2-console
-[/if][if (baseName(m) = 'Youtube')]- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/channels
-- GET /api/channels/{channelId}
-- POST /api/channels
-- PUT /api/channels/{channelId}
-- DELETE /api/channels/{channelId}
-- GET /api/videos?channelId={channelId}
-- GET /api/videos/{videoId}
-- POST /api/channels/{channelId}/videos
-- PUT /api/videos/{videoId}
-- DELETE /api/videos/{videoId}
-- GET /api/comments?videoId={videoId}
-- GET /api/comments/{commentId}
-- POST /api/videos/{videoId}/comments
-- PUT /api/comments/{commentId}
-- DELETE /api/comments/{commentId}
-- GET /api/likes?videoId={videoId}
-- GET /api/likes?commentId={commentId}
-- POST /api/likes?videoId={videoId}
-- POST /api/likes?commentId={commentId}
-- DELETE /api/likes/{likeId}
-- GET /api/subscriptions?userId={userId}
-- POST /api/subscriptions/{channelId}
-- DELETE /api/subscriptions/{subscriptionId}
-- GET /api/policies/channels/{channelId}/permissions
-- POST /api/policies/channels/{channelId}/permissions
-- GET /api/policies/channels/{channelId}/sorting
-- POST /api/policies/channels/{channelId}/sorting
-- GET /api/policies/validation-rules?videoId={videoId}&commentId={commentId}
-- POST /api/policies/validation-rules?videoId={videoId}&commentId={commentId}
-- GET /api/reports?status={status}
-- POST /api/reports?videoId={videoId}
-- POST /api/reports?commentId={commentId}
-- GET /api/moderation/videos/{videoId}/checks
-- POST /api/moderation/videos/{videoId}/checks
-- GET /api/moderation/comments/{commentId}/checks
-- POST /api/moderation/comments/{commentId}/checks
-- POST /api/moderation/videos/{videoId}/comment-status?status={status}
-- POST /api/moderation/videos/{videoId}/simulate
-- POST /api/moderation/comments/{commentId}/simulate
-- POST /api/moderation/reports/simulate
-- GET /h2-console
-[/if]
 [/file]
 [/template]
 
@@ -638,10 +517,16 @@ public class [baseName(m)/]UserDetailsService {
 [file (domainGeneratedPath(m) + '/Generated' + className + '.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @MappedSuperclass
 @Table(name = "[sqlTableName(className)/]")
@@ -650,12 +535,31 @@ public abstract class Generated[className/] {
     @GeneratedValue
     private Long id;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> attributes = new LinkedHashMap<>();
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonAnyGetter
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes == null ? new LinkedHashMap<>() : attributes;
+    }
+
+    @JsonAnySetter
+    public void setAttribute(String name, Object value) {
+        if (value != null) {
+            attributes.put(name, value.toString());
+        }
     }
 }
 [/file]
@@ -674,14 +578,35 @@ public class [className/] extends Generated[className/] {
 [generateRepositoryStack(m, className)/]
 [/template]
 
+[template public generateEntityWrapperOnly(m : RefModel, className : String)]
+[file (domainRootPath(m) + '/' + className + '.java', false, 'UTF-8')]
+package [domainPackage(m)/];
+
+import [domainGeneratedPackage(m)/].Generated[className/];
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "[sqlTableName(className)/]")
+public class [className/] extends Generated[className/] {
+}
+[/file]
+[/template]
+
 [template public generateDomainPair(m : RefModel, className : String)]
 [file (domainGeneratedPath(m) + '/Generated' + className + '.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Table;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @MappedSuperclass
 @Table(name = "[sqlTableName(className)/]")
@@ -690,12 +615,31 @@ public abstract class Generated[className/] {
     @GeneratedValue
     private Long id;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> attributes = new LinkedHashMap<>();
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonAnyGetter
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes == null ? new LinkedHashMap<>() : attributes;
+    }
+
+    @JsonAnySetter
+    public void setAttribute(String name, Object value) {
+        if (value != null) {
+            attributes.put(name, value.toString());
+        }
     }
 }
 [/file]
@@ -718,11 +662,45 @@ public class [className/] extends Generated[className/] {
 package [repositoryGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[className/];
+[if (className = 'Report')]
+import [domainEnumsPackage(m)/].ReportStatus;
+import java.util.List;
+import java.util.Optional;
+[/if]
+[if (className = 'ProductReview')]
+import [domainEnumsPackage(m)/].ReviewStatus;
+import java.util.List;
+[/if]
+[if (className = 'PostModerationCheck' or className = 'CommentModerationCheck' or className = 'VideoModerationCheck')]
+import java.util.List;
+[/if]
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface Generated[className/]Repository extends JpaRepository<[className/], Long> {
+[if (className = 'PostModerationCheck')]
+    List<PostModerationCheck> findByPostId(Long postId);
+[/if]
+[if (className = 'CommentModerationCheck')]
+    List<CommentModerationCheck> findByCommentId(Long commentId);
+[/if]
+[if (className = 'VideoModerationCheck')]
+    List<VideoModerationCheck> findByVideoId(Long videoId);
+[/if]
+[if (className = 'Report')]
+    List<Report> findByStatus(ReportStatus status);
+[if (baseName(m) = 'Reddit')]
+    Optional<Report> findFirstByPostIdAndStatusOrderByTimestampDesc(Long postId, ReportStatus status);
+[/if]
+[if (baseName(m) = 'Youtube')]
+    Optional<Report> findFirstByVideoIdAndStatusOrderByTimestampDesc(Long videoId, ReportStatus status);
+[/if]
+    Optional<Report> findFirstByCommentIdAndStatusOrderByTimestampDesc(Long commentId, ReportStatus status);
+[/if]
+[if (className = 'ProductReview')]
+    List<ProductReview> findByStatus(ReviewStatus status);
+[/if]
 }
 [/file]
 [file (repositoryPath(m) + '/' + className + 'Repository.java', false, 'UTF-8')]
@@ -773,6 +751,102 @@ public class [className/]Service extends Generated[className/]Service {
 [/template]
 
 [template public generateSimpleServicePair(m : RefModel, className : String)]
+[if (not (className = 'Authentication' or className = 'Policy' or className = 'Context'))]
+[file (serviceGeneratedPath(m) + '/Generated' + className + 'Service.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+import [domainPackage(m)/].[className/];
+[if (className = 'Report')]
+import [domainEnumsPackage(m)/].ReportStatus;
+import java.time.Instant;
+[/if]
+import [repositoryGeneratedPackage(m)/].Generated[className/]Repository;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class Generated[className/]Service {
+    protected final Generated[className/]Repository repository;
+
+    public Generated[className/]Service(Generated[className/]Repository repository) {
+        this.repository = repository;
+    }
+
+    public List<[className/]> list() {
+        return repository.findAll();
+    }
+
+    public [className/] get(String id) {
+        return repository.findById(toLong(id))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "[className/] '" + id + "' was not found."));
+    }
+
+    public [className/] create([className/] entity) {
+[if (className = 'Report')]
+        if (entity.getStatus() == null) {
+            entity.setStatus(ReportStatus.PENDING);
+        }
+        if (entity.getTimestamp() == null) {
+            entity.setTimestamp(Instant.now());
+        }
+[/if]
+        return repository.save(entity);
+    }
+
+    public [className/] update(String id, [className/] entity) {
+        entity.setId(toLong(id));
+        return repository.save(entity);
+    }
+
+    public void delete(String id) {
+        repository.deleteById(toLong(id));
+    }
+
+    private Long toLong(String id) {
+        try {
+            return Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid numeric id: " + id);
+        }
+    }
+}
+[/file]
+[file (servicePath(m) + '/' + className + 'Service.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].Generated[className/]Service;
+import [repositoryPackage(m)/].[className/]Repository;
+[if (className = 'Report')]
+import [domainPackage(m)/].Report;
+[/if]
+import org.springframework.stereotype.Service;
+
+@Service
+public class [className/]Service extends Generated[className/]Service {
+[if (className = 'Report')]
+    private final ModerationService moderationService;
+
+    public [className/]Service([className/]Repository repository, ModerationService moderationService) {
+        super(repository);
+        this.moderationService = moderationService;
+    }
+
+    @Override
+    public Report create(Report entity) {
+        Report saved = super.create(entity);
+        moderationService.moderateAutomaticallyOnReportCreated(saved);
+        return saved;
+    }
+[/if]
+[if (className <> 'Report')]
+    public [className/]Service([className/]Repository repository) {
+        super(repository);
+    }
+[/if]
+}
+[/file]
+[/if]
+[if (className = 'Authentication' or className = 'Policy' or className = 'Context')]
 [file (serviceGeneratedPath(m) + '/Generated' + className + 'Service.java', false, 'ISO-8859-1')]
 package [serviceGeneratedPackage(m)/];
 
@@ -809,6 +883,7 @@ import org.springframework.stereotype.Service;
 public class [className/]Service extends Generated[className/]Service {
 }
 [/file]
+[/if]
 [/template]
 
 [template public generateGeneratedServiceOnly(m : RefModel, className : String)]
@@ -829,17 +904,882 @@ public class Generated[className/]Service {
 [file (serviceGeneratedPath(m) + '/GeneratedModerationService.java', false, 'ISO-8859-1')]
 package [serviceGeneratedPackage(m)/];
 
+import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class GeneratedModerationService {
+    private final Object postRepository;
+    private final Object commentRepository;
+    private final Object videoRepository;
+    private final Object postModerationCheckRepository;
+    private final Object commentModerationCheckRepository;
+    private final Object videoModerationCheckRepository;
+    private final Map<String, List<Map<String, Object>>> checksByTarget = new ConcurrentHashMap<>();
+    private final Map<String, String> contentStatuses = new ConcurrentHashMap<>();
+
+    public GeneratedModerationService() {
+        this(null, null, null, null, null, null);
+    }
+
+    public GeneratedModerationService(
+            Object postRepository,
+            Object commentRepository,
+            Object videoRepository,
+            Object postModerationCheckRepository,
+            Object commentModerationCheckRepository,
+            Object videoModerationCheckRepository) {
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.videoRepository = videoRepository;
+        this.postModerationCheckRepository = postModerationCheckRepository;
+        this.commentModerationCheckRepository = commentModerationCheckRepository;
+        this.videoModerationCheckRepository = videoModerationCheckRepository;
+    }
+
+    public Map<String, Object> moderatePost(String postId, Object content) {
+        return moderateContent("post", postId, content);
+    }
+
+    public Map<String, Object> moderateComment(String commentId, Object content) {
+        return moderateContent("comment", commentId, content);
+    }
+
+    public Map<String, Object> moderateVideo(String videoId, Object content) {
+        return moderateContent("video", videoId, content);
+    }
+
+    public Map<String, Object> moderateContent(String contentType, String contentId, Object content) {
+        String text = extractText(content);
+        List<String> matchedRules = matchedRules(text);
+        String decision = matchedRules.isEmpty() ? "APPROVED" : "FLAGGED";
+        String status = matchedRules.isEmpty() ? "ACTIVE" : "FLAGGED";
+        updateContentStatus(content, decision);
+        Object persistedContent = persistContent(contentType, contentId, content);
+        String targetId = normalizeId(contentId, persistedContent);
+        Map<String, Object> check = saveModerationCheck(contentType, targetId, persistedContent, text, matchedRules, decision, status, Instant.now());
+        contentStatuses.put(key(contentType, targetId), status);
+        return check;
+    }
+
+    public List<Map<String, Object>> checksFor(String contentType, String contentId) {
+        List<Map<String, Object>> checks = new ArrayList<>(checksByTarget.getOrDefault(key(contentType, contentId), List.of()));
+        Object repository = checkRepositoryFor(contentType);
+        if (repository == null) {
+            return List.copyOf(checks);
+        }
+
+        for (Object check : findAll(repository)) {
+            if (Objects.equals(contentId, associatedContentId(check, contentType))) {
+                checks.add(checkToMap(contentType, check));
+            }
+        }
+        return List.copyOf(checks);
+    }
+
+    public Map<String, Object> changeContentStatus(String contentType, String contentId, String status) {
+        String normalizedStatus = normalizeStatus(status);
+        contentStatuses.put(key(contentType, contentId), normalizedStatus);
+        Object content = findById(contentRepositoryFor(contentType), contentId);
+        if (content != null) {
+            setContentStatus(content, normalizedStatus);
+            save(contentRepositoryFor(contentType), content);
+        }
+
+        Map<String, Object> check = new LinkedHashMap<>();
+        check.put("id", UUID.randomUUID().toString());
+        check.put("targetType", contentType);
+        check.put("targetId", contentId);
+        check.put("type", "MANUAL_STATUS_CHANGE");
+        check.put("result", normalizedStatus);
+        check.put("status", normalizedStatus);
+        check.put("timestamp", Instant.now().toString());
+        checksByTarget.computeIfAbsent(key(contentType, contentId), ignored -> new ArrayList<>()).add(check);
+        return check;
+    }
+
+    public String statusFor(String contentType, String contentId) {
+        return contentStatuses.getOrDefault(key(contentType, contentId), "UNKNOWN");
+    }
+
+    protected String extractText(Object content) {
+        if (content instanceof Map<?, ?> map) {
+            return firstPresent(map, "text", "body", "title", "description", "content", "message");
+        }
+
+        StringBuilder text = new StringBuilder();
+        appendGetterValue(content, text, "getText");
+        appendGetterValue(content, text, "getBody");
+        appendGetterValue(content, text, "getTitle");
+        appendGetterValue(content, text, "getDescription");
+        appendGetterValue(content, text, "getContent");
+        return text.toString().trim();
+    }
+
+    protected List<String> matchedRules(String text) {
+        String normalized = text == null ? "" : text.toLowerCase(Locale.ROOT);
+        List<String> matches = new ArrayList<>();
+        if (normalized.contains("spam")) {
+            matches.add("spam");
+        }
+        if (normalized.contains("hate") || normalized.contains("toxicity") || normalized.contains("toxic")) {
+            matches.add("toxicity");
+        }
+        if (normalized.contains("abuse") || normalized.contains("offensive")) {
+            matches.add("abuse");
+        }
+        if (normalized.contains("blocked-word") || normalized.contains("banned-link")) {
+            matches.add("blocked-term");
+        }
+        if (normalized.contains("copyright") || normalized.contains("reupload") || normalized.contains("unlicensed")) {
+            matches.add("copyright-risk");
+        }
+        return matches;
+    }
+
+    protected Map<String, Object> saveModerationCheck(String contentType, String contentId, Object content, String text, List<String> matchedRules, String decision, String status, Instant timestamp) {
+        Map<String, Object> check = new LinkedHashMap<>();
+        check.put("id", UUID.randomUUID().toString());
+        check.put("targetType", contentType);
+        check.put("targetId", contentId);
+        check.put("type", matchedRules.isEmpty() ? "POLICY" : String.join(",", matchedRules));
+        check.put("result", decision);
+        check.put("status", status);
+        check.put("matchedRules", matchedRules);
+        check.put("textExcerpt", text == null ? "" : text.substring(0, Math.min(text.length(), 160)));
+        check.put("timestamp", timestamp.toString());
+
+        Object persistedCheck = persistModerationCheck(contentType, content, matchedRules, decision, timestamp);
+        Object persistedId = getterValue(persistedCheck, "getId");
+        if (persistedId != null) {
+            check.put("id", persistedId.toString());
+        }
+
+        if (persistedCheck == null) {
+            checksByTarget.computeIfAbsent(key(contentType, contentId), ignored -> new ArrayList<>()).add(check);
+        }
+        return check;
+    }
+
+    protected void updateContentStatus(Object content, String decision) {
+        String status = "FLAGGED".equals(decision) || "REJECTED".equals(decision) ? "FLAGGED" : "ACTIVE";
+        setContentStatus(content, status);
+    }
+
+    private void setContentStatus(Object content, String status) {
+        if (content instanceof Map<?, ?> rawMap) {
+            @SuppressWarnings("unchecked")
+            Map<Object, Object> map = (Map<Object, Object>) rawMap;
+            try {
+                map.put("status", status);
+            } catch (UnsupportedOperationException ignored) {
+            }
+            return;
+        }
+
+        invokeSetter(content, "setStatus", enumValue("[domainEnumsPackage(m)/].ContentStatus", status, "UNDER_REVIEW"));
+        invokeSetter(content, "setStatus", status);
+    }
+
+    private String normalizeId(String providedId, Object content) {
+        if (providedId != null && !providedId.isBlank()) {
+            return providedId;
+        }
+        if (content instanceof Map<?, ?> map && map.get("id") != null) {
+            return map.get("id").toString();
+        }
+        try {
+            var method = content.getClass().getMethod("getId");
+            Object value = method.invoke(content);
+            if (value != null) {
+                return value.toString();
+            }
+        } catch (Exception ignored) {
+        }
+        return UUID.randomUUID().toString();
+    }
+
+    private Object persistContent(String contentType, String contentId, Object content) {
+        Object repository = contentRepositoryFor(contentType);
+        if (repository == null || content == null || content instanceof Map<?, ?>) {
+            return content;
+        }
+
+        if (contentId != null && !contentId.isBlank()) {
+            Object existing = findById(repository, contentId);
+            if (existing != null) {
+                setContentStatus(existing, statusFrom(content));
+                return save(repository, existing);
+            }
+        }
+        return save(repository, content);
+    }
+
+    private Object persistModerationCheck(String contentType, Object content, List<String> matchedRules, String decision, Instant timestamp) {
+        Object repository = checkRepositoryFor(contentType);
+        if (repository == null || content == null || content instanceof Map<?, ?>) {
+            return null;
+        }
+
+        String className = switch (contentType) {
+            case "post" -> "[domainPackage(m)/].PostModerationCheck";
+            case "video" -> "[domainPackage(m)/].VideoModerationCheck";
+            case "comment" -> "[domainPackage(m)/].CommentModerationCheck";
+            default -> null;
+        };
+        if (className == null) {
+            return null;
+        }
+
+        try {
+            Object check = Class.forName(className).getDeclaredConstructor().newInstance();
+            String type = matchedRules.isEmpty() ? "CONTENT" : moderationTypeFor(matchedRules.get(0));
+            String result = "APPROVED".equals(decision) ? "APPROVED" : "FLAGGED";
+            if ("comment".equals(contentType)) {
+                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].CommentModerationType", type, "SPAM"));
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].CommentModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setComment", content);
+            } else if ("post".equals(contentType)) {
+                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].PostModerationType", type, "SPAM"));
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].PostModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setPost", content);
+            } else if ("video".equals(contentType)) {
+                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].VideoModerationType", type, "SPAM"));
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].VideoModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setVideo", content);
+            }
+            invokeSetter(check, "setTimestamp", timestamp);
+            return save(repository, check);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private String moderationTypeFor(String rule) {
+        String normalized = rule == null ? "" : rule.toLowerCase(Locale.ROOT);
+        if (normalized.contains("copyright")) {
+            return "COPYRIGHT";
+        }
+        if (normalized.contains("toxicity") || normalized.contains("abuse") || normalized.contains("offensive")) {
+            return "TOXICITY";
+        }
+        if (normalized.contains("blocked") || normalized.contains("banned")) {
+            return "BLOCKED_WORD";
+        }
+        return "SPAM";
+    }
+
+    private String statusFrom(Object content) {
+        Object status = getterValue(content, "getStatus");
+        return status == null ? "UNDER_REVIEW" : status.toString();
+    }
+
+    private Object contentRepositoryFor(String contentType) {
+        return switch (contentType) {
+            case "post" -> postRepository;
+            case "comment" -> commentRepository;
+            case "video" -> videoRepository;
+            default -> null;
+        };
+    }
+
+    private Object checkRepositoryFor(String contentType) {
+        return switch (contentType) {
+            case "post" -> postModerationCheckRepository;
+            case "comment" -> commentModerationCheckRepository;
+            case "video" -> videoModerationCheckRepository;
+            default -> null;
+        };
+    }
+
+    private Object save(Object repository, Object entity) {
+        if (repository == null || entity == null) {
+            return entity;
+        }
+        for (Method method : repository.getClass().getMethods()) {
+            if (!method.getName().equals("save") || method.getParameterCount() != 1) {
+                continue;
+            }
+            try {
+                return method.invoke(repository, entity);
+            } catch (Exception ignored) {
+            }
+        }
+        return entity;
+    }
+
+    private Object findById(Object repository, String id) {
+        if (repository == null || id == null || id.isBlank()) {
+            return null;
+        }
+        for (Method method : repository.getClass().getMethods()) {
+            if (!method.getName().equals("findById") || method.getParameterCount() != 1) {
+                continue;
+            }
+            try {
+                Object result = method.invoke(repository, Long.valueOf(id));
+                if (result instanceof java.util.Optional<?> optional) {
+                    return optional.orElse(null);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    private Iterable<?> findAll(Object repository) {
+        if (repository == null) {
+            return List.of();
+        }
+        try {
+            Object result = repository.getClass().getMethod("findAll").invoke(repository);
+            return result instanceof Iterable<?> iterable ? iterable : List.of();
+        } catch (Exception ignored) {
+            return List.of();
+        }
+    }
+
+    private Map<String, Object> checkToMap(String contentType, Object check) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        Object id = getterValue(check, "getId");
+        Object type = getterValue(check, "getType");
+        Object result = getterValue(check, "getResult");
+        Object timestamp = getterValue(check, "getTimestamp");
+        map.put("id", id == null ? null : id.toString());
+        map.put("targetType", contentType);
+        map.put("targetId", associatedContentId(check, contentType));
+        map.put("type", type == null ? null : type.toString());
+        map.put("result", result == null ? null : result.toString());
+        map.put("timestamp", timestamp == null ? null : timestamp.toString());
+        return map;
+    }
+
+    private String associatedContentId(Object check, String contentType) {
+        Object content = switch (contentType) {
+            case "post" -> getterValue(check, "getPost");
+            case "comment" -> getterValue(check, "getComment");
+            case "video" -> getterValue(check, "getVideo");
+            default -> null;
+        };
+        Object id = getterValue(content, "getId");
+        return id == null ? null : id.toString();
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Object enumValue(String enumClassName, String preferred, String fallback) {
+        try {
+            Class<?> enumClass = Class.forName(enumClassName);
+            try {
+                return Enum.valueOf((Class<Enum>) enumClass.asSubclass(Enum.class), preferred);
+            } catch (Exception ignored) {
+                return Enum.valueOf((Class<Enum>) enumClass.asSubclass(Enum.class), fallback);
+            }
+        } catch (Exception ignored) {
+            return preferred;
+        }
+    }
+
+    private boolean invokeSetter(Object target, String methodName, Object value) {
+        if (target == null || value == null) {
+            return false;
+        }
+        for (Method method : target.getClass().getMethods()) {
+            if (!method.getName().equals(methodName) || method.getParameterCount() != 1) {
+                continue;
+            }
+            Class<?> parameter = null;
+            for (Class<?> candidate : method.getParameterTypes()) {
+                parameter = candidate;
+                break;
+            }
+            if (parameter == null || !parameter.isAssignableFrom(value.getClass())) {
+                continue;
+            }
+            try {
+                method.invoke(target, value);
+                return true;
+            } catch (Exception ignored) {
+            }
+        }
+        return false;
+    }
+
+    private Object getterValue(Object target, String methodName) {
+        if (target == null) {
+            return null;
+        }
+        try {
+            return target.getClass().getMethod(methodName).invoke(target);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private String normalizeStatus(String status) {
+        if (status == null || status.isBlank()) {
+            return "UNDER_REVIEW";
+        }
+        return status.trim().toUpperCase(Locale.ROOT);
+    }
+
+    private String key(String contentType, String contentId) {
+        return contentType + ":" + contentId;
+    }
+
+    private String firstPresent(Map<?, ?> map, String... keys) {
+        StringBuilder text = new StringBuilder();
+        for (String key : keys) {
+            Object value = map.get(key);
+            if (value != null) {
+                if (text.length() > 0) {
+                    text.append(' ');
+                }
+                text.append(value);
+            }
+        }
+        return text.toString().trim();
+    }
+
+    private void appendGetterValue(Object content, StringBuilder text, String getterName) {
+        try {
+            var method = content.getClass().getMethod(getterName);
+            Object value = method.invoke(content);
+            if (value != null) {
+                if (text.length() > 0) {
+                    text.append(' ');
+                }
+                text.append(value);
+            }
+        } catch (Exception ignored) {
+        }
+    }
 }
 [/file]
 [file (servicePath(m) + '/ModerationService.java', false, 'UTF-8')]
 package [servicePackage(m)/];
 
 import [serviceGeneratedPackage(m)/].GeneratedModerationService;
+[if (baseName(m) = 'Reddit')]
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].Post;
+import [domainPackage(m)/].RedditUser;
+import [domainPackage(m)/].Report;
+import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].ReportStatus;
+import [repositoryPackage(m)/].CommentModerationCheckRepository;
+import [repositoryPackage(m)/].CommentRepository;
+import [repositoryPackage(m)/].PostModerationCheckRepository;
+import [repositoryPackage(m)/].PostRepository;
+import [repositoryPackage(m)/].ReportRepository;
+[/if]
+[if (baseName(m) = 'Youtube')]
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].Report;
+import [domainPackage(m)/].Video;
+import [domainPackage(m)/].YoutubeUser;
+import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].ReportStatus;
+import [repositoryPackage(m)/].CommentModerationCheckRepository;
+import [repositoryPackage(m)/].CommentRepository;
+import [repositoryPackage(m)/].ReportRepository;
+import [repositoryPackage(m)/].VideoModerationCheckRepository;
+import [repositoryPackage(m)/].VideoRepository;
+[/if]
+[if (baseName(m) = 'Amazon')]
+import [domainPackage(m)/].AmazonUser;
+import [domainPackage(m)/].ProductReview;
+import [domainEnumsPackage(m)/].ReviewStatus;
+import [repositoryPackage(m)/].ProductReviewRepository;
+import [serviceGeneratedPackage(m)/].GeneratedModerationModel;
+import [serviceGeneratedPackage(m)/].GeneratedModerationModel.AutomationRuleSpec;
+import [serviceGeneratedPackage(m)/].GeneratedModerationModel.ConditionSpec;
+import [serviceGeneratedPackage(m)/].GeneratedModerationModel.PolicySpec;
+[/if]
+import [servicePackage(m)/].projection.ModerationSimulationResult;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ModerationService extends GeneratedModerationService {
+[if (baseName(m) = 'Reddit')]
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
+
+    public ModerationService(
+            PostRepository postRepository,
+            CommentRepository commentRepository,
+            ReportRepository reportRepository,
+            PostModerationCheckRepository postModerationCheckRepository,
+            CommentModerationCheckRepository commentModerationCheckRepository) {
+        super(postRepository, commentRepository, null, postModerationCheckRepository, commentModerationCheckRepository, null);
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.reportRepository = reportRepository;
+    }
+
+    @Transactional
+    public void approvePost(RedditUser moderator, Long postId) {
+        Post post = loadPost(postId);
+        post.setStatus(ContentStatus.ACTIVE);
+        postRepository.save(post);
+    }
+
+    @Transactional
+    public void approveComment(RedditUser moderator, Long commentId) {
+        Comment comment = loadComment(commentId);
+        comment.setStatus(ContentStatus.ACTIVE);
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void approveReport(RedditUser moderator, Long reportId) {
+        Report report = loadReport(reportId);
+        report.setReviewedBy(moderator);
+        report.setStatus(ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulatePostModeration(RedditUser moderator, Long postId) {
+        Post post = loadPost(postId);
+        Map<String, Object> check = moderatePost(postId.toString(), post);
+        return result("POST", post.getId(), check, null, post.getStatus().name(), "Post text inspected and moderation check persisted.");
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateCommentModeration(RedditUser moderator, Long commentId) {
+        Comment comment = loadComment(commentId);
+        Map<String, Object> check = moderateComment(commentId.toString(), comment);
+        return result("COMMENT", comment.getId(), check, null, comment.getStatus().name(), "Comment text inspected and moderation check persisted.");
+    }
+
+    @Transactional
+    public List<ModerationSimulationResult> simulateReportModeration(RedditUser moderator) {
+        List<ModerationSimulationResult> results = new ArrayList<>();
+        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+            if (report.getPost() != null) {
+                results.add(moderateReportedPost(report, moderator));
+            } else if (report.getComment() != null) {
+                results.add(moderateReportedComment(report, moderator));
+            }
+        }
+        return results;
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnPostCreated(Post post) {
+        if (post != null) {
+            moderatePost(idOf(post), post);
+        }
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnCommentCreated(Comment comment) {
+        if (comment != null) {
+            moderateComment(idOf(comment), comment);
+        }
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnReportCreated(Report report) {
+        if (report == null) {
+            return;
+        }
+        // Report-threshold moderation is exposed through the simulation endpoint.
+    }
+
+    private ModerationSimulationResult moderateReportedPost(Report report, RedditUser moderator) {
+        Post post = report.getPost();
+        Map<String, Object> check = moderatePost(idOf(post), post);
+        closeReport(report, moderator);
+        return result("POST", post.getId(), check, report.getId(), post.getStatus().name(), "Pending report triggered post moderation.");
+    }
+
+    private ModerationSimulationResult moderateReportedComment(Report report, RedditUser moderator) {
+        Comment comment = report.getComment();
+        Map<String, Object> check = moderateComment(idOf(comment), comment);
+        closeReport(report, moderator);
+        return result("COMMENT", comment.getId(), check, report.getId(), comment.getStatus().name(), "Pending report triggered comment moderation.");
+    }
+
+    private void closeReport(Report report, RedditUser moderator) {
+        report.setReviewedBy(moderator);
+        report.setStatus(ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    private Post loadPost(Long postId) {
+        return postRepository.findById(postId).orElseThrow();
+    }
+
+    private Comment loadComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow();
+    }
+
+    private Report loadReport(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow();
+    }
+[/if]
+[if (baseName(m) = 'Youtube')]
+    private final VideoRepository videoRepository;
+    private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
+
+    public ModerationService(
+            VideoRepository videoRepository,
+            CommentRepository commentRepository,
+            ReportRepository reportRepository,
+            VideoModerationCheckRepository videoModerationCheckRepository,
+            CommentModerationCheckRepository commentModerationCheckRepository) {
+        super(null, commentRepository, videoRepository, null, commentModerationCheckRepository, videoModerationCheckRepository);
+        this.videoRepository = videoRepository;
+        this.commentRepository = commentRepository;
+        this.reportRepository = reportRepository;
+    }
+
+    @Transactional
+    public void approveVideo(YoutubeUser moderator, Long videoId) {
+        Video video = loadVideo(videoId);
+        video.setStatus(ContentStatus.ACTIVE);
+        videoRepository.save(video);
+    }
+
+    @Transactional
+    public void approveComment(YoutubeUser moderator, Long commentId) {
+        Comment comment = loadComment(commentId);
+        comment.setStatus(ContentStatus.ACTIVE);
+        commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void approveReport(YoutubeUser moderator, Long reportId) {
+        Report report = loadReport(reportId);
+        report.setReviewedBy(moderator);
+        report.setStatus(ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateVideoModeration(YoutubeUser moderator, Long videoId) {
+        Video video = loadVideo(videoId);
+        Map<String, Object> check = moderateVideo(videoId.toString(), video);
+        return result("VIDEO", video.getId(), check, null, video.getStatus().name(), "Video title and description inspected and moderation check persisted.");
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateCommentModeration(YoutubeUser moderator, Long commentId) {
+        Comment comment = loadComment(commentId);
+        Map<String, Object> check = moderateComment(commentId.toString(), comment);
+        return result("COMMENT", comment.getId(), check, null, comment.getStatus().name(), "Comment text inspected and moderation check persisted.");
+    }
+
+    @Transactional
+    public List<ModerationSimulationResult> simulateReportModeration(YoutubeUser moderator) {
+        List<ModerationSimulationResult> results = new ArrayList<>();
+        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+            if (report.getVideo() != null) {
+                results.add(moderateReportedVideo(report, moderator));
+            } else if (report.getComment() != null) {
+                results.add(moderateReportedComment(report, moderator));
+            }
+        }
+        return results;
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnVideoCreated(Video video) {
+        if (video != null) {
+            moderateVideo(idOf(video), video);
+        }
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnCommentCreated(Comment comment) {
+        if (comment != null) {
+            moderateComment(idOf(comment), comment);
+        }
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnReportCreated(Report report) {
+        if (report == null) {
+            return;
+        }
+        // Report-threshold moderation is exposed through the simulation endpoint.
+    }
+
+    private ModerationSimulationResult moderateReportedVideo(Report report, YoutubeUser moderator) {
+        Video video = report.getVideo();
+        Map<String, Object> check = moderateVideo(idOf(video), video);
+        closeReport(report, moderator);
+        return result("VIDEO", video.getId(), check, report.getId(), video.getStatus().name(), "Pending report triggered video moderation.");
+    }
+
+    private ModerationSimulationResult moderateReportedComment(Report report, YoutubeUser moderator) {
+        Comment comment = report.getComment();
+        Map<String, Object> check = moderateComment(idOf(comment), comment);
+        closeReport(report, moderator);
+        return result("COMMENT", comment.getId(), check, report.getId(), comment.getStatus().name(), "Pending report triggered comment moderation.");
+    }
+
+    private void closeReport(Report report, YoutubeUser moderator) {
+        report.setReviewedBy(moderator);
+        report.setStatus(ReportStatus.REVIEWED);
+        reportRepository.save(report);
+    }
+
+    private Video loadVideo(Long videoId) {
+        return videoRepository.findById(videoId).orElseThrow();
+    }
+
+    private Comment loadComment(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow();
+    }
+
+    private Report loadReport(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow();
+    }
+[/if]
+[if (baseName(m) = 'Amazon')]
+    private final ProductReviewRepository productReviewRepository;
+
+    public ModerationService(ProductReviewRepository productReviewRepository) {
+        super();
+        this.productReviewRepository = productReviewRepository;
+    }
+
+    @Transactional
+    public void approveReview(AmazonUser moderator, Long reviewId) {
+        ProductReview review = loadReview(reviewId);
+        review.setStatus(ReviewStatus.APPROVED);
+        productReviewRepository.save(review);
+    }
+
+    @Transactional
+    public ModerationSimulationResult simulateReviewModeration(AmazonUser moderator, Long reviewId) {
+        return moderateReview(loadReview(reviewId), GeneratedModerationModel.DEFAULT_POLICY);
+    }
+
+    @Transactional
+    public List<ModerationSimulationResult> simulatePendingReviewModeration(AmazonUser moderator) {
+        List<ModerationSimulationResult> results = new ArrayList<>();
+        PolicySpec policy = policyForReportThreshold();
+        for (ProductReview review : productReviewRepository.findByStatus(ReviewStatus.PENDING)) {
+            results.add(moderateReview(review, policy));
+        }
+        return results;
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnReviewCreated(ProductReview review) {
+        if (review != null) {
+            moderateReview(review, GeneratedModerationModel.DEFAULT_POLICY);
+        }
+    }
+
+    private ModerationSimulationResult moderateReview(ProductReview review, PolicySpec policy) {
+        AutomationRuleSpec rule = primaryRule(policy);
+        List<String> matches = matchedKeywords(review.getComment(), rule);
+        String decision = matches.isEmpty() ? "APPROVED" : policy.getDecision().name();
+        ReviewStatus status = matches.isEmpty() ? ReviewStatus.APPROVED : ReviewStatus.PENDING;
+        review.setStatus(status);
+        productReviewRepository.save(review);
+        return new ModerationSimulationResult("REVIEW", review.getId(), null, null, policy.getTrigger().name(), policy.getMode().name(), decision, status.name(), matches, explanation(policy, rule, matches));
+    }
+
+    private PolicySpec policyForReportThreshold() {
+        return GeneratedModerationModel.POLICIES.stream()
+            .filter(policy -> "ON_REPORT_THRESHOLD".equals(policy.getTrigger().name()))
+            .findFirst()
+            .orElse(GeneratedModerationModel.DEFAULT_POLICY);
+    }
+
+    private AutomationRuleSpec primaryRule(PolicySpec policy) {
+        return policy.getAutomationRules().isEmpty() ? null : policy.getAutomationRules().get(0);
+    }
+
+    private List<String> matchedKeywords(String text, AutomationRuleSpec rule) {
+        String normalized = text == null ? "" : text.toLowerCase(Locale.ROOT);
+        List<String> matches = new ArrayList<>();
+        if (rule == null) {
+            return matches;
+        }
+        for (ConditionSpec condition : rule.getConditions()) {
+            if (!"CONTAINS_KEYWORDS".equals(condition.getOperator().name())) {
+                continue;
+            }
+            for (String keyword : condition.getValues()) {
+                if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
+                    matches.add(keyword);
+                }
+            }
+        }
+        return matches;
+    }
+
+    private String explanation(PolicySpec policy, AutomationRuleSpec rule, List<String> matches) {
+        if (matches.isEmpty()) {
+            return "No generated keyword condition matched; " + policy.getName() + " approved review.";
+        }
+        return (rule == null ? "NoAutomationRule" : rule.getName()) + " matched " + matches + "; " + policy.getName() + " flagged review for moderation.";
+    }
+
+    private ProductReview loadReview(Long reviewId) {
+        return productReviewRepository.findById(reviewId).orElseThrow();
+    }
+[/if]
+
+[if (baseName(m) = 'Reddit' or baseName(m) = 'Youtube')]
+    private ModerationSimulationResult result(String targetType, Long targetId, Map<String, Object> check, Long reportId, String status, String explanation) {
+        Object checkId = check.get("id");
+        Object decision = check.get("result");
+        Object matches = check.get("matchedRules");
+        return new ModerationSimulationResult(
+            targetType,
+            targetId,
+            longId(checkId),
+            reportId,
+            "ON_REPORT_THRESHOLD",
+            "HYBRID",
+            decision == null ? "APPROVED" : decision.toString(),
+            status,
+            matches instanceof List<?> list ? list.stream().map(Object::toString).toList() : List.of(),
+            explanation
+        );
+    }
+
+    private String idOf(Object entity) {
+        try {
+            Object id = entity.getClass().getMethod("getId").invoke(entity);
+            return id == null ? null : id.toString();
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    private Long longId(Object value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return Long.valueOf(value.toString());
+        } catch (NumberFormatException ignored) {
+            return null;
+        }
+    }
+[/if]
 }
 [/file]
 [/template]
@@ -862,12 +1802,35 @@ public class [className/]Service extends Generated[className/]Service {
 [/template]
 
 [template public generateSimpleProjection(m : RefModel, className : String)]
+[if (className = 'ModerationSimulationResult')]
+[file (servicePath(m) + '/projection/' + className + '.java', false, 'UTF-8')]
+package [servicePackage(m)/].projection;
+
+import java.util.List;
+
+public record [className/](
+    String targetType,
+    Long targetId,
+    Long checkId,
+    Long reportId,
+    String trigger,
+    String mode,
+    String decision,
+    String status,
+    List<String> matchedRules,
+    String explanation
+) {
+}
+[/file]
+[/if]
+[if (className <> 'ModerationSimulationResult')]
 [file (servicePath(m) + '/projection/' + className + '.java', false, 'UTF-8')]
 package [servicePackage(m)/].projection;
 
 public record [className/](String status) {
 }
 [/file]
+[/if]
 [/template]
 
 [template public generateControllerWrapper(m : RefModel, className : String)]
@@ -919,7 +1882,7 @@ class [applicationClassName(m)/]Tests {
 [generateEntityStack(m, 'Order')/]
 [generateEntityStack(m, 'OrderItem')/]
 [generateEntityStack(m, 'Product')/]
-[generateEntityStack(m, 'ProductReview')/]
+[generateAmazonModerationDomainOverrides(m)/]
 [generateDomainPair(m, 'ReviewMediaReference')/]
 [generateEntityStack(m, 'SortingPolicy')/]
 [generateEntityStack(m, 'ValidationRule')/]
@@ -954,31 +1917,137 @@ public record ProductRatingSummary(Long productId, double averageRating, long to
 [generateAmazonDataAndLibs(m)/]
 [/template]
 
+[template public generateAmazonModerationDomainOverrides(m : RefModel)]
+[generateEntityWrapperOnly(m, 'ProductReview')/]
+[generateRepositoryStack(m, 'ProductReview')/]
+[file (domainGeneratedPath(m) + '/GeneratedProductReview.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].ReviewStatus;
+import [domainEnumsPackage(m)/].VerificationType;
+import [domainPackage(m)/].AmazonUser;
+import [domainPackage(m)/].Product;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedProductReview {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private AmazonUser author;
+    @Column(length = 2000)
+    private String comment;
+    private Integer rating;
+    private Integer grade;
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status = ReviewStatus.PENDING;
+    @Enumerated(EnumType.STRING)
+    private VerificationType verificationType = VerificationType.AUTOMATIC;
+    private boolean verifiedBuyerAtSubmission;
+    private Instant submittedAt = Instant.now();
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Product getProduct() { return product; }
+    public void setProduct(Product product) { this.product = product; }
+    public AmazonUser getAuthor() { return author; }
+    public void setAuthor(AmazonUser author) { this.author = author; }
+    public String getComment() { return comment; }
+    public void setComment(String comment) { this.comment = comment; }
+    public Integer getRating() { return rating == null ? grade : rating; }
+    public void setRating(Integer rating) { this.rating = rating; }
+    public Integer getGrade() { return grade == null ? rating : grade; }
+    public void setGrade(Integer grade) { this.grade = grade; }
+    public ReviewStatus getStatus() { return status; }
+    public void setStatus(ReviewStatus status) { this.status = status; }
+    public VerificationType getVerificationType() { return verificationType; }
+    public void setVerificationType(VerificationType verificationType) { this.verificationType = verificationType; }
+    public boolean isVerifiedBuyerAtSubmission() { return verifiedBuyerAtSubmission; }
+    public void setVerifiedBuyerAtSubmission(boolean verifiedBuyerAtSubmission) { this.verifiedBuyerAtSubmission = verifiedBuyerAtSubmission; }
+    public Instant getSubmittedAt() { return submittedAt; }
+    public void setSubmittedAt(Instant submittedAt) { this.submittedAt = submittedAt; }
+}
+[/file]
+[/template]
+
 [template public generateAmazonProductEvaluationService(m : RefModel)]
 [file (serviceGeneratedPath(m) + '/GeneratedProductEvaluationService.java', false, 'ISO-8859-1')]
 package [serviceGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Product;
+import [domainPackage(m)/].ProductReview;
+import [repositoryGeneratedPackage(m)/].GeneratedProductRepository;
+import [repositoryGeneratedPackage(m)/].GeneratedProductReviewRepository;
 import java.util.List;
 
 public class GeneratedProductEvaluationService {
+    protected final GeneratedProductRepository productRepository;
+    protected final GeneratedProductReviewRepository productReviewRepository;
+
+    public GeneratedProductEvaluationService(GeneratedProductRepository productRepository, GeneratedProductReviewRepository productReviewRepository) {
+        this.productRepository = productRepository;
+        this.productReviewRepository = productReviewRepository;
+    }
+
     public List<Product> list() {
-        return List.of();
+        return productRepository.findAll();
     }
 
     public Product create(Product product) {
-        return product;
+        return productRepository.save(product);
+    }
+
+    public ProductReview createReview(ProductReview review) {
+        ProductReview savedReview = productReviewRepository.save(review);
+        afterReviewSubmitted(savedReview);
+        return savedReview;
+    }
+
+    public List<ProductReview> listReviews() {
+        return productReviewRepository.findAll();
+    }
+
+    protected void afterReviewSubmitted(ProductReview savedReview) {
     }
 }
 [/file]
 [file (servicePath(m) + '/ProductEvaluationService.java', false, 'UTF-8')]
 package [servicePackage(m)/];
 
+import [domainPackage(m)/].ProductReview;
 import [serviceGeneratedPackage(m)/].GeneratedProductEvaluationService;
+import [repositoryPackage(m)/].ProductRepository;
+import [repositoryPackage(m)/].ProductReviewRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductEvaluationService extends GeneratedProductEvaluationService {
+    private final ModerationService moderationService;
+
+    public ProductEvaluationService(ProductRepository productRepository, ProductReviewRepository productReviewRepository, ModerationService moderationService) {
+        super(productRepository, productReviewRepository);
+        this.moderationService = moderationService;
+    }
+
+    @Override
+    protected void afterReviewSubmitted(ProductReview savedReview) {
+        moderationService.moderateAutomaticallyOnReviewCreated(savedReview);
+    }
 }
 [/file]
 [/template]
@@ -1176,20 +2245,16 @@ public enum VoteValue { HELPFUL, NOT_HELPFUL }
 
 [template public generateRedditReferenceScaffold(m : RefModel)]
 [generateForumEnums(m, 'reddit')/]
-[generateEntityStack(m, 'Comment')/]
-[generateEntityStack(m, 'CommentModerationCheck')/]
 [generateEntityStack(m, 'CommunityRule')/]
 [generateEntityStack(m, 'ParticipationPolicy')/]
-[generateEntityStack(m, 'Post')/]
-[generateEntityStack(m, 'PostModerationCheck')/]
 [generateEntityStack(m, 'RedditUser')/]
-[generateEntityStack(m, 'Report')/]
 [generateEntityStack(m, 'SortingPolicy')/]
 [generateEntityStack(m, 'Subreddit')/]
 [generateEntityStack(m, 'Subscription')/]
 [generateEntityStack(m, 'ValidationRule')/]
 [generateEntityStack(m, 'Vote')/]
 [generateEntityStack(m, 'VoteHistory')/]
+[generateRedditModerationDomainOverrides(m)/]
 [generateSimpleServicePair(m, 'Authentication')/]
 [generateSimpleServicePair(m, 'Comment')/]
 [generateModerationServicePair(m)/]
@@ -1222,18 +2287,14 @@ public enum VoteValue { HELPFUL, NOT_HELPFUL }
 [generateForumEnums(m, 'youtube')/]
 [generateEntityStack(m, 'Channel')/]
 [generateEntityStack(m, 'ChannelPermissionPolicy')/]
-[generateEntityStack(m, 'Comment')/]
-[generateEntityStack(m, 'CommentModerationCheck')/]
 [generateEntityStack(m, 'CommentSettingsChange')/]
 [generateEntityStack(m, 'ContentValidationRule')/]
 [generateEntityStack(m, 'Like')/]
 [generateEntityStack(m, 'LikeHistory')/]
-[generateEntityStack(m, 'Report')/]
 [generateEntityStack(m, 'SortingPolicy')/]
 [generateEntityStack(m, 'Subscription')/]
-[generateEntityStack(m, 'Video')/]
-[generateEntityStack(m, 'VideoModerationCheck')/]
 [generateEntityStack(m, 'YoutubeUser')/]
+[generateYoutubeModerationDomainOverrides(m)/]
 [generateSimpleServicePair(m, 'Authentication')/]
 [generateSimpleServicePair(m, 'Channel')/]
 [generateSimpleServicePair(m, 'Comment')/]
@@ -1258,14 +2319,891 @@ public enum VoteValue { HELPFUL, NOT_HELPFUL }
 [generateTestScaffold(m)/]
 [/template]
 
+[template public generateRedditModerationDomainOverrides(m : RefModel)]
+[generateEntityWrapperOnly(m, 'Post')/]
+[generateEntityWrapperOnly(m, 'Comment')/]
+[generateEntityWrapperOnly(m, 'Report')/]
+[generateEntityWrapperOnly(m, 'PostModerationCheck')/]
+[generateEntityWrapperOnly(m, 'CommentModerationCheck')/]
+[generateRepositoryStack(m, 'Post')/]
+[generateRepositoryStack(m, 'Comment')/]
+[generateRepositoryStack(m, 'Report')/]
+[generateRepositoryStack(m, 'PostModerationCheck')/]
+[generateRepositoryStack(m, 'CommentModerationCheck')/]
+[file (domainGeneratedPath(m) + '/GeneratedPost.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].CommentStatus;
+import [domainEnumsPackage(m)/].ContentStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDate;
+
+@MappedSuperclass
+public abstract class GeneratedPost {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 200)
+    private String title;
+    @Column(length = 1000)
+    private String body;
+    @Column(length = 1000)
+    private String description;
+    private LocalDate creationDate;
+    private LocalDate uploadDate;
+    private Integer duration;
+    @Enumerated(EnumType.STRING)
+    private CommentStatus commentStatus;
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status = ContentStatus.ACTIVE;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getBody() { return body; }
+    public void setBody(String body) { this.body = body; }
+    public String getDescription() { return description == null ? body : description; }
+    public void setDescription(String description) { this.description = description; }
+    public LocalDate getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
+    public LocalDate getUploadDate() { return uploadDate; }
+    public void setUploadDate(LocalDate uploadDate) { this.uploadDate = uploadDate; }
+    public Integer getDuration() { return duration; }
+    public void setDuration(Integer duration) { this.duration = duration; }
+    public CommentStatus getCommentStatus() { return commentStatus; }
+    public void setCommentStatus(CommentStatus commentStatus) { this.commentStatus = commentStatus; }
+    public ContentStatus getStatus() { return status; }
+    public void setStatus(ContentStatus status) { this.status = status; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedComment.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].ContentStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDate;
+
+@MappedSuperclass
+public abstract class GeneratedComment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 1000)
+    private String text;
+    @Column(length = 1000)
+    private String body;
+    private LocalDate creationDate;
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status = ContentStatus.ACTIVE;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getText() { return text == null ? body : text; }
+    public void setText(String text) { this.text = text; }
+    public String getBody() { return body; }
+    public void setBody(String body) { this.body = body; }
+    public LocalDate getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
+    public ContentStatus getStatus() { return status; }
+    public void setStatus(ContentStatus status) { this.status = status; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedPostModerationCheck.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].PostModerationResult;
+import [domainEnumsPackage(m)/].PostModerationType;
+import [domainPackage(m)/].Post;
+import [domainPackage(m)/].RedditUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedPostModerationCheck {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private PostModerationType type;
+    @Enumerated(EnumType.STRING)
+    private PostModerationResult result;
+    @Column(nullable = false)
+    private Instant timestamp;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private RedditUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public PostModerationType getType() { return type; }
+    public void setType(PostModerationType type) { this.type = type; }
+    public PostModerationResult getResult() { return result; }
+    public void setResult(PostModerationResult result) { this.result = result; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
+    public RedditUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(RedditUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedCommentModerationCheck.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].CommentModerationResult;
+import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].RedditUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedCommentModerationCheck {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private CommentModerationType type;
+    @Enumerated(EnumType.STRING)
+    private CommentModerationResult result;
+    @Column(nullable = false)
+    private Instant timestamp;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private RedditUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public CommentModerationType getType() { return type; }
+    public void setType(CommentModerationType type) { this.type = type; }
+    public CommentModerationResult getResult() { return result; }
+    public void setResult(CommentModerationResult result) { this.result = result; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public Comment getComment() { return comment; }
+    public void setComment(Comment comment) { this.comment = comment; }
+    public RedditUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(RedditUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedReport.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].ReportStatus;
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].Post;
+import [domainPackage(m)/].RedditUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedReport {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 500)
+    private String reason;
+    @Enumerated(EnumType.STRING)
+    private ReportStatus status = ReportStatus.PENDING;
+    private Instant timestamp = Instant.now();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submitter_id")
+    private RedditUser submitter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private RedditUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+    public ReportStatus getStatus() { return status; }
+    public void setStatus(ReportStatus status) { this.status = status; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public RedditUser getSubmitter() { return submitter; }
+    public void setSubmitter(RedditUser submitter) { this.submitter = submitter; }
+    public Post getPost() { return post; }
+    public void setPost(Post post) { this.post = post; }
+    public Comment getComment() { return comment; }
+    public void setComment(Comment comment) { this.comment = comment; }
+    public RedditUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(RedditUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+[/template]
+
+[template public generateYoutubeModerationDomainOverrides(m : RefModel)]
+[generateEntityWrapperOnly(m, 'Video')/]
+[generateEntityWrapperOnly(m, 'Comment')/]
+[generateEntityWrapperOnly(m, 'Report')/]
+[generateEntityWrapperOnly(m, 'VideoModerationCheck')/]
+[generateEntityWrapperOnly(m, 'CommentModerationCheck')/]
+[generateRepositoryStack(m, 'Video')/]
+[generateRepositoryStack(m, 'Comment')/]
+[generateRepositoryStack(m, 'Report')/]
+[generateRepositoryStack(m, 'VideoModerationCheck')/]
+[generateRepositoryStack(m, 'CommentModerationCheck')/]
+[file (domainGeneratedPath(m) + '/GeneratedVideo.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].CommentStatus;
+import [domainEnumsPackage(m)/].ContentStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDate;
+
+@MappedSuperclass
+public abstract class GeneratedVideo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 200)
+    private String title;
+    @Column(length = 1000)
+    private String description;
+    private LocalDate creationDate;
+    private LocalDate uploadDate;
+    private Integer duration;
+    @Enumerated(EnumType.STRING)
+    private CommentStatus commentStatus;
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status = ContentStatus.ACTIVE;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public LocalDate getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
+    public LocalDate getUploadDate() { return uploadDate; }
+    public void setUploadDate(LocalDate uploadDate) { this.uploadDate = uploadDate; }
+    public Integer getDuration() { return duration; }
+    public void setDuration(Integer duration) { this.duration = duration; }
+    public CommentStatus getCommentStatus() { return commentStatus; }
+    public void setCommentStatus(CommentStatus commentStatus) { this.commentStatus = commentStatus; }
+    public ContentStatus getStatus() { return status; }
+    public void setStatus(ContentStatus status) { this.status = status; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedComment.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].ContentStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDate;
+
+@MappedSuperclass
+public abstract class GeneratedComment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 1000)
+    private String text;
+    private LocalDate creationDate;
+    @Enumerated(EnumType.STRING)
+    private ContentStatus status = ContentStatus.ACTIVE;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
+    public LocalDate getCreationDate() { return creationDate; }
+    public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
+    public ContentStatus getStatus() { return status; }
+    public void setStatus(ContentStatus status) { this.status = status; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedVideoModerationCheck.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].VideoModerationResult;
+import [domainEnumsPackage(m)/].VideoModerationType;
+import [domainPackage(m)/].Video;
+import [domainPackage(m)/].YoutubeUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedVideoModerationCheck {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private VideoModerationType type;
+    @Enumerated(EnumType.STRING)
+    private VideoModerationResult result;
+    @Column(nullable = false)
+    private Instant timestamp;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
+    private Video video;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private YoutubeUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public VideoModerationType getType() { return type; }
+    public void setType(VideoModerationType type) { this.type = type; }
+    public VideoModerationResult getResult() { return result; }
+    public void setResult(VideoModerationResult result) { this.result = result; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public Video getVideo() { return video; }
+    public void setVideo(Video video) { this.video = video; }
+    public YoutubeUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(YoutubeUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedCommentModerationCheck.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].CommentModerationResult;
+import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].YoutubeUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedCommentModerationCheck {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private CommentModerationType type;
+    @Enumerated(EnumType.STRING)
+    private CommentModerationResult result;
+    @Column(nullable = false)
+    private Instant timestamp;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private YoutubeUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public CommentModerationType getType() { return type; }
+    public void setType(CommentModerationType type) { this.type = type; }
+    public CommentModerationResult getResult() { return result; }
+    public void setResult(CommentModerationResult result) { this.result = result; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public Comment getComment() { return comment; }
+    public void setComment(Comment comment) { this.comment = comment; }
+    public YoutubeUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(YoutubeUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+
+[file (domainGeneratedPath(m) + '/GeneratedReport.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import [domainEnumsPackage(m)/].ReportStatus;
+import [domainPackage(m)/].Comment;
+import [domainPackage(m)/].Video;
+import [domainPackage(m)/].YoutubeUser;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
+
+@MappedSuperclass
+public abstract class GeneratedReport {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 500)
+    private String reason;
+    @Enumerated(EnumType.STRING)
+    private ReportStatus status = ReportStatus.PENDING;
+    private Instant timestamp = Instant.now();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "submitter_id")
+    private YoutubeUser submitter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "video_id")
+    private Video video;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewed_by_id")
+    private YoutubeUser reviewedBy;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+    public ReportStatus getStatus() { return status; }
+    public void setStatus(ReportStatus status) { this.status = status; }
+    public Instant getTimestamp() { return timestamp; }
+    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
+    public YoutubeUser getSubmitter() { return submitter; }
+    public void setSubmitter(YoutubeUser submitter) { this.submitter = submitter; }
+    public Video getVideo() { return video; }
+    public void setVideo(Video video) { this.video = video; }
+    public Comment getComment() { return comment; }
+    public void setComment(Comment comment) { this.comment = comment; }
+    public YoutubeUser getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(YoutubeUser reviewedBy) { this.reviewedBy = reviewedBy; }
+}
+[/file]
+[/template]
+
 [template public generateModerationModel(m : RefModel)]
 [file (serviceGeneratedPath(m) + '/GeneratedModerationModel.java', false, 'ISO-8859-1')]
 package [serviceGeneratedPackage(m)/];
 
+[if (baseName(m) = 'Amazon')]
+import java.util.List;
+
+import [domainEnumsPackage(m)/].ActionResultKind;
+import [domainEnumsPackage(m)/].ConditionOperator;
+import [domainEnumsPackage(m)/].ModerationDecision;
+import [domainEnumsPackage(m)/].ModerationMode;
+import [domainEnumsPackage(m)/].TriggerEvent;
+import [domainEnumsPackage(m)/].UserKind;
+
+public final class GeneratedModerationModel {
+    public static final List<PolicySpec> POLICIES = List.of(
+        new PolicySpec(
+            "ReviewModerationOnCreate",
+            "Product",
+            "ProductReview",
+            ModerationMode.HYBRID,
+            TriggerEvent.ON_FEEDBACK_CREATE,
+            ModerationDecision.FLAGGED,
+            UserKind.MODERATOR,
+            "ModerationBackoffice",
+            List.of(new AutomationRuleSpec(
+                "AutoReviewContentCheck",
+                TriggerEvent.ON_FEEDBACK_CREATE,
+                List.of(new ConditionSpec("ReviewTextKeywordScreening", ConditionOperator.CONTAINS_KEYWORDS, "text", List.of("spam", "abuse", "off-topic", "incentivized"))),
+                List.of(new ActionSpec("FlagSuspiciousReview", ActionResultKind.FLAG_CONTENT, "set review.status='PENDING'; record keyword moderation result"))
+            ))
+        ),
+        new PolicySpec(
+            "PendingReviewModeration",
+            "Product",
+            "ProductReview",
+            ModerationMode.MANUAL,
+            TriggerEvent.ON_REPORT_THRESHOLD,
+            ModerationDecision.FLAGGED,
+            UserKind.MODERATOR,
+            "ModerationBackoffice",
+            List.of(new AutomationRuleSpec(
+                "EscalatePendingReviewKeywords",
+                TriggerEvent.ON_REPORT_THRESHOLD,
+                List.of(new ConditionSpec("PendingReviewKeywordScreening", ConditionOperator.CONTAINS_KEYWORDS, "text", List.of("spam", "abuse", "off-topic", "incentivized"))),
+                List.of(new ActionSpec("NotifyModeratorAboutPendingReview", ActionResultKind.NOTIFY_MODERATOR, "notify moderator about pending review keyword match"))
+            ))
+        )
+    );
+
+    public static final PolicySpec DEFAULT_POLICY = POLICIES.get(0);
+    public static final AutomationRuleSpec DEFAULT_AUTOMATION_RULE = DEFAULT_POLICY.getAutomationRules().get(0);
+
+    public static final class PolicySpec {
+        private final String name;
+        private final String resourceTarget;
+        private final String feedbackTarget;
+        private final ModerationMode mode;
+        private final TriggerEvent trigger;
+        private final ModerationDecision decision;
+        private final UserKind executedByKind;
+        private final String context;
+        private final List<AutomationRuleSpec> automationRules;
+
+        public PolicySpec(String name, String resourceTarget, String feedbackTarget, ModerationMode mode, TriggerEvent trigger, ModerationDecision decision, UserKind executedByKind, String context, List<AutomationRuleSpec> automationRules) {
+            this.name = name;
+            this.resourceTarget = resourceTarget;
+            this.feedbackTarget = feedbackTarget;
+            this.mode = mode;
+            this.trigger = trigger;
+            this.decision = decision;
+            this.executedByKind = executedByKind;
+            this.context = context;
+            this.automationRules = automationRules;
+        }
+
+        public String getName() { return name; }
+        public String getResourceTarget() { return resourceTarget; }
+        public String getFeedbackTarget() { return feedbackTarget; }
+        public ModerationMode getMode() { return mode; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public ModerationDecision getDecision() { return decision; }
+        public UserKind getExecutedByKind() { return executedByKind; }
+        public String getContext() { return context; }
+        public List<AutomationRuleSpec> getAutomationRules() { return automationRules; }
+    }
+
+    public static final class AutomationRuleSpec {
+        private final String name;
+        private final TriggerEvent trigger;
+        private final List<ConditionSpec> conditions;
+        private final List<ActionSpec> actions;
+
+        public AutomationRuleSpec(String name, TriggerEvent trigger, List<ConditionSpec> conditions, List<ActionSpec> actions) {
+            this.name = name;
+            this.trigger = trigger;
+            this.conditions = conditions;
+            this.actions = actions;
+        }
+
+        public String getName() { return name; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public List<ConditionSpec> getConditions() { return conditions; }
+        public List<ActionSpec> getActions() { return actions; }
+    }
+
+    public static final class ConditionSpec {
+        private final String name;
+        private final ConditionOperator operator;
+        private final String attribute;
+        private final List<String> values;
+
+        public ConditionSpec(String name, ConditionOperator operator, String attribute, List<String> values) {
+            this.name = name;
+            this.operator = operator;
+            this.attribute = attribute;
+            this.values = values;
+        }
+
+        public String getName() { return name; }
+        public ConditionOperator getOperator() { return operator; }
+        public String getAttribute() { return attribute; }
+        public List<String> getValues() { return values; }
+    }
+
+    public static final class ActionSpec {
+        private final String name;
+        private final ActionResultKind kind;
+        private final String message;
+
+        public ActionSpec(String name, ActionResultKind kind, String message) {
+            this.name = name;
+            this.kind = kind;
+            this.message = message;
+        }
+
+        public String getName() { return name; }
+        public ActionResultKind getKind() { return kind; }
+        public String getMessage() { return message; }
+    }
+
+    private GeneratedModerationModel() {
+    }
+}
+[/if]
+[if (baseName(m) = 'Reddit')]
+import java.util.List;
+
+import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainEnumsPackage(m)/].PostModerationType;
+import [domainEnumsPackage(m)/].UserKind;
+
+public final class GeneratedModerationModel {
+    public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
+    public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
+    public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
+    public enum ConditionOperator { CONTAINS_KEYWORDS }
+    public enum ActionKind { FLAG_CONTENT }
+
+    public static final List<PolicySpec> POLICIES = List.of(
+        new PolicySpec("PostModeration", "Post", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
+            List.of(new AutomationRuleSpec("RedditAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
+                List.of(new ConditionSpec("BlockedPostKeywords", ConditionOperator.CONTAINS_KEYWORDS, "content", List.of("spam", "malware", "phishing"))),
+                List.of(new ActionSpec("FlagPost", ActionKind.FLAG_CONTENT, "Post flagged for moderator review"))))),
+        new PolicySpec("CommentModeration", "Comment", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
+            List.of(new AutomationRuleSpec("RedditCommentAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
+                List.of(new ConditionSpec("BlockedCommentKeywords", ConditionOperator.CONTAINS_KEYWORDS, "text", List.of("spam", "malware", "phishing"))),
+                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review")))))
+    );
+
+    public static final PolicySpec DEFAULT_POLICY = POLICIES.get(0);
+    public static final AutomationRuleSpec DEFAULT_AUTOMATION_RULE = DEFAULT_POLICY.getAutomationRules().get(0);
+    public static final PostModerationType POST_CHECK_TYPE = PostModerationType.CONTENT;
+    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
+
+    public static final class PolicySpec {
+        private final String name;
+        private final String resourceTarget;
+        private final String feedbackTarget;
+        private final ModerationMode mode;
+        private final TriggerEvent trigger;
+        private final ModerationDecision decision;
+        private final UserKind executedByKind;
+        private final String context;
+        private final List<AutomationRuleSpec> automationRules;
+
+        public PolicySpec(String name, String resourceTarget, String feedbackTarget, ModerationMode mode, TriggerEvent trigger, ModerationDecision decision, UserKind executedByKind, String context, List<AutomationRuleSpec> automationRules) {
+            this.name = name;
+            this.resourceTarget = resourceTarget;
+            this.feedbackTarget = feedbackTarget;
+            this.mode = mode;
+            this.trigger = trigger;
+            this.decision = decision;
+            this.executedByKind = executedByKind;
+            this.context = context;
+            this.automationRules = automationRules;
+        }
+
+        public String getName() { return name; }
+        public String getResourceTarget() { return resourceTarget; }
+        public String getFeedbackTarget() { return feedbackTarget; }
+        public ModerationMode getMode() { return mode; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public ModerationDecision getDecision() { return decision; }
+        public UserKind getExecutedByKind() { return executedByKind; }
+        public String getContext() { return context; }
+        public List<AutomationRuleSpec> getAutomationRules() { return automationRules; }
+    }
+
+    public static final class AutomationRuleSpec {
+        private final String name;
+        private final TriggerEvent trigger;
+        private final List<ConditionSpec> conditions;
+        private final List<ActionSpec> actions;
+        public AutomationRuleSpec(String name, TriggerEvent trigger, List<ConditionSpec> conditions, List<ActionSpec> actions) { this.name = name; this.trigger = trigger; this.conditions = conditions; this.actions = actions; }
+        public String getName() { return name; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public List<ConditionSpec> getConditions() { return conditions; }
+        public List<ActionSpec> getActions() { return actions; }
+    }
+
+    public static final class ConditionSpec {
+        private final String name;
+        private final ConditionOperator operator;
+        private final String attribute;
+        private final List<String> values;
+        public ConditionSpec(String name, ConditionOperator operator, String attribute, List<String> values) { this.name = name; this.operator = operator; this.attribute = attribute; this.values = values; }
+        public String getName() { return name; }
+        public ConditionOperator getOperator() { return operator; }
+        public String getAttribute() { return attribute; }
+        public List<String> getValues() { return values; }
+    }
+
+    public static final class ActionSpec {
+        private final String name;
+        private final ActionKind kind;
+        private final String message;
+        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public String getName() { return name; }
+        public ActionKind getKind() { return kind; }
+        public String getMessage() { return message; }
+    }
+
+    private GeneratedModerationModel() {
+    }
+}
+[/if]
+[if (baseName(m) = 'Youtube')]
+import java.util.List;
+
+import [domainEnumsPackage(m)/].CommentModerationResult;
+import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainEnumsPackage(m)/].UserKind;
+import [domainEnumsPackage(m)/].VideoModerationResult;
+import [domainEnumsPackage(m)/].VideoModerationType;
+
+public final class GeneratedModerationModel {
+    public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
+    public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
+    public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
+    public enum ConditionOperator { CONTAINS_KEYWORDS, HAS_PROPERTY, HAS_SPECIFIC_PROPERTY }
+    public enum ActionKind { FLAG_CONTENT, HIDE_CONTENT, NOTIFY_MODERATOR }
+
+    public static final List<PolicySpec> POLICIES = List.of(
+        new PolicySpec("VideoCreationModeration", "Video", null, ModerationMode.HYBRID, TriggerEvent.ON_RESOURCE_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
+            List.of(new AutomationRuleSpec("AutoVideoCopyrightCheck", TriggerEvent.ON_RESOURCE_CREATE,
+                List.of(new ConditionSpec("VideoContainsCopyrightRiskKeywords", ConditionOperator.CONTAINS_KEYWORDS, "video_title_and_description", List.of("copyright", "reupload", "unlicensed"))),
+                List.of(new ActionSpec("FlagVideo", ActionKind.FLAG_CONTENT, "Video flagged for moderator review"))))),
+        new PolicySpec("CommentCreationModeration", "Video", "CommentOnVideo", ModerationMode.HYBRID, TriggerEvent.ON_FEEDBACK_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
+            List.of(new AutomationRuleSpec("AutoCommentModerationCheck", TriggerEvent.ON_FEEDBACK_CREATE,
+                List.of(new ConditionSpec("CommentContainsRiskyTerms", ConditionOperator.CONTAINS_KEYWORDS, "comment_text", List.of("spam", "toxicity", "blocked-word"))),
+                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review"))))),
+        new PolicySpec("ReportedContentModeration", "Content", "ReportContent", ModerationMode.MANUAL, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.HIDDEN, UserKind.MODERATOR, null,
+            List.of(new AutomationRuleSpec("AutoReportEscalation", TriggerEvent.ON_REPORT_THRESHOLD,
+                List.of(new ConditionSpec("ReportThresholdReached", ConditionOperator.HAS_SPECIFIC_PROPERTY, "report_status", List.of("PENDING"))),
+                List.of(new ActionSpec("HideReportedContent", ActionKind.HIDE_CONTENT, "Hide reported content and notify moderator")))))
+    );
+
+    public static final PolicySpec VIDEO_POLICY = POLICIES.get(0);
+    public static final PolicySpec COMMENT_POLICY = POLICIES.get(1);
+    public static final PolicySpec REPORT_POLICY = POLICIES.get(2);
+    public static final PolicySpec DEFAULT_POLICY = VIDEO_POLICY;
+    public static final VideoModerationType VIDEO_CHECK_TYPE = VideoModerationType.COPYRIGHT;
+    public static final VideoModerationResult VIDEO_DECISION_ON_MATCH = VideoModerationResult.FLAGGED;
+    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
+    public static final CommentModerationResult COMMENT_DECISION_ON_MATCH = CommentModerationResult.FLAGGED;
+
+    public static final class PolicySpec {
+        private final String name;
+        private final String resourceTarget;
+        private final String feedbackTarget;
+        private final ModerationMode mode;
+        private final TriggerEvent trigger;
+        private final ModerationDecision decision;
+        private final UserKind executedByKind;
+        private final String context;
+        private final List<AutomationRuleSpec> automationRules;
+        public PolicySpec(String name, String resourceTarget, String feedbackTarget, ModerationMode mode, TriggerEvent trigger, ModerationDecision decision, UserKind executedByKind, String context, List<AutomationRuleSpec> automationRules) { this.name = name; this.resourceTarget = resourceTarget; this.feedbackTarget = feedbackTarget; this.mode = mode; this.trigger = trigger; this.decision = decision; this.executedByKind = executedByKind; this.context = context; this.automationRules = automationRules; }
+        public String getName() { return name; }
+        public String getResourceTarget() { return resourceTarget; }
+        public String getFeedbackTarget() { return feedbackTarget; }
+        public ModerationMode getMode() { return mode; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public ModerationDecision getDecision() { return decision; }
+        public UserKind getExecutedByKind() { return executedByKind; }
+        public String getContext() { return context; }
+        public List<AutomationRuleSpec> getAutomationRules() { return automationRules; }
+    }
+
+    public static final class AutomationRuleSpec {
+        private final String name;
+        private final TriggerEvent trigger;
+        private final List<ConditionSpec> conditions;
+        private final List<ActionSpec> actions;
+        public AutomationRuleSpec(String name, TriggerEvent trigger, List<ConditionSpec> conditions, List<ActionSpec> actions) { this.name = name; this.trigger = trigger; this.conditions = conditions; this.actions = actions; }
+        public String getName() { return name; }
+        public TriggerEvent getTrigger() { return trigger; }
+        public List<ConditionSpec> getConditions() { return conditions; }
+        public List<ActionSpec> getActions() { return actions; }
+    }
+
+    public static final class ConditionSpec {
+        private final String name;
+        private final ConditionOperator operator;
+        private final String attribute;
+        private final List<String> values;
+        public ConditionSpec(String name, ConditionOperator operator, String attribute, List<String> values) { this.name = name; this.operator = operator; this.attribute = attribute; this.values = values; }
+        public String getName() { return name; }
+        public ConditionOperator getOperator() { return operator; }
+        public String getAttribute() { return attribute; }
+        public List<String> getValues() { return values; }
+    }
+
+    public static final class ActionSpec {
+        private final String name;
+        private final ActionKind kind;
+        private final String message;
+        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public String getName() { return name; }
+        public ActionKind getKind() { return kind; }
+        public String getMessage() { return message; }
+    }
+
+    private GeneratedModerationModel() {
+    }
+}
+[/if]
+[if (not isReferenceBackend(m))]
 public final class GeneratedModerationModel {
     private GeneratedModerationModel() {
     }
 }
+[/if]
 [/file]
 [/template]
 
@@ -1499,6 +3437,18 @@ public class Generated[rt.name/]Controller {
 [file (webGeneratedPath(m) + '/GeneratedAuthenticationController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+[if (baseName(m) = 'Amazon')]
+import [domainPackage(m)/].AmazonUser;
+import [repositoryPackage(m)/].AmazonUserRepository;
+[/if]
+[if (baseName(m) = 'Reddit')]
+import [domainPackage(m)/].RedditUser;
+import [repositoryPackage(m)/].RedditUserRepository;
+[/if]
+[if (baseName(m) = 'Youtube')]
+import [domainPackage(m)/].YoutubeUser;
+import [repositoryPackage(m)/].YoutubeUserRepository;
+[/if]
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -1510,12 +3460,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class GeneratedAuthenticationController {
+[if (baseName(m) = 'Amazon')]
+    private final AmazonUserRepository userRepository;
+
+    public GeneratedAuthenticationController(AmazonUserRepository userRepository) { this.userRepository = userRepository; }
+[/if]
+[if (baseName(m) = 'Reddit')]
+    private final RedditUserRepository userRepository;
+
+    public GeneratedAuthenticationController(RedditUserRepository userRepository) { this.userRepository = userRepository; }
+[/if]
+[if (baseName(m) = 'Youtube')]
+    private final YoutubeUserRepository userRepository;
+
+    public GeneratedAuthenticationController(YoutubeUserRepository userRepository) { this.userRepository = userRepository; }
+[/if]
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
+[if (baseName(m) = 'Amazon')]
+    public AmazonUser register(@RequestBody AmazonUser payload) {
+        return userRepository.save(payload);
+    }
+[/if]
+[if (baseName(m) = 'Reddit')]
+    public RedditUser register(@RequestBody RedditUser payload) {
+        return userRepository.save(payload);
+    }
+[/if]
+[if (baseName(m) = 'Youtube')]
+    public YoutubeUser register(@RequestBody YoutubeUser payload) {
+        return userRepository.save(payload);
+    }
+[/if]
+[if (not isReferenceBackend(m))]
     public Map<String, String> register(@RequestBody Map<String, Object> payload) {
         return Map.of("status", "registered", "model", "[m.name/]");
     }
+[/if]
 
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody Map<String, Object> payload) {
@@ -1528,8 +3510,9 @@ public class GeneratedAuthenticationController {
 [file (webGeneratedPath(m) + '/GeneratedContextController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].ContextType;
+import [repositoryPackage(m)/].ContextTypeRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1544,31 +3527,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/contexts")
 public class GeneratedContextController {
+    private final ContextTypeRepository repository;
+
+    public GeneratedContextController(ContextTypeRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping
-    public List<String> list() {
-        return List.of([for (c : ContextType | m.contextTypes) separator(', ')]"[c.name/]"[/for]);
+    public List<ContextType> list() {
+        return repository.findAll();
     }
 
     @GetMapping("/{contextId}")
-    public Map<String, String> get(@PathVariable String contextId) {
-        return Map.of("contextId", contextId, "model", "[m.name/]");
+    public ContextType get(@PathVariable String contextId) {
+        return repository.findById(Long.valueOf(contextId)).orElseThrow();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Map<String, Object> payload) {
-        return payload;
+    public ContextType create(@RequestBody ContextType payload) {
+        return repository.save(payload);
     }
 
     @PutMapping("/{contextId}")
-    public Map<String, Object> update(@PathVariable String contextId, @RequestBody Map<String, Object> payload) {
-        return payload;
+    public ContextType update(@PathVariable String contextId, @RequestBody ContextType payload) {
+        payload.setId(Long.valueOf(contextId));
+        return repository.save(payload);
     }
 
     @DeleteMapping("/{contextId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable String contextId) {
+        repository.deleteById(Long.valueOf(contextId));
     }
 }
 [/file]
@@ -1592,6 +3582,7 @@ public class GeneratedContextController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Product;
+import [domainPackage(m)/].ProductReview;
 import [serviceGeneratedPackage(m)/].GeneratedProductEvaluationService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -1632,8 +3623,8 @@ public class GeneratedProductEvaluationController {
 
     @PostMapping("/{productId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createReview(@PathVariable String productId, @RequestBody Object payload) {
-        // Placeholder: delegate to a review service when available
+    public ProductReview createReview(@PathVariable String productId, @RequestBody ProductReview payload) {
+        return productService.createReview(payload);
     }
 }
 [/file]
@@ -1641,7 +3632,8 @@ public class GeneratedProductEvaluationController {
 [file (webGeneratedPath(m) + '/GeneratedReviewController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
-import java.util.Map;
+import [domainPackage(m)/].ProductReview;
+import [serviceGeneratedPackage(m)/].GeneratedProductEvaluationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -1652,18 +3644,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reviews")
 public class GeneratedReviewController {
+    private final GeneratedProductEvaluationService service;
+
+    public GeneratedReviewController(GeneratedProductEvaluationService service) { this.service = service; }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    public ProductReview create(@RequestBody ProductReview payload) { return service.createReview(payload); }
 }
 [/file]
 
 [file (webGeneratedPath(m) + '/GeneratedCommentReviewController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].CommentReview;
+import [serviceGeneratedPackage(m)/].GeneratedCommentReviewService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1679,48 +3675,57 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/comments")
 public class GeneratedCommentReviewController {
+    private final GeneratedCommentReviewService service;
+
+    public GeneratedCommentReviewController(GeneratedCommentReviewService service) { this.service = service; }
 
     @GetMapping
-    public List<Map<String, Object>> list(@RequestParam(required = false) String productId) { return List.of(); }
+    public List<CommentReview> list(@RequestParam(required = false) String productId) { return service.list(); }
 
     @GetMapping("/{commentId}")
-    public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
+    public CommentReview get(@PathVariable String commentId) { return service.get(commentId); }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestParam(required = false) String productId, @RequestBody Map<String, Object> payload) { return payload; }
+    public CommentReview create(@RequestParam(required = false) String productId, @RequestBody CommentReview payload) { return service.create(payload); }
 
     @PutMapping("/{commentId}")
-    public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    public CommentReview update(@PathVariable String commentId, @RequestBody CommentReview payload) { return service.update(commentId, payload); }
 
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String commentId) { }
+    public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }
 [/file]
 
 [file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
-import java.util.Map;
+import [servicePackage(m)/].ModerationService;
+import [servicePackage(m)/].projection.ModerationSimulationResult;
+import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/moderation")
 public class GeneratedModerationController {
+    private final ModerationService service;
+
+    public GeneratedModerationController(ModerationService service) {
+        this.service = service;
+    }
 
     @PostMapping("/reviews/{reviewId}/simulate")
-    public Map<String, String> simulateReview(@PathVariable String reviewId, @RequestBody(required = false) Map<String, Object> payload) {
-        return Map.of("reviewId", reviewId, "status", "simulation-executed");
+    public ModerationSimulationResult simulateReview(@PathVariable Long reviewId) {
+        return service.simulateReviewModeration(null, reviewId);
     }
 
     @PostMapping("/reviews/simulate")
-    public Map<String, String> simulateReviews(@RequestBody(required = false) Map<String, Object> payload) {
-        return Map.of("status", "simulation-executed");
+    public List<ModerationSimulationResult> simulateReviews() {
+        return service.simulatePendingReviewModeration(null);
     }
 }
 [/file]
@@ -1728,8 +3733,9 @@ public class GeneratedModerationController {
 [file (webGeneratedPath(m) + '/GeneratedHelpfulVoteController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].HelpfulVote;
+import [serviceGeneratedPackage(m)/].GeneratedHelpfulVoteService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1743,25 +3749,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/comments/{commentId}/votes")
 public class GeneratedHelpfulVoteController {
+    private final GeneratedHelpfulVoteService service;
+
+    public GeneratedHelpfulVoteController(GeneratedHelpfulVoteService service) { this.service = service; }
 
     @GetMapping
-    public List<Map<String, Object>> list(@PathVariable String commentId) { return List.of(); }
+    public List<HelpfulVote> list(@PathVariable String commentId) { return service.list(); }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    public HelpfulVote create(@PathVariable String commentId, @RequestBody HelpfulVote payload) { return service.create(payload); }
 
     @DeleteMapping("/{voteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String commentId, @PathVariable String voteId) { }
+    public void delete(@PathVariable String commentId, @PathVariable String voteId) { service.delete(voteId); }
 }
 [/file]
 
 [file (webGeneratedPath(m) + '/GeneratedOrderController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Order;
+import [serviceGeneratedPackage(m)/].GeneratedOrderService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -1776,23 +3786,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/orders")
 public class GeneratedOrderController {
+    private final GeneratedOrderService service;
+
+    public GeneratedOrderController(GeneratedOrderService service) { this.service = service; }
 
     @GetMapping
-    public List<Map<String, Object>> list() { return List.of(); }
+    public List<Order> list() { return service.list(); }
 
     @GetMapping("/{orderId}")
-    public Map<String, String> get(@PathVariable String orderId) { return Map.of("orderId", orderId); }
+    public Order get(@PathVariable String orderId) { return service.get(orderId); }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    public Order create(@RequestBody Order payload) { return service.create(payload); }
 
     @PutMapping("/{orderId}")
-    public Map<String, Object> update(@PathVariable String orderId, @RequestBody Map<String, Object> payload) { return payload; }
+    public Order update(@PathVariable String orderId, @RequestBody Order payload) { return service.update(orderId, payload); }
 
     @DeleteMapping("/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String orderId) { }
+    public void delete(@PathVariable String orderId) { service.delete(orderId); }
 }
 [/file]
 [/template]
@@ -1802,6 +3815,9 @@ public class GeneratedOrderController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Subreddit;
+import [domainPackage(m)/].Post;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
+import [serviceGeneratedPackage(m)/].GeneratedPostService;
 import [serviceGeneratedPackage(m)/].GeneratedSubredditService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -1819,9 +3835,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/subreddits")
 public class GeneratedSubredditController {
     private final GeneratedSubredditService service;
+    private final GeneratedPostService postService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedSubredditController(GeneratedSubredditService service) {
+    public GeneratedSubredditController(GeneratedSubredditService service, GeneratedPostService postService, GeneratedModerationService moderationService) {
         this.service = service;
+        this.postService = postService;
+        this.moderationService = moderationService;
     }
 
     @GetMapping
@@ -1843,7 +3863,7 @@ public class GeneratedSubredditController {
 
     @PostMapping("/{subredditId}/posts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@PathVariable String subredditId, @RequestBody Object payload) { }
+    public Post createPost(@PathVariable String subredditId, @RequestBody Post payload) { moderationService.moderatePost(null, payload); return postService.create(payload); }
 }
 [/file]
 
@@ -1851,6 +3871,9 @@ public class GeneratedSubredditController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Post;
+import [domainPackage(m)/].Comment;
+import [serviceGeneratedPackage(m)/].GeneratedCommentService;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
 import [serviceGeneratedPackage(m)/].GeneratedPostService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -1869,18 +3892,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/posts")
 public class GeneratedPostController {
     private final GeneratedPostService service;
+    private final GeneratedCommentService commentService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedPostController(GeneratedPostService service) { this.service = service; }
+    public GeneratedPostController(GeneratedPostService service, GeneratedCommentService commentService, GeneratedModerationService moderationService) { this.service = service; this.commentService = commentService; this.moderationService = moderationService; }
 
     @GetMapping public List<Post> list(@RequestParam(required = false) String subredditId) { return service.list(); }
     @GetMapping("/{postId}") public Post get(@PathVariable String postId) { return service.get(postId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Post create(@RequestBody Post payload) { return service.create(payload); }
-    @PutMapping("/{postId}") public Post update(@PathVariable String postId, @RequestBody Post payload) { return service.update(postId, payload); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Post create(@RequestBody Post payload) { moderationService.moderatePost(null, payload); return service.create(payload); }
+    @PutMapping("/{postId}") public Post update(@PathVariable String postId, @RequestBody Post payload) { moderationService.moderatePost(postId, payload); return service.update(postId, payload); }
     @DeleteMapping("/{postId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String postId) { service.delete(postId); }
 
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public void comment(@PathVariable String postId, @RequestBody Object payload) { }
+    public Comment comment(@PathVariable String postId, @RequestBody Comment payload) { moderationService.moderateComment(null, payload); return commentService.create(payload); }
 }
 [/file]
 
@@ -1888,6 +3913,7 @@ public class GeneratedPostController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Comment;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
 import [serviceGeneratedPackage(m)/].GeneratedCommentService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -1906,13 +3932,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/comments")
 public class GeneratedCommentController {
     private final GeneratedCommentService service;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedCommentController(GeneratedCommentService service) { this.service = service; }
+    public GeneratedCommentController(GeneratedCommentService service, GeneratedModerationService moderationService) { this.service = service; this.moderationService = moderationService; }
 
     @GetMapping public List<Comment> list(@RequestParam(required = false) String postId) { return service.list(); }
     @GetMapping("/{commentId}") public Comment get(@PathVariable String commentId) { return service.get(commentId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String postId, @RequestBody Comment payload) { return service.create(payload); }
-    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { return service.update(commentId, payload); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String postId, @RequestBody Comment payload) { moderationService.moderateComment(null, payload); return service.create(payload); }
+    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { moderationService.moderateComment(commentId, payload); return service.update(commentId, payload); }
     @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }
 [/file]
@@ -1980,8 +4007,13 @@ public class GeneratedSubscriptionController {
 [file (webGeneratedPath(m) + '/GeneratedPolicyController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].ParticipationPolicy;
+import [domainPackage(m)/].SortingPolicy;
+import [domainPackage(m)/].ValidationRule;
+import [repositoryPackage(m)/].ParticipationPolicyRepository;
+import [repositoryPackage(m)/].SortingPolicyRepository;
+import [repositoryPackage(m)/].ValidationRuleRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -1995,12 +4027,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/policies")
 public class GeneratedPolicyController {
-    @GetMapping("/subreddits/{subredditId}/permissions") public List<String> permissions(@PathVariable String subredditId) { return List.of(); }
-    @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/subreddits/{subredditId}/sorting") public List<String> sorting(@PathVariable String subredditId) { return List.of(); }
-    @PostMapping("/subreddits/{subredditId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    private final ParticipationPolicyRepository participationPolicyRepository;
+    private final SortingPolicyRepository sortingPolicyRepository;
+    private final ValidationRuleRepository validationRuleRepository;
+
+    public GeneratedPolicyController(ParticipationPolicyRepository participationPolicyRepository, SortingPolicyRepository sortingPolicyRepository, ValidationRuleRepository validationRuleRepository) {
+        this.participationPolicyRepository = participationPolicyRepository;
+        this.sortingPolicyRepository = sortingPolicyRepository;
+        this.validationRuleRepository = validationRuleRepository;
+    }
+
+    @GetMapping("/subreddits/{subredditId}/permissions") public List<ParticipationPolicy> permissions(@PathVariable String subredditId) { return participationPolicyRepository.findAll(); }
+    @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public ParticipationPolicy createPermission(@PathVariable String subredditId, @RequestBody ParticipationPolicy payload) { return participationPolicyRepository.save(payload); }
+    @GetMapping("/subreddits/{subredditId}/sorting") public List<SortingPolicy> sorting(@PathVariable String subredditId) { return sortingPolicyRepository.findAll(); }
+    @PostMapping("/subreddits/{subredditId}/sorting") @ResponseStatus(HttpStatus.CREATED) public SortingPolicy createSorting(@PathVariable String subredditId, @RequestBody SortingPolicy payload) { return sortingPolicyRepository.save(payload); }
+    @GetMapping("/validation-rules") public List<ValidationRule> validationRules(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return validationRuleRepository.findAll(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public ValidationRule createValidationRule(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody ValidationRule payload) { return validationRuleRepository.save(payload); }
 }
 [/file]
 
@@ -2034,6 +4076,8 @@ public class GeneratedReportController {
 [file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [servicePackage(m)/].ModerationService;
+import [servicePackage(m)/].projection.ModerationSimulationResult;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -2047,14 +4091,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/moderation")
 public class GeneratedModerationController {
-    @GetMapping("/posts/{postId}/checks") public List<String> postChecks(@PathVariable String postId) { return List.of(); }
-    @PostMapping("/posts/{postId}/checks") public Map<String, String> createPostCheck(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("postId", postId, "status", "check-created"); }
-    @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }
-    @PostMapping("/comments/{commentId}/checks") public Map<String, String> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "check-created"); }
-    @PostMapping("/posts/{postId}/comment-status") public Map<String, String> changeCommentStatus(@PathVariable String postId, @RequestParam String status) { return Map.of("postId", postId, "status", status); }
-    @PostMapping("/posts/{postId}/simulate") public Map<String, String> simulatePost(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("postId", postId, "status", "simulation-executed"); }
-    @PostMapping("/comments/{commentId}/simulate") public Map<String, String> simulateComment(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "simulation-executed"); }
-    @PostMapping("/reports/simulate") public Map<String, String> simulateReports(@RequestBody(required = false) Map<String, Object> payload) { return Map.of("status", "simulation-executed"); }
+    private final ModerationService service;
+
+    public GeneratedModerationController(ModerationService service) { this.service = service; }
+
+    @GetMapping("/posts/{postId}/checks") public List<Map<String, Object>> postChecks(@PathVariable String postId) { return service.checksFor("post", postId); }
+    @PostMapping("/posts/{postId}/checks") public Map<String, Object> createPostCheck(@PathVariable String postId, @RequestBody(required = false) Map<String, Object> payload) { return service.moderatePost(postId, payload == null ? Map.of() : payload); }
+    @GetMapping("/comments/{commentId}/checks") public List<Map<String, Object>> commentChecks(@PathVariable String commentId) { return service.checksFor("comment", commentId); }
+    @PostMapping("/comments/{commentId}/checks") public Map<String, Object> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return service.moderateComment(commentId, payload == null ? Map.of() : payload); }
+    @PostMapping("/posts/{postId}/status") public Map<String, Object> changePostStatus(@PathVariable String postId, @RequestParam String status) { return service.changeContentStatus("post", postId, status); }
+    @PostMapping("/comments/{commentId}/status") public Map<String, Object> changeCommentStatus(@PathVariable String commentId, @RequestParam String status) { return service.changeContentStatus("comment", commentId, status); }
+    @PostMapping("/posts/{postId}/simulate") public ModerationSimulationResult simulatePost(@PathVariable Long postId) { return service.simulatePostModeration(null, postId); }
+    @PostMapping("/comments/{commentId}/simulate") public ModerationSimulationResult simulateComment(@PathVariable Long commentId) { return service.simulateCommentModeration(null, commentId); }
+    @PostMapping("/reports/simulate") public List<ModerationSimulationResult> simulateReports() { return service.simulateReportModeration(null); }
 }
 [/file]
 [/template]
@@ -2064,7 +4113,10 @@ public class GeneratedModerationController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Channel;
+import [domainPackage(m)/].Video;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
 import [serviceGeneratedPackage(m)/].GeneratedChannelService;
+import [serviceGeneratedPackage(m)/].GeneratedVideoService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -2081,8 +4133,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/channels")
 public class GeneratedChannelController {
     private final GeneratedChannelService service;
+    private final GeneratedVideoService videoService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedChannelController(GeneratedChannelService service) { this.service = service; }
+    public GeneratedChannelController(GeneratedChannelService service, GeneratedVideoService videoService, GeneratedModerationService moderationService) { this.service = service; this.videoService = videoService; this.moderationService = moderationService; }
 
     @GetMapping public List<Channel> list() { return service.list(); }
     @GetMapping("/{channelId}") public Channel get(@PathVariable String channelId) { return service.get(channelId); }
@@ -2092,7 +4146,7 @@ public class GeneratedChannelController {
 
     @PostMapping("/{channelId}/videos")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createVideo(@PathVariable String channelId, @RequestBody Object payload) { }
+    public Video createVideo(@PathVariable String channelId, @RequestBody Video payload) { moderationService.moderateVideo(null, payload); return videoService.create(payload); }
 }
 [/file]
 
@@ -2100,6 +4154,7 @@ public class GeneratedChannelController {
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Video;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
 import [serviceGeneratedPackage(m)/].GeneratedVideoService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -2118,13 +4173,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/videos")
 public class GeneratedVideoController {
     private final GeneratedVideoService service;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedVideoController(GeneratedVideoService service) { this.service = service; }
+    public GeneratedVideoController(GeneratedVideoService service, GeneratedModerationService moderationService) { this.service = service; this.moderationService = moderationService; }
 
     @GetMapping public List<Video> list(@RequestParam(required = false) String channelId) { return service.list(); }
     @GetMapping("/{videoId}") public Video get(@PathVariable String videoId) { return service.get(videoId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Video create(@RequestBody Video payload) { return service.create(payload); }
-    @PutMapping("/{videoId}") public Video update(@PathVariable String videoId, @RequestBody Video payload) { return service.update(videoId, payload); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Video create(@RequestBody Video payload) { moderationService.moderateVideo(null, payload); return service.create(payload); }
+    @PutMapping("/{videoId}") public Video update(@PathVariable String videoId, @RequestBody Video payload) { moderationService.moderateVideo(videoId, payload); return service.update(videoId, payload); }
     @DeleteMapping("/{videoId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String videoId) { service.delete(videoId); }
 }
 [/file]
@@ -2132,8 +4188,10 @@ public class GeneratedVideoController {
 [file (webGeneratedPath(m) + '/GeneratedCommentController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].Comment;
+import [serviceGeneratedPackage(m)/].GeneratedCommentService;
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -2149,11 +4207,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/comments")
 public class GeneratedCommentController {
-    @GetMapping public List<String> list(@RequestParam(required = false) String videoId) { return List.of(); }
-    @GetMapping("/{commentId}") public Map<String, String> get(@PathVariable String commentId) { return Map.of("commentId", commentId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestBody Map<String, Object> payload) { return payload; }
-    @PutMapping("/{commentId}") public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
-    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) {}
+    private final GeneratedCommentService service;
+    private final GeneratedModerationService moderationService;
+
+    public GeneratedCommentController(GeneratedCommentService service, GeneratedModerationService moderationService) { this.service = service; this.moderationService = moderationService; }
+
+    @GetMapping public List<Comment> list(@RequestParam(required = false) String videoId) { return service.list(); }
+    @GetMapping("/{commentId}") public Comment get(@PathVariable String commentId) { return service.get(commentId); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String videoId, @RequestBody Comment payload) { moderationService.moderateComment(null, payload); return service.create(payload); }
+    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { moderationService.moderateComment(commentId, payload); return service.update(commentId, payload); }
+    @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }
 [/file]
 
@@ -2220,8 +4283,13 @@ public class GeneratedSubscriptionController {
 [file (webGeneratedPath(m) + '/GeneratedPolicyController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [domainPackage(m)/].ChannelPermissionPolicy;
+import [domainPackage(m)/].ContentValidationRule;
+import [domainPackage(m)/].SortingPolicy;
+import [repositoryPackage(m)/].ChannelPermissionPolicyRepository;
+import [repositoryPackage(m)/].ContentValidationRuleRepository;
+import [repositoryPackage(m)/].SortingPolicyRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -2235,12 +4303,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/policies")
 public class GeneratedPolicyController {
-    @GetMapping("/channels/{channelId}/permissions") public List<String> permissions(@PathVariable String channelId) { return List.of(); }
-    @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/channels/{channelId}/sorting") public List<String> sorting(@PathVariable String channelId) { return List.of(); }
-    @PostMapping("/channels/{channelId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String channelId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    private final ChannelPermissionPolicyRepository channelPermissionPolicyRepository;
+    private final SortingPolicyRepository sortingPolicyRepository;
+    private final ContentValidationRuleRepository contentValidationRuleRepository;
+
+    public GeneratedPolicyController(ChannelPermissionPolicyRepository channelPermissionPolicyRepository, SortingPolicyRepository sortingPolicyRepository, ContentValidationRuleRepository contentValidationRuleRepository) {
+        this.channelPermissionPolicyRepository = channelPermissionPolicyRepository;
+        this.sortingPolicyRepository = sortingPolicyRepository;
+        this.contentValidationRuleRepository = contentValidationRuleRepository;
+    }
+
+    @GetMapping("/channels/{channelId}/permissions") public List<ChannelPermissionPolicy> permissions(@PathVariable String channelId) { return channelPermissionPolicyRepository.findAll(); }
+    @PostMapping("/channels/{channelId}/permissions") @ResponseStatus(HttpStatus.CREATED) public ChannelPermissionPolicy createPermission(@PathVariable String channelId, @RequestBody ChannelPermissionPolicy payload) { return channelPermissionPolicyRepository.save(payload); }
+    @GetMapping("/channels/{channelId}/sorting") public List<SortingPolicy> sorting(@PathVariable String channelId) { return sortingPolicyRepository.findAll(); }
+    @PostMapping("/channels/{channelId}/sorting") @ResponseStatus(HttpStatus.CREATED) public SortingPolicy createSorting(@PathVariable String channelId, @RequestBody SortingPolicy payload) { return sortingPolicyRepository.save(payload); }
+    @GetMapping("/validation-rules") public List<ContentValidationRule> validationRules(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId) { return contentValidationRuleRepository.findAll(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public ContentValidationRule createValidationRule(@RequestParam(required = false) String videoId, @RequestParam(required = false) String commentId, @RequestBody ContentValidationRule payload) { return contentValidationRuleRepository.save(payload); }
 }
 [/file]
 
@@ -2274,6 +4352,8 @@ public class GeneratedReportController {
 [file (webGeneratedPath(m) + '/GeneratedModerationController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
+import [servicePackage(m)/].ModerationService;
+import [servicePackage(m)/].projection.ModerationSimulationResult;
 import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -2287,14 +4367,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/moderation")
 public class GeneratedModerationController {
-    @GetMapping("/videos/{videoId}/checks") public List<String> videoChecks(@PathVariable String videoId) { return List.of(); }
-    @PostMapping("/videos/{videoId}/checks") public Map<String, String> createVideoCheck(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "check-created"); }
-    @GetMapping("/comments/{commentId}/checks") public List<String> commentChecks(@PathVariable String commentId) { return List.of(); }
-    @PostMapping("/comments/{commentId}/checks") public Map<String, String> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "check-created"); }
-    @PostMapping("/videos/{videoId}/comment-status") public Map<String, String> changeCommentStatus(@PathVariable String videoId, @RequestParam String status) { return Map.of("videoId", videoId, "status", status); }
-    @PostMapping("/videos/{videoId}/simulate") public Map<String, String> simulateVideo(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "simulation-executed"); }
-    @PostMapping("/comments/{commentId}/simulate") public Map<String, String> simulateComment(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return Map.of("commentId", commentId, "status", "simulation-executed"); }
-    @PostMapping("/reports/simulate") public Map<String, String> simulateReports(@RequestBody(required = false) Map<String, Object> payload) { return Map.of("status", "simulation-executed"); }
+    private final ModerationService service;
+
+    public GeneratedModerationController(ModerationService service) { this.service = service; }
+
+    @GetMapping("/videos/{videoId}/checks") public List<Map<String, Object>> videoChecks(@PathVariable String videoId) { return service.checksFor("video", videoId); }
+    @PostMapping("/videos/{videoId}/checks") public Map<String, Object> createVideoCheck(@PathVariable String videoId, @RequestBody(required = false) Map<String, Object> payload) { return service.moderateVideo(videoId, payload == null ? Map.of() : payload); }
+    @GetMapping("/comments/{commentId}/checks") public List<Map<String, Object>> commentChecks(@PathVariable String commentId) { return service.checksFor("comment", commentId); }
+    @PostMapping("/comments/{commentId}/checks") public Map<String, Object> createCommentCheck(@PathVariable String commentId, @RequestBody(required = false) Map<String, Object> payload) { return service.moderateComment(commentId, payload == null ? Map.of() : payload); }
+    @PostMapping("/videos/{videoId}/status") public Map<String, Object> changeVideoStatus(@PathVariable String videoId, @RequestParam String status) { return service.changeContentStatus("video", videoId, status); }
+    @PostMapping("/comments/{commentId}/status") public Map<String, Object> changeCommentStatus(@PathVariable String commentId, @RequestParam String status) { return service.changeContentStatus("comment", commentId, status); }
+    @PostMapping("/videos/{videoId}/comment-status") public Map<String, Object> changeVideoCommentStatus(@PathVariable String videoId, @RequestParam String status) { return service.changeContentStatus("video-comment-settings", videoId, status); }
+    @PostMapping("/videos/{videoId}/simulate") public ModerationSimulationResult simulateVideo(@PathVariable Long videoId) { return service.simulateVideoModeration(null, videoId); }
+    @PostMapping("/comments/{commentId}/simulate") public ModerationSimulationResult simulateComment(@PathVariable Long commentId) { return service.simulateCommentModeration(null, commentId); }
+    @PostMapping("/reports/simulate") public List<ModerationSimulationResult> simulateReports() { return service.simulateReportModeration(null); }
 }
 [/file]
 [/template]

@@ -1,24 +1,45 @@
 package pt.isep.enorm.ref.reddit.service.generated;
 
+import pt.isep.enorm.ref.reddit.domain.Post;
+import pt.isep.enorm.ref.reddit.repository.generated.GeneratedPostRepository;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 public class GeneratedPostService {
-    public List list() {
-        return List.of();
+    protected final GeneratedPostRepository repository;
+
+    public GeneratedPostService(GeneratedPostRepository repository) {
+        this.repository = repository;
     }
 
-    public <T> T get(String id) {
-        return null;
+    public List<Post> list() {
+        return repository.findAll();
     }
 
-    public <T> T create(T entity) {
-        return entity;
+    public Post get(String id) {
+        return repository.findById(toLong(id))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Post '" + id + "' was not found."));
     }
 
-    public <T> T update(String id, T entity) {
-        return entity;
+    public Post create(Post entity) {
+        return repository.save(entity);
+    }
+
+    public Post update(String id, Post entity) {
+        entity.setId(toLong(id));
+        return repository.save(entity);
     }
 
     public void delete(String id) {
+        repository.deleteById(toLong(id));
+    }
+
+    private Long toLong(String id) {
+        try {
+            return Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid numeric id: " + id);
+        }
     }
 }
