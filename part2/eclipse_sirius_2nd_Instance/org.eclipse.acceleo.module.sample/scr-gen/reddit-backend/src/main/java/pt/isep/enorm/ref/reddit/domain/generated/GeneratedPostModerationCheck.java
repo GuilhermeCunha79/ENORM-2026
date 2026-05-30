@@ -27,10 +27,10 @@ public abstract class GeneratedPostModerationCheck {
     private PostModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private RedditUser reviewedBy;
 

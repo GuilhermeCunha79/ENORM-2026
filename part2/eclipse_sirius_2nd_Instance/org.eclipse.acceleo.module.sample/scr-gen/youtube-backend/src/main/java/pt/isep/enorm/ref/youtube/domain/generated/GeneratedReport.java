@@ -26,16 +26,16 @@ public abstract class GeneratedReport {
     @Enumerated(EnumType.STRING)
     private ReportStatus status = ReportStatus.PENDING;
     private Instant timestamp = Instant.now();
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
     private YoutubeUser submitter;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private YoutubeUser reviewedBy;
 

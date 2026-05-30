@@ -2,7 +2,7 @@ package pt.isep.enorm.ref.amazon.domain.generated;
 
 import pt.isep.enorm.ref.amazon.domain.enums.ReviewStatus;
 import pt.isep.enorm.ref.amazon.domain.enums.VerificationType;
-import pt.isep.enorm.ref.amazon.domain.AmazonUser;
+import pt.isep.enorm.ref.amazon.domain.UserType;
 import pt.isep.enorm.ref.amazon.domain.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -21,12 +21,12 @@ public abstract class GeneratedProductReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
-    private AmazonUser author;
+    private UserType author;
     @Column(length = 2000)
     private String comment;
     private Integer rating;
@@ -42,8 +42,8 @@ public abstract class GeneratedProductReview {
     public void setId(Long id) { this.id = id; }
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
-    public AmazonUser getAuthor() { return author; }
-    public void setAuthor(AmazonUser author) { this.author = author; }
+    public UserType getAuthor() { return author; }
+    public void setAuthor(UserType author) { this.author = author; }
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
     public Integer getRating() { return rating == null ? grade : rating; }

@@ -27,10 +27,10 @@ public abstract class GeneratedVideoModerationCheck {
     private VideoModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private YoutubeUser reviewedBy;
 

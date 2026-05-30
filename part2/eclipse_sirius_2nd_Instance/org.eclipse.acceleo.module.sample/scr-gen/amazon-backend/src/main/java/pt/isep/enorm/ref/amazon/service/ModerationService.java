@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.amazon.service;
 
 import pt.isep.enorm.ref.amazon.service.generated.GeneratedModerationService;
-import pt.isep.enorm.ref.amazon.domain.AmazonUser;
+import pt.isep.enorm.ref.amazon.domain.UserType;
 import pt.isep.enorm.ref.amazon.domain.ProductReview;
 import pt.isep.enorm.ref.amazon.domain.enums.ReviewStatus;
 import pt.isep.enorm.ref.amazon.repository.ProductReviewRepository;
@@ -27,19 +27,19 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public void approveReview(AmazonUser moderator, Long reviewId) {
+    public void approveReview(UserType moderator, Long reviewId) {
         ProductReview review = loadReview(reviewId);
         review.setStatus(ReviewStatus.APPROVED);
         productReviewRepository.save(review);
     }
 
     @Transactional
-    public ModerationSimulationResult simulateReviewModeration(AmazonUser moderator, Long reviewId) {
+    public ModerationSimulationResult simulateReviewModeration(UserType moderator, Long reviewId) {
         return moderateReview(loadReview(reviewId), GeneratedModerationModel.DEFAULT_POLICY);
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulatePendingReviewModeration(AmazonUser moderator) {
+    public List<ModerationSimulationResult> simulatePendingReviewModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         PolicySpec policy = policyForReportThreshold();
         for (ProductReview review : productReviewRepository.findByStatus(ReviewStatus.PENDING)) {

@@ -339,6 +339,7 @@ package [domainGeneratedPackage(m)/];
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import java.net.URI;
@@ -356,7 +357,7 @@ public abstract class Generated[rt.name/][if (rt.superTypes->notEmpty())] extend
 [/if]
 [for (a : Attribute | rt.attributes->select(a | not shouldSkipAttribute(a)))]
 [if (a.multiValued)]
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
 [/if]
     @Column(name = "[sqlColumnName(a.name)/]")
     private [javaType(a.type, a.multiValued)/] [a.name/][if (a.multiValued)] = new ArrayList<>()[/if];
@@ -1393,7 +1394,7 @@ import [repositoryPackage(m)/].VideoModerationCheckRepository;
 import [repositoryPackage(m)/].VideoRepository;
 [/if]
 [if (baseName(m) = 'Amazon')]
-import [domainPackage(m)/].AmazonUser;
+import [domainPackage(m)/].UserType;
 import [domainPackage(m)/].ProductReview;
 import [domainEnumsPackage(m)/].ReviewStatus;
 import [repositoryPackage(m)/].ProductReviewRepository;
@@ -1661,19 +1662,19 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public void approveReview(AmazonUser moderator, Long reviewId) {
+    public void approveReview(UserType moderator, Long reviewId) {
         ProductReview review = loadReview(reviewId);
         review.setStatus(ReviewStatus.APPROVED);
         productReviewRepository.save(review);
     }
 
     @Transactional
-    public ModerationSimulationResult simulateReviewModeration(AmazonUser moderator, Long reviewId) {
+    public ModerationSimulationResult simulateReviewModeration(UserType moderator, Long reviewId) {
         return moderateReview(loadReview(reviewId), GeneratedModerationModel.DEFAULT_POLICY);
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulatePendingReviewModeration(AmazonUser moderator) {
+    public List<ModerationSimulationResult> simulatePendingReviewModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         PolicySpec policy = policyForReportThreshold();
         for (ProductReview review : productReviewRepository.findByStatus(ReviewStatus.PENDING)) {
@@ -1867,7 +1868,7 @@ class [applicationClassName(m)/]Tests {
 
 [template public generateAmazonReferenceScaffold(m : RefModel)]
 [generateAmazonEnums(m)/]
-[generateEntityStack(m, 'AmazonUser')/]
+[generateEntityStack(m, 'UserType')/]
 [generateEntityStack(m, 'AuthorizationRule')/]
 [generateDomainPair(m, 'AutomationAction')/]
 [generateDomainPair(m, 'AutomationCondition')/]
@@ -1925,7 +1926,7 @@ package [domainGeneratedPackage(m)/];
 
 import [domainEnumsPackage(m)/].ReviewStatus;
 import [domainEnumsPackage(m)/].VerificationType;
-import [domainPackage(m)/].AmazonUser;
+import [domainPackage(m)/].UserType;
 import [domainPackage(m)/].Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -1944,12 +1945,12 @@ public abstract class GeneratedProductReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
-    private AmazonUser author;
+    private UserType author;
     @Column(length = 2000)
     private String comment;
     private Integer rating;
@@ -1965,8 +1966,8 @@ public abstract class GeneratedProductReview {
     public void setId(Long id) { this.id = id; }
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
-    public AmazonUser getAuthor() { return author; }
-    public void setAuthor(AmazonUser author) { this.author = author; }
+    public UserType getAuthor() { return author; }
+    public void setAuthor(UserType author) { this.author = author; }
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
     public Integer getRating() { return rating == null ? grade : rating; }
@@ -2453,10 +2454,10 @@ public abstract class GeneratedPostModerationCheck {
     private PostModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private RedditUser reviewedBy;
 
@@ -2505,10 +2506,10 @@ public abstract class GeneratedCommentModerationCheck {
     private CommentModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private RedditUser reviewedBy;
 
@@ -2556,16 +2557,16 @@ public abstract class GeneratedReport {
     @Enumerated(EnumType.STRING)
     private ReportStatus status = ReportStatus.PENDING;
     private Instant timestamp = Instant.now();
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
     private RedditUser submitter;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private RedditUser reviewedBy;
 
@@ -2715,10 +2716,10 @@ public abstract class GeneratedVideoModerationCheck {
     private VideoModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private YoutubeUser reviewedBy;
 
@@ -2767,10 +2768,10 @@ public abstract class GeneratedCommentModerationCheck {
     private CommentModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private YoutubeUser reviewedBy;
 
@@ -2818,16 +2819,16 @@ public abstract class GeneratedReport {
     @Enumerated(EnumType.STRING)
     private ReportStatus status = ReportStatus.PENDING;
     private Instant timestamp = Instant.now();
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
     private YoutubeUser submitter;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private YoutubeUser reviewedBy;
 
@@ -3438,8 +3439,8 @@ public class Generated[rt.name/]Controller {
 package [webGeneratedPackage(m)/];
 
 [if (baseName(m) = 'Amazon')]
-import [domainPackage(m)/].AmazonUser;
-import [repositoryPackage(m)/].AmazonUserRepository;
+import [domainPackage(m)/].UserType;
+import [repositoryPackage(m)/].UserTypeRepository;
 [/if]
 [if (baseName(m) = 'Reddit')]
 import [domainPackage(m)/].RedditUser;
@@ -3461,9 +3462,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 public class GeneratedAuthenticationController {
 [if (baseName(m) = 'Amazon')]
-    private final AmazonUserRepository userRepository;
+    private final UserTypeRepository userRepository;
 
-    public GeneratedAuthenticationController(AmazonUserRepository userRepository) { this.userRepository = userRepository; }
+    public GeneratedAuthenticationController(UserTypeRepository userRepository) { this.userRepository = userRepository; }
 [/if]
 [if (baseName(m) = 'Reddit')]
     private final RedditUserRepository userRepository;
@@ -3479,7 +3480,7 @@ public class GeneratedAuthenticationController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
 [if (baseName(m) = 'Amazon')]
-    public AmazonUser register(@RequestBody AmazonUser payload) {
+    public UserType register(@RequestBody UserType payload) {
         return userRepository.save(payload);
     }
 [/if]
@@ -4384,3 +4385,4 @@ public class GeneratedModerationController {
 }
 [/file]
 [/template]
+

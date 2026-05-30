@@ -27,10 +27,10 @@ public abstract class GeneratedCommentModerationCheck {
     private CommentModerationResult result;
     @Column(nullable = false)
     private Instant timestamp;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
     private RedditUser reviewedBy;
 
