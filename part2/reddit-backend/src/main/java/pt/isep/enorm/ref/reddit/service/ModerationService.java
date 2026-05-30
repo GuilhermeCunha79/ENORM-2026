@@ -27,9 +27,11 @@ import pt.isep.enorm.ref.reddit.repository.PostRepository;
 import pt.isep.enorm.ref.reddit.repository.ReportRepository;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ActionSpec;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.AutomationRuleSpec;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ConditionSpec;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationDecision;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.ModerationMode;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.PolicySpec;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationModel.TriggerEvent;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.reddit.service.projection.ModerationSimulationResult;
@@ -97,12 +99,13 @@ public class ModerationService extends GeneratedModerationService {
         ensureModerator(moderator);
         Post post = loadPost(postId);
         Optional<Report> report = findPendingPostReport(postId);
+        PolicySpec policy = policyFor("POST");
 
-        if (!isPolicyTriggerMatched(report.isPresent())) {
-            return skipped("POST", post.getId(), post.getStatus(), report.orElse(null));
+        if (!isPolicyTriggerMatched(policy, report.isPresent())) {
+            return skipped("POST", post.getId(), post.getStatus(), report.orElse(null), policy);
         }
 
-        return moderatePost(moderator, post, report.orElse(null));
+        return moderatePost(moderator, post, report.orElse(null), policy);
     }
 
     @Transactional
@@ -110,12 +113,13 @@ public class ModerationService extends GeneratedModerationService {
         ensureModerator(moderator);
         Comment comment = loadComment(commentId);
         Optional<Report> report = findPendingCommentReport(commentId);
+        PolicySpec policy = policyFor("COMMENT");
 
-        if (!isPolicyTriggerMatched(report.isPresent())) {
-            return skipped("COMMENT", comment.getId(), comment.getStatus(), report.orElse(null));
+        if (!isPolicyTriggerMatched(policy, report.isPresent())) {
+            return skipped("COMMENT", comment.getId(), comment.getStatus(), report.orElse(null), policy);
         }
 
-        return moderateComment(moderator, comment, report.orElse(null));
+        return moderateComment(moderator, comment, report.orElse(null), policy);
     }
 
     @Transactional
@@ -125,23 +129,24 @@ public class ModerationService extends GeneratedModerationService {
 
         for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
             if (report.getPost() != null) {
-                results.add(moderatePost(moderator, report.getPost(), report));
+                results.add(moderatePost(moderator, report.getPost(), report, policyFor("POST")));
             } else if (report.getComment() != null) {
-                results.add(moderateComment(moderator, report.getComment(), report));
+                results.add(moderateComment(moderator, report.getComment(), report, policyFor("COMMENT")));
             }
         }
 
         return results;
     }
 
-    private ModerationSimulationResult moderatePost(RedditUser moderator, Post post, Report report) {
-        List<String> matches = findMatchedKeywords(post.getTitle() + " " + post.getDescription());
+    private ModerationSimulationResult moderatePost(RedditUser moderator, Post post, Report report, PolicySpec policy) {
+        AutomationRuleSpec rule = primaryRule(policy);
+        List<String> matches = findMatchedKeywords(post.getTitle() + " " + post.getDescription(), rule);
         PostModerationResult decision = matches.isEmpty()
             ? PostModerationResult.APPROVED
-            : postResultFor(GeneratedModerationModel.POLICY_DECISION);
+            : postResultFor(policy.getDecision());
         ContentStatus status = matches.isEmpty()
             ? ContentStatus.ACTIVE
-            : statusFor(GeneratedModerationModel.POLICY_DECISION);
+            : statusFor(policy.getDecision(), policy, rule);
 
         post.setStatus(status);
         postRepository.save(post);
@@ -157,18 +162,20 @@ public class ModerationService extends GeneratedModerationService {
             decision.name(),
             status,
             matches,
-            explanation(matches, GeneratedModerationModel.POST_CHECK_TYPE.name(), decision.name())
+            explanation(matches, GeneratedModerationModel.POST_CHECK_TYPE.name(), decision.name(), policy, rule),
+            policy
         );
     }
 
-    private ModerationSimulationResult moderateComment(RedditUser moderator, Comment comment, Report report) {
-        List<String> matches = findMatchedKeywords(comment.getText());
+    private ModerationSimulationResult moderateComment(RedditUser moderator, Comment comment, Report report, PolicySpec policy) {
+        AutomationRuleSpec rule = primaryRule(policy);
+        List<String> matches = findMatchedKeywords(comment.getText(), rule);
         CommentModerationResult decision = matches.isEmpty()
             ? CommentModerationResult.APPROVED
-            : commentResultFor(GeneratedModerationModel.POLICY_DECISION);
+            : commentResultFor(policy.getDecision());
         ContentStatus status = matches.isEmpty()
             ? ContentStatus.ACTIVE
-            : statusFor(GeneratedModerationModel.POLICY_DECISION);
+            : statusFor(policy.getDecision(), policy, rule);
 
         comment.setStatus(status);
         commentRepository.save(comment);
@@ -184,22 +191,30 @@ public class ModerationService extends GeneratedModerationService {
             decision.name(),
             status,
             matches,
-            explanation(matches, GeneratedModerationModel.COMMENT_CHECK_TYPE.name(), decision.name())
+            explanation(matches, GeneratedModerationModel.COMMENT_CHECK_TYPE.name(), decision.name(), policy, rule),
+            policy
         );
     }
 
-    private boolean isPolicyTriggerMatched(boolean hasPendingReport) {
-        if (GeneratedModerationModel.POLICY_TRIGGER == TriggerEvent.ON_REPORT_THRESHOLD) {
+    private boolean isPolicyTriggerMatched(PolicySpec policy, boolean hasPendingReport) {
+        if (policy == null) {
+            return false;
+        }
+        if (policy.getTrigger() == TriggerEvent.ON_REPORT_THRESHOLD) {
             return hasPendingReport;
         }
         return true;
     }
 
-    private List<String> findMatchedKeywords(String content) {
+    private List<String> findMatchedKeywords(String content, AutomationRuleSpec rule) {
         String normalized = normalize(content);
         List<String> matches = new ArrayList<>();
 
-        for (ConditionSpec condition : GeneratedModerationModel.CONDITIONS) {
+        if (rule == null) {
+            return matches;
+        }
+
+        for (ConditionSpec condition : rule.getConditions()) {
             if (condition.getOperator() != GeneratedModerationModel.ConditionOperator.CONTAINS_KEYWORDS) {
                 continue;
             }
@@ -213,17 +228,17 @@ public class ModerationService extends GeneratedModerationService {
         return matches;
     }
 
-    private ContentStatus statusFor(ModerationDecision decision) {
+    private ContentStatus statusFor(ModerationDecision decision, PolicySpec policy, AutomationRuleSpec rule) {
         if (decision == ModerationDecision.APPROVED) {
             return ContentStatus.ACTIVE;
         }
 
-        ActionSpec action = primaryAction();
+        ActionSpec action = primaryAction(rule);
         if (action != null && action.getKind() == GeneratedModerationModel.ActionKind.FLAG_CONTENT) {
             return ContentStatus.FLAGGED;
         }
 
-        if (GeneratedModerationModel.POLICY_MODE == ModerationMode.MANUAL) {
+        if (policy.getMode() == ModerationMode.MANUAL) {
             return ContentStatus.UNDER_REVIEW;
         }
 
@@ -250,44 +265,77 @@ public class ModerationService extends GeneratedModerationService {
         };
     }
 
-    private String explanation(List<String> matches, String checkType, String decision) {
+    private String explanation(
+        List<String> matches,
+        String checkType,
+        String decision,
+        PolicySpec policy,
+        AutomationRuleSpec rule
+    ) {
         if (matches.isEmpty()) {
-            return "No " + conditionNames()
-                + " match; content approved by " + GeneratedModerationModel.POLICY_NAME + ".";
+            return "No " + conditionNames(rule)
+                + " match; content approved by " + policy.getName() + ".";
         }
 
-        ActionSpec action = primaryAction();
+        ActionSpec action = primaryAction(rule);
         String actionName = action == null ? "NoAction" : action.getName();
         String actionKind = action == null ? "NONE" : action.getKind().name();
         String actionMessage = action == null ? "" : "; message: " + action.getMessage();
 
-        return GeneratedModerationModel.AUTOMATION_RULE_NAME
-            + " (" + GeneratedModerationModel.AUTOMATION_TRIGGER + ") matched " + matches
+        return ruleName(rule)
+            + " (" + ruleTrigger(rule) + ") matched " + matches
             + "; " + actionName
             + " uses " + actionKind
-            + "; " + GeneratedModerationModel.POLICY_NAME
+            + "; " + policy.getName()
             + " records " + checkType
             + " as " + decision
             + actionMessage
             + ".";
     }
 
-    private ActionSpec primaryAction() {
-        return GeneratedModerationModel.ACTIONS.isEmpty() ? null : GeneratedModerationModel.ACTIONS.get(0);
+    private PolicySpec policyFor(String targetType) {
+        String resourceTarget = "POST".equals(targetType) ? "Post" : "Comment";
+        return GeneratedModerationModel.POLICIES.stream()
+            .filter(policy -> resourceTarget.equals(policy.getResourceTarget()))
+            .findFirst()
+            .orElse(null);
     }
 
-    private String conditionNames() {
-        return GeneratedModerationModel.CONDITIONS.stream()
+    private AutomationRuleSpec primaryRule(PolicySpec policy) {
+        if (policy == null || policy.getAutomationRules().isEmpty()) {
+            return null;
+        }
+        return policy.getAutomationRules().get(0);
+    }
+
+    private ActionSpec primaryAction(AutomationRuleSpec rule) {
+        return rule == null || rule.getActions().isEmpty() ? null : rule.getActions().get(0);
+    }
+
+    private String conditionNames(AutomationRuleSpec rule) {
+        if (rule == null) {
+            return "[]";
+        }
+        return rule.getConditions().stream()
             .map(ConditionSpec::getName)
             .toList()
             .toString();
+    }
+
+    private String ruleName(AutomationRuleSpec rule) {
+        return rule == null ? "NoAutomationRule" : rule.getName();
+    }
+
+    private String ruleTrigger(AutomationRuleSpec rule) {
+        return rule == null ? "NONE" : rule.getTrigger().name();
     }
 
     private ModerationSimulationResult skipped(
         String targetType,
         Long targetId,
         ContentStatus status,
-        Report report
+        Report report,
+        PolicySpec policy
     ) {
         return result(
             targetType,
@@ -297,8 +345,9 @@ public class ModerationService extends GeneratedModerationService {
             "SKIPPED",
             status,
             List.of(),
-            GeneratedModerationModel.POLICY_NAME + " skipped because "
-                + GeneratedModerationModel.POLICY_TRIGGER + " did not match."
+            (policy == null ? "No generated policy" : policy.getName()) + " skipped because "
+                + (policy == null ? "NONE" : policy.getTrigger()) + " did not match.",
+            policy
         );
     }
 
@@ -310,15 +359,17 @@ public class ModerationService extends GeneratedModerationService {
         String decision,
         ContentStatus status,
         List<String> matches,
-        String explanation
+        String explanation,
+        PolicySpec policy
     ) {
+        PolicySpec resultPolicy = policy == null ? GeneratedModerationModel.DEFAULT_POLICY : policy;
         return new ModerationSimulationResult(
             targetType,
             targetId,
             checkId,
             report == null ? null : report.getId(),
-            GeneratedModerationModel.POLICY_TRIGGER.name(),
-            GeneratedModerationModel.POLICY_MODE.name(),
+            resultPolicy.getTrigger().name(),
+            resultPolicy.getMode().name(),
             decision,
             status.name(),
             matches,
@@ -383,9 +434,11 @@ public class ModerationService extends GeneratedModerationService {
         if (moderator == null) {
             throw new IllegalArgumentException("Moderator is required.");
         }
-        if (moderator.getRole() == null
-            || !GeneratedModerationModel.POLICY_EXECUTED_BY.equalsIgnoreCase(moderator.getRole().name())) {
-            throw new IllegalArgumentException("Moderation policy requires " + GeneratedModerationModel.POLICY_EXECUTED_BY + ".");
+        boolean allowed = moderator.getRole() != null && GeneratedModerationModel.POLICIES.stream()
+            .anyMatch(policy -> policy.getExecutedByKind() != null
+                && policy.getExecutedByKind().name().equalsIgnoreCase(moderator.getRole().name()));
+        if (!allowed) {
+            throw new IllegalArgumentException("Moderation policies require MODERATOR.");
         }
     }
 

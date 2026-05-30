@@ -17,7 +17,6 @@ import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
 import pt.isep.enorm.ref.youtube.domain.enums.CommentModerationResult;
 import pt.isep.enorm.ref.youtube.domain.enums.ContentStatus;
 import pt.isep.enorm.ref.youtube.domain.enums.ReportStatus;
-import pt.isep.enorm.ref.youtube.domain.enums.Role;
 import pt.isep.enorm.ref.youtube.domain.enums.VideoModerationResult;
 import pt.isep.enorm.ref.youtube.repository.CommentModerationCheckRepository;
 import pt.isep.enorm.ref.youtube.repository.CommentRepository;
@@ -26,8 +25,12 @@ import pt.isep.enorm.ref.youtube.repository.ReportRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoModerationCheckRepository;
 import pt.isep.enorm.ref.youtube.repository.VideoRepository;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ActionSpec;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.AutomationRuleSpec;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ConditionSpec;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationDecision;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationMode;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.PolicySpec;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.youtube.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.youtube.web.error.ResourceNotFoundException;
@@ -118,16 +121,22 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateVideo(YoutubeUser moderator, Video video) {
+        PolicySpec policy = GeneratedModerationModel.VIDEO_POLICY;
+        AutomationRuleSpec rule = primaryRule(policy);
         List<String> matches = findMatchedKeywords(
             video.getTitle() + " " + video.getDescription(),
-            GeneratedModerationModel.VIDEO_BLOCKED_KEYWORDS
+            ruleConditions(rule)
         );
         VideoModerationResult decision = matches.isEmpty()
             ? VideoModerationResult.APPROVED
             : GeneratedModerationModel.VIDEO_DECISION_ON_MATCH;
         ContentStatus status = matches.isEmpty()
             ? ContentStatus.ACTIVE
-            : statusFor(GeneratedModerationModel.VIDEO_POLICY_DECISION, GeneratedModerationModel.VIDEO_POLICY_MODE);
+            : statusFor(
+                policy.getDecision(),
+                policy.getMode(),
+                primaryAction(rule)
+            );
 
         video.setStatus(status);
         videoRepository.save(video);
@@ -139,16 +148,15 @@ public class ModerationService extends GeneratedModerationService {
             video.getId(),
             check.getId(),
             null,
-            GeneratedModerationModel.VIDEO_POLICY_TRIGGER.name(),
-            GeneratedModerationModel.VIDEO_POLICY_MODE.name(),
+            policy.getTrigger().name(),
+            policy.getMode().name(),
             decision.name(),
             status,
             matches,
             explanation(
-                GeneratedModerationModel.VIDEO_AUTOMATION_RULE_NAME,
-                GeneratedModerationModel.VIDEO_ACTION_NAME,
-                GeneratedModerationModel.VIDEO_ACTION_KIND.name(),
-                GeneratedModerationModel.VIDEO_POLICY_NAME,
+                ruleName(rule),
+                primaryAction(rule),
+                policy.getName(),
                 matches,
                 decision.name()
             )
@@ -156,13 +164,19 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateComment(YoutubeUser moderator, Comment comment) {
-        List<String> matches = findMatchedKeywords(comment.getText(), GeneratedModerationModel.COMMENT_BLOCKED_KEYWORDS);
+        PolicySpec policy = GeneratedModerationModel.COMMENT_POLICY;
+        AutomationRuleSpec rule = primaryRule(policy);
+        List<String> matches = findMatchedKeywords(comment.getText(), ruleConditions(rule));
         CommentModerationResult decision = matches.isEmpty()
             ? CommentModerationResult.APPROVED
             : GeneratedModerationModel.COMMENT_DECISION_ON_MATCH;
         ContentStatus status = matches.isEmpty()
             ? ContentStatus.ACTIVE
-            : statusFor(GeneratedModerationModel.COMMENT_POLICY_DECISION, GeneratedModerationModel.COMMENT_POLICY_MODE);
+            : statusFor(
+                policy.getDecision(),
+                policy.getMode(),
+                primaryAction(rule)
+            );
 
         comment.setStatus(status);
         commentRepository.save(comment);
@@ -174,16 +188,15 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             null,
-            GeneratedModerationModel.COMMENT_POLICY_TRIGGER.name(),
-            GeneratedModerationModel.COMMENT_POLICY_MODE.name(),
+            policy.getTrigger().name(),
+            policy.getMode().name(),
             decision.name(),
             status,
             matches,
             explanation(
-                GeneratedModerationModel.COMMENT_AUTOMATION_RULE_NAME,
-                GeneratedModerationModel.COMMENT_ACTION_NAME,
-                GeneratedModerationModel.COMMENT_ACTION_KIND.name(),
-                GeneratedModerationModel.COMMENT_POLICY_NAME,
+                ruleName(rule),
+                primaryAction(rule),
+                policy.getName(),
                 matches,
                 decision.name()
             )
@@ -191,10 +204,15 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateReportedVideo(YoutubeUser moderator, Report report) {
+        PolicySpec policy = GeneratedModerationModel.REPORT_POLICY;
+        AutomationRuleSpec rule = primaryRule(policy);
         Video video = report.getVideo();
+        List<String> conditionMatches = findConditionMatches(report.getStatus().name(), ruleConditions(rule));
+        ActionSpec action = conditionMatches.isEmpty() ? null : primaryAction(rule);
         ContentStatus status = statusFor(
-            GeneratedModerationModel.REPORT_POLICY_DECISION,
-            GeneratedModerationModel.REPORT_POLICY_MODE
+            policy.getDecision(),
+            policy.getMode(),
+            action
         );
 
         video.setStatus(status);
@@ -208,25 +226,31 @@ public class ModerationService extends GeneratedModerationService {
             video.getId(),
             check.getId(),
             report,
-            GeneratedModerationModel.REPORT_POLICY_TRIGGER.name(),
-            GeneratedModerationModel.REPORT_POLICY_MODE.name(),
-            GeneratedModerationModel.REPORT_POLICY_DECISION.name(),
+            policy.getTrigger().name(),
+            policy.getMode().name(),
+            policy.getDecision().name(),
             status,
-            List.of(),
-            GeneratedModerationModel.REPORT_AUTOMATION_RULE_NAME
-                + " applies " + GeneratedModerationModel.REPORT_ACTION_NAME
-                + " using " + GeneratedModerationModel.REPORT_ACTION_KIND
-                + "; " + GeneratedModerationModel.REPORT_POLICY_NAME
-                + " records decision " + GeneratedModerationModel.REPORT_POLICY_DECISION
+            conditionMatches,
+            ruleName(rule)
+                + " matched report conditions " + conditionMatches
+                + "; applies " + actionName(action)
+                + " using " + actionKind(action)
+                + "; " + policy.getName()
+                + " records decision " + policy.getDecision()
                 + "."
         );
     }
 
     private ModerationSimulationResult moderateReportedComment(YoutubeUser moderator, Report report) {
+        PolicySpec policy = GeneratedModerationModel.REPORT_POLICY;
+        AutomationRuleSpec rule = primaryRule(policy);
         Comment comment = report.getComment();
+        List<String> conditionMatches = findConditionMatches(report.getStatus().name(), ruleConditions(rule));
+        ActionSpec action = conditionMatches.isEmpty() ? null : primaryAction(rule);
         ContentStatus status = statusFor(
-            GeneratedModerationModel.REPORT_POLICY_DECISION,
-            GeneratedModerationModel.REPORT_POLICY_MODE
+            policy.getDecision(),
+            policy.getMode(),
+            action
         );
 
         comment.setStatus(status);
@@ -240,34 +264,67 @@ public class ModerationService extends GeneratedModerationService {
             comment.getId(),
             check.getId(),
             report,
-            GeneratedModerationModel.REPORT_POLICY_TRIGGER.name(),
-            GeneratedModerationModel.REPORT_POLICY_MODE.name(),
-            GeneratedModerationModel.REPORT_POLICY_DECISION.name(),
+            policy.getTrigger().name(),
+            policy.getMode().name(),
+            policy.getDecision().name(),
             status,
-            List.of(),
-            GeneratedModerationModel.REPORT_AUTOMATION_RULE_NAME
-                + " applies " + GeneratedModerationModel.REPORT_ACTION_NAME
-                + " using " + GeneratedModerationModel.REPORT_ACTION_KIND
-                + "; " + GeneratedModerationModel.REPORT_POLICY_NAME
-                + " records decision " + GeneratedModerationModel.REPORT_POLICY_DECISION
+            conditionMatches,
+            ruleName(rule)
+                + " matched report conditions " + conditionMatches
+                + "; applies " + actionName(action)
+                + " using " + actionKind(action)
+                + "; " + policy.getName()
+                + " records decision " + policy.getDecision()
                 + "."
         );
     }
 
-    private List<String> findMatchedKeywords(String content, List<String> keywords) {
+    private List<String> findMatchedKeywords(String content, List<ConditionSpec> conditions) {
         String normalized = normalize(content);
         List<String> matches = new ArrayList<>();
-        for (String keyword : keywords) {
-            if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
-                matches.add(keyword);
+        for (ConditionSpec condition : conditions) {
+            if (condition.getOperator() != GeneratedModerationModel.ConditionOperator.CONTAINS_KEYWORDS) {
+                continue;
+            }
+            for (String keyword : condition.getValues()) {
+                if (normalized.contains(keyword.toLowerCase(Locale.ROOT))) {
+                    matches.add(keyword);
+                }
             }
         }
         return matches;
     }
 
-    private ContentStatus statusFor(ModerationDecision decision, ModerationMode mode) {
+    private List<String> findConditionMatches(String value, List<ConditionSpec> conditions) {
+        String normalized = normalize(value);
+        List<String> matches = new ArrayList<>();
+        for (ConditionSpec condition : conditions) {
+            if (condition.getOperator() == GeneratedModerationModel.ConditionOperator.HAS_PROPERTY && !normalized.isBlank()) {
+                matches.add(condition.getAttribute());
+                continue;
+            }
+            if (condition.getOperator() != GeneratedModerationModel.ConditionOperator.HAS_SPECIFIC_PROPERTY) {
+                continue;
+            }
+            for (String expectedValue : condition.getValues()) {
+                if (normalized.equals(expectedValue.toLowerCase(Locale.ROOT))) {
+                    matches.add(expectedValue);
+                }
+            }
+        }
+        return matches;
+    }
+
+    private ContentStatus statusFor(ModerationDecision decision, ModerationMode mode, ActionSpec action) {
         if (decision == ModerationDecision.APPROVED) {
             return ContentStatus.ACTIVE;
+        }
+        if (action != null) {
+            return switch (action.getKind()) {
+                case FLAG_CONTENT -> mode == ModerationMode.MANUAL ? ContentStatus.UNDER_REVIEW : ContentStatus.FLAGGED;
+                case HIDE_CONTENT -> ContentStatus.REMOVED;
+                case NOTIFY_MODERATOR -> ContentStatus.UNDER_REVIEW;
+            };
         }
         if (decision == ModerationDecision.FLAGGED) {
             return mode == ModerationMode.MANUAL ? ContentStatus.UNDER_REVIEW : ContentStatus.FLAGGED;
@@ -277,8 +334,7 @@ public class ModerationService extends GeneratedModerationService {
 
     private String explanation(
         String automationRule,
-        String actionName,
-        String actionKind,
+        ActionSpec action,
         String policyName,
         List<String> matches,
         String decision
@@ -286,13 +342,44 @@ public class ModerationService extends GeneratedModerationService {
         if (matches.isEmpty()) {
             return "No generated keyword condition matched; " + policyName + " approved content.";
         }
+        String actionName = action == null ? "NoAction" : action.getName();
+        String actionKind = action == null ? "NONE" : action.getKind().name();
+        String actionMessage = action == null ? "" : "; message: " + action.getMessage();
         return automationRule
             + " matched " + matches
             + "; " + actionName
             + " uses " + actionKind
             + "; " + policyName
             + " records decision " + decision
+            + actionMessage
             + ".";
+    }
+
+    private AutomationRuleSpec primaryRule(PolicySpec policy) {
+        if (policy == null || policy.getAutomationRules().isEmpty()) {
+            return null;
+        }
+        return policy.getAutomationRules().get(0);
+    }
+
+    private List<ConditionSpec> ruleConditions(AutomationRuleSpec rule) {
+        return rule == null ? List.of() : rule.getConditions();
+    }
+
+    private ActionSpec primaryAction(AutomationRuleSpec rule) {
+        return rule == null || rule.getActions().isEmpty() ? null : rule.getActions().get(0);
+    }
+
+    private String ruleName(AutomationRuleSpec rule) {
+        return rule == null ? "NoAutomationRule" : rule.getName();
+    }
+
+    private String actionName(ActionSpec action) {
+        return action == null ? "NoAction" : action.getName();
+    }
+
+    private String actionKind(ActionSpec action) {
+        return action == null ? "NONE" : action.getKind().name();
     }
 
     private ModerationSimulationResult result(
@@ -358,7 +445,10 @@ public class ModerationService extends GeneratedModerationService {
         if (moderator == null) {
             throw new IllegalArgumentException("Moderator is required.");
         }
-        if (moderator.getRole() != Role.MODERATOR) {
+        boolean allowed = moderator.getRole() != null && GeneratedModerationModel.POLICIES.stream()
+            .anyMatch(policy -> policy.getExecutedByKind() != null
+                && policy.getExecutedByKind().name().equalsIgnoreCase(moderator.getRole().name()));
+        if (!allowed) {
             throw new IllegalArgumentException("Moderation policies require MODERATOR.");
         }
     }

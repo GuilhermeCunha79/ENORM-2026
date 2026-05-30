@@ -123,7 +123,7 @@
         <reference id="6041381794867197723" name="inContext" index="28hnIw" />
         <reference id="6041381794867197722" name="monitorsResource" index="28hnIx" />
         <reference id="6041381794867197718" name="executedBy" index="28hnIH" />
-        <reference id="6041381794867197706" name="feedbackDefinition" index="28hnIL" />
+        <reference id="6041381794867197706" name="monitorsFeedback" index="28hnIL" />
       </concept>
       <concept id="3890156942413033156" name="Ref.structure.ResourceType" flags="ng" index="3$Wff$">
         <property id="4020620510182583082" name="supportsMedia" index="1LQjoB" />
@@ -168,6 +168,25 @@
         <property role="TrG5h" value="FlagReview" />
         <property role="2xtiKh" value="77Q8YzgwKZF/FLAG_CONTENT" />
         <property role="2xtiKi" value="Content Restricted" />
+      </node>
+    </node>
+    <node concept="3$Wfel" id="6aM2xXHdJS0" role="3$Wfeu">
+      <property role="TrG5h" value="Ooaszodaosdasod" />
+      <property role="2InxWG" value="77Q8YzgwKYX/ON_FEEDBACK_CREATE" />
+      <ref role="28hnIM" node="47EFX_nz$PB" resolve="ProductReview" />
+      <ref role="28hnI$" node="47EFX_nz$PR" resolve="ReviewValidationRule" />
+      <ref role="28hnIB" node="47EFX_nz$Pq" resolve="Product" />
+      <node concept="2xtiKx" id="6aM2xXHdJS1" role="2xtiKm">
+        <property role="TrG5h" value="Descriro" />
+        <ref role="1ms6pP" node="47EFX_nz$Pt" resolve="Description" />
+        <node concept="3SET_Z" id="6aM2xXHdNbw" role="3SET_T">
+          <property role="3SET_S" value="DOPAMINA" />
+        </node>
+      </node>
+      <node concept="2xtiK9" id="6aM2xXHdJS2" role="2xtiKn">
+        <property role="TrG5h" value="DELETErECVO" />
+        <property role="2xtiKh" value="77Q8YzgwKZF/FLAG_CONTENT" />
+        <property role="2xtiKi" value="WORK" />
       </node>
     </node>
     <node concept="3$Wfeo" id="47EFX_nz$PZ" role="2IgU2G">
