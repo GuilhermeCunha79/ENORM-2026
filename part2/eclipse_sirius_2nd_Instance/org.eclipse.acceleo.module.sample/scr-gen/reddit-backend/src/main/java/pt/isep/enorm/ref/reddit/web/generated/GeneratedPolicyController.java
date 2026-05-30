@@ -1,7 +1,12 @@
 package pt.isep.enorm.ref.reddit.web.generated;
 
+import pt.isep.enorm.ref.reddit.domain.ParticipationPolicy;
+import pt.isep.enorm.ref.reddit.domain.SortingPolicy;
+import pt.isep.enorm.ref.reddit.domain.ValidationRule;
+import pt.isep.enorm.ref.reddit.repository.ParticipationPolicyRepository;
+import pt.isep.enorm.ref.reddit.repository.SortingPolicyRepository;
+import pt.isep.enorm.ref.reddit.repository.ValidationRuleRepository;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,10 +20,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/policies")
 public class GeneratedPolicyController {
-    @GetMapping("/subreddits/{subredditId}/permissions") public List<String> permissions(@PathVariable String subredditId) { return List.of(); }
-    @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createPermission(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/subreddits/{subredditId}/sorting") public List<String> sorting(@PathVariable String subredditId) { return List.of(); }
-    @PostMapping("/subreddits/{subredditId}/sorting") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createSorting(@PathVariable String subredditId, @RequestBody Map<String, Object> payload) { return payload; }
-    @GetMapping("/validation-rules") public List<String> validationRules(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return List.of(); }
-    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> createValidationRule(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody Map<String, Object> payload) { return payload; }
+    private final ParticipationPolicyRepository participationPolicyRepository;
+    private final SortingPolicyRepository sortingPolicyRepository;
+    private final ValidationRuleRepository validationRuleRepository;
+
+    public GeneratedPolicyController(ParticipationPolicyRepository participationPolicyRepository, SortingPolicyRepository sortingPolicyRepository, ValidationRuleRepository validationRuleRepository) {
+        this.participationPolicyRepository = participationPolicyRepository;
+        this.sortingPolicyRepository = sortingPolicyRepository;
+        this.validationRuleRepository = validationRuleRepository;
+    }
+
+    @GetMapping("/subreddits/{subredditId}/permissions") public List<ParticipationPolicy> permissions(@PathVariable String subredditId) { return participationPolicyRepository.findAll(); }
+    @PostMapping("/subreddits/{subredditId}/permissions") @ResponseStatus(HttpStatus.CREATED) public ParticipationPolicy createPermission(@PathVariable String subredditId, @RequestBody ParticipationPolicy payload) { return participationPolicyRepository.save(payload); }
+    @GetMapping("/subreddits/{subredditId}/sorting") public List<SortingPolicy> sorting(@PathVariable String subredditId) { return sortingPolicyRepository.findAll(); }
+    @PostMapping("/subreddits/{subredditId}/sorting") @ResponseStatus(HttpStatus.CREATED) public SortingPolicy createSorting(@PathVariable String subredditId, @RequestBody SortingPolicy payload) { return sortingPolicyRepository.save(payload); }
+    @GetMapping("/validation-rules") public List<ValidationRule> validationRules(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId) { return validationRuleRepository.findAll(); }
+    @PostMapping("/validation-rules") @ResponseStatus(HttpStatus.CREATED) public ValidationRule createValidationRule(@RequestParam(required = false) String postId, @RequestParam(required = false) String commentId, @RequestBody ValidationRule payload) { return validationRuleRepository.save(payload); }
 }

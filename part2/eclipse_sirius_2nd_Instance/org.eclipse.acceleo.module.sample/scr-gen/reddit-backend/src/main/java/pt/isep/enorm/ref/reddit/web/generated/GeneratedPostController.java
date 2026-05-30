@@ -1,6 +1,9 @@
 package pt.isep.enorm.ref.reddit.web.generated;
 
 import pt.isep.enorm.ref.reddit.domain.Post;
+import pt.isep.enorm.ref.reddit.domain.Comment;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedCommentService;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedPostService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -19,16 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/posts")
 public class GeneratedPostController {
     private final GeneratedPostService service;
+    private final GeneratedCommentService commentService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedPostController(GeneratedPostService service) { this.service = service; }
+    public GeneratedPostController(GeneratedPostService service, GeneratedCommentService commentService, GeneratedModerationService moderationService) { this.service = service; this.commentService = commentService; this.moderationService = moderationService; }
 
     @GetMapping public List<Post> list(@RequestParam(required = false) String subredditId) { return service.list(); }
     @GetMapping("/{postId}") public Post get(@PathVariable String postId) { return service.get(postId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Post create(@RequestBody Post payload) { return service.create(payload); }
-    @PutMapping("/{postId}") public Post update(@PathVariable String postId, @RequestBody Post payload) { return service.update(postId, payload); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Post create(@RequestBody Post payload) { moderationService.moderatePost(null, payload); return service.create(payload); }
+    @PutMapping("/{postId}") public Post update(@PathVariable String postId, @RequestBody Post payload) { moderationService.moderatePost(postId, payload); return service.update(postId, payload); }
     @DeleteMapping("/{postId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String postId) { service.delete(postId); }
 
     @PostMapping("/{postId}/comments")
     @ResponseStatus(HttpStatus.CREATED)
-    public void comment(@PathVariable String postId, @RequestBody Object payload) { }
+    public Comment comment(@PathVariable String postId, @RequestBody Comment payload) { moderationService.moderateComment(null, payload); return commentService.create(payload); }
 }

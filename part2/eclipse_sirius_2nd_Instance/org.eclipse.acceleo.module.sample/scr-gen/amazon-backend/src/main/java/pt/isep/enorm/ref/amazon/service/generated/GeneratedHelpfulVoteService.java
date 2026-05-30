@@ -1,24 +1,45 @@
 package pt.isep.enorm.ref.amazon.service.generated;
 
+import pt.isep.enorm.ref.amazon.domain.HelpfulVote;
+import pt.isep.enorm.ref.amazon.repository.generated.GeneratedHelpfulVoteRepository;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 public class GeneratedHelpfulVoteService {
-    public List list() {
-        return List.of();
+    protected final GeneratedHelpfulVoteRepository repository;
+
+    public GeneratedHelpfulVoteService(GeneratedHelpfulVoteRepository repository) {
+        this.repository = repository;
     }
 
-    public <T> T get(String id) {
-        return null;
+    public List<HelpfulVote> list() {
+        return repository.findAll();
     }
 
-    public <T> T create(T entity) {
-        return entity;
+    public HelpfulVote get(String id) {
+        return repository.findById(toLong(id))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "HelpfulVote '" + id + "' was not found."));
     }
 
-    public <T> T update(String id, T entity) {
-        return entity;
+    public HelpfulVote create(HelpfulVote entity) {
+        return repository.save(entity);
+    }
+
+    public HelpfulVote update(String id, HelpfulVote entity) {
+        entity.setId(toLong(id));
+        return repository.save(entity);
     }
 
     public void delete(String id) {
+        repository.deleteById(toLong(id));
+    }
+
+    private Long toLong(String id) {
+        try {
+            return Long.valueOf(id);
+        } catch (NumberFormatException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid numeric id: " + id);
+        }
     }
 }

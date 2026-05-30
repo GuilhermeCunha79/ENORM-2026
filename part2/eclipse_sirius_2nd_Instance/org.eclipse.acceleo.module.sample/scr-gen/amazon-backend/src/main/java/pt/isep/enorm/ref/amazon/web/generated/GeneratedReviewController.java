@@ -1,6 +1,7 @@
 package pt.isep.enorm.ref.amazon.web.generated;
 
-import java.util.Map;
+import pt.isep.enorm.ref.amazon.domain.ProductReview;
+import pt.isep.enorm.ref.amazon.service.generated.GeneratedProductEvaluationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reviews")
 public class GeneratedReviewController {
+    private final GeneratedProductEvaluationService service;
+
+    public GeneratedReviewController(GeneratedProductEvaluationService service) { this.service = service; }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> create(@RequestBody Map<String, Object> payload) { return payload; }
+    public ProductReview create(@RequestBody ProductReview payload) { return service.createReview(payload); }
 }

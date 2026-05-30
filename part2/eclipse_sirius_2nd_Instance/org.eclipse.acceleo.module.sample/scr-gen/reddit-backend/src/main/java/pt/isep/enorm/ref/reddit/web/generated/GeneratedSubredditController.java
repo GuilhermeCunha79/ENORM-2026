@@ -1,6 +1,9 @@
 package pt.isep.enorm.ref.reddit.web.generated;
 
 import pt.isep.enorm.ref.reddit.domain.Subreddit;
+import pt.isep.enorm.ref.reddit.domain.Post;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedPostService;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedSubredditService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -18,9 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/subreddits")
 public class GeneratedSubredditController {
     private final GeneratedSubredditService service;
+    private final GeneratedPostService postService;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedSubredditController(GeneratedSubredditService service) {
+    public GeneratedSubredditController(GeneratedSubredditService service, GeneratedPostService postService, GeneratedModerationService moderationService) {
         this.service = service;
+        this.postService = postService;
+        this.moderationService = moderationService;
     }
 
     @GetMapping
@@ -42,5 +49,5 @@ public class GeneratedSubredditController {
 
     @PostMapping("/{subredditId}/posts")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPost(@PathVariable String subredditId, @RequestBody Object payload) { }
+    public Post createPost(@PathVariable String subredditId, @RequestBody Post payload) { moderationService.moderatePost(null, payload); return postService.create(payload); }
 }

@@ -1,4 +1,17 @@
 package pt.isep.enorm.ref.amazon.service.projection;
 
-public record ModerationSimulationResult(String status) {
+import java.util.List;
+
+public record ModerationSimulationResult(
+    String targetType,
+    Long targetId,
+    Long checkId,
+    Long reportId,
+    String trigger,
+    String mode,
+    String decision,
+    String status,
+    List<String> matchedRules,
+    String explanation
+) {
 }

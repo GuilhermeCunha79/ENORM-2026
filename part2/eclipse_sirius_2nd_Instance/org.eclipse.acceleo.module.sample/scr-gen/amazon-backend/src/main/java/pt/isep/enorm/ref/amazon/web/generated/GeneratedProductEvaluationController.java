@@ -1,6 +1,7 @@
 package pt.isep.enorm.ref.amazon.web.generated;
 
 import pt.isep.enorm.ref.amazon.domain.Product;
+import pt.isep.enorm.ref.amazon.domain.ProductReview;
 import pt.isep.enorm.ref.amazon.service.generated.GeneratedProductEvaluationService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class GeneratedProductEvaluationController {
 
     @PostMapping("/{productId}/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createReview(@PathVariable String productId, @RequestBody Object payload) {
-        // Placeholder: delegate to a review service when available
+    public ProductReview createReview(@PathVariable String productId, @RequestBody ProductReview payload) {
+        return productService.createReview(payload);
     }
 }

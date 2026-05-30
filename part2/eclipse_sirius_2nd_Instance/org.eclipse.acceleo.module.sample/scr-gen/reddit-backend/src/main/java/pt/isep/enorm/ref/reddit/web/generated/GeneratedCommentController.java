@@ -1,6 +1,7 @@
 package pt.isep.enorm.ref.reddit.web.generated;
 
 import pt.isep.enorm.ref.reddit.domain.Comment;
+import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedCommentService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/comments")
 public class GeneratedCommentController {
     private final GeneratedCommentService service;
+    private final GeneratedModerationService moderationService;
 
-    public GeneratedCommentController(GeneratedCommentService service) { this.service = service; }
+    public GeneratedCommentController(GeneratedCommentService service, GeneratedModerationService moderationService) { this.service = service; this.moderationService = moderationService; }
 
     @GetMapping public List<Comment> list(@RequestParam(required = false) String postId) { return service.list(); }
     @GetMapping("/{commentId}") public Comment get(@PathVariable String commentId) { return service.get(commentId); }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String postId, @RequestBody Comment payload) { return service.create(payload); }
-    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { return service.update(commentId, payload); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Comment create(@RequestParam(required = false) String postId, @RequestBody Comment payload) { moderationService.moderateComment(null, payload); return service.create(payload); }
+    @PutMapping("/{commentId}") public Comment update(@PathVariable String commentId, @RequestBody Comment payload) { moderationService.moderateComment(commentId, payload); return service.update(commentId, payload); }
     @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) { service.delete(commentId); }
 }

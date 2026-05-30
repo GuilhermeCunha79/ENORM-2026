@@ -1,0 +1,4022 @@
+{
+  "variable":  [
+    {
+      "key":  "redditBaseUrl",
+      "type":  "string",
+      "value":  "http://localhost:8083"
+    },
+    {
+      "key":  "youtubeBaseUrl",
+      "type":  "string",
+      "value":  "http://localhost:8082"
+    },
+    {
+      "key":  "amazonBaseUrl",
+      "type":  "string",
+      "value":  "http://localhost:8081"
+    },
+    {
+      "key":  "channelId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "commentId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "contextId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "likeId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "orderId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "postId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "productId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "reviewId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "status",
+      "type":  "string",
+      "value":  "PENDING"
+    },
+    {
+      "key":  "subredditId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "subscriptionId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "userId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "videoId",
+      "type":  "string",
+      "value":  "1"
+    },
+    {
+      "key":  "voteId",
+      "type":  "string",
+      "value":  "1"
+    }
+  ],
+  "info":  {
+    "description":  "Generated from the controllers in org.eclipse.acceleo.module.sample/scr-gen. Import in Postman and run the app ports: Amazon 8081, YouTube 8082, Reddit 8083.",
+    "name":  "ENORM Generated Apps - Amazon Reddit YouTube",
+    "schema":  "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item":  [
+    {
+      "name":  "Amazon (generated app)",
+      "item":  [
+        {
+          "name":  "Authentication",
+          "item":  [
+            {
+              "name":  "POST auth register",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"username\":  \"amazon_user\",\r\n    \"email\":  \"user@amazon.local\",\r\n    \"role\":  \"MODERATOR\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/auth/register",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST auth login",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"password\":  \"password\",\r\n    \"username\":  \"amazon_user\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/auth/login",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "CommentReview",
+          "item":  [
+            {
+              "name":  "GET comments",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "productId",
+                      "value":  "{{productId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments?productId={{productId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentReviewController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET comments commentId",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentReviewController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST comments",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"Helpful comment\",\r\n    \"productId\":  \"{{productId}}\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "productId",
+                      "value":  "{{productId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments?productId={{productId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentReviewController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT comments commentId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"Helpful comment\",\r\n    \"productId\":  \"{{productId}}\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentReviewController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE comments commentId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentReviewController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Context",
+          "item":  [
+            {
+              "name":  "GET contexts",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/contexts",
+                  "path":  [
+                    "api",
+                    "contexts"
+                  ]
+                },
+                "description":  "Generated from GeneratedContextController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET contexts contextId",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/contexts/{{contextId}}",
+                  "path":  [
+                    "api",
+                    "contexts",
+                    "{{contextId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedContextController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST contexts",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"kind\":  \"SYSTEM\",\r\n    \"name\":  \"ModerationBackoffice\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/contexts",
+                  "path":  [
+                    "api",
+                    "contexts"
+                  ]
+                },
+                "description":  "Generated from GeneratedContextController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT contexts contextId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"kind\":  \"SYSTEM\",\r\n    \"name\":  \"ModerationBackoffice\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/contexts/{{contextId}}",
+                  "path":  [
+                    "api",
+                    "contexts",
+                    "{{contextId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedContextController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE contexts contextId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/contexts/{{contextId}}",
+                  "path":  [
+                    "api",
+                    "contexts",
+                    "{{contextId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedContextController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "HelpfulVote",
+          "item":  [
+            {
+              "name":  "GET comments commentId votes",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}/votes",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}",
+                    "votes"
+                  ]
+                },
+                "description":  "Generated from GeneratedHelpfulVoteController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST comments commentId votes",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"Helpful comment\",\r\n    \"productId\":  \"{{productId}}\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}/votes",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}",
+                    "votes"
+                  ]
+                },
+                "description":  "Generated from GeneratedHelpfulVoteController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE comments commentId votes voteId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/comments/{{commentId}}/votes/{{voteId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}",
+                    "votes",
+                    "{{voteId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedHelpfulVoteController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Moderation",
+          "item":  [
+            {
+              "name":  "POST moderation reviews reviewId simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/moderation/reviews/{{reviewId}}/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "reviews",
+                    "{{reviewId}}",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation reviews simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/moderation/reviews/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "reviews",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Order",
+          "item":  [
+            {
+              "name":  "GET orders",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/orders",
+                  "path":  [
+                    "api",
+                    "orders"
+                  ]
+                },
+                "description":  "Generated from GeneratedOrderController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET orders orderId",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/orders/{{orderId}}",
+                  "path":  [
+                    "api",
+                    "orders",
+                    "{{orderId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedOrderController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST orders",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"total\":  89.99,\r\n    \"status\":  \"CREATED\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/orders",
+                  "path":  [
+                    "api",
+                    "orders"
+                  ]
+                },
+                "description":  "Generated from GeneratedOrderController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT orders orderId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"total\":  89.99,\r\n    \"status\":  \"CREATED\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/orders/{{orderId}}",
+                  "path":  [
+                    "api",
+                    "orders",
+                    "{{orderId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedOrderController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE orders orderId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/orders/{{orderId}}",
+                  "path":  [
+                    "api",
+                    "orders",
+                    "{{orderId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedOrderController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "ProductEvaluation",
+          "item":  [
+            {
+              "name":  "GET products",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/products",
+                  "path":  [
+                    "api",
+                    "products"
+                  ]
+                },
+                "description":  "Generated from GeneratedProductEvaluationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST products",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"price\":  89.99,\r\n    \"description\":  \"Compact keyboard\",\r\n    \"name\":  \"Mechanical Keyboard\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/products",
+                  "path":  [
+                    "api",
+                    "products"
+                  ]
+                },
+                "description":  "Generated from GeneratedProductEvaluationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET products productId average-rating",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/products/{{productId}}/average-rating",
+                  "path":  [
+                    "api",
+                    "products",
+                    "{{productId}}",
+                    "average-rating"
+                  ]
+                },
+                "description":  "Generated from GeneratedProductEvaluationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST products productId reviews",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"rating\":  4,\r\n    \"comment\":  \"spam incentivized off-topic review\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/products/{{productId}}/reviews",
+                  "path":  [
+                    "api",
+                    "products",
+                    "{{productId}}",
+                    "reviews"
+                  ]
+                },
+                "description":  "Generated from GeneratedProductEvaluationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Review",
+          "item":  [
+            {
+              "name":  "POST reviews",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"rating\":  4,\r\n    \"comment\":  \"spam incentivized off-topic review\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/api/reviews",
+                  "path":  [
+                    "api",
+                    "reviews"
+                  ]
+                },
+                "description":  "Generated from GeneratedReviewController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "H2",
+          "item":  [
+            {
+              "name":  "GET  h2-console",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{amazonBaseUrl}}"
+                  ],
+                  "raw":  "{{amazonBaseUrl}}/h2-console",
+                  "path":  [
+                    "h2-console"
+                  ]
+                },
+                "description":  "Generated from application.properties",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name":  "Reddit (generated app)",
+      "item":  [
+        {
+          "name":  "Authentication",
+          "item":  [
+            {
+              "name":  "POST auth register",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"username\":  \"reddit_user\",\r\n    \"email\":  \"user@reddit.local\",\r\n    \"role\":  \"MODERATOR\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/auth/register",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST auth login",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"password\":  \"password\",\r\n    \"username\":  \"reddit_user\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/auth/login",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Comment",
+          "item":  [
+            {
+              "name":  "GET comments",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/comments?postId={{postId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET comments commentId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/comments/{{commentId}}?postId={{postId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST comments",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/comments?postId={{postId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT comments commentId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE comments commentId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Moderation",
+          "item":  [
+            {
+              "name":  "GET moderation posts postId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/posts/{{postId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "posts",
+                    "{{postId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation posts postId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/posts/{{postId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "posts",
+                    "{{postId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET moderation comments commentId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/comments/{{commentId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/comments/{{commentId}}/checks?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation posts postId status",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/posts/{{postId}}/status?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "posts",
+                    "{{postId}}",
+                    "status"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId status",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/comments/{{commentId}}/status?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "status"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation posts postId simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/posts/{{postId}}/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "posts",
+                    "{{postId}}",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/comments/{{commentId}}/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation reports simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/moderation/reports/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "reports",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Policy",
+          "item":  [
+            {
+              "name":  "GET policies subreddits subredditId permissions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/subreddits/{{subredditId}}/permissions",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "subreddits",
+                    "{{subredditId}}",
+                    "permissions"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies subreddits subredditId permissions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/subreddits/{{subredditId}}/permissions",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "subreddits",
+                    "{{subredditId}}",
+                    "permissions"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET policies subreddits subredditId sorting",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/subreddits/{{subredditId}}/sorting",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "subreddits",
+                    "{{subredditId}}",
+                    "sorting"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies subreddits subredditId sorting",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/subreddits/{{subredditId}}/sorting?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "subreddits",
+                    "{{subredditId}}",
+                    "sorting"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET policies validation-rules",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"expression\":  \"text must not contain spam\",\r\n    \"target\":  \"COMMENT\",\r\n    \"severity\":  \"WARNING\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/validation-rules?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "validation-rules"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies validation-rules",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"expression\":  \"text must not contain spam\",\r\n    \"target\":  \"COMMENT\",\r\n    \"severity\":  \"WARNING\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/policies/validation-rules?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "validation-rules"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Post",
+          "item":  [
+            {
+              "name":  "GET posts",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "subredditId",
+                      "value":  "{{subredditId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts?subredditId={{subredditId}}",
+                  "path":  [
+                    "api",
+                    "posts"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET posts postId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts/{{postId}}",
+                  "path":  [
+                    "api",
+                    "posts",
+                    "{{postId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST posts",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts",
+                  "path":  [
+                    "api",
+                    "posts"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT posts postId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts/{{postId}}",
+                  "path":  [
+                    "api",
+                    "posts",
+                    "{{postId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE posts postId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts/{{postId}}",
+                  "path":  [
+                    "api",
+                    "posts",
+                    "{{postId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST posts postId comments",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam phishing comment\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/posts/{{postId}}/comments",
+                  "path":  [
+                    "api",
+                    "posts",
+                    "{{postId}}",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedPostController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Report",
+          "item":  [
+            {
+              "name":  "GET reports",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"reason\":  \"Contains risky content\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    },
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/reports?status={{status}}\u0026postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description":  "Generated from GeneratedReportController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST reports",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"reason\":  \"Contains risky content\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/reports?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description":  "Generated from GeneratedReportController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Subreddit",
+          "item":  [
+            {
+              "name":  "GET subreddits",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits",
+                  "path":  [
+                    "api",
+                    "subreddits"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET subreddits subredditId",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits/{{subredditId}}",
+                  "path":  [
+                    "api",
+                    "subreddits",
+                    "{{subredditId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST subreddits",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits",
+                  "path":  [
+                    "api",
+                    "subreddits"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT subreddits subredditId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"java\",\r\n    \"description\":  \"Java discussions\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits/{{subredditId}}",
+                  "path":  [
+                    "api",
+                    "subreddits",
+                    "{{subredditId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE subreddits subredditId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits/{{subredditId}}",
+                  "path":  [
+                    "api",
+                    "subreddits",
+                    "{{subredditId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST subreddits subredditId posts",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"spam malware link\",\r\n    \"body\":  \"phishing content\",\r\n    \"description\":  \"phishing content\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subreddits/{{subredditId}}/posts",
+                  "path":  [
+                    "api",
+                    "subreddits",
+                    "{{subredditId}}",
+                    "posts"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubredditController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Subscription",
+          "item":  [
+            {
+              "name":  "GET subscriptions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"active\":  true\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "userId",
+                      "value":  "{{userId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subscriptions?userId={{userId}}",
+                  "path":  [
+                    "api",
+                    "subscriptions"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST subscriptions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"active\":  true\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subscriptions",
+                  "path":  [
+                    "api",
+                    "subscriptions"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE subscriptions subscriptionId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/subscriptions/{{subscriptionId}}",
+                  "path":  [
+                    "api",
+                    "subscriptions",
+                    "{{subscriptionId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Vote",
+          "item":  [
+            {
+              "name":  "GET votes",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"value\":  \"UPVOTE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/votes?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "votes"
+                  ]
+                },
+                "description":  "Generated from GeneratedVoteController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST votes",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"value\":  \"UPVOTE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "postId",
+                      "value":  "{{postId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/votes?postId={{postId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "votes"
+                  ]
+                },
+                "description":  "Generated from GeneratedVoteController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE votes voteId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/api/votes/{{voteId}}",
+                  "path":  [
+                    "api",
+                    "votes",
+                    "{{voteId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedVoteController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "H2",
+          "item":  [
+            {
+              "name":  "GET  h2-console",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{redditBaseUrl}}"
+                  ],
+                  "raw":  "{{redditBaseUrl}}/h2-console",
+                  "path":  [
+                    "h2-console"
+                  ]
+                },
+                "description":  "Generated from application.properties",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name":  "YouTube (generated app)",
+      "item":  [
+        {
+          "name":  "Authentication",
+          "item":  [
+            {
+              "name":  "POST auth register",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"username\":  \"youtube_user\",\r\n    \"email\":  \"user@youtube.local\",\r\n    \"role\":  \"MODERATOR\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/auth/register",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST auth login",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"password\":  \"password\",\r\n    \"username\":  \"youtube_user\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/auth/login",
+                  "path":  [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description":  "Generated from GeneratedAuthenticationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Channel",
+          "item":  [
+            {
+              "name":  "GET channels",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels",
+                  "path":  [
+                    "api",
+                    "channels"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET channels channelId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels/{{channelId}}",
+                  "path":  [
+                    "api",
+                    "channels",
+                    "{{channelId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST channels",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels",
+                  "path":  [
+                    "api",
+                    "channels"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT channels channelId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels/{{channelId}}",
+                  "path":  [
+                    "api",
+                    "channels",
+                    "{{channelId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE channels channelId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels/{{channelId}}",
+                  "path":  [
+                    "api",
+                    "channels",
+                    "{{channelId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST channels channelId videos",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/channels/{{channelId}}/videos",
+                  "path":  [
+                    "api",
+                    "channels",
+                    "{{channelId}}",
+                    "videos"
+                  ]
+                },
+                "description":  "Generated from GeneratedChannelController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Comment",
+          "item":  [
+            {
+              "name":  "GET comments",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/comments?videoId={{videoId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET comments commentId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam toxicity blocked-word\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/comments/{{commentId}}?videoId={{videoId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST comments",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam toxicity blocked-word\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/comments?videoId={{videoId}}",
+                  "path":  [
+                    "api",
+                    "comments"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT comments commentId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam toxicity blocked-word\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE comments commentId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/comments/{{commentId}}",
+                  "path":  [
+                    "api",
+                    "comments",
+                    "{{commentId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedCommentController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Like",
+          "item":  [
+            {
+              "name":  "GET likes",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"value\":  \"LIKE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/likes?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "likes"
+                  ]
+                },
+                "description":  "Generated from GeneratedLikeController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST likes",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"value\":  \"LIKE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/likes?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "likes"
+                  ]
+                },
+                "description":  "Generated from GeneratedLikeController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE likes likeId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/likes/{{likeId}}",
+                  "path":  [
+                    "api",
+                    "likes",
+                    "{{likeId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedLikeController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Moderation",
+          "item":  [
+            {
+              "name":  "GET moderation videos videoId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/videos/{{videoId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "videos",
+                    "{{videoId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation videos videoId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/videos/{{videoId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "videos",
+                    "{{videoId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET moderation comments commentId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam toxicity blocked-word\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/comments/{{commentId}}/checks",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId checks",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"text\":  \"spam toxicity blocked-word\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/comments/{{commentId}}/checks?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "checks"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation videos videoId status",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/videos/{{videoId}}/status?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "videos",
+                    "{{videoId}}",
+                    "status"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId status",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/comments/{{commentId}}/status?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "status"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation videos videoId comment-status",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/videos/{{videoId}}/comment-status?status={{status}}",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "videos",
+                    "{{videoId}}",
+                    "comment-status"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation videos videoId simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/videos/{{videoId}}/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "videos",
+                    "{{videoId}}",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation comments commentId simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/comments/{{commentId}}/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "comments",
+                    "{{commentId}}",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "POST moderation reports simulate",
+              "request":  {
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/moderation/reports/simulate",
+                  "path":  [
+                    "api",
+                    "moderation",
+                    "reports",
+                    "simulate"
+                  ]
+                },
+                "description":  "Generated from GeneratedModerationController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Policy",
+          "item":  [
+            {
+              "name":  "GET policies channels channelId permissions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/channels/{{channelId}}/permissions",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "channels",
+                    "{{channelId}}",
+                    "permissions"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies channels channelId permissions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/channels/{{channelId}}/permissions",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "channels",
+                    "{{channelId}}",
+                    "permissions"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET policies channels channelId sorting",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/channels/{{channelId}}/sorting",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "channels",
+                    "{{channelId}}",
+                    "sorting"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies channels channelId sorting",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"name\":  \"ENORM Channel\",\r\n    \"description\":  \"Generated videos\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/channels/{{channelId}}/sorting?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "channels",
+                    "{{channelId}}",
+                    "sorting"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "GET policies validation-rules",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"expression\":  \"text must not contain spam\",\r\n    \"target\":  \"COMMENT\",\r\n    \"severity\":  \"WARNING\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/validation-rules?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "validation-rules"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST policies validation-rules",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"expression\":  \"text must not contain spam\",\r\n    \"target\":  \"COMMENT\",\r\n    \"severity\":  \"WARNING\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/policies/validation-rules?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "policies",
+                    "validation-rules"
+                  ]
+                },
+                "description":  "Generated from GeneratedPolicyController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Report",
+          "item":  [
+            {
+              "name":  "GET reports",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"reason\":  \"Contains risky content\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "status",
+                      "value":  "{{status}}"
+                    },
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/reports?status={{status}}\u0026videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description":  "Generated from GeneratedReportController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST reports",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"status\":  \"PENDING\",\r\n    \"reason\":  \"Contains risky content\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "videoId",
+                      "value":  "{{videoId}}"
+                    },
+                    {
+                      "key":  "commentId",
+                      "value":  "{{commentId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/reports?videoId={{videoId}}\u0026commentId={{commentId}}",
+                  "path":  [
+                    "api",
+                    "reports"
+                  ]
+                },
+                "description":  "Generated from GeneratedReportController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Subscription",
+          "item":  [
+            {
+              "name":  "GET subscriptions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"active\":  true\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "userId",
+                      "value":  "{{userId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/subscriptions?userId={{userId}}",
+                  "path":  [
+                    "api",
+                    "subscriptions"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST subscriptions",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"active\":  true\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/subscriptions",
+                  "path":  [
+                    "api",
+                    "subscriptions"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE subscriptions subscriptionId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/subscriptions/{{subscriptionId}}",
+                  "path":  [
+                    "api",
+                    "subscriptions",
+                    "{{subscriptionId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedSubscriptionController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "Video",
+          "item":  [
+            {
+              "name":  "GET videos",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+                    {
+                      "key":  "channelId",
+                      "value":  "{{channelId}}"
+                    }
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/videos?channelId={{channelId}}",
+                  "path":  [
+                    "api",
+                    "videos"
+                  ]
+                },
+                "description":  "Generated from GeneratedVideoController.java",
+                "header":  [
+
+                ]
+              }
+            },
+            {
+              "name":  "GET videos videoId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/videos/{{videoId}}",
+                  "path":  [
+                    "api",
+                    "videos",
+                    "{{videoId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedVideoController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "POST videos",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "POST",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/videos",
+                  "path":  [
+                    "api",
+                    "videos"
+                  ]
+                },
+                "description":  "Generated from GeneratedVideoController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "PUT videos videoId",
+              "request":  {
+                "body":  {
+                  "raw":  "{\r\n    \"title\":  \"copyright reupload\",\r\n    \"description\":  \"unlicensed material\",\r\n    \"status\":  \"ACTIVE\"\r\n}",
+                  "options":  {
+                    "raw":  {
+                      "language":  "json"
+                    }
+                  },
+                  "mode":  "raw"
+                },
+                "method":  "PUT",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/videos/{{videoId}}",
+                  "path":  [
+                    "api",
+                    "videos",
+                    "{{videoId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedVideoController.java",
+                "header":  [
+                  {
+                    "key":  "Content-Type",
+                    "value":  "application/json"
+                  }
+                ]
+              }
+            },
+            {
+              "name":  "DELETE videos videoId",
+              "request":  {
+                "method":  "DELETE",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/api/videos/{{videoId}}",
+                  "path":  [
+                    "api",
+                    "videos",
+                    "{{videoId}}"
+                  ]
+                },
+                "description":  "Generated from GeneratedVideoController.java",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name":  "H2",
+          "item":  [
+            {
+              "name":  "GET  h2-console",
+              "request":  {
+                "method":  "GET",
+                "url":  {
+                  "query":  [
+
+                  ],
+                  "host":  [
+                    "{{youtubeBaseUrl}}"
+                  ],
+                  "raw":  "{{youtubeBaseUrl}}/h2-console",
+                  "path":  [
+                    "h2-console"
+                  ]
+                },
+                "description":  "Generated from application.properties",
+                "header":  [
+
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+
