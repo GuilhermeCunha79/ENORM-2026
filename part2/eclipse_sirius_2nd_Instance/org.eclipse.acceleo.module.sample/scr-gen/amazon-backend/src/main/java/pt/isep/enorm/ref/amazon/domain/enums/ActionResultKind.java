@@ -1,0 +1,2 @@
+package pt.isep.enorm.ref.amazon.domain.enums;
+public enum ActionResultKind { DISPLAY_MESSAGE, FLAG_CONTENT, HIDE_CONTENT, REMOVE_CONTENT, BLOCK_SUBMISSION, NOTIFY_MODERATOR, AUTO_APPROVE, AUTO_REJECT }

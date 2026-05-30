@@ -23,7 +23,7 @@ Tool-specific implementation details remain in each individual tool report.
 ## 2. Activity 1 - Design Concrete Syntax for the DSL
 
 ### 2.1 Graphical notation
-The Sirius editor is used to provide a single overview diagram for each REF model instance. The diagram is centered on 
+The Sirius editor is used to provide a single overview diagram for each REF model instance. The diagram is centered on
 the `RefModel` root and shows the model as a navigable canvas with typed nodes, labeled connectors, and visual grouping by concern.
 The notation is meant to make the model readable for a domain expert without exposing implementation details. Each metamodel element
 uses a compact shape, a clear label, and a small set of visual cues for type and relationship semantics.
@@ -65,8 +65,8 @@ uses a compact shape, a clear label, and a small set of visual cues for type and
 - Edges are color-coded by concern: actor/security links, structure links, feedback links, moderation/validation links, and automation/sorting links.
 
 #### How this supports the domain expert
-The editor keeps the same vocabulary as the metamodel, but the diagram removes most technical noise. A domain expert can 
-scan the model by reading the main nodes first, then inspect the connectors to understand who can act, what is being 
+The editor keeps the same vocabulary as the metamodel, but the diagram removes most technical noise. A domain expert can
+scan the model by reading the main nodes first, then inspect the connectors to understand who can act, what is being
 described, and which rules govern the scenario. The Sirius diagram can be used in validation sessions and for scenario
 comparison across YouTube, Amazon, and Reddit models.
 
@@ -74,25 +74,25 @@ comparison across YouTube, Amazon, and Reddit models.
 ### 2.2 Textual notation
 
 ### Scope and Intent
- 
+
 This is the proposed textual concrete syntax for REF in Part 2.
 It follows the REF metamodel v3 used in the project and includes the concepts shown in the MPS model instances, such as `SortingPolicy`, `Condition`, `ConditionKeywords`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`.
- 
+
 Two equivalent textual views are supported in the report:
- 
+
 - A canonical SME-oriented syntax with section headers, minimal repeated keywords, and indentation (no braces).
 - A projection-compatible syntax (properties/children/references) matching MPS exports.
 
 ### Design Principles
- 
+
 A domain expert should be able to read and validate a model without developer help.
 
 "Close to natural language" here means familiar keywords and clear structure. It does not mean full prose sentences.
 
 The notation uses one declaration per line, keyword-based properties, and indentation under section headers. Braces are optional and omitted in the SME view. This keeps models easy to read and review.
- 
+
 The syntax follows these principles:
- 
+
 - Keep the syntax traceable to REF v3, including the `ConditionKeywords` child elements used by automation conditions.
 - Use domain words close to natural language (for example: `authorize`, `moderation`, `automation`, `verification`).
 - Keep strong typing through explicit enum tokens and typed references.
@@ -100,9 +100,9 @@ The syntax follows these principles:
 - Keep models readable in code review and version control.
 
 ### Global Document Structure
- 
+
 The full model is organized in named sections so users can navigate by domain concern.
- 
+
 ```refdsl
 ref "ModelName" version "1.0.0"
 
@@ -142,11 +142,11 @@ automations:
 verifications:
   ...
 ```
- 
+
 In the automation section, behavior detail is represented with nested conditions and actions.
 
 ### Textual Representation for Each Metamodel Element
- 
+
 | Metamodel element | Textual representation in editor |
 |---|---|
 | RefModel | `ref [name] version [semver]` followed by section headers `[section]:` |
@@ -168,11 +168,11 @@ In the automation section, behavior detail is represented with nested conditions
 | Action | In an automation action list: `- [Name] should [ActionResultKind] with message [message]` |
 | VerificationPolicy | In `verifications:` section: `[Name] in [ValidationKind] mode is applied on [TriggerEvent]` |
 | SortingPolicy | In `sorting policies:` section: `[Name] applies to resource [ResourceType] \| applies to feedback [FeedbackDefinition] in [ContextType] context , sorted by [SortCriterion] with [SortDirection] direction` |
- 
+
 ## Enum Token Notation
- 
+
 All enum literals are written as uppercase keywords to preserve type safety and align with the existing P1 model vocabulary.
- 
+
 - UserKind: `GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`
 - ContextKind: `GLOBAL`, `COMMUNITY`, `CHANNEL`, `CATALOG`
 - PrimitiveType: `TEXT`, `NUMBER`, `BOOLEAN`, `DATE`, `DATETIME`, `IMAGE`, `VIDEO`, `URL`
@@ -195,7 +195,7 @@ All enum literals are written as uppercase keywords to preserve type safety and 
 
 
 ### End-to-End Textual Example
- 
+
 ```refdsl
 ref AmazonRef version 1.0.0
 
@@ -269,11 +269,11 @@ verifications:
   ProductReviewVerificationAuto in AUTOMATIC mode is applied on ON_FEEDBACK_CREATE
   ProductReviewVerificationManual in MANUAL mode is applied on ON_MANUAL_REQUEST
 ```
- 
+
 ### Adaptations Relative to P1 and Justification
- 
+
 The syntax is projection-compatible with REF v3 and documents the current `ConditionKeywords` structure used by automation conditions.
- 
+
 1. Section headers remove repeated concept keywords (for example, under `users:` the entry is just `Buyer kind BUYER`, not `user Buyer ...`). Indentation replaces braces in the SME view.
 2. Trigger values are typed with `TriggerEvent` instead of free text. This prevents invalid event names at parse time.
 3. `AutomationRule` includes explicit condition and action lists. A `Condition` owns one or more `ConditionKeywords` entries instead of a single free-text value.
@@ -283,7 +283,16 @@ The syntax is projection-compatible with REF v3 and documents the current `Condi
 
 ### 2.3 Adaptations from P1 metamodel and justification
 
-TODO
+The Part 2 assignment requires the team to keep using the P1 metamodel, while allowing adaptations when necessary, as long as they are justified in the report. In practice, the transition from P1 to the current REF v3 metamodel required refining the language so that both graphical and textual editors could represent not only resources and feedback, but also governance and behavioral concepts such as sorting, validation, moderation, automation, and verification in a first-class way.
+
+From the Sirius/tooling perspective, the most relevant metamodel adaptations were the following:
+
+- `SortingPolicy` was promoted as an explicit concept, because ordering behavior is central in the three reference scenarios and needs to be visible in the graphical editor rather than being hidden in generated code or documentation.
+- `AutomationRule`, `Condition`, `ConditionKeywords`, and `Action` were kept as explicit model elements so that the DSL can capture executable moderation/automation intent instead of relying only on free-text notes.
+- Governance concepts such as `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, and `VerificationPolicy` were treated as first-class nodes, which makes the DSL more complete and better aligned with the assignment goal of generating most of the backend structure from the model.
+- Some concrete-syntax helper constructs used in tools, such as inline `contains` and `extends` views, were intentionally kept as presentation choices rather than as extra domain concepts, so the metamodel remains stable while editors stay readable for domain experts.
+
+These adaptations are justified by the assignment requirements for a DSL that is simple, strongly typed, complete, flexible, and evolvable. They also improve Sirius modeling usability, because the diagram can show high-level domain structure together with policy and automation concerns without forcing users to encode important semantics outside the model.
 
 ---
 
@@ -570,22 +579,74 @@ Each tool contributes to Activity 5 using the same metamodel semantics and targe
 
 To keep cross-tool compatibility, generation uses a normalized intermediate representation independent of source notation (graphical/textual/projectional). This allows the same rules to generate Amazon, Reddit, and YouTube backends with scenario-specific variability.
 
+For the Sirius contribution specifically, the graphical editor does not directly compete with textual generators; instead, it provides a model-authoring and inspection front-end for the same EMF instance consumed by downstream generation steps. This is aligned with the assignment, which states that Sirius is the tool selected for the graphical notation, while Xtext and MPS support textual or projectional notations over the same domain concepts.
+
+Within this team architecture, Sirius contributes in four concrete ways:
+
+- It offers a visual overview of all REF concepts in one navigable diagram, which is useful for domain review sessions and for checking whether a model is complete before generation.
+- It exposes typed properties through node labels and property views, reducing visual clutter while still preserving the strongly typed structure expected by the assignment.
+- It helps validate cross-reference consistency at the model level, since users can visually inspect links among actors, resources, feedback definitions, and governance rules before code generation starts.
+- It produces EMF model instances that can be serialized and handed to the same generation pipeline used by the other tools, which supports the team goal of notation-independent generation.
+
+
 ---
 
 ## 7. Activity 6 - Generate Applications
 
 ### 7.1 Generation of the three REF scenarios
 
-TODO
+The team generated or prepared the three reference applications corresponding to the scenarios used throughout Part 2: Amazon, Reddit, and YouTube. These scenarios exercise different subsets of the REF metamodel and therefore act as complementary validation cases for both syntax design and backend generation.
+
+At team level, Activity 6 is understood as the point where the common generation architecture is instantiated with concrete REF models and verified against the expected scenario behavior. The generated applications share the same target platform and architectural conventions described earlier in the report, but differ in the resources, feedback flows, policies, and automation features activated by each model.
+
+A concise view of the scenario coverage is shown below.
+
+| Scenario | Main modeled focus | Representative generated/backend concerns |
+|---|---|---|
+| Amazon | Product evaluation and verified review flows | Products, orders, reviews, helpful votes, rating constraints, verification checks, moderation and automation support. |
+| Reddit | Community discussion and moderation | Subreddits, posts, threaded comments, voting, reports, participation policies, community moderation. |
+| YouTube | Media publication and audience feedback | Channels, videos, comments, likes/dislikes, subscriptions, validation rules, moderation checks, channel permission policies. |
+
+These three cases are important because they demonstrate that the DSL is not restricted to a single application style; instead, it covers e-commerce, discussion-community, and media-feedback scenarios using the same REF metamodel family.
 
 ### 7.2 Manual extension integration
 
-TODO
+The assignment explicitly requires support for manual adaptations or extensions in the generated code, so that software engineers can complete the remaining behavior that is not practical to derive automatically from the DSL. The team addressed this through the Generation Gap strategy already described in Sections 3 and 6, where generated classes provide the stable base and handwritten classes provide controlled extension points.
+
+In practical terms, manual extension integration follows these principles:
+
+- Regeneration only replaces artifacts under `generated` packages; handwritten subclasses, additional repositories, and specialized services are preserved.
+- Scenario-specific logic that depends on external state or richer domain interpretation is implemented in manual services or controllers, not by editing generated classes directly.
+- `implementationId`-style hooks and protected service methods are used as integration points for validation, moderation, verification, and authorization refinements that cannot be fully inferred from the model.
+- This separation allows the team to regenerate the backend when the REF model evolves, while minimizing merge conflicts and preserving custom logic.
+
+This solution matches the project brief, which states that some generated-code aspects should allow user extension in the base programming language and be integrated with the generated solution.
 
 ### 7.3 Cross-tool compatibility tests
 
-TODO
+Cross-tool compatibility means that the same REF concepts can be edited with different concrete syntaxes or tools, while still producing semantically equivalent model instances for generation. This is especially important in this project because each team member used a different tool, but all tools had to target the same domain metamodel and overall application family.
+
+The team compatibility strategy is based on a shared EMF/Ecore metamodel and on the normalization of model contents before generation. Under this approach, Sirius contributes the graphical notation, Xtext contributes a textual notation, and MPS contributes a projectional/textual notation, but all of them ultimately describe the same REF structures.
+
+At report level, the main compatibility checks are the following:
+
+- The same scenario concepts can be represented in each tool without introducing tool-specific semantic elements.
+- Core relationships such as resource containment, feedback targets, authorization links, and policy ownership remain consistent after serialization/export.
+- The generated backend architecture remains stable regardless of whether the model originated in Sirius, Xtext, or MPS, because generation is driven by normalized model semantics rather than editor-specific syntax.
+- Scenario-level differences are caused by the REF model itself, not by the concrete syntax tool used to create it.
+
+For the Sirius part in particular, compatibility depends on keeping the graphical notation close to the metamodel and avoiding editor-only modeling shortcuts that would make exported models diverge from the common team interpretation.
 
 ### 7.4 Model evolution and migration proposal
 
-TODO
+Model evolution is an explicit project concern, since the assignment characterizes the DSL as evolvable and allows justified adaptations to the metamodel across project stages. The team therefore treats evolution not as an exception but as a normal part of refining the REF language and its generators.
+
+The proposed migration strategy is incremental:
+
+1. Preserve the Ecore metamodel as the single source of truth for structural concepts and enumerations.
+2. When a new concept is added, first update the metamodel, then align the concrete syntaxes (Sirius, Xtext, MPS), and only after that adapt generators and prototypes.
+3. Prefer additive changes, such as introducing new optional concepts or enum literals, over breaking renames/removals whenever possible.
+4. When breaking changes are necessary, provide model transformation or migration rules so older scenario models can still be upgraded consistently.
+5. Preserve manual code through the Generation Gap so that model evolution mainly affects generated artifacts and controlled extension contracts, rather than handwritten business logic.
+
+From the Sirius viewpoint, this proposal is especially important because viewpoint specifications, mappings, and property views depend directly on the metamodel structure. Keeping metamodel evolution disciplined reduces editor breakage and makes it easier to update diagram mappings while preserving existing model instances and scenario diagrams.
