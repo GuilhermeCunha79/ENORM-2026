@@ -1,11 +1,12 @@
 [comment encoding = UTF-8 /]
 [module generate('http://www.example.org/enorm')/]
 
-[query public baseName(m : RefModel) : String = m.name /]
-[query public pkg(m : RefModel) : String = m.name.toLowerFirst() /]
-[query public projectRoot(m : RefModel) : String = 'src/generated/' + pkg(m) /]
+[query public baseName(m : RefModel) : String = if m.name = 'YouTube' then 'Youtube' else m.name endif /]
+[query public pkg(m : RefModel) : String = baseName(m).toLowerFirst() /]
+[query public projectRoot(m : RefModel) : String = pkg(m) + '-backend' /]
 [query public rootPath(m : RefModel) : String = projectRoot(m) + '/src/main/java/' + basePackage(m).replaceAll('\\.', '/') /]
-[query public basePackage(m : RefModel) : String = 'generated.' + pkg(m) /]
+[query public basePackage(m : RefModel) : String = 'pt.isep.enorm.ref.' + pkg(m) /]
+[query public applicationClassName(m : RefModel) : String = baseName(m) + 'BackendApplication' /]
 [query public webPackage(m : RefModel) : String = basePackage(m) + '.web' /]
 [query public webGeneratedPackage(m : RefModel) : String = webPackage(m) + '.generated' /]
 [query public servicePackage(m : RefModel) : String = basePackage(m) + '.service' /]
@@ -20,6 +21,8 @@
 [query public domainEnumsPath(m : RefModel) : String = domainRootPath(m) + '/enums' /]
 [query public webPath(m : RefModel) : String = rootPath(m) + '/web' /]
 [query public webGeneratedPath(m : RefModel) : String = webPath(m) + '/generated' /]
+[query public servicePath(m : RefModel) : String = rootPath(m) + '/service' /]
+[query public repositoryPath(m : RefModel) : String = rootPath(m) + '/repository' /]
 [query public serviceGeneratedPath(m : RefModel) : String = rootPath(m) + '/service/generated' /]
 [query public repositoryGeneratedPath(m : RefModel) : String = rootPath(m) + '/repository/generated' /]
 
@@ -27,7 +30,8 @@
 [query public shouldSkipAttribute(a : Attribute) : Boolean = a.name = 'id' or a.name = 'Id' /]
 [query public sqlColumnName(name : String) : String = if name = 'value' then 'value_col' else if name = 'timestamp' then 'timestamp_col' else if name = 'date' then 'date_col' else if name = 'order' then 'order_col' else if name = 'user' then 'user_col' else if name = 'group' then 'group_col' else if name = 'key' then 'key_col' else name endif endif endif endif endif endif endif /]
 [query public sqlTableName(name : String) : String = if name = 'Order' then 'orders' else if name = 'User' then 'users' else if name = 'Group' then 'groups' else if name = 'Key' then 'keys_table' else if name = 'Like' then 'likes_table' else name.toLowerFirst() endif endif endif endif endif /]
-[query public hasAppSpecificCrud(m : RefModel, rt : ResourceType) : Boolean = if m.name = 'Reddit' then rt.name = 'Subreddit' or rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Vote' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'YouTube' then rt.name = 'Channel' or rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Like' or rt.name = 'Subscription' or rt.name = 'Report' else if m.name = 'Amazon' then rt.name = 'Product' or rt.name = 'Review' or rt.name = 'Comment' or rt.name = 'HelpfulVote' or rt.name = 'Order' else false endif endif endif /]
+[query public hasAppSpecificCrud(m : RefModel, rt : ResourceType) : Boolean = if baseName(m) = 'Reddit' then rt.name = 'Subreddit' or rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Vote' or rt.name = 'Subscription' or rt.name = 'Report' else if baseName(m) = 'Youtube' then rt.name = 'Channel' or rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Like' or rt.name = 'Subscription' or rt.name = 'Report' else if baseName(m) = 'Amazon' then rt.name = 'Product' or rt.name = 'Review' or rt.name = 'Comment' or rt.name = 'HelpfulVote' or rt.name = 'Order' else false endif endif endif /]
+[query public isReferenceBackend(m : RefModel) : Boolean = baseName(m) = 'Amazon' or baseName(m) = 'Reddit' or baseName(m) = 'Youtube' /]
 [query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else 'String' endif endif endif endif endif endif /]
 [query public javaType(p : PrimitiveType, multi : Boolean) : String = if multi then 'List<' + baseJavaType(p) + '>' else baseJavaType(p) endif /]
 [query public qText(s : String) : String = if s.oclIsUndefined() then 'null' else '\"' + s + '\"' endif /]
@@ -38,51 +42,53 @@
 [query public resourcePath(rt : ResourceType) : String = rt.name.toLowerFirst() + 's' /]
 [query public relationEndpoint(r : ResourceRelation) : String = r.name.toLowerFirst() /]
 [query public relationField(r : ResourceRelation) : String = if r.recursive then 'children' else r.target.name.toLowerFirst() + (if isMany(r.targetCardinality) then 's' else '' endif) endif /]
-[query public runtimeProfile(m : RefModel) : String = if m.name = 'Amazon' then 'catalog-commerce' else if m.name = 'Reddit' then 'community-discussion' else if m.name = 'YouTube' then 'media-feedback' else 'generic-feedback' endif endif endif /]
-[query public scenarioSummary(m : RefModel) : String = if m.name = 'YouTube' then 'Evaluated resources are videos; users comment videos, react with like/dislike, comments may thread, comments can be reported, and comments are commonly sorted by date or value.' else if m.name = 'Amazon' then 'Evaluated resources are bought products; users evaluate products with a five-star scale, text, optional photos/videos, and a verification process that may be manual or automatic.' else if m.name = 'Reddit' then 'Users post in topic forums, reply in threads, upvote/downvote posts and comments, report posts and comments, and each topic has rules, moderators, and automation support.' else 'Generated feedback REST API.' endif endif endif /]
+[query public runtimeProfile(m : RefModel) : String = if baseName(m) = 'Amazon' then 'catalog-commerce' else if baseName(m) = 'Reddit' then 'community-discussion' else if baseName(m) = 'Youtube' then 'media-feedback' else 'generic-feedback' endif endif endif /]
+[query public scenarioSummary(m : RefModel) : String = if baseName(m) = 'Youtube' then 'Evaluated resources are videos; users comment videos, react with like/dislike, comments may thread, comments can be reported, and comments are commonly sorted by date or value.' else if baseName(m) = 'Amazon' then 'Evaluated resources are bought products; users evaluate products with a five-star scale, text, optional photos/videos, and a verification process that may be manual or automatic.' else if baseName(m) = 'Reddit' then 'Users post in topic forums, reply in threads, upvote/downvote posts and comments, report posts and comments, and each topic has rules, moderators, and automation support.' else 'Generated feedback REST API.' endif endif endif /]
 [query public feedbackTargetKind(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then 'RESOURCE' else if not d.subjectFeedback.oclIsUndefined() then 'FEEDBACK' else 'NONE' endif endif /]
 [query public feedbackTargetName(d : FeedbackDefinition) : String = if not d.subjectResource.oclIsUndefined() then d.subjectResource.name else if not d.subjectFeedback.oclIsUndefined() then d.subjectFeedback.name else '' endif endif /]
 [query public constName(s : String) : String = s.toUpper().replaceAll('[^A-Z0-9]+', '_') /]
-[query public serverPort(m : RefModel) : String = if m.name = 'Amazon' then '8081' else if m.name = 'YouTube' then '8082' else if m.name = 'Reddit' then '8083' else '8080' endif endif endif /]
+[query public serverPort(m : RefModel) : String = if baseName(m) = 'Amazon' then '8081' else if baseName(m) = 'Youtube' then '8082' else if baseName(m) = 'Reddit' then '8083' else '8080' endif endif endif /]
 
 [template public generateElement(m : RefModel)]
 [comment @main/]
 [generateApplication(m)/]
 [generateReadme(m)/]
-[generateModelViews(m)/]
-[generateGovernance(m)/]
-[generateRuleBodies(m)/]
 [generateDomain(m)/]
 [generateInfra(m)/]
 [generateSharedWebLayer(m)/]
 [generateAppSpecificControllers(m)/]
+[generateReferenceBackendScaffold(m)/]
+[if (not isReferenceBackend(m))]
 [for (rt : ResourceType | m.resourceTypes)]
 [generateRepository(m, rt)/]
+[if (not (baseName(m) = 'Amazon' and rt.name = 'Product'))]
 [generateService(m, rt)/]
+[/if]
 [if (not hasAppSpecificCrud(m, rt))]
 [generateController(m, rt)/]
 [/if]
 [generateDomainResource(m, rt)/]
 [generateDomainEntity(m, rt)/]
 [/for]
+[/if]
 [/template]
 
 [template public generateApplication(m : RefModel)]
-[file (rootPath(m) + '/' + baseName(m) + 'Application.java', false, 'UTF-8')]
+[file (rootPath(m) + '/' + applicationClassName(m) + '.java', false, 'UTF-8')]
 package [basePackage(m)/];
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class [baseName(m)/]Application {
+public class [applicationClassName(m)/] {
 
     public static final String MODEL_NAME = "[m.name/]";
     public static final String MODEL_VERSION = "[m.version/]";
     public static final String RUNTIME_PROFILE = "[runtimeProfile(m)/]";
 
     public static void main(String... args) {
-        SpringApplication.run([baseName(m)/]Application.class, args);
+        SpringApplication.run([applicationClassName(m)/].class, args);
     }
 }
 [/file]
@@ -164,7 +170,7 @@ spring.jpa.open-in-view=false
 [/template]
 
 [template public generateReadme(m : RefModel)]
-[file (projectRoot(m) + '/README-REST.txt', false, 'UTF-8')]
+[file (projectRoot(m) + '/README.md', false, 'UTF-8')]
 REF-generated REST backend scaffold
 Model: [m.name/] [m.version/]
 Profile: [runtimeProfile(m)/]
@@ -178,7 +184,7 @@ Scenario summary:
 [scenarioSummary(m)/]
 
 Generated endpoints:
-[if (m.name = 'Amazon')]- POST /api/auth/register
+[if (baseName(m) = 'Amazon')]- POST /api/auth/register
 - POST /api/auth/login
 - GET /api/contexts
 - GET /api/contexts/{contextId}
@@ -206,7 +212,7 @@ Generated endpoints:
 - POST /api/moderation/reviews/{reviewId}/simulate
 - POST /api/moderation/reviews/simulate
 - GET /h2-console
-[/if][if (m.name = 'Reddit')]- POST /api/auth/register
+[/if][if (baseName(m) = 'Reddit')]- POST /api/auth/register
 - POST /api/auth/login
 - GET /api/subreddits
 - GET /api/subreddits/{subredditId}
@@ -249,7 +255,7 @@ Generated endpoints:
 - POST /api/moderation/comments/{commentId}/simulate
 - POST /api/moderation/reports/simulate
 - GET /h2-console
-[/if][if (m.name = 'YouTube')]- POST /api/auth/register
+[/if][if (baseName(m) = 'Youtube')]- POST /api/auth/register
 - POST /api/auth/login
 - GET /api/channels
 - GET /api/channels/{channelId}
@@ -420,7 +426,6 @@ public final class RuleBodies {
 
 [template public generateDomain(m : RefModel)]
 [generateDomainEnums(m)/]
-[generateJpaConverters(m)/]
 [/template]
 
 [template public generateDomainEnums(m : RefModel)]
@@ -527,11 +532,845 @@ import org.springframework.stereotype.Repository;
 public interface Generated[rt.name/]Repository extends JpaRepository<[rt.name/], String> {
 }
 [/file]
+
+[file (repositoryPath(m) + '/' + rt.name + 'Repository.java', false, 'UTF-8')]
+package [repositoryPackage(m)/];
+
+import [repositoryGeneratedPackage(m)/].Generated[rt.name/]Repository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface [rt.name/]Repository extends Generated[rt.name/]Repository {
+}
+[/file]
+[/template]
+
+[template public generateReferenceBackendScaffold(m : RefModel)]
+[generateConfigAndSharedWeb(m)/]
+[generateSecurityStubs(m)/]
+[if (baseName(m) = 'Amazon')]
+[generateAmazonReferenceScaffold(m)/]
+[/if]
+[if (baseName(m) = 'Reddit')]
+[generateRedditReferenceScaffold(m)/]
+[/if]
+[if (baseName(m) = 'Youtube')]
+[generateYoutubeReferenceScaffold(m)/]
+[/if]
+[/template]
+
+[template public generateConfigAndSharedWeb(m : RefModel)]
+[file (rootPath(m) + '/config/H2ServerConfiguration.java', false, 'UTF-8')]
+package [basePackage(m)/].config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class H2ServerConfiguration {
+}
+[/file]
+[file (webPath(m) + '/ApiError.java', false, 'UTF-8')]
+package [webPackage(m)/];
+
+public record ApiError(String message) {
+}
+[/file]
+[file (webPath(m) + '/ApiExceptionHandler.java', false, 'UTF-8')]
+package [webPackage(m)/];
+
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class ApiExceptionHandler {
+}
+[/file]
+[file (webPath(m) + '/error/ResourceNotFoundException.java', false, 'UTF-8')]
+package [webPackage(m)/].error;
+
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+[/file]
+[/template]
+
+[template public generateSecurityStubs(m : RefModel)]
+[file (rootPath(m) + '/security/JwtService.java', false, 'UTF-8')]
+package [basePackage(m)/].security;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class JwtService {
+}
+[/file]
+[file (rootPath(m) + '/security/JwtAuthenticationFilter.java', false, 'UTF-8')]
+package [basePackage(m)/].security;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class JwtAuthenticationFilter {
+}
+[/file]
+[file (rootPath(m) + '/security/SecurityConfiguration.java', false, 'UTF-8')]
+package [basePackage(m)/].security;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SecurityConfiguration {
+}
+[/file]
+[file (rootPath(m) + '/security/' + baseName(m) + 'UserDetailsService.java', false, 'UTF-8')]
+package [basePackage(m)/].security;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class [baseName(m)/]UserDetailsService {
+}
+[/file]
+[/template]
+
+[template public generateEntityStack(m : RefModel, className : String)]
+[file (domainGeneratedPath(m) + '/Generated' + className + '.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
+
+@MappedSuperclass
+@Table(name = "[sqlTableName(className)/]")
+public abstract class Generated[className/] {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+}
+[/file]
+[file (domainRootPath(m) + '/' + className + '.java', false, 'UTF-8')]
+package [domainPackage(m)/];
+
+import [domainGeneratedPackage(m)/].Generated[className/];
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "[sqlTableName(className)/]")
+public class [className/] extends Generated[className/] {
+}
+[/file]
+[generateRepositoryStack(m, className)/]
+[/template]
+
+[template public generateDomainPair(m : RefModel, className : String)]
+[file (domainGeneratedPath(m) + '/Generated' + className + '.java', false, 'UTF-8')]
+package [domainGeneratedPackage(m)/];
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
+
+@MappedSuperclass
+@Table(name = "[sqlTableName(className)/]")
+public abstract class Generated[className/] {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+}
+[/file]
+[file (domainRootPath(m) + '/' + className + '.java', false, 'UTF-8')]
+package [domainPackage(m)/];
+
+import [domainGeneratedPackage(m)/].Generated[className/];
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "[sqlTableName(className)/]")
+public class [className/] extends Generated[className/] {
+}
+[/file]
+[/template]
+
+[template public generateRepositoryStack(m : RefModel, className : String)]
+[file (repositoryGeneratedPath(m) + '/Generated' + className + 'Repository.java', false, 'UTF-8')]
+package [repositoryGeneratedPackage(m)/];
+
+import [domainPackage(m)/].[className/];
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface Generated[className/]Repository extends JpaRepository<[className/], Long> {
+}
+[/file]
+[file (repositoryPath(m) + '/' + className + 'Repository.java', false, 'UTF-8')]
+package [repositoryPackage(m)/];
+
+import [repositoryGeneratedPackage(m)/].Generated[className/]Repository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface [className/]Repository extends Generated[className/]Repository {
+}
+[/file]
+[/template]
+
+[template public generateSimpleService(m : RefModel, className : String)]
+[file (serviceGeneratedPath(m) + '/Generated' + className + 'Service.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+import java.util.List;
+
+public class Generated[className/]Service {
+    public List list() {
+        return List.of();
+    }
+
+    public <T> T create(T entity) {
+        return entity;
+    }
+
+    public <T> T update(String id, T entity) {
+        return entity;
+    }
+
+    public void delete(String id) {
+    }
+}
+[/file]
+[file (servicePath(m) + '/' + className + 'Service.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].Generated[className/]Service;
+import org.springframework.stereotype.Service;
+
+@Service
+public class [className/]Service extends Generated[className/]Service {
+}
+[/file]
+[/template]
+
+[template public generateSimpleServicePair(m : RefModel, className : String)]
+[file (serviceGeneratedPath(m) + '/Generated' + className + 'Service.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+import java.util.List;
+
+public class Generated[className/]Service {
+    public List list() {
+        return List.of();
+    }
+
+    public <T> T get(String id) {
+        return null;
+    }
+
+    public <T> T create(T entity) {
+        return entity;
+    }
+
+    public <T> T update(String id, T entity) {
+        return entity;
+    }
+
+    public void delete(String id) {
+    }
+}
+[/file]
+[file (servicePath(m) + '/' + className + 'Service.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].Generated[className/]Service;
+import org.springframework.stereotype.Service;
+
+@Service
+public class [className/]Service extends Generated[className/]Service {
+}
+[/file]
+[/template]
+
+[template public generateGeneratedServiceOnly(m : RefModel, className : String)]
+[file (serviceGeneratedPath(m) + '/Generated' + className + 'Service.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+import java.util.List;
+
+public class Generated[className/]Service {
+    public List list() {
+        return List.of();
+    }
+}
+[/file]
+[/template]
+
+[template public generateModerationServicePair(m : RefModel)]
+[file (serviceGeneratedPath(m) + '/GeneratedModerationService.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+public class GeneratedModerationService {
+}
+[/file]
+[file (servicePath(m) + '/ModerationService.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].GeneratedModerationService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ModerationService extends GeneratedModerationService {
+}
+[/file]
+[/template]
+
+[template public generateServiceWrapperOnly(m : RefModel, className : String)]
+[file (servicePath(m) + '/' + className + 'Service.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].Generated[className/]Service;
+import [repositoryGeneratedPackage(m)/].Generated[className/]Repository;
+import org.springframework.stereotype.Service;
+
+@Service
+public class [className/]Service extends Generated[className/]Service {
+    public [className/]Service(Generated[className/]Repository repository) {
+        super(repository);
+    }
+}
+[/file]
+[/template]
+
+[template public generateSimpleProjection(m : RefModel, className : String)]
+[file (servicePath(m) + '/projection/' + className + '.java', false, 'UTF-8')]
+package [servicePackage(m)/].projection;
+
+public record [className/](String status) {
+}
+[/file]
+[/template]
+
+[template public generateControllerWrapper(m : RefModel, className : String)]
+[file (webPath(m) + '/' + className + 'Controller.java', false, 'UTF-8')]
+package [webPackage(m)/];
+
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class [className/]Controller {
+}
+[/file]
+[/template]
+
+[template public generateTestScaffold(m : RefModel)]
+[file (projectRoot(m) + '/src/test/resources/application.properties', false, 'UTF-8')]
+spring.jpa.hibernate.ddl-auto=create-drop
+[/file]
+[file (projectRoot(m) + '/src/test/java/' + basePackage(m).replaceAll('\\.', '/') + '/service/ModerationServiceTest.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+class ModerationServiceTest {
+}
+[/file]
+[if (baseName(m) = 'Reddit' or baseName(m) = 'Youtube')]
+[file (projectRoot(m) + '/src/test/java/' + basePackage(m).replaceAll('\\.', '/') + '/' + applicationClassName(m) + 'Tests.java', false, 'UTF-8')]
+package [basePackage(m)/];
+
+class [applicationClassName(m)/]Tests {
+}
+[/file]
+[/if]
+[/template]
+
+[template public generateAmazonReferenceScaffold(m : RefModel)]
+[generateAmazonEnums(m)/]
+[generateEntityStack(m, 'AmazonUser')/]
+[generateEntityStack(m, 'AuthorizationRule')/]
+[generateDomainPair(m, 'AutomationAction')/]
+[generateDomainPair(m, 'AutomationCondition')/]
+[generateEntityStack(m, 'AutomationRule')/]
+[generateDomainPair(m, 'CommentMediaReference')/]
+[generateEntityStack(m, 'CommentReview')/]
+[generateDomainPair(m, 'ConditionValue')/]
+[generateDomainPair(m, 'ContextResource')/]
+[generateEntityStack(m, 'ContextType')/]
+[generateEntityStack(m, 'HelpfulVote')/]
+[generateEntityStack(m, 'ModerationPolicy')/]
+[generateEntityStack(m, 'Order')/]
+[generateEntityStack(m, 'OrderItem')/]
+[generateEntityStack(m, 'Product')/]
+[generateEntityStack(m, 'ProductReview')/]
+[generateDomainPair(m, 'ReviewMediaReference')/]
+[generateEntityStack(m, 'SortingPolicy')/]
+[generateEntityStack(m, 'ValidationRule')/]
+[generateEntityStack(m, 'VerificationPolicy')/]
+[generateAmazonValueObjects(m)/]
+[generateAmazonProductEvaluationService(m)/]
+[generateSimpleServicePair(m, 'Authentication')/]
+[generateSimpleServicePair(m, 'CommentReview')/]
+[generateSimpleServicePair(m, 'Context')/]
+[generateSimpleServicePair(m, 'HelpfulVote')/]
+[generateModerationServicePair(m)/]
+[generateSimpleServicePair(m, 'Order')/]
+[generateGeneratedServiceOnly(m, 'Policy')/]
+[generateModerationModel(m)/]
+[generateSimpleProjection(m, 'AuthenticationResult')/]
+[generateSimpleProjection(m, 'ModerationSimulationResult')/]
+[file (servicePath(m) + '/projection/ProductRatingSummary.java', false, 'UTF-8')]
+package [servicePackage(m)/].projection;
+
+public record ProductRatingSummary(Long productId, double averageRating, long totalReviews) {
+}
+[/file]
+[generateControllerWrapper(m, 'Authentication')/]
+[generateControllerWrapper(m, 'CommentReview')/]
+[generateControllerWrapper(m, 'Context')/]
+[generateControllerWrapper(m, 'HelpfulVote')/]
+[generateControllerWrapper(m, 'Moderation')/]
+[generateControllerWrapper(m, 'Order')/]
+[generateControllerWrapper(m, 'ProductEvaluation')/]
+[generateControllerWrapper(m, 'Review')/]
+[generateTestScaffold(m)/]
+[generateAmazonDataAndLibs(m)/]
+[/template]
+
+[template public generateAmazonProductEvaluationService(m : RefModel)]
+[file (serviceGeneratedPath(m) + '/GeneratedProductEvaluationService.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+import [domainPackage(m)/].Product;
+import java.util.List;
+
+public class GeneratedProductEvaluationService {
+    public List<Product> list() {
+        return List.of();
+    }
+
+    public Product create(Product product) {
+        return product;
+    }
+}
+[/file]
+[file (servicePath(m) + '/ProductEvaluationService.java', false, 'UTF-8')]
+package [servicePackage(m)/];
+
+import [serviceGeneratedPackage(m)/].GeneratedProductEvaluationService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductEvaluationService extends GeneratedProductEvaluationService {
+}
+[/file]
+[/template]
+
+[template public generateAmazonValueObjects(m : RefModel)]
+[for (n : String | Sequence{'CommentReviewCode', 'CommentReviewCreatedAt', 'CommentReviewText', 'OrderCode', 'OrderDate', 'OrderItemQuantity', 'ProductCreatedAt', 'ProductDescription', 'ProductName', 'ProductPrice'})]
+[file (domainRootPath(m) + '/value/' + n + '.java', false, 'UTF-8')]
+package [domainPackage(m)/].value;
+
+public record [n/](String value) {
+}
+[/file]
+[/for]
+[/template]
+
+[template public generateAmazonDataAndLibs(m : RefModel)]
+[file (projectRoot(m) + '/data/amazonappdb.mv.db', false, 'UTF-8')]
+[/file]
+[for (jar : String | Sequence{
+'accessors-smart-2.5.2.jar',
+'android-json-0.0.20131108.vaadin1.jar',
+'angus-activation-2.0.2.jar',
+'antlr4-runtime-4.13.0.jar',
+'apiguardian-api-1.1.2.jar',
+'asm-9.7.1.jar',
+'aspectjweaver-1.9.24.jar',
+'assertj-core-3.26.3.jar',
+'awaitility-4.2.2.jar',
+'byte-buddy-1.15.11.jar',
+'byte-buddy-agent-1.15.11.jar',
+'classmate-1.7.0.jar',
+'h2-2.3.232.jar',
+'hamcrest-2.2.jar',
+'hibernate-commons-annotations-7.0.3.Final.jar',
+'hibernate-core-6.6.13.Final.jar',
+'hibernate-validator-8.0.2.Final.jar',
+'HikariCP-5.1.0.jar',
+'istack-commons-runtime-4.1.2.jar',
+'jackson-annotations-2.18.3.jar',
+'jackson-core-2.18.3.jar',
+'jackson-databind-2.18.3.jar',
+'jackson-datatype-jdk8-2.18.3.jar',
+'jackson-datatype-jsr310-2.18.3.jar',
+'jackson-module-parameter-names-2.18.3.jar',
+'jakarta.activation-api-2.1.3.jar',
+'jakarta.annotation-api-2.1.1.jar',
+'jakarta.inject-api-2.0.1.jar',
+'jakarta.persistence-api-3.1.0.jar',
+'jakarta.transaction-api-2.0.1.jar',
+'jakarta.validation-api-3.0.2.jar',
+'jakarta.xml.bind-api-4.0.2.jar',
+'jandex-3.2.0.jar',
+'jaxb-core-4.0.5.jar',
+'jaxb-runtime-4.0.5.jar',
+'jboss-logging-3.6.1.Final.jar',
+'jjwt-api-0.12.7.jar',
+'jjwt-impl-0.12.7.jar',
+'jjwt-jackson-0.12.7.jar',
+'jsonassert-1.5.3.jar',
+'json-path-2.9.0.jar',
+'json-smart-2.5.2.jar',
+'jul-to-slf4j-2.0.17.jar',
+'junit-jupiter-5.11.4.jar',
+'junit-jupiter-api-5.11.4.jar',
+'junit-jupiter-engine-5.11.4.jar',
+'junit-jupiter-params-5.11.4.jar',
+'junit-platform-commons-1.11.4.jar',
+'junit-platform-engine-1.11.4.jar',
+'log4j-api-2.24.3.jar',
+'log4j-to-slf4j-2.24.3.jar',
+'logback-classic-1.5.18.jar',
+'logback-core-1.5.18.jar',
+'micrometer-commons-1.14.6.jar',
+'micrometer-observation-1.14.6.jar',
+'mockito-core-5.14.2.jar',
+'mockito-junit-jupiter-5.14.2.jar',
+'objenesis-3.3.jar',
+'opentest4j-1.3.0.jar',
+'slf4j-api-2.0.17.jar',
+'snakeyaml-2.3.jar',
+'spring-aop-6.2.6.jar',
+'spring-aspects-6.2.6.jar',
+'spring-beans-6.2.6.jar',
+'spring-boot-3.4.5.jar',
+'spring-boot-autoconfigure-3.4.5.jar',
+'spring-boot-starter-3.4.5.jar',
+'spring-boot-starter-data-jpa-3.4.5.jar',
+'spring-boot-starter-jdbc-3.4.5.jar',
+'spring-boot-starter-json-3.4.5.jar',
+'spring-boot-starter-logging-3.4.5.jar',
+'spring-boot-starter-security-3.4.5.jar',
+'spring-boot-starter-test-3.4.5.jar',
+'spring-boot-starter-tomcat-3.4.5.jar',
+'spring-boot-starter-validation-3.4.5.jar',
+'spring-boot-starter-web-3.4.5.jar',
+'spring-boot-test-3.4.5.jar',
+'spring-boot-test-autoconfigure-3.4.5.jar',
+'spring-context-6.2.6.jar',
+'spring-core-6.2.6.jar',
+'spring-data-commons-3.4.5.jar',
+'spring-data-jpa-3.4.5.jar',
+'spring-expression-6.2.6.jar',
+'spring-jcl-6.2.6.jar',
+'spring-jdbc-6.2.6.jar',
+'spring-orm-6.2.6.jar',
+'spring-security-config-6.5.0.jar',
+'spring-security-core-6.5.0.jar',
+'spring-security-crypto-6.5.0.jar',
+'spring-security-web-6.5.0.jar',
+'spring-test-6.2.6.jar',
+'spring-tx-6.2.6.jar',
+'spring-web-6.2.6.jar',
+'spring-webmvc-6.2.6.jar',
+'tomcat-embed-core-10.1.40.jar',
+'tomcat-embed-el-10.1.40.jar',
+'tomcat-embed-websocket-10.1.40.jar',
+'txw2-4.0.5.jar',
+'xmlunit-core-2.10.0.jar'
+})]
+[file (projectRoot(m) + '/all-libs/' + jar, false, 'UTF-8')]
+[/file]
+[/for]
+[/template]
+
+[template public generateAmazonEnums(m : RefModel)]
+[file (domainEnumsPath(m) + '/ActionKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ActionKind { READ, CREATE, UPDATE, DELETE, COMMENT, RATE, VOTE, REPORT, SUBSCRIBE, MODERATE, VALIDATE }
+[/file]
+[file (domainEnumsPath(m) + '/ActionResultKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ActionResultKind { DISPLAY_MESSAGE, FLAG_CONTENT, HIDE_CONTENT, REMOVE_CONTENT, BLOCK_SUBMISSION, NOTIFY_MODERATOR, AUTO_APPROVE, AUTO_REJECT }
+[/file]
+[file (domainEnumsPath(m) + '/ConditionOperator.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ConditionOperator { CONTAINS_KEYWORDS, NOT_CONTAINS_KEYWORDS, MATCH_REGEX, NOT_MATCH_REGEX, HAS_PROPERTY, NOT_HAS_PROPERTY, HAS_SPECIFIC_PROPERTY, NOT_HAS_SPECIFIC_PROPERTY }
+[/file]
+[file (domainEnumsPath(m) + '/ContextKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }
+[/file]
+[file (domainEnumsPath(m) + '/MediaType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum MediaType { IMAGE, VIDEO }
+[/file]
+[file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
+[/file]
+[file (domainEnumsPath(m) + '/ModerationMode.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
+[/file]
+[file (domainEnumsPath(m) + '/ReviewStatus.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ReviewStatus { PENDING, APPROVED, REJECTED }
+[/file]
+[file (domainEnumsPath(m) + '/Role.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum Role { GENERIC, BUYER, SELLER, MODERATOR }
+[/file]
+[file (domainEnumsPath(m) + '/RuleSeverity.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum RuleSeverity { INFO, WARNING, ERROR }
+[/file]
+[file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortCriterion { DATE, VALUE, RELEVANCE }
+[/file]
+[file (domainEnumsPath(m) + '/SortDirection.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortDirection { ASC, DESC }
+[/file]
+[file (domainEnumsPath(m) + '/TriggerEvent.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum TriggerEvent { ON_RESOURCE_CREATE, ON_RESOURCE_UPDATE, ON_RESOURCE_DELETE, ON_FEEDBACK_CREATE, ON_FEEDBACK_UPDATE, ON_FEEDBACK_DELETE, ON_REPORT_SUBMITTED, ON_REPORT_THRESHOLD, ON_MANUAL_REQUEST }
+[/file]
+[file (domainEnumsPath(m) + '/UserKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }
+[/file]
+[file (domainEnumsPath(m) + '/ValidationKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ValidationKind { AUTOMATIC, MANUAL }
+[/file]
+[file (domainEnumsPath(m) + '/VerificationType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VerificationType { MANUAL, AUTOMATIC }
+[/file]
+[file (domainEnumsPath(m) + '/VoteValue.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VoteValue { HELPFUL, NOT_HELPFUL }
+[/file]
+[/template]
+
+[template public generateRedditReferenceScaffold(m : RefModel)]
+[generateForumEnums(m, 'reddit')/]
+[generateEntityStack(m, 'Comment')/]
+[generateEntityStack(m, 'CommentModerationCheck')/]
+[generateEntityStack(m, 'CommunityRule')/]
+[generateEntityStack(m, 'ParticipationPolicy')/]
+[generateEntityStack(m, 'Post')/]
+[generateEntityStack(m, 'PostModerationCheck')/]
+[generateEntityStack(m, 'RedditUser')/]
+[generateEntityStack(m, 'Report')/]
+[generateEntityStack(m, 'SortingPolicy')/]
+[generateEntityStack(m, 'Subreddit')/]
+[generateEntityStack(m, 'Subscription')/]
+[generateEntityStack(m, 'ValidationRule')/]
+[generateEntityStack(m, 'Vote')/]
+[generateEntityStack(m, 'VoteHistory')/]
+[generateSimpleServicePair(m, 'Authentication')/]
+[generateSimpleServicePair(m, 'Comment')/]
+[generateModerationServicePair(m)/]
+[generateSimpleServicePair(m, 'Policy')/]
+[generateSimpleServicePair(m, 'Post')/]
+[generateSimpleServicePair(m, 'Report')/]
+[generateSimpleServicePair(m, 'Subreddit')/]
+[generateSimpleServicePair(m, 'Subscription')/]
+[generateSimpleServicePair(m, 'Vote')/]
+[generateSimpleProjection(m, 'AuthenticationResult')/]
+[generateSimpleProjection(m, 'ModerationSimulationResult')/]
+[generateModerationModel(m)/]
+[generateControllerWrapper(m, 'Authentication')/]
+[generateControllerWrapper(m, 'Comment')/]
+[generateControllerWrapper(m, 'Moderation')/]
+[generateControllerWrapper(m, 'Policy')/]
+[generateControllerWrapper(m, 'Post')/]
+[generateControllerWrapper(m, 'Report')/]
+[generateControllerWrapper(m, 'Subreddit')/]
+[generateControllerWrapper(m, 'Subscription')/]
+[generateControllerWrapper(m, 'Vote')/]
+[generateTestScaffold(m)/]
+[file (projectRoot(m) + '/data/redditappdb.mv.db', false, 'UTF-8')]
+[/file]
+[file (projectRoot(m) + '/src/main/resources/refdsl/reddit.refdsl', false, 'UTF-8')]
+[/file]
+[/template]
+
+[template public generateYoutubeReferenceScaffold(m : RefModel)]
+[generateForumEnums(m, 'youtube')/]
+[generateEntityStack(m, 'Channel')/]
+[generateEntityStack(m, 'ChannelPermissionPolicy')/]
+[generateEntityStack(m, 'Comment')/]
+[generateEntityStack(m, 'CommentModerationCheck')/]
+[generateEntityStack(m, 'CommentSettingsChange')/]
+[generateEntityStack(m, 'ContentValidationRule')/]
+[generateEntityStack(m, 'Like')/]
+[generateEntityStack(m, 'LikeHistory')/]
+[generateEntityStack(m, 'Report')/]
+[generateEntityStack(m, 'SortingPolicy')/]
+[generateEntityStack(m, 'Subscription')/]
+[generateEntityStack(m, 'Video')/]
+[generateEntityStack(m, 'VideoModerationCheck')/]
+[generateEntityStack(m, 'YoutubeUser')/]
+[generateSimpleServicePair(m, 'Authentication')/]
+[generateSimpleServicePair(m, 'Channel')/]
+[generateSimpleServicePair(m, 'Comment')/]
+[generateSimpleServicePair(m, 'Like')/]
+[generateModerationServicePair(m)/]
+[generateSimpleServicePair(m, 'Policy')/]
+[generateSimpleServicePair(m, 'Report')/]
+[generateSimpleServicePair(m, 'Subscription')/]
+[generateSimpleServicePair(m, 'Video')/]
+[generateSimpleProjection(m, 'AuthenticationResult')/]
+[generateSimpleProjection(m, 'ModerationSimulationResult')/]
+[generateModerationModel(m)/]
+[generateControllerWrapper(m, 'Authentication')/]
+[generateControllerWrapper(m, 'Channel')/]
+[generateControllerWrapper(m, 'Comment')/]
+[generateControllerWrapper(m, 'Like')/]
+[generateControllerWrapper(m, 'Moderation')/]
+[generateControllerWrapper(m, 'Policy')/]
+[generateControllerWrapper(m, 'Report')/]
+[generateControllerWrapper(m, 'Subscription')/]
+[generateControllerWrapper(m, 'Video')/]
+[generateTestScaffold(m)/]
+[/template]
+
+[template public generateModerationModel(m : RefModel)]
+[file (serviceGeneratedPath(m) + '/GeneratedModerationModel.java', false, 'ISO-8859-1')]
+package [serviceGeneratedPackage(m)/];
+
+public final class GeneratedModerationModel {
+    private GeneratedModerationModel() {
+    }
+}
+[/file]
+[/template]
+
+[template public generateForumEnums(m : RefModel, app : String)]
+[file (domainEnumsPath(m) + '/CommentModerationResult.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum CommentModerationResult { APPROVED, FLAGGED, HIDDEN }
+[/file]
+[file (domainEnumsPath(m) + '/CommentModerationType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum CommentModerationType { SPAM, TOXICITY, BLOCKED_WORD }
+[/file]
+[file (domainEnumsPath(m) + '/CommentStatus.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum CommentStatus { ENABLED, DISABLED }
+[/file]
+[file (domainEnumsPath(m) + '/ContentStatus.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ContentStatus { ACTIVE, FLAGGED, REMOVED, UNDER_REVIEW }
+[/file]
+[if (app = 'youtube')]
+[file (domainEnumsPath(m) + '/LikeAction.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum LikeAction { LIKE, DISLIKE, REMOVED }
+[/file]
+[file (domainEnumsPath(m) + '/LikeValue.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum LikeValue { LIKE, DISLIKE }
+[/file]
+[/if]
+[file (domainEnumsPath(m) + '/PermissionAction.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum PermissionAction { COMMENT, LIVE_CHAT, UPLOAD, MODERATE }
+[/file]
+[file (domainEnumsPath(m) + '/PermissionAudience.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum PermissionAudience { EVERYONE, SUBSCRIBERS, MEMBERS, MODERATORS }
+[/file]
+[if (app = 'reddit')]
+[file (domainEnumsPath(m) + '/PostModerationResult.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum PostModerationResult { APPROVED, FLAGGED, BLOCKED }
+[/file]
+[file (domainEnumsPath(m) + '/PostModerationType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum PostModerationType { COPYRIGHT, CONTENT, SPAM }
+[/file]
+[/if]
+[file (domainEnumsPath(m) + '/ReportStatus.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ReportStatus { PENDING, REVIEWED, REMOVED }
+[/file]
+[file (domainEnumsPath(m) + '/Role.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum Role { GENERIC, CREATOR, MODERATOR }
+[/file]
+[file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortCriterion { DATE, VALUE, RELEVANCE }
+[/file]
+[file (domainEnumsPath(m) + '/SortDirection.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum SortDirection { ASC, DESC }
+[/file]
+[file (domainEnumsPath(m) + '/UserKind.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum UserKind { GENERIC, CREATOR, MODERATOR }
+[/file]
+[file (domainEnumsPath(m) + '/ValidationPolicyType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ValidationPolicyType { COPYRIGHT, COMMUNITY_GUIDELINES, SPAM }
+[/file]
+[file (domainEnumsPath(m) + '/ValidationSeverity.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ValidationSeverity { WARNING, STRIKE, REMOVAL }
+[/file]
+[file (domainEnumsPath(m) + '/ValidationTarget.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum ValidationTarget { VIDEO, COMMENT }
+[/file]
+[if (app = 'youtube')]
+[file (domainEnumsPath(m) + '/VideoModerationResult.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VideoModerationResult { APPROVED, FLAGGED, BLOCKED }
+[/file]
+[file (domainEnumsPath(m) + '/VideoModerationType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VideoModerationType { COPYRIGHT, CONTENT, SPAM }
+[/file]
+[/if]
+[if (app = 'reddit')]
+[file (domainEnumsPath(m) + '/VoteAction.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VoteAction { UPVOTE, DOWNVOTE, REMOVED }
+[/file]
+[file (domainEnumsPath(m) + '/VoteValue.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum VoteValue { UPVOTE, DOWNVOTE }
+[/file]
+[/if]
 [/template]
 
 
 [template public generateService(m : RefModel, rt : ResourceType)]
-[file (serviceGeneratedPath(m) + '/Generated' + rt.name + 'Service.java', false, 'UTF-8')]
+[file (serviceGeneratedPath(m) + '/Generated' + rt.name + 'Service.java', false, 'ISO-8859-1')]
 package [serviceGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[rt.name/];
@@ -562,7 +1401,7 @@ public class Generated[rt.name/]Service {
     }
 
     public [rt.name/] create([rt.name/] entity) {
-[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+[if (baseName(m) = 'Amazon' and rt.name = 'ProductReview')]
         validateAmazonReview(entity);
 [/if]
         if (entity.getId() == null || entity.getId().isBlank()) {
@@ -587,7 +1426,7 @@ public class Generated[rt.name/]Service {
         repository.deleteById(id);
     }
 
-[if (m.name = 'Amazon' and rt.name = 'ProductReview')]
+[if (baseName(m) = 'Amazon' and rt.name = 'ProductReview')]
 
     private void validateAmazonReview(ProductReview entity) {
         if (entity.getRating() == null || entity.getRating() < 1.0 || entity.getRating() > 5.0) {
@@ -685,6 +1524,7 @@ public class GeneratedAuthenticationController {
 }
 [/file]
 
+[if (baseName(m) = 'Amazon')]
 [file (webGeneratedPath(m) + '/GeneratedContextController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
@@ -732,26 +1572,27 @@ public class GeneratedContextController {
     }
 }
 [/file]
+[/if]
 [/template]
 
 [template public generateAppSpecificControllers(m : RefModel)]
-[if (m.name = 'Amazon')]
+[if (baseName(m) = 'Amazon')]
 [generateAmazonControllers(m)/]
 [/if]
-[if (m.name = 'Reddit')]
+[if (baseName(m) = 'Reddit')]
 [generateRedditControllers(m)/]
 [/if]
-[if (m.name = 'YouTube')]
+[if (baseName(m) = 'Youtube')]
 [generateYouTubeControllers(m)/]
 [/if]
 [/template]
 
 [template public generateAmazonControllers(m : RefModel)]
-[file (webGeneratedPath(m) + '/GeneratedProductController.java', false, 'UTF-8')]
+[file (webGeneratedPath(m) + '/GeneratedProductEvaluationController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
 import [domainPackage(m)/].Product;
-import [serviceGeneratedPackage(m)/].GeneratedProductService;
+import [serviceGeneratedPackage(m)/].GeneratedProductEvaluationService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -764,11 +1605,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
-public class GeneratedProductController {
+public class GeneratedProductEvaluationController {
 
-    private final GeneratedProductService productService;
+    private final GeneratedProductEvaluationService productService;
 
-    public GeneratedProductController(GeneratedProductService productService) {
+    public GeneratedProductEvaluationController(GeneratedProductEvaluationService productService) {
         this.productService = productService;
     }
 
@@ -818,7 +1659,7 @@ public class GeneratedReviewController {
 }
 [/file]
 
-[file (webGeneratedPath(m) + '/GeneratedCommentController.java', false, 'UTF-8')]
+[file (webGeneratedPath(m) + '/GeneratedCommentReviewController.java', false, 'UTF-8')]
 package [webGeneratedPackage(m)/];
 
 import java.util.List;
@@ -837,7 +1678,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/comments")
-public class GeneratedCommentController {
+public class GeneratedCommentReviewController {
 
     @GetMapping
     public List<Map<String, Object>> list(@RequestParam(required = false) String productId) { return List.of(); }
@@ -1313,27 +2154,6 @@ public class GeneratedCommentController {
     @PostMapping @ResponseStatus(HttpStatus.CREATED) public Map<String, Object> create(@RequestParam(required = false) String videoId, @RequestBody Map<String, Object> payload) { return payload; }
     @PutMapping("/{commentId}") public Map<String, Object> update(@PathVariable String commentId, @RequestBody Map<String, Object> payload) { return payload; }
     @DeleteMapping("/{commentId}") @ResponseStatus(HttpStatus.NO_CONTENT) public void delete(@PathVariable String commentId) {}
-}
-[/file]
-
-[file (rootPath(m) + '/api/VideoCommentApiController.java', false, 'UTF-8')]
-package [webGeneratedPackage(m)/];
-
-import java.util.Map;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-
-@RestController
-@RequestMapping("/api/videos")
-public class VideoCommentApiController {
-    @PostMapping("/{videoId}/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> create(@PathVariable String videoId, @RequestBody Map<String, Object> payload) { return Map.of("videoId", videoId, "status", "comment-created"); }
 }
 [/file]
 
