@@ -41,15 +41,23 @@ class RefBackendGenerator {
 			generateFeedback(model, fsa, root, pkg, fd)
 		}
 
-		// Fase D.1: ContextType -> one persistent entity per context (name + kind)
+		// Fase D.1: ContextType -> entity (name + kind + resources) + ContextResource link entity
 		val path = pkg.replace('.', '/')
 		for (ct : model.contextTypes) {
 			val cName = naming.toPascalCase(ct.name)
-			writeGovernance(fsa, root, path, model, cName, '''«cName.toLowerCase»s''', '''/api/contexts/«naming.toKebabCase(ct.name)»''', #["name", "kind"])
+			write(fsa, '''«root»/src/main/java/«path»/governance/domain/«cName».java''', contextEntity(model, cName, ct.kind.literal))
+			write(fsa, '''«root»/src/main/java/«path»/governance/repository/«cName»Repository.java''', governanceRepo(model, cName))
+			write(fsa, '''«root»/src/main/java/«path»/governance/web/«cName»Controller.java''', governanceController(model, cName, '''/api/contexts/«naming.toKebabCase(ct.name)»'''))
+		}
+		if (!model.contextTypes.empty) {
+			write(fsa, '''«root»/src/main/java/«path»/governance/domain/ContextResource.java''', contextResourceEntity(model))
 		}
 
 		// Fase E: governance artifacts (validation/authorization/moderation/verification/sorting/automation)
 		generateGovernance(model, fsa, root, pkg)
+
+		// Fase E.5: behaviour engines (moderation simulation + automation execution)
+		generateBehaviour(model, fsa, root, pkg)
 
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/SecurityConfiguration.java''', securityConfig(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/JwtService.java''', jwtService(model))
@@ -96,6 +104,11 @@ class RefBackendGenerator {
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/«entity»Service.java''', serviceSubclass(model, entity))
 		write(fsa, '''«root»/src/main/java/«path»/web/generated/Generated«entity»Controller.java''', generatedFeedbackController(model, entity))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/web/«entity»Controller.java''', feedbackControllerSubclass(model, entity))
+
+		if (feedbackHasMedia(fd)) {
+			write(fsa, '''«root»/src/main/java/«path»/domain/generated/«entity»MediaReference.java''', mediaReferenceEntity(model, entity))
+			write(fsa, '''«root»/src/main/java/«path»/repository/generated/«entity»MediaReferenceRepository.java''', mediaReferenceRepo(model, entity))
+		}
 	}
 
 	def void write(IFileSystemAccess2 fsa, String path, String content) {
@@ -295,6 +308,10 @@ public enum Role {
 
 	def boolean feedbackIsReport(FeedbackDefinition fd) {
 		fd.type.kind === FeedbackKind.REPORT
+	}
+
+	def boolean feedbackHasMedia(FeedbackDefinition fd) {
+		fd.type.allowsMedia
 	}
 
 	def String columnAnnotation(Attribute a) {
@@ -578,6 +595,58 @@ public interface Generated«entity»Repository extends JpaRepository<«entity»,
 «IF fd.uniquePerAuthorTarget && parent !== null»
     boolean existsByAuthor_IdAndParentFeedback_Id(Long authorId, Long parentFeedbackId);
 «ENDIF»
+}
+'''
+
+	def String mediaReferenceEntity(RefModel model, String entity) '''
+package «naming.basePackage(model)».domain.generated;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.«entity»;
+
+@Entity
+@Table(name = "«entity.toLowerCase»_media")
+public class «entity»MediaReference {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "media_type", length = 16)
+    private String mediaType;
+
+    @Column(length = 1000)
+    private String url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "«entity.toLowerCase»_id")
+    private «entity» «decapitalize(entity)»;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getMediaType() { return mediaType; }
+    public void setMediaType(String mediaType) { this.mediaType = mediaType; }
+    public String getUrl() { return url; }
+    public void setUrl(String url) { this.url = url; }
+    public «entity» get«entity»() { return «decapitalize(entity)»; }
+    public void set«entity»(«entity» «decapitalize(entity)») { this.«decapitalize(entity)» = «decapitalize(entity)»; }
+}
+'''
+
+	def String mediaReferenceRepo(RefModel model, String entity) '''
+package «naming.basePackage(model)».repository.generated;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import «naming.basePackage(model)».domain.generated.«entity»MediaReference;
+
+public interface «entity»MediaReferenceRepository extends JpaRepository<«entity»MediaReference, Long> {
 }
 '''
 
@@ -1341,6 +1410,76 @@ public class «entityName»Controller {
 }
 '''
 
+	def String contextEntity(RefModel model, String entity, String kind) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "«entity.toLowerCase»s")
+public class «entity» {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String kind = "«kind»";
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "«entity.toLowerCase»_id")
+    private List<ContextResource> resources = new ArrayList<>();
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getKind() { return kind; }
+    public void setKind(String kind) { this.kind = kind; }
+    public List<ContextResource> getResources() { return resources; }
+    public void setResources(List<ContextResource> resources) { this.resources = resources; }
+}
+'''
+
+	def String contextResourceEntity(RefModel model) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "context_resources")
+public class ContextResource {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "resource_name", nullable = false, length = 120)
+    private String resourceName;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getResourceName() { return resourceName; }
+    public void setResourceName(String resourceName) { this.resourceName = resourceName; }
+}
+'''
+
 	// ----- Fase E.3: Automation (rule -> conditions -> values, rule -> actions) -----
 
 	def void generateAutomation(RefModel model, IFileSystemAccess2 fsa, String root, String path) {
@@ -1521,6 +1660,262 @@ public class AutomationAction {
     public void setActionKind(String actionKind) { this.actionKind = actionKind; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+}
+'''
+
+	// ----- Fase E.5: Behaviour engines (moderation + automation) -----
+
+	def void generateBehaviour(RefModel model, IFileSystemAccess2 fsa, String root, String pkg) {
+		val path = pkg.replace('.', '/')
+		if (!model.moderationPolicies.empty) {
+			write(fsa, '''«root»/src/main/java/«path»/dto/ModerationSimulationResult.java''', moderationSimulationDto(model))
+			write(fsa, '''«root»/src/main/java/«path»/service/generated/GeneratedModerationService.java''', generatedModerationService(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/ModerationService.java''', moderationServiceSubclass(model))
+			write(fsa, '''«root»/src/main/java/«path»/governance/web/ModerationController.java''', moderationController(model))
+		}
+		if (!model.automationRules.empty) {
+			write(fsa, '''«root»/src/main/java/«path»/dto/AutomationActionResult.java''', automationActionResultDto(model))
+			write(fsa, '''«root»/src/main/java/«path»/service/generated/GeneratedAutomationEngineService.java''', generatedAutomationEngineService(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/AutomationEngineService.java''', automationEngineServiceSubclass(model))
+			write(fsa, '''«root»/src/main/java/«path»/governance/web/AutomationController.java''', automationEngineController(model))
+		}
+	}
+
+	def String moderationSimulationDto(RefModel model) '''
+package «naming.basePackage(model)».dto;
+
+public record ModerationSimulationResult(String policyName, String mode, String decision, boolean requiresHumanReview, String message) {
+}
+'''
+
+	def String generatedModerationService(RefModel model) '''
+package «naming.basePackage(model)».service.generated;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import «naming.basePackage(model)».dto.ModerationSimulationResult;
+import «naming.basePackage(model)».governance.domain.ModerationPolicy;
+import «naming.basePackage(model)».governance.repository.ModerationPolicyRepository;
+
+@Service
+public class GeneratedModerationService {
+    private final ModerationPolicyRepository moderationPolicyRepository;
+
+    public GeneratedModerationService(ModerationPolicyRepository moderationPolicyRepository) {
+        this.moderationPolicyRepository = moderationPolicyRepository;
+    }
+
+    /** Simulate moderation for a trigger event; AUTOMATIC applies the policy decision, MANUAL/HYBRID needs a human. */
+    @Transactional(readOnly = true)
+    public List<ModerationSimulationResult> simulate(String triggerEvent) {
+        List<ModerationSimulationResult> results = new ArrayList<>();
+        for (ModerationPolicy policy : moderationPolicyRepository.findAll()) {
+            boolean triggerMatches = triggerEvent == null || triggerEvent.isBlank()
+                || triggerEvent.equalsIgnoreCase(policy.getTriggerEvent());
+            if (!triggerMatches) {
+                continue;
+            }
+            String mode = policy.getMode();
+            boolean manual = "MANUAL".equalsIgnoreCase(mode);
+            boolean hybrid = "HYBRID".equalsIgnoreCase(mode);
+            boolean requiresHuman = manual || hybrid;
+            String decision = manual ? "PENDING_REVIEW" : policy.getDecision();
+            results.add(new ModerationSimulationResult(policy.getName(), mode, decision, requiresHuman, describe(policy)));
+        }
+        return results;
+    }
+
+    /** Override in manual ModerationService for scenario-specific moderation logic. */
+    protected String describe(ModerationPolicy policy) {
+        return "Simulated decision for policy " + policy.getName();
+    }
+}
+'''
+
+	def String moderationServiceSubclass(RefModel model) '''
+package «naming.basePackage(model)».service;
+
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».governance.repository.ModerationPolicyRepository;
+import «naming.basePackage(model)».service.generated.GeneratedModerationService;
+
+@Service
+public class ModerationService extends GeneratedModerationService {
+    public ModerationService(ModerationPolicyRepository moderationPolicyRepository) {
+        super(moderationPolicyRepository);
+    }
+}
+'''
+
+	def String moderationController(RefModel model) '''
+package «naming.basePackage(model)».governance.web;
+
+import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import «naming.basePackage(model)».dto.ModerationSimulationResult;
+import «naming.basePackage(model)».service.ModerationService;
+
+@RestController
+@RequestMapping("/api/moderation")
+public class ModerationController {
+    private final ModerationService moderationService;
+
+    public ModerationController(ModerationService moderationService) {
+        this.moderationService = moderationService;
+    }
+
+    @PostMapping("/simulate")
+    public List<ModerationSimulationResult> simulate(@RequestParam(required = false) String trigger) {
+        return moderationService.simulate(trigger);
+    }
+}
+'''
+
+	def String automationActionResultDto(RefModel model) '''
+package «naming.basePackage(model)».dto;
+
+public record AutomationActionResult(String ruleName, String actionName, String actionKind, String message) {
+}
+'''
+
+	def String generatedAutomationEngineService(RefModel model) '''
+package «naming.basePackage(model)».service.generated;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import «naming.basePackage(model)».dto.AutomationActionResult;
+import «naming.basePackage(model)».governance.domain.AutomationAction;
+import «naming.basePackage(model)».governance.domain.AutomationCondition;
+import «naming.basePackage(model)».governance.domain.AutomationRule;
+import «naming.basePackage(model)».governance.domain.ConditionValue;
+import «naming.basePackage(model)».governance.repository.AutomationRuleRepository;
+
+@Service
+public class GeneratedAutomationEngineService {
+    private final AutomationRuleRepository automationRuleRepository;
+
+    public GeneratedAutomationEngineService(AutomationRuleRepository automationRuleRepository) {
+        this.automationRuleRepository = automationRuleRepository;
+    }
+
+    /** Evaluate automation rules for a trigger against content (attribute -> value); return the actions that fire. */
+    @Transactional(readOnly = true)
+    public List<AutomationActionResult> evaluate(String triggerEvent, Map<String, String> content) {
+        List<AutomationActionResult> results = new ArrayList<>();
+        Map<String, String> safe = content == null ? Map.of() : content;
+        for (AutomationRule rule : automationRuleRepository.findAll()) {
+            boolean triggerMatches = triggerEvent == null || triggerEvent.isBlank()
+                || rule.getTriggerEvent() == null || triggerEvent.equalsIgnoreCase(rule.getTriggerEvent());
+            if (!triggerMatches) {
+                continue;
+            }
+            if (allConditionsMatch(rule, safe)) {
+                for (AutomationAction action : rule.getActions()) {
+                    results.add(new AutomationActionResult(rule.getName(), action.getName(), action.getActionKind(), action.getMessage()));
+                }
+            }
+        }
+        return results;
+    }
+
+    private boolean allConditionsMatch(AutomationRule rule, Map<String, String> content) {
+        for (AutomationCondition condition : rule.getConditions()) {
+            if (!conditionMatches(condition, content)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean conditionMatches(AutomationCondition condition, Map<String, String> content) {
+        String operator = condition.getOperator();
+        String attribute = condition.getAttributeName();
+        String value = attribute == null ? null : content.get(attribute);
+        List<String> keywords = new ArrayList<>();
+        for (ConditionValue cv : condition.getValues()) {
+            if (cv.getMatchValue() != null) {
+                keywords.add(cv.getMatchValue());
+            }
+        }
+        if (operator == null) {
+            return true;
+        }
+        switch (operator) {
+            case "HAS_PROPERTY":
+                return value != null && !value.isBlank();
+            case "NOT_HAS_PROPERTY":
+                return value == null || value.isBlank();
+            case "CONTAINS_KEYWORDS":
+                return value != null && keywords.stream().anyMatch(value::contains);
+            case "NOT_CONTAINS_KEYWORDS":
+                return value == null || keywords.stream().noneMatch(value::contains);
+            case "MATCH_REGEX":
+                return value != null && !keywords.isEmpty() && Pattern.compile(keywords.get(0)).matcher(value).find();
+            case "NOT_MATCH_REGEX":
+                return value == null || keywords.isEmpty() || !Pattern.compile(keywords.get(0)).matcher(value).find();
+            case "HAS_SPECIFIC_PROPERTY":
+                return value != null && keywords.contains(value);
+            case "NOT_HAS_SPECIFIC_PROPERTY":
+                return value == null || !keywords.contains(value);
+            default:
+                return true;
+        }
+    }
+}
+'''
+
+	def String automationEngineServiceSubclass(RefModel model) '''
+package «naming.basePackage(model)».service;
+
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».governance.repository.AutomationRuleRepository;
+import «naming.basePackage(model)».service.generated.GeneratedAutomationEngineService;
+
+@Service
+public class AutomationEngineService extends GeneratedAutomationEngineService {
+    public AutomationEngineService(AutomationRuleRepository automationRuleRepository) {
+        super(automationRuleRepository);
+    }
+}
+'''
+
+	def String automationEngineController(RefModel model) '''
+package «naming.basePackage(model)».governance.web;
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import «naming.basePackage(model)».dto.AutomationActionResult;
+import «naming.basePackage(model)».service.AutomationEngineService;
+
+@RestController
+@RequestMapping("/api/automation")
+public class AutomationController {
+    private final AutomationEngineService automationEngineService;
+
+    public AutomationController(AutomationEngineService automationEngineService) {
+        this.automationEngineService = automationEngineService;
+    }
+
+    @PostMapping("/evaluate")
+    public List<AutomationActionResult> evaluate(
+            @RequestParam(required = false) String trigger,
+            @RequestBody(required = false) Map<String, String> content) {
+        return automationEngineService.evaluate(trigger, content);
+    }
 }
 '''
 }
