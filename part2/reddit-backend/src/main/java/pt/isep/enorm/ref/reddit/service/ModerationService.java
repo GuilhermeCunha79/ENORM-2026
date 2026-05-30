@@ -99,7 +99,8 @@ public class ModerationService extends GeneratedModerationService {
         ensureModerator(moderator);
         Post post = loadPost(postId);
         Optional<Report> report = findPendingPostReport(postId);
-        PolicySpec policy = policyFor("POST");
+        TriggerEvent trigger = report.isPresent() ? TriggerEvent.ON_REPORT_THRESHOLD : TriggerEvent.ON_RESOURCE_CREATE;
+        PolicySpec policy = policyFor("POST", trigger);
 
         if (!isPolicyTriggerMatched(policy, report.isPresent())) {
             return skipped("POST", post.getId(), post.getStatus(), report.orElse(null), policy);
@@ -113,7 +114,8 @@ public class ModerationService extends GeneratedModerationService {
         ensureModerator(moderator);
         Comment comment = loadComment(commentId);
         Optional<Report> report = findPendingCommentReport(commentId);
-        PolicySpec policy = policyFor("COMMENT");
+        TriggerEvent trigger = report.isPresent() ? TriggerEvent.ON_REPORT_THRESHOLD : TriggerEvent.ON_FEEDBACK_CREATE;
+        PolicySpec policy = policyFor("COMMENT", trigger);
 
         if (!isPolicyTriggerMatched(policy, report.isPresent())) {
             return skipped("COMMENT", comment.getId(), comment.getStatus(), report.orElse(null), policy);
@@ -129,13 +131,63 @@ public class ModerationService extends GeneratedModerationService {
 
         for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
             if (report.getPost() != null) {
-                results.add(moderatePost(moderator, report.getPost(), report, policyFor("POST")));
+                results.add(moderatePost(moderator, report.getPost(), report, policyFor("POST", TriggerEvent.ON_REPORT_THRESHOLD)));
             } else if (report.getComment() != null) {
-                results.add(moderateComment(moderator, report.getComment(), report, policyFor("COMMENT")));
+                results.add(moderateComment(moderator, report.getComment(), report, policyFor("COMMENT", TriggerEvent.ON_REPORT_THRESHOLD)));
             }
         }
 
         return results;
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnPostCreated(Post post) {
+        if (post == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("POST", TriggerEvent.ON_RESOURCE_CREATE);
+        if (!isAutomatic(policy) || !isPolicyTriggerMatched(policy, false)) {
+            return;
+        }
+
+        moderatePost(null, post, null, policy);
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnCommentCreated(Comment comment) {
+        if (comment == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("COMMENT", TriggerEvent.ON_FEEDBACK_CREATE);
+        if (!isAutomatic(policy) || !isPolicyTriggerMatched(policy, false)) {
+            return;
+        }
+
+        moderateComment(null, comment, null, policy);
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnReportCreated(Report report) {
+        if (report == null) {
+            return;
+        }
+
+        if (report.getPost() != null) {
+            PolicySpec policy = policyFor("POST", TriggerEvent.ON_REPORT_THRESHOLD);
+            if (isAutomatic(policy) && isPolicyTriggerMatched(policy, true)) {
+                moderatePost(null, report.getPost(), report, policy);
+            }
+            return;
+        }
+
+        if (report.getComment() != null) {
+            PolicySpec policy = policyFor("COMMENT", TriggerEvent.ON_REPORT_THRESHOLD);
+            if (isAutomatic(policy) && isPolicyTriggerMatched(policy, true)) {
+                moderateComment(null, report.getComment(), report, policy);
+            }
+        }
     }
 
     private ModerationSimulationResult moderatePost(RedditUser moderator, Post post, Report report, PolicySpec policy) {
@@ -293,12 +345,17 @@ public class ModerationService extends GeneratedModerationService {
             + ".";
     }
 
-    private PolicySpec policyFor(String targetType) {
+    private PolicySpec policyFor(String targetType, TriggerEvent trigger) {
         String resourceTarget = "POST".equals(targetType) ? "Post" : "Comment";
         return GeneratedModerationModel.POLICIES.stream()
+            .filter(policy -> policy.getTrigger() == trigger)
             .filter(policy -> resourceTarget.equals(policy.getResourceTarget()))
             .findFirst()
             .orElse(null);
+    }
+
+    private boolean isAutomatic(PolicySpec policy) {
+        return policy != null && policy.getMode() == ModerationMode.AUTOMATIC;
     }
 
     private AutomationRuleSpec primaryRule(PolicySpec policy) {

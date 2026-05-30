@@ -64,6 +64,20 @@ public class ModerationService extends GeneratedModerationService {
         return results;
     }
 
+    @Transactional
+    public void moderateAutomaticallyOnReviewCreated(ProductReview review) {
+        if (review == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("ProductReview", TriggerEvent.ON_FEEDBACK_CREATE);
+        if (!isAutomatic(policy) || !isPolicyTriggerMatched(policy, review)) {
+            return;
+        }
+
+        moderateReview(review, policy);
+    }
+
     private ModerationSimulationResult moderateReview(ProductReview review, PolicySpec policy) {
         AutomationRuleSpec rule = primaryRule(policy);
         ReviewStatus previousStatus = review.getStatus();
@@ -91,6 +105,10 @@ public class ModerationService extends GeneratedModerationService {
             return review.getStatus() == ReviewStatus.PENDING;
         }
         return true;
+    }
+
+    private boolean isAutomatic(PolicySpec policy) {
+        return policy != null && policy.getMode() == ModerationMode.AUTOMATIC;
     }
 
     private List<String> findMatchedKeywords(ProductReview review, AutomationRuleSpec rule) {

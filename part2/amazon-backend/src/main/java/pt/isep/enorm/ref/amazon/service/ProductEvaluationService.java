@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.domain.Product;
+import pt.isep.enorm.ref.amazon.domain.ProductReview;
 import pt.isep.enorm.ref.amazon.repository.AmazonUserRepository;
 import pt.isep.enorm.ref.amazon.repository.OrderItemRepository;
 import pt.isep.enorm.ref.amazon.repository.ProductRepository;
@@ -14,20 +15,28 @@ import pt.isep.enorm.ref.amazon.service.generated.GeneratedProductEvaluationServ
 public class ProductEvaluationService extends GeneratedProductEvaluationService {
 
     private final OrderItemRepository orderItemRepository;
+    private final ModerationService moderationService;
 
     public ProductEvaluationService(
         ProductRepository productRepository,
         AmazonUserRepository amazonUserRepository,
         ProductReviewRepository productReviewRepository,
-        OrderItemRepository orderItemRepository
+        OrderItemRepository orderItemRepository,
+        ModerationService moderationService
     ) {
         super(productRepository, amazonUserRepository, productReviewRepository);
         this.orderItemRepository = orderItemRepository;
+        this.moderationService = moderationService;
     }
 
     @Override
     protected boolean isVerifiedBuyerForProduct(AmazonUser user, Product product) {
         return user.isVerifiedBuyer()
             || orderItemRepository.existsByOrderBuyerIdAndProduct_Id(user.getId(), product.getId());
+    }
+
+    @Override
+    protected void afterReviewSubmitted(ProductReview savedReview) {
+        moderationService.moderateAutomaticallyOnReviewCreated(savedReview);
     }
 }

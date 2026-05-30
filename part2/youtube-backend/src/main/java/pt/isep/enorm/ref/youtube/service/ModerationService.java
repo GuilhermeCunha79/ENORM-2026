@@ -31,6 +31,7 @@ import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.Cond
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationDecision;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.ModerationMode;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.PolicySpec;
+import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationModel.TriggerEvent;
 import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.youtube.service.projection.ModerationSimulationResult;
 import pt.isep.enorm.ref.youtube.web.error.ResourceNotFoundException;
@@ -120,8 +121,57 @@ public class ModerationService extends GeneratedModerationService {
         return results;
     }
 
+    @Transactional
+    public void moderateAutomaticallyOnVideoCreated(Video video) {
+        if (video == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("Video", TriggerEvent.ON_RESOURCE_CREATE);
+        if (!isAutomatic(policy)) {
+            return;
+        }
+
+        moderateVideo(null, video, policy);
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnCommentCreated(Comment comment) {
+        if (comment == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("CommentOnVideo", TriggerEvent.ON_FEEDBACK_CREATE);
+        if (!isAutomatic(policy)) {
+            return;
+        }
+
+        moderateComment(null, comment, policy);
+    }
+
+    @Transactional
+    public void moderateAutomaticallyOnReportCreated(Report report) {
+        if (report == null) {
+            return;
+        }
+
+        PolicySpec policy = policyFor("ReportContent", TriggerEvent.ON_REPORT_THRESHOLD);
+        if (!isAutomatic(policy)) {
+            return;
+        }
+
+        if (report.getVideo() != null) {
+            moderateReportedVideo(null, report, policy);
+        } else if (report.getComment() != null) {
+            moderateReportedComment(null, report, policy);
+        }
+    }
+
     private ModerationSimulationResult moderateVideo(YoutubeUser moderator, Video video) {
-        PolicySpec policy = GeneratedModerationModel.VIDEO_POLICY;
+        return moderateVideo(moderator, video, GeneratedModerationModel.VIDEO_POLICY);
+    }
+
+    private ModerationSimulationResult moderateVideo(YoutubeUser moderator, Video video, PolicySpec policy) {
         AutomationRuleSpec rule = primaryRule(policy);
         List<String> matches = findMatchedKeywords(
             video.getTitle() + " " + video.getDescription(),
@@ -164,7 +214,10 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateComment(YoutubeUser moderator, Comment comment) {
-        PolicySpec policy = GeneratedModerationModel.COMMENT_POLICY;
+        return moderateComment(moderator, comment, GeneratedModerationModel.COMMENT_POLICY);
+    }
+
+    private ModerationSimulationResult moderateComment(YoutubeUser moderator, Comment comment, PolicySpec policy) {
         AutomationRuleSpec rule = primaryRule(policy);
         List<String> matches = findMatchedKeywords(comment.getText(), ruleConditions(rule));
         CommentModerationResult decision = matches.isEmpty()
@@ -204,7 +257,10 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateReportedVideo(YoutubeUser moderator, Report report) {
-        PolicySpec policy = GeneratedModerationModel.REPORT_POLICY;
+        return moderateReportedVideo(moderator, report, GeneratedModerationModel.REPORT_POLICY);
+    }
+
+    private ModerationSimulationResult moderateReportedVideo(YoutubeUser moderator, Report report, PolicySpec policy) {
         AutomationRuleSpec rule = primaryRule(policy);
         Video video = report.getVideo();
         List<String> conditionMatches = findConditionMatches(report.getStatus().name(), ruleConditions(rule));
@@ -242,7 +298,10 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     private ModerationSimulationResult moderateReportedComment(YoutubeUser moderator, Report report) {
-        PolicySpec policy = GeneratedModerationModel.REPORT_POLICY;
+        return moderateReportedComment(moderator, report, GeneratedModerationModel.REPORT_POLICY);
+    }
+
+    private ModerationSimulationResult moderateReportedComment(YoutubeUser moderator, Report report, PolicySpec policy) {
         AutomationRuleSpec rule = primaryRule(policy);
         Comment comment = report.getComment();
         List<String> conditionMatches = findConditionMatches(report.getStatus().name(), ruleConditions(rule));
@@ -313,6 +372,26 @@ public class ModerationService extends GeneratedModerationService {
             }
         }
         return matches;
+    }
+
+    private PolicySpec policyFor(String targetType, TriggerEvent trigger) {
+        return GeneratedModerationModel.POLICIES.stream()
+            .filter(policy -> policy.getTrigger() == trigger)
+            .filter(policy -> targetMatches(policy, targetType))
+            .findFirst()
+            .orElse(null);
+    }
+
+    private boolean targetMatches(PolicySpec policy, String targetType) {
+        if (targetType == null || targetType.isBlank()) {
+            return true;
+        }
+        return targetType.equals(policy.getResourceTarget())
+            || targetType.equals(policy.getFeedbackTarget());
+    }
+
+    private boolean isAutomatic(PolicySpec policy) {
+        return policy != null && policy.getMode() == ModerationMode.AUTOMATIC;
     }
 
     private ContentStatus statusFor(ModerationDecision decision, ModerationMode mode, ActionSpec action) {

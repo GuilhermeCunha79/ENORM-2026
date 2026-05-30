@@ -15,6 +15,7 @@ public final class GeneratedModerationModel {
     }
 
     public enum TriggerEvent {
+        ON_RESOURCE_CREATE,
         ON_FEEDBACK_CREATE,
         ON_REPORT_THRESHOLD
     }
