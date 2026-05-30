@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.youtube.domain.Topvideocomment;
-import pt.isep.enorm.ref.youtube.service.TopvideocommentService;
+import pt.isep.enorm.ref.youtube.domain.TopVideoComment;
+import pt.isep.enorm.ref.youtube.service.TopVideoCommentService;
 
-public abstract class GeneratedTopvideocommentController {
-    private final TopvideocommentService service;
+public abstract class GeneratedTopVideoCommentController {
+    private final TopVideoCommentService service;
 
-    protected GeneratedTopvideocommentController(TopvideocommentService service) {
+    protected GeneratedTopVideoCommentController(TopVideoCommentService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Topvideocomment> list() {
+    public List<TopVideoComment> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Topvideocomment> submit(@RequestBody Topvideocomment body) {
+    public ResponseEntity<TopVideoComment> submit(@RequestBody TopVideoComment body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.reddit.domain.Postvote;
-import pt.isep.enorm.ref.reddit.service.PostvoteService;
+import pt.isep.enorm.ref.reddit.domain.PostVote;
+import pt.isep.enorm.ref.reddit.service.PostVoteService;
 
-public abstract class GeneratedPostvoteController {
-    private final PostvoteService service;
+public abstract class GeneratedPostVoteController {
+    private final PostVoteService service;
 
-    protected GeneratedPostvoteController(PostvoteService service) {
+    protected GeneratedPostVoteController(PostVoteService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Postvote> list() {
+    public List<PostVote> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Postvote> submit(@RequestBody Postvote body) {
+    public ResponseEntity<PostVote> submit(@RequestBody PostVote body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

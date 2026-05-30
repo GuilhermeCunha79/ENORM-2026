@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.amazon.domain.Topthreadcomment;
-import pt.isep.enorm.ref.amazon.service.TopthreadcommentService;
+import pt.isep.enorm.ref.amazon.domain.TopThreadComment;
+import pt.isep.enorm.ref.amazon.service.TopThreadCommentService;
 
-public abstract class GeneratedTopthreadcommentController {
-    private final TopthreadcommentService service;
+public abstract class GeneratedTopThreadCommentController {
+    private final TopThreadCommentService service;
 
-    protected GeneratedTopthreadcommentController(TopthreadcommentService service) {
+    protected GeneratedTopThreadCommentController(TopThreadCommentService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Topthreadcomment> list() {
+    public List<TopThreadComment> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Topthreadcomment> submit(@RequestBody Topthreadcomment body) {
+    public ResponseEntity<TopThreadComment> submit(@RequestBody TopThreadComment body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

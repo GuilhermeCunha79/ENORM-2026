@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.amazon.repository.generated;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pt.isep.enorm.ref.amazon.domain.Topthreadcomment;
+import pt.isep.enorm.ref.amazon.domain.TopThreadComment;
 
-public interface GeneratedTopthreadcommentRepository extends JpaRepository<Topthreadcomment, Long> {
+public interface GeneratedTopThreadCommentRepository extends JpaRepository<TopThreadComment, Long> {
 }

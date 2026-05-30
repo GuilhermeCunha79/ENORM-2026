@@ -44,6 +44,7 @@ import pt.isep.enorm.refdsl.refDsl.VerificationPolicy;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getVersion <em>Version</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getUserTypes <em>User Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getResourceTypes <em>Resource Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.impl.RefModelImpl#getContextTypes <em>Context Types</em>}</li>
@@ -101,6 +102,26 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
    * @ordered
    */
   protected String version = VERSION_EDEFAULT;
+
+  /**
+   * The default value of the '{@link #getDescription() <em>Description</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getDescription()
+   * @generated
+   * @ordered
+   */
+  protected static final String DESCRIPTION_EDEFAULT = null;
+
+  /**
+   * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getDescription()
+   * @generated
+   * @ordered
+   */
+  protected String description = DESCRIPTION_EDEFAULT;
 
   /**
    * The cached value of the '{@link #getUserTypes() <em>User Types</em>}' containment reference list.
@@ -291,6 +312,31 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
     version = newVersion;
     if (eNotificationRequired())
       eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.REF_MODEL__VERSION, oldVersion, version));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public String getDescription()
+  {
+    return description;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public void setDescription(String newDescription)
+  {
+    String oldDescription = description;
+    description = newDescription;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, RefDslPackage.REF_MODEL__DESCRIPTION, oldDescription, description));
   }
 
   /**
@@ -525,6 +571,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return getName();
       case RefDslPackage.REF_MODEL__VERSION:
         return getVersion();
+      case RefDslPackage.REF_MODEL__DESCRIPTION:
+        return getDescription();
       case RefDslPackage.REF_MODEL__USER_TYPES:
         return getUserTypes();
       case RefDslPackage.REF_MODEL__RESOURCE_TYPES:
@@ -569,6 +617,9 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return;
       case RefDslPackage.REF_MODEL__VERSION:
         setVersion((String)newValue);
+        return;
+      case RefDslPackage.REF_MODEL__DESCRIPTION:
+        setDescription((String)newValue);
         return;
       case RefDslPackage.REF_MODEL__USER_TYPES:
         getUserTypes().clear();
@@ -638,6 +689,9 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
       case RefDslPackage.REF_MODEL__VERSION:
         setVersion(VERSION_EDEFAULT);
         return;
+      case RefDslPackage.REF_MODEL__DESCRIPTION:
+        setDescription(DESCRIPTION_EDEFAULT);
+        return;
       case RefDslPackage.REF_MODEL__USER_TYPES:
         getUserTypes().clear();
         return;
@@ -692,6 +746,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
       case RefDslPackage.REF_MODEL__VERSION:
         return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
+      case RefDslPackage.REF_MODEL__DESCRIPTION:
+        return DESCRIPTION_EDEFAULT == null ? description != null : !DESCRIPTION_EDEFAULT.equals(description);
       case RefDslPackage.REF_MODEL__USER_TYPES:
         return userTypes != null && !userTypes.isEmpty();
       case RefDslPackage.REF_MODEL__RESOURCE_TYPES:
@@ -735,6 +791,8 @@ public class RefModelImpl extends MinimalEObjectImpl.Container implements RefMod
     result.append(name);
     result.append(", version: ");
     result.append(version);
+    result.append(", description: ");
+    result.append(description);
     result.append(')');
     return result.toString();
   }

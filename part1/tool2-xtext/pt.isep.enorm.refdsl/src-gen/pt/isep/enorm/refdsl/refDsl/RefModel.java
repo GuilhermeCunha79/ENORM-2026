@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getName <em>Name</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getVersion <em>Version</em>}</li>
+ *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getDescription <em>Description</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getUserTypes <em>User Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getResourceTypes <em>Resource Types</em>}</li>
  *   <li>{@link pt.isep.enorm.refdsl.refDsl.RefModel#getContextTypes <em>Context Types</em>}</li>
@@ -81,6 +82,28 @@ public interface RefModel extends EObject
    * @generated
    */
   void setVersion(String value);
+
+  /**
+   * Returns the value of the '<em><b>Description</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Description</em>' attribute.
+   * @see #setDescription(String)
+   * @see pt.isep.enorm.refdsl.refDsl.RefDslPackage#getRefModel_Description()
+   * @model
+   * @generated
+   */
+  String getDescription();
+
+  /**
+   * Sets the value of the '{@link pt.isep.enorm.refdsl.refDsl.RefModel#getDescription <em>Description</em>}' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Description</em>' attribute.
+   * @see #getDescription()
+   * @generated
+   */
+  void setDescription(String value);
 
   /**
    * Returns the value of the '<em><b>User Types</b></em>' containment reference list.

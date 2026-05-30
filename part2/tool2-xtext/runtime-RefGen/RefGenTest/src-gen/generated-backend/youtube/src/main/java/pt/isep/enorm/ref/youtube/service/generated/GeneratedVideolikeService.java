@@ -2,27 +2,35 @@ package pt.isep.enorm.ref.youtube.service.generated;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import pt.isep.enorm.ref.youtube.domain.Videolike;
-import pt.isep.enorm.ref.youtube.repository.VideolikeRepository;
+import pt.isep.enorm.ref.youtube.domain.VideoLike;
+import pt.isep.enorm.ref.youtube.repository.VideoLikeRepository;
 
 @Service
-public class GeneratedVideolikeService {
-    private final VideolikeRepository repository;
+public class GeneratedVideoLikeService {
+    private final VideoLikeRepository repository;
 
-    public GeneratedVideolikeService(VideolikeRepository repository) {
+    public GeneratedVideoLikeService(VideoLikeRepository repository) {
         this.repository = repository;
     }
 
-    public List<Videolike> findAll() {
+    public List<VideoLike> findAll() {
         return repository.findAll();
     }
 
-    public Videolike submit(Videolike feedback) {
+    public VideoLike submit(VideoLike feedback) {
+        checkUniquePerAuthorTarget(feedback);
         beforeSubmit(feedback);
         return repository.save(feedback);
     }
 
+    private void checkUniquePerAuthorTarget(VideoLike feedback) {
+if (feedback.getAuthor() != null && feedback.getSubject() != null
+        && repository.existsByAuthor_IdAndSubject_Id(feedback.getAuthor().getId(), feedback.getSubject().getId())) {
+    throw new IllegalArgumentException("Author already submitted this feedback for the target");
+}
+    }
+
     /** Override in manual service for verification, moderation, etc. */
-    protected void beforeSubmit(Videolike feedback) {
+    protected void beforeSubmit(VideoLike feedback) {
     }
 }

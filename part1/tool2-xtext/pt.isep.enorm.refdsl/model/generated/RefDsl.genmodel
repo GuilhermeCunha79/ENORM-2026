@@ -134,6 +134,7 @@
     <genClasses ecoreClass="RefDsl.ecore#//RefModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RefDsl.ecore#//RefModel/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RefDsl.ecore#//RefModel/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RefDsl.ecore#//RefModel/description"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RefDsl.ecore#//RefModel/userTypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RefDsl.ecore#//RefModel/resourceTypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RefDsl.ecore#//RefModel/contextTypes"/>

@@ -8,13 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import pt.isep.enorm.ref.amazon.domain.AmazonUser;
 import pt.isep.enorm.ref.amazon.domain.Product;
 
 @MappedSuperclass
-public abstract class GeneratedTopthreadcomment {
+public abstract class GeneratedTopThreadComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +25,8 @@ public abstract class GeneratedTopthreadcomment {
 @JoinColumn(name = "subject_id", nullable = false)
 private Product subject;
 
-    @Column(nullable = false, length = 2000)
-    private String comment;
+@Column(nullable = false, length = 2000)
+private String comment;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,6 +34,6 @@ private Product subject;
     public void setAuthor(AmazonUser author) { this.author = author; }
 public Product getSubject() { return subject; }
 public void setSubject(Product subject) { this.subject = subject; }
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
+public String getComment() { return comment; }
+public void setComment(String comment) { this.comment = comment; }
 }

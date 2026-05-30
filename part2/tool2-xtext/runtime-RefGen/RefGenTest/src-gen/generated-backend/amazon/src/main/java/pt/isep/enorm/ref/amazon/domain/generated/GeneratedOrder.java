@@ -21,10 +21,16 @@ private String orderId;
 @Column(nullable = false)
 private java.math.BigDecimal total;
 
+@jakarta.persistence.ManyToOne()
+@jakarta.persistence.JoinColumn(name = "product_id")
+private pt.isep.enorm.ref.amazon.domain.Product product;
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-public String getOrderid() { return orderId; }
-public void setOrderid(String orderId) { this.orderId = orderId; }
+public String getOrderId() { return orderId; }
+public void setOrderId(String orderId) { this.orderId = orderId; }
 public java.math.BigDecimal getTotal() { return total; }
 public void setTotal(java.math.BigDecimal total) { this.total = total; }
+public pt.isep.enorm.ref.amazon.domain.Product getProduct() { return product; }
+public void setProduct(pt.isep.enorm.ref.amazon.domain.Product product) { this.product = product; }
 }

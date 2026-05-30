@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.youtube.domain.Videolike;
-import pt.isep.enorm.ref.youtube.service.VideolikeService;
+import pt.isep.enorm.ref.youtube.domain.VideoLike;
+import pt.isep.enorm.ref.youtube.service.VideoLikeService;
 
-public abstract class GeneratedVideolikeController {
-    private final VideolikeService service;
+public abstract class GeneratedVideoLikeController {
+    private final VideoLikeService service;
 
-    protected GeneratedVideolikeController(VideolikeService service) {
+    protected GeneratedVideoLikeController(VideoLikeService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Videolike> list() {
+    public List<VideoLike> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Videolike> submit(@RequestBody Videolike body) {
+    public ResponseEntity<VideoLike> submit(@RequestBody VideoLike body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

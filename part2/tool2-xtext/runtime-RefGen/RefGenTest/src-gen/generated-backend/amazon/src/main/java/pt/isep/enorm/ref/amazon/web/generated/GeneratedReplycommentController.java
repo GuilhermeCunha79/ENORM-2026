@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.amazon.domain.Replycomment;
-import pt.isep.enorm.ref.amazon.service.ReplycommentService;
+import pt.isep.enorm.ref.amazon.domain.ReplyComment;
+import pt.isep.enorm.ref.amazon.service.ReplyCommentService;
 
-public abstract class GeneratedReplycommentController {
-    private final ReplycommentService service;
+public abstract class GeneratedReplyCommentController {
+    private final ReplyCommentService service;
 
-    protected GeneratedReplycommentController(ReplycommentService service) {
+    protected GeneratedReplyCommentController(ReplyCommentService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Replycomment> list() {
+    public List<ReplyComment> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Replycomment> submit(@RequestBody Replycomment body) {
+    public ResponseEntity<ReplyComment> submit(@RequestBody ReplyComment body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

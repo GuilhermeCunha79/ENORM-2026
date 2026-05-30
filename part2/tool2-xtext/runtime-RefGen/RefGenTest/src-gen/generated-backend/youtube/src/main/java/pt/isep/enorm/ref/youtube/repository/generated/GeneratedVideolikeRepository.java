@@ -1,7 +1,8 @@
 package pt.isep.enorm.ref.youtube.repository.generated;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pt.isep.enorm.ref.youtube.domain.Videolike;
+import pt.isep.enorm.ref.youtube.domain.VideoLike;
 
-public interface GeneratedVideolikeRepository extends JpaRepository<Videolike, Long> {
+public interface GeneratedVideoLikeRepository extends JpaRepository<VideoLike, Long> {
+boolean existsByAuthor_IdAndSubject_Id(Long authorId, Long subjectId);
 }

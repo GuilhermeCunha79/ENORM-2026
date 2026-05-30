@@ -20,10 +20,16 @@ private String subredditName;
 @Column(nullable = true, length = 2000)
 private String description;
 
+@jakarta.persistence.OneToMany()
+@jakarta.persistence.JoinColumn(name = "subreddit_id")
+private java.util.List<pt.isep.enorm.ref.reddit.domain.Post> posts = new java.util.ArrayList<>();
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-public String getSubredditname() { return subredditName; }
-public void setSubredditname(String subredditName) { this.subredditName = subredditName; }
+public String getSubredditName() { return subredditName; }
+public void setSubredditName(String subredditName) { this.subredditName = subredditName; }
 public String getDescription() { return description; }
 public void setDescription(String description) { this.description = description; }
+public java.util.List<pt.isep.enorm.ref.reddit.domain.Post> getPosts() { return posts; }
+public void setPosts(java.util.List<pt.isep.enorm.ref.reddit.domain.Post> posts) { this.posts = posts; }
 }

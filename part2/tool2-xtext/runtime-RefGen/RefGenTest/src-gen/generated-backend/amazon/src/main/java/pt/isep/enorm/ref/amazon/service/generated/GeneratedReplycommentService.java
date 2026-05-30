@@ -2,27 +2,31 @@ package pt.isep.enorm.ref.amazon.service.generated;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import pt.isep.enorm.ref.amazon.domain.Replycomment;
-import pt.isep.enorm.ref.amazon.repository.ReplycommentRepository;
+import pt.isep.enorm.ref.amazon.domain.ReplyComment;
+import pt.isep.enorm.ref.amazon.repository.ReplyCommentRepository;
 
 @Service
-public class GeneratedReplycommentService {
-    private final ReplycommentRepository repository;
+public class GeneratedReplyCommentService {
+    private final ReplyCommentRepository repository;
 
-    public GeneratedReplycommentService(ReplycommentRepository repository) {
+    public GeneratedReplyCommentService(ReplyCommentRepository repository) {
         this.repository = repository;
     }
 
-    public List<Replycomment> findAll() {
+    public List<ReplyComment> findAll() {
         return repository.findAll();
     }
 
-    public Replycomment submit(Replycomment feedback) {
+    public ReplyComment submit(ReplyComment feedback) {
+        checkUniquePerAuthorTarget(feedback);
         beforeSubmit(feedback);
         return repository.save(feedback);
     }
 
+    private void checkUniquePerAuthorTarget(ReplyComment feedback) {
+    }
+
     /** Override in manual service for verification, moderation, etc. */
-    protected void beforeSubmit(Replycomment feedback) {
+    protected void beforeSubmit(ReplyComment feedback) {
     }
 }

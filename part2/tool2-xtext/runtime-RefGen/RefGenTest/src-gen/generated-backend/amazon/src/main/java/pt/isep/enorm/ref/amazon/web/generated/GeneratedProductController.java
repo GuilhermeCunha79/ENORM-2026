@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import pt.isep.enorm.ref.amazon.domain.Product;
 import pt.isep.enorm.ref.amazon.service.ProductService;
 
@@ -18,8 +19,10 @@ public abstract class GeneratedProductController {
     }
 
     @GetMapping
-    public List<Product> list() {
-        return service.findAll();
+    public List<Product> list(
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String direction) {
+        return service.findAll(sortBy, direction);
     }
 
     @GetMapping("/{id}")

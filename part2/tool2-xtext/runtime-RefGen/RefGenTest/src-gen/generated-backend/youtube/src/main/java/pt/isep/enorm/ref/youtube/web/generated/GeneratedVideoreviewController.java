@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.youtube.domain.Videoreview;
-import pt.isep.enorm.ref.youtube.service.VideoreviewService;
+import pt.isep.enorm.ref.youtube.domain.VideoReview;
+import pt.isep.enorm.ref.youtube.service.VideoReviewService;
 
-public abstract class GeneratedVideoreviewController {
-    private final VideoreviewService service;
+public abstract class GeneratedVideoReviewController {
+    private final VideoReviewService service;
 
-    protected GeneratedVideoreviewController(VideoreviewService service) {
+    protected GeneratedVideoReviewController(VideoReviewService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Videoreview> list() {
+    public List<VideoReview> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Videoreview> submit(@RequestBody Videoreview body) {
+    public ResponseEntity<VideoReview> submit(@RequestBody VideoReview body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

@@ -14,7 +14,7 @@ import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
 import pt.isep.enorm.ref.youtube.domain.Video;
 
 @MappedSuperclass
-public abstract class GeneratedVideoreview {
+public abstract class GeneratedVideoReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +27,8 @@ public abstract class GeneratedVideoreview {
 @JoinColumn(name = "subject_id", nullable = false)
 private Video subject;
 
-    @Column(nullable = false, length = 2000)
-    private String comment;
+@Column(nullable = false, length = 2000)
+private String comment;
 
 @Min(1)
 @Max(5)
@@ -41,8 +41,8 @@ private int grade;
     public void setAuthor(YoutubeUser author) { this.author = author; }
 public Video getSubject() { return subject; }
 public void setSubject(Video subject) { this.subject = subject; }
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
+public String getComment() { return comment; }
+public void setComment(String comment) { this.comment = comment; }
 public int getGrade() { return grade; }
 public void setGrade(int grade) { this.grade = grade; }
 }

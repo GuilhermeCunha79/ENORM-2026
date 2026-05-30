@@ -60,16 +60,41 @@ class RefBackendNaming {
 		}
 	}
 
-	def String apiCollectionPath(String entityName) {
-		'''/api/«entityName.toLowerCase»s'''
+	def String toKebabCase(String raw) {
+	val pascal = toPascalCase(raw)
+	val sb = new StringBuilder
+	for (i : 0 ..< pascal.length) {
+		val c = pascal.charAt(i)
+		if (Character.isUpperCase(c) && i > 0) {
+			sb.append("-")
+		}
+		sb.append(Character.toLowerCase(c))
 	}
+	sb.toString
+}
+
+def String apiCollectionPath(String entityName) {
+	'''/api/«toKebabCase(entityName)»s'''
+}
 
 	def String toPascalCase(String raw) {
-		if (raw === null || raw.empty)
-			return "RefApp"
-		val parts = raw.split('''[^A-Za-z0-9]+''')
-		parts.filter[p|!p.empty].map[p|p.substring(0, 1).toUpperCase + p.substring(1).toLowerCase].join
+	if (raw === null || raw.empty)
+		return "RefApp"
+	val result = new StringBuilder
+	// 1) parte por separadores (snake_case, kebab-case, espaços)
+	for (word : raw.split("[^A-Za-z0-9]+")) {
+		if (!word.empty) {
+			// 2) parte em fronteiras camelCase: "ProductReview" -> ["Product","Review"]
+			for (token : word.split("(?<=[a-z0-9])(?=[A-Z])")) {
+				if (!token.empty) {
+					result.append(Character.toUpperCase(token.charAt(0)))
+					result.append(token.substring(1))
+				}
+			}
+		}
 	}
+	if (result.length === 0) "RefApp" else result.toString
+}
 
 	def String tableName(String entityName) {
 		'''«entityName.toLowerCase»s'''

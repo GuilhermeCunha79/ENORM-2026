@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import pt.isep.enorm.ref.youtube.domain.Video;
 import pt.isep.enorm.ref.youtube.service.VideoService;
 
@@ -18,8 +19,10 @@ public abstract class GeneratedVideoController {
     }
 
     @GetMapping
-    public List<Video> list() {
-        return service.findAll();
+    public List<Video> list(
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String direction) {
+        return service.findAll(sortBy, direction);
     }
 
     @GetMapping("/{id}")

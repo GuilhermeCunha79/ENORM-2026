@@ -419,9 +419,9 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_UserTypes()
+  public EAttribute getRefModel_Description()
   {
-    return (EReference)refModelEClass.getEStructuralFeatures().get(2);
+    return (EAttribute)refModelEClass.getEStructuralFeatures().get(2);
   }
 
   /**
@@ -430,7 +430,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_ResourceTypes()
+  public EReference getRefModel_UserTypes()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(3);
   }
@@ -441,7 +441,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_ContextTypes()
+  public EReference getRefModel_ResourceTypes()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(4);
   }
@@ -452,7 +452,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_ResourceRelations()
+  public EReference getRefModel_ContextTypes()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(5);
   }
@@ -463,7 +463,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_FeedbackTypes()
+  public EReference getRefModel_ResourceRelations()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(6);
   }
@@ -474,7 +474,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_FeedbackDefinitions()
+  public EReference getRefModel_FeedbackTypes()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(7);
   }
@@ -485,7 +485,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_AuthorizationRules()
+  public EReference getRefModel_FeedbackDefinitions()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(8);
   }
@@ -496,7 +496,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_ValidationRules()
+  public EReference getRefModel_AuthorizationRules()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(9);
   }
@@ -507,7 +507,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_ModerationPolicies()
+  public EReference getRefModel_ValidationRules()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(10);
   }
@@ -518,7 +518,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_AutomationRules()
+  public EReference getRefModel_ModerationPolicies()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(11);
   }
@@ -529,7 +529,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_VerificationPolicies()
+  public EReference getRefModel_AutomationRules()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(12);
   }
@@ -540,9 +540,20 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
    * @generated
    */
   @Override
-  public EReference getRefModel_SortingPolicies()
+  public EReference getRefModel_VerificationPolicies()
   {
     return (EReference)refModelEClass.getEStructuralFeatures().get(13);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public EReference getRefModel_SortingPolicies()
+  {
+    return (EReference)refModelEClass.getEStructuralFeatures().get(14);
   }
 
   /**
@@ -1987,6 +1998,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     refModelEClass = createEClass(REF_MODEL);
     createEAttribute(refModelEClass, REF_MODEL__NAME);
     createEAttribute(refModelEClass, REF_MODEL__VERSION);
+    createEAttribute(refModelEClass, REF_MODEL__DESCRIPTION);
     createEReference(refModelEClass, REF_MODEL__USER_TYPES);
     createEReference(refModelEClass, REF_MODEL__RESOURCE_TYPES);
     createEReference(refModelEClass, REF_MODEL__CONTEXT_TYPES);
@@ -2183,6 +2195,7 @@ public class RefDslPackageImpl extends EPackageImpl implements RefDslPackage
     initEClass(refModelEClass, RefModel.class, "RefModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getRefModel_Name(), ecorePackage.getEString(), "name", null, 0, 1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getRefModel_Version(), ecorePackage.getEString(), "version", null, 0, 1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getRefModel_Description(), ecorePackage.getEString(), "description", null, 0, 1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRefModel_UserTypes(), this.getUserType(), null, "userTypes", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRefModel_ResourceTypes(), this.getResourceType(), null, "resourceTypes", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getRefModel_ContextTypes(), this.getContextType(), null, "contextTypes", null, 0, -1, RefModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

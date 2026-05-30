@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.amazon.domain.Productreview;
-import pt.isep.enorm.ref.amazon.service.ProductreviewService;
+import pt.isep.enorm.ref.amazon.domain.ProductReview;
+import pt.isep.enorm.ref.amazon.service.ProductReviewService;
 
-public abstract class GeneratedProductreviewController {
-    private final ProductreviewService service;
+public abstract class GeneratedProductReviewController {
+    private final ProductReviewService service;
 
-    protected GeneratedProductreviewController(ProductreviewService service) {
+    protected GeneratedProductReviewController(ProductReviewService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Productreview> list() {
+    public List<ProductReview> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Productreview> submit(@RequestBody Productreview body) {
+    public ResponseEntity<ProductReview> submit(@RequestBody ProductReview body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

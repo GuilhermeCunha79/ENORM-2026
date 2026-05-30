@@ -3,7 +3,9 @@
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import pt.isep.enorm.refdsl.refDsl.Attribute
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition
+import pt.isep.enorm.refdsl.refDsl.FeedbackKind
 import pt.isep.enorm.refdsl.refDsl.RefModel
+import pt.isep.enorm.refdsl.refDsl.ResourceRelation
 import pt.isep.enorm.refdsl.refDsl.ResourceType
 
 /**
@@ -39,11 +41,27 @@ class RefBackendGenerator {
 			generateFeedback(model, fsa, root, pkg, fd)
 		}
 
+		// Fase D.1: ContextType -> one persistent entity per context (name + kind)
+		val path = pkg.replace('.', '/')
+		for (ct : model.contextTypes) {
+			val cName = naming.toPascalCase(ct.name)
+			writeGovernance(fsa, root, path, model, cName, '''«cName.toLowerCase»s''', '''/api/contexts/«naming.toKebabCase(ct.name)»''', #["name", "kind"])
+		}
+
+		// Fase E: governance artifacts (validation/authorization/moderation/verification/sorting/automation)
+		generateGovernance(model, fsa, root, pkg)
+
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/SecurityConfiguration.java''', securityConfig(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/JwtService.java''', jwtService(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/AppUserDetailsService.java''', appUserDetailsService(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/JwtAuthenticationFilter.java''', jwtAuthenticationFilter(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/RegisterRequest.java''', registerRequestDto(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/LoginRequest.java''', loginRequestDto(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/AuthResponse.java''', authResponseDto(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/generated/GeneratedAuthenticationService.java''', generatedAuthService(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/AuthenticationService.java''', authServiceSubclass(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/AuthenticationService.java''', authServiceSubclass(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/generated/GeneratedAuthenticationController.java''', generatedAuthController(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/AuthenticationController.java''', authControllerSubclass(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/AuthenticationController.java''', authControllerSubclass(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/error/ApiError.java''', apiError(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/error/ApiExceptionHandler.java''', apiExceptionHandler(model))
 		write(fsa, '''«root»/src/test/java/«pkg.replace('.', '/')»/«app»BackendApplicationTests.java''', applicationTest(model))
@@ -52,8 +70,9 @@ class RefBackendGenerator {
 	def void generateResource(RefModel model, IFileSystemAccess2 fsa, String root, String pkg, ResourceType rt) {
 		val entity = naming.toPascalCase(rt.name)
 		val path = pkg.replace('.', '/')
+		val outgoing = model.resourceRelations.filter[r|r.source === rt].toList
 
-		write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entity».java''', generatedResourceEntity(model, rt, entity))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entity».java''', generatedResourceEntity(model, rt, entity, outgoing))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/«entity».java''', entitySubclass(model, entity))
 		write(fsa, '''«root»/src/main/java/«path»/repository/generated/Generated«entity»Repository.java''', generatedRepository(model, entity))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/repository/«entity»Repository.java''', repositorySubclass(model, entity))
@@ -67,12 +86,13 @@ class RefBackendGenerator {
 		val entity = naming.toPascalCase(fd.name)
 		val path = pkg.replace('.', '/')
 		val subject = if (fd.subjectResource !== null) naming.toPascalCase(fd.subjectResource.name) else null
+		val parent = if (fd.subjectFeedback !== null) naming.toPascalCase(fd.subjectFeedback.name) else null
 
-		write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entity».java''', generatedFeedbackEntity(model, fd, entity, subject))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entity».java''', generatedFeedbackEntity(model, fd, entity, subject, parent))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/«entity».java''', entitySubclass(model, entity))
-		write(fsa, '''«root»/src/main/java/«path»/repository/generated/Generated«entity»Repository.java''', generatedRepository(model, entity))
+		write(fsa, '''«root»/src/main/java/«path»/repository/generated/Generated«entity»Repository.java''', generatedFeedbackRepository(model, fd, entity, subject, parent))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/repository/«entity»Repository.java''', repositorySubclass(model, entity))
-		write(fsa, '''«root»/src/main/java/«path»/service/generated/Generated«entity»Service.java''', generatedFeedbackService(model, fd, entity, subject))
+		write(fsa, '''«root»/src/main/java/«path»/service/generated/Generated«entity»Service.java''', generatedFeedbackService(model, fd, entity, subject, parent))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/«entity»Service.java''', serviceSubclass(model, entity))
 		write(fsa, '''«root»/src/main/java/«path»/web/generated/Generated«entity»Controller.java''', generatedFeedbackController(model, entity))
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/web/«entity»Controller.java''', feedbackControllerSubclass(model, entity))
@@ -82,16 +102,45 @@ class RefBackendGenerator {
 		fsa.generateFile(path, content)
 	}
 
+	/**
+	 * Generation Gap: emit manual subclass/interface only when missing or still the empty stub.
+	 * Do not rely on {@link IFileSystemAccess2#isFile} alone — it may report true while the file
+	 * is absent on disk (stale generator state), which leaves Generated* types without their manual type.
+	 */
 	def void writeManualOnce(IFileSystemAccess2 fsa, String path, String content) {
-		// Skip if output already exists (Generation Gap manual classes).
-		try {
-			if (fsa.isFile(path)) {
-				return
-			}
-		} catch (UnsupportedOperationException e) {
-			// Older Xtext: isFile not supported — always emit manual stubs.
+		if (!shouldPreserveExistingManualFile(fsa, path)) {
+			fsa.generateFile(path, content)
 		}
-		fsa.generateFile(path, content)
+	}
+
+	def boolean shouldPreserveExistingManualFile(IFileSystemAccess2 fsa, String path) {
+		try {
+			if (!fsa.isFile(path)) {
+				return false
+			}
+			val existingText = fsa.readTextFile(path)
+			if (existingText === null) {
+				return false
+			}
+			val existing = existingText.toString
+			if (existing.trim.empty) {
+				return false
+			}
+			// Keep user edits; re-emit if the file is still only our default empty stub.
+			return !isDefaultManualStub(existing)
+		} catch (Exception e) {
+			return false
+		}
+	}
+
+	def boolean isDefaultManualStub(String source) {
+		if (!source.contains("Manual extension point")) {
+			return false
+		}
+		// Empty class body: "public class Foo extends GeneratedFoo {\n}"
+		source.replaceAll('''/\*[\s\S]*?\*/''', "").replaceAll("//.*", "").trim.matches(
+			"(?s).*\\{\\s*\\}\\s*$"
+		)
 	}
 
 	def String pom(RefModel model) '''<?xml version="1.0" encoding="UTF-8"?>
@@ -128,6 +177,23 @@ class RefBackendGenerator {
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -212,6 +278,25 @@ public enum Role {
 		false
 	}
 
+	def boolean feedbackHasText(FeedbackDefinition fd) {
+		val k = fd.type.kind
+		val isTextKind = k === FeedbackKind.COMMENT || k === FeedbackKind.REVIEW
+		isTextKind && fd.type.allowsText
+	}
+
+	def boolean feedbackHasRating(FeedbackDefinition fd) {
+		fd.type.hasRating || fd.rating !== null
+	}
+
+	def boolean feedbackIsVote(FeedbackDefinition fd) {
+		val k = fd.type.kind
+		k === FeedbackKind.VOTE || k === FeedbackKind.REACTION
+	}
+
+	def boolean feedbackIsReport(FeedbackDefinition fd) {
+		fd.type.kind === FeedbackKind.REPORT
+	}
+
 	def String columnAnnotation(Attribute a) {
 		val extra = naming.columnDefinition(a)
 		if (extra === null || extra.empty) {
@@ -232,10 +317,12 @@ public enum Role {
 	def String generatedUserRepository(RefModel model) '''
 package «naming.basePackage(model)».repository.generated;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
 
 public interface Generated«naming.scenarioPascal(model)»UserRepository extends JpaRepository<«naming.scenarioPascal(model)»User, Long> {
+    Optional<«naming.scenarioPascal(model)»User> findByUsername(String username);
 }
 '''
 
@@ -301,7 +388,7 @@ public class «naming.scenarioPascal(model)»User extends Generated«naming.scen
 }
 '''
 
-	def String generatedResourceEntity(RefModel model, ResourceType rt, String entity) '''
+	def String generatedResourceEntity(RefModel model, ResourceType rt, String entity, java.util.List<ResourceRelation> relations) '''
 package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
@@ -325,16 +412,38 @@ public abstract class Generated«entity» {
     private «naming.javaType(a)» «a.name»;
 
 «ENDFOR»
+«FOR r : relations»
+«IF relationIsToMany(r)»
+    @jakarta.persistence.OneToMany(«IF r.containment»cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true«ENDIF»)
+    @jakarta.persistence.JoinColumn(name = "«entity.toLowerCase»_id")
+    private java.util.List<«naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)»> «relationFieldName(r)» = new java.util.ArrayList<>();
+
+«ELSE»
+    @jakarta.persistence.ManyToOne(«IF r.containment»cascade = jakarta.persistence.CascadeType.ALL«ENDIF»)
+    @jakarta.persistence.JoinColumn(name = "«relationFieldName(r)»_id")
+    private «naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)» «relationFieldName(r)»;
+
+«ENDIF»
+«ENDFOR»
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 «FOR a : rt.attributes»
     public «naming.javaType(a)» get«naming.toPascalCase(a.name)»() { return «a.name»; }
     public void set«naming.toPascalCase(a.name)»(«naming.javaType(a)» «a.name») { this.«a.name» = «a.name»; }
 «ENDFOR»
+«FOR r : relations»
+«IF relationIsToMany(r)»
+    public java.util.List<«naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)»> get«naming.toPascalCase(relationFieldName(r))»() { return «relationFieldName(r)»; }
+    public void set«naming.toPascalCase(relationFieldName(r))»(java.util.List<«naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)»> «relationFieldName(r)») { this.«relationFieldName(r)» = «relationFieldName(r)»; }
+«ELSE»
+    public «naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)» get«naming.toPascalCase(relationFieldName(r))»() { return «relationFieldName(r)»; }
+    public void set«naming.toPascalCase(relationFieldName(r))»(«naming.basePackage(model)».domain.«naming.toPascalCase(r.target.name)» «relationFieldName(r)») { this.«relationFieldName(r)» = «relationFieldName(r)»; }
+«ENDIF»
+«ENDFOR»
 }
 '''
 
-	def String generatedFeedbackEntity(RefModel model, FeedbackDefinition fd, String entity, String subject) '''
+	def String generatedFeedbackEntity(RefModel model, FeedbackDefinition fd, String entity, String subject, String parent) '''
 package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
@@ -345,11 +454,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+«IF feedbackHasRating(fd)»
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+«ENDIF»
 import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
-«IF subject != null»
+«IF subject !== null»
 import «naming.basePackage(model)».domain.«subject»;
+«ENDIF»
+«IF parent !== null && parent != subject»
+import «naming.basePackage(model)».domain.«parent»;
 «ENDIF»
 
 @MappedSuperclass
@@ -362,16 +476,34 @@ public abstract class Generated«entity» {
     @JoinColumn(name = "author_id", nullable = false)
     private «naming.scenarioPascal(model)»User author;
 
-«IF subject != null»
+«IF subject !== null»
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "subject_id", nullable = false)
     private «subject» subject;
 
 «ENDIF»
+«IF parent !== null»
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_feedback_id")
+    private «parent» parentFeedback;
+
+«ENDIF»
+«IF feedbackHasText(fd)»
     @Column(nullable = false, length = 2000)
     private String comment;
 
-«IF fd.rating != null»
+«ENDIF»
+«IF feedbackIsVote(fd)»
+    @Column(name = "vote_value", nullable = false)
+    private int value;
+
+«ENDIF»
+«IF feedbackIsReport(fd)»
+    @Column(nullable = false, length = 1000)
+    private String reason;
+
+«ENDIF»
+«IF feedbackHasRating(fd)»
     @Min(«ratingMin(fd)»)
     @Max(«ratingMax(fd)»)
     @Column(nullable = false)
@@ -382,13 +514,27 @@ public abstract class Generated«entity» {
     public void setId(Long id) { this.id = id; }
     public «naming.scenarioPascal(model)»User getAuthor() { return author; }
     public void setAuthor(«naming.scenarioPascal(model)»User author) { this.author = author; }
-«IF subject != null»
+«IF subject !== null»
     public «subject» getSubject() { return subject; }
     public void setSubject(«subject» subject) { this.subject = subject; }
 «ENDIF»
+«IF parent !== null»
+    public «parent» getParentFeedback() { return parentFeedback; }
+    public void setParentFeedback(«parent» parentFeedback) { this.parentFeedback = parentFeedback; }
+«ENDIF»
+«IF feedbackHasText(fd)»
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
-«IF fd.rating != null»
+«ENDIF»
+«IF feedbackIsVote(fd)»
+    public int getValue() { return value; }
+    public void setValue(int value) { this.value = value; }
+«ENDIF»
+«IF feedbackIsReport(fd)»
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+«ENDIF»
+«IF feedbackHasRating(fd)»
     public int getGrade() { return grade; }
     public void setGrade(int grade) { this.grade = grade; }
 «ENDIF»
@@ -419,6 +565,22 @@ public interface Generated«entity»Repository extends JpaRepository<«entity»,
 }
 '''
 
+	def String generatedFeedbackRepository(RefModel model, FeedbackDefinition fd, String entity, String subject, String parent) '''
+package «naming.basePackage(model)».repository.generated;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import «naming.basePackage(model)».domain.«entity»;
+
+public interface Generated«entity»Repository extends JpaRepository<«entity», Long> {
+«IF fd.uniquePerAuthorTarget && subject !== null»
+    boolean existsByAuthor_IdAndSubject_Id(Long authorId, Long subjectId);
+«ENDIF»
+«IF fd.uniquePerAuthorTarget && parent !== null»
+    boolean existsByAuthor_IdAndParentFeedback_Id(Long authorId, Long parentFeedbackId);
+«ENDIF»
+}
+'''
+
 	def String repositorySubclass(RefModel model, String entity) '''
 package «naming.basePackage(model)».repository;
 
@@ -433,6 +595,7 @@ public interface «entity»Repository extends Generated«entity»Repository {
 package «naming.basePackage(model)».service.generated;
 
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import «naming.basePackage(model)».domain.«entity»;
 import «naming.basePackage(model)».repository.«entity»Repository;
@@ -445,8 +608,17 @@ public class Generated«entity»Service {
         this.repository = repository;
     }
 
-    public List<«entity»> findAll() {
-        return repository.findAll();
+    /** Fase G: optional sorting driven by SortingPolicy (sortBy = entity property, direction = ASC|DESC). */
+    public List<«entity»> findAll(String sortBy, String direction) {
+        if (sortBy == null || sortBy.isBlank()) {
+            return repository.findAll();
+        }
+        Sort.Direction dir = "DESC".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        try {
+            return repository.findAll(Sort.by(dir, sortBy));
+        } catch (RuntimeException ex) {
+            return repository.findAll();
+        }
     }
 
     public «entity» findById(Long id) {
@@ -463,7 +635,7 @@ public class Generated«entity»Service {
 }
 '''
 
-	def String generatedFeedbackService(RefModel model, FeedbackDefinition fd, String entity, String subject) '''
+	def String generatedFeedbackService(RefModel model, FeedbackDefinition fd, String entity, String subject, String parent) '''
 package «naming.basePackage(model)».service.generated;
 
 import java.util.List;
@@ -484,8 +656,24 @@ public class Generated«entity»Service {
     }
 
     public «entity» submit(«entity» feedback) {
+        checkUniquePerAuthorTarget(feedback);
         beforeSubmit(feedback);
         return repository.save(feedback);
+    }
+
+    private void checkUniquePerAuthorTarget(«entity» feedback) {
+«IF fd.uniquePerAuthorTarget && subject !== null»
+        if (feedback.getAuthor() != null && feedback.getSubject() != null
+                && repository.existsByAuthor_IdAndSubject_Id(feedback.getAuthor().getId(), feedback.getSubject().getId())) {
+            throw new IllegalArgumentException("Author already submitted this feedback for the target");
+        }
+«ENDIF»
+«IF fd.uniquePerAuthorTarget && parent !== null»
+        if (feedback.getAuthor() != null && feedback.getParentFeedback() != null
+                && repository.existsByAuthor_IdAndParentFeedback_Id(feedback.getAuthor().getId(), feedback.getParentFeedback().getId())) {
+            throw new IllegalArgumentException("Author already submitted this feedback for the parent");
+        }
+«ENDIF»
     }
 
     /** Override in manual service for verification, moderation, etc. */
@@ -519,6 +707,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import «naming.basePackage(model)».domain.«entity»;
 import «naming.basePackage(model)».service.«entity»Service;
 
@@ -530,8 +719,10 @@ public abstract class Generated«entity»Controller {
     }
 
     @GetMapping
-    public List<«entity»> list() {
-        return service.findAll();
+    public List<«entity»> list(
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false, defaultValue = "ASC") String direction) {
+        return service.findAll(sortBy, direction);
     }
 
     @GetMapping("/{id}")
@@ -614,25 +805,43 @@ public class «entity»Controller extends Generated«entity»Controller {
 	def String generatedAuthService(RefModel model) '''
 package «naming.basePackage(model)».service.generated;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
 import «naming.basePackage(model)».domain.enums.Role;
+import «naming.basePackage(model)».dto.AuthResponse;
 import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».security.JwtService;
 
 @Service
 public class GeneratedAuthenticationService {
     private final «naming.scenarioPascal(model)»UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public GeneratedAuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository) {
+    public GeneratedAuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository,
+                                          PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public «naming.scenarioPascal(model)»User register(String username, String password, Role role) {
         «naming.scenarioPascal(model)»User user = new «naming.scenarioPascal(model)»User();
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         return userRepository.save(user);
+    }
+
+    public AuthResponse login(String username, String password) {
+        «naming.scenarioPascal(model)»User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new IllegalArgumentException("Invalid credentials");
+        }
+        String token = jwtService.generateToken(user.getUsername(), user.getRole().name());
+        return new AuthResponse(token, user.getUsername(), user.getRole().name());
     }
 }
 '''
@@ -640,14 +849,17 @@ public class GeneratedAuthenticationService {
 	def String authServiceSubclass(RefModel model) '''
 package «naming.basePackage(model)».service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».security.JwtService;
 import «naming.basePackage(model)».service.generated.GeneratedAuthenticationService;
 
 @Service
 public class AuthenticationService extends GeneratedAuthenticationService {
-    public AuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository) {
-        super(userRepository);
+    public AuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository,
+                                 PasswordEncoder passwordEncoder, JwtService jwtService) {
+        super(userRepository, passwordEncoder, jwtService);
     }
 }
 '''
@@ -659,9 +871,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
 import «naming.basePackage(model)».domain.enums.Role;
+import «naming.basePackage(model)».dto.AuthResponse;
+import «naming.basePackage(model)».dto.LoginRequest;
+import «naming.basePackage(model)».dto.RegisterRequest;
 import «naming.basePackage(model)».service.AuthenticationService;
 
 public abstract class GeneratedAuthenticationController {
@@ -672,13 +886,15 @@ public abstract class GeneratedAuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<«naming.scenarioPascal(model)»User> register(
-        @RequestParam String username,
-        @RequestParam String password,
-        @RequestParam(defaultValue = "GENERIC") Role role
-    ) {
+    public ResponseEntity<«naming.scenarioPascal(model)»User> register(@RequestBody RegisterRequest request) {
+        Role role = Role.valueOf(request.role());
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(authenticationService.register(username, password, role));
+            .body(authenticationService.register(request.username(), request.password(), role));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authenticationService.login(request.username(), request.password()));
     }
 }
 '''
@@ -700,25 +916,215 @@ public class AuthenticationController extends GeneratedAuthenticationController 
 }
 '''
 
+	def String actionToHttpMethod(String action) {
+		switch action {
+			case "READ": "GET"
+			case "CREATE": "POST"
+			case "UPDATE": "PUT"
+			case "DELETE": "DELETE"
+			default: "POST"
+		}
+	}
+
 	def String securityConfig(RefModel model) '''
 package «naming.basePackage(model)».security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
+        http
+            .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
+«FOR ar : model.authorizationRules»
+                .requestMatchers(HttpMethod.«actionToHttpMethod(ar.allowedAction.literal)», "«IF ar.feedbackTarget !== null»«naming.apiCollectionPath(naming.toPascalCase(ar.feedbackTarget.name))»«ELSE»«naming.apiCollectionPath(naming.toPascalCase(ar.resourceTarget.name))»«ENDIF»").hasRole("«ar.actor.kind.literal»")
+«ENDFOR»
+                .anyRequest().authenticated())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+'''
+
+	def String jwtService(RefModel model) '''
+package «naming.basePackage(model)».security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import java.util.Date;
+import javax.crypto.SecretKey;
+import org.springframework.stereotype.Service;
+
+@Service
+public class JwtService {
+    private static final String SECRET = "0123456789012345678901234567890123456789012345678901234567890123";
+    private static final long EXPIRATION_MS = 1000L * 60 * 60 * 24;
+
+    private SecretKey key() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
+    }
+
+    public String generateToken(String username, String role) {
+        Date now = new Date();
+        return Jwts.builder()
+            .subject(username)
+            .claim("role", role)
+            .issuedAt(now)
+            .expiration(new Date(now.getTime() + EXPIRATION_MS))
+            .signWith(key())
+            .compact();
+    }
+
+    public String extractUsername(String token) {
+        return parse(token).getSubject();
+    }
+
+    public boolean isValid(String token, String username) {
+        try {
+            Claims claims = parse(token);
+            return username.equals(claims.getSubject()) && claims.getExpiration().after(new Date());
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    private Claims parse(String token) {
+        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
+    }
+}
+'''
+
+	def String appUserDetailsService(RefModel model) '''
+package «naming.basePackage(model)».security;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+
+@Service
+public class AppUserDetailsService implements UserDetailsService {
+    private final «naming.scenarioPascal(model)»UserRepository userRepository;
+
+    public AppUserDetailsService(«naming.scenarioPascal(model)»UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        «naming.scenarioPascal(model)»User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return User.withUsername(user.getUsername())
+            .password(user.getPassword())
+            .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()))
+            .build();
+    }
+}
+'''
+
+	def String jwtAuthenticationFilter(RefModel model) '''
+package «naming.basePackage(model)».security;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String header = request.getHeader("Authorization");
+        if (header == null || !header.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        String token = header.substring(7);
+        String username = null;
+        try {
+            username = jwtService.extractUsername(token);
+        } catch (Exception ignored) {
+        }
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            if (jwtService.isValid(token, userDetails.getUsername())) {
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+}
+'''
+
+	def String registerRequestDto(RefModel model) '''
+package «naming.basePackage(model)».dto;
+
+public record RegisterRequest(String username, String password, String role) {
+}
+'''
+
+	def String loginRequestDto(RefModel model) '''
+package «naming.basePackage(model)».dto;
+
+public record LoginRequest(String username, String password) {
+}
+'''
+
+	def String authResponseDto(RefModel model) '''
+package «naming.basePackage(model)».dto;
+
+public record AuthResponse(String token, String username, String role) {
 }
 '''
 
@@ -796,5 +1202,325 @@ User kinds: «model.userTypes.map[kind.literal].join(", ")»
 Common (always): pom, application, security baseline, user entity, API error handler
 Variable: one stack per ResourceType and FeedbackDefinition in the model
 Manual: subclasses in domain/repository/service/web without "generated" in package name
+'''
+
+	// ----- Fase D.2: ResourceRelation helpers -----
+
+	def boolean relationIsToMany(ResourceRelation r) {
+		val tc = r.targetCardinality
+		tc !== null && tc.contains("*")
+	}
+
+	def String relationFieldName(ResourceRelation r) {
+		val base = decapitalize(naming.toPascalCase(r.target.name))
+		if (relationIsToMany(r)) base + "s" else base
+	}
+
+	def String decapitalize(String s) {
+		if (s === null || s.empty) {
+			s
+		} else {
+			Character.toString(Character.toLowerCase(s.charAt(0))) + s.substring(1)
+		}
+	}
+
+	// ----- Fase E: governance artifacts (entity + repository + CRUD controller) -----
+
+	def void generateGovernance(RefModel model, IFileSystemAccess2 fsa, String root, String pkg) {
+		val path = pkg.replace('.', '/')
+		if (!model.validationRules.empty) {
+			writeGovernance(fsa, root, path, model, "ValidationRule", "validation_rules", "/api/policies/validation-rules",
+				#["name", "kind", "severity", "expression", "implementationId", "appliesToResource", "appliesToFeedback", "invokedBy"])
+		}
+		if (!model.authorizationRules.empty) {
+			writeGovernance(fsa, root, path, model, "AuthorizationRule", "authorization_rules", "/api/policies/authorization-rules",
+				#["name", "allowedAction", "actor", "contextName", "resourceTarget", "feedbackTarget"])
+		}
+		if (!model.moderationPolicies.empty) {
+			writeGovernance(fsa, root, path, model, "ModerationPolicy", "moderation_policies", "/api/policies/moderation-policies",
+				#["name", "mode", "triggerEvent", "decision", "monitorsResource", "monitorsFeedback", "executedBy", "inContext"])
+		}
+		if (!model.verificationPolicies.empty) {
+			writeGovernance(fsa, root, path, model, "VerificationPolicy", "verification_policies", "/api/policies/verification-policies",
+				#["name", "mode", "appliesWhen", "verifies"])
+		}
+		if (!model.sortingPolicies.empty) {
+			writeGovernance(fsa, root, path, model, "SortingPolicy", "sorting_policies", "/api/policies/sorting-policies",
+				#["name", "criterion", "direction", "appliesToResource", "appliesToFeedback", "inContext"])
+		}
+		if (!model.automationRules.empty) {
+			generateAutomation(model, fsa, root, path)
+		}
+	}
+
+	def void writeGovernance(IFileSystemAccess2 fsa, String root, String path, RefModel model, String entityName, String table, String apiPath, java.util.List<String> fields) {
+		write(fsa, '''«root»/src/main/java/«path»/governance/domain/«entityName».java''', governanceEntity(model, entityName, table, fields))
+		write(fsa, '''«root»/src/main/java/«path»/governance/repository/«entityName»Repository.java''', governanceRepo(model, entityName))
+		write(fsa, '''«root»/src/main/java/«path»/governance/web/«entityName»Controller.java''', governanceController(model, entityName, apiPath))
+	}
+
+	def String governanceEntity(RefModel model, String entityName, String table, java.util.List<String> fields) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "«table»")
+public class «entityName» {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+«FOR f : fields»
+    @Column(length = 1000)
+    private String «f»;
+
+«ENDFOR»
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+«FOR f : fields»
+    public String get«naming.toPascalCase(f)»() { return «f»; }
+    public void set«naming.toPascalCase(f)»(String «f») { this.«f» = «f»; }
+«ENDFOR»
+}
+'''
+
+	def String governanceRepo(RefModel model, String entityName) '''
+package «naming.basePackage(model)».governance.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import «naming.basePackage(model)».governance.domain.«entityName»;
+
+public interface «entityName»Repository extends JpaRepository<«entityName», Long> {
+}
+'''
+
+	def String governanceController(RefModel model, String entityName, String apiPath) '''
+package «naming.basePackage(model)».governance.web;
+
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import «naming.basePackage(model)».governance.domain.«entityName»;
+import «naming.basePackage(model)».governance.repository.«entityName»Repository;
+
+@RestController
+@RequestMapping("«apiPath»")
+public class «entityName»Controller {
+    private final «entityName»Repository repository;
+
+    public «entityName»Controller(«entityName»Repository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping
+    public List<«entityName»> list() {
+        return repository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public «entityName» get(@PathVariable Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("«entityName» not found: " + id));
+    }
+
+    @PostMapping
+    public ResponseEntity<«entityName»> create(@RequestBody «entityName» body) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(body));
+    }
+}
+'''
+
+	// ----- Fase E.3: Automation (rule -> conditions -> values, rule -> actions) -----
+
+	def void generateAutomation(RefModel model, IFileSystemAccess2 fsa, String root, String path) {
+		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationRule.java''', automationRuleEntity(model))
+		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationCondition.java''', automationConditionEntity(model))
+		write(fsa, '''«root»/src/main/java/«path»/governance/domain/ConditionValue.java''', conditionValueEntity(model))
+		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationAction.java''', automationActionEntity(model))
+		write(fsa, '''«root»/src/main/java/«path»/governance/repository/AutomationRuleRepository.java''', governanceRepo(model, "AutomationRule"))
+		write(fsa, '''«root»/src/main/java/«path»/governance/web/AutomationRuleController.java''', governanceController(model, "AutomationRule", "/api/policies/automation-rules"))
+	}
+
+	def String automationRuleEntity(RefModel model) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "automation_rules")
+public class AutomationRule {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 1000)
+    private String name;
+    @Column(length = 1000)
+    private String triggerEvent;
+    @Column(length = 1000)
+    private String contextResource;
+    @Column(length = 1000)
+    private String inContext;
+    @Column(length = 1000)
+    private String onFeedback;
+    @Column(length = 1000)
+    private String uses;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "automation_rule_id")
+    private List<AutomationCondition> conditions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "automation_rule_action_id")
+    private List<AutomationAction> actions = new ArrayList<>();
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getTriggerEvent() { return triggerEvent; }
+    public void setTriggerEvent(String triggerEvent) { this.triggerEvent = triggerEvent; }
+    public String getContextResource() { return contextResource; }
+    public void setContextResource(String contextResource) { this.contextResource = contextResource; }
+    public String getInContext() { return inContext; }
+    public void setInContext(String inContext) { this.inContext = inContext; }
+    public String getOnFeedback() { return onFeedback; }
+    public void setOnFeedback(String onFeedback) { this.onFeedback = onFeedback; }
+    public String getUses() { return uses; }
+    public void setUses(String uses) { this.uses = uses; }
+    public List<AutomationCondition> getConditions() { return conditions; }
+    public void setConditions(List<AutomationCondition> conditions) { this.conditions = conditions; }
+    public List<AutomationAction> getActions() { return actions; }
+    public void setActions(List<AutomationAction> actions) { this.actions = actions; }
+}
+'''
+
+	def String automationConditionEntity(RefModel model) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "automation_conditions")
+public class AutomationCondition {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 1000)
+    private String name;
+    @Column(length = 1000)
+    private String operator;
+    @Column(length = 1000)
+    private String attributeName;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "automation_condition_id")
+    private List<ConditionValue> values = new ArrayList<>();
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getOperator() { return operator; }
+    public void setOperator(String operator) { this.operator = operator; }
+    public String getAttributeName() { return attributeName; }
+    public void setAttributeName(String attributeName) { this.attributeName = attributeName; }
+    public List<ConditionValue> getValues() { return values; }
+    public void setValues(List<ConditionValue> values) { this.values = values; }
+}
+'''
+
+	def String conditionValueEntity(RefModel model) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "condition_values")
+public class ConditionValue {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "match_value", length = 1000)
+    private String matchValue;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getMatchValue() { return matchValue; }
+    public void setMatchValue(String matchValue) { this.matchValue = matchValue; }
+}
+'''
+
+	def String automationActionEntity(RefModel model) '''
+package «naming.basePackage(model)».governance.domain;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "automation_actions")
+public class AutomationAction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 1000)
+    private String name;
+    @Column(length = 1000)
+    private String actionKind;
+    @Column(length = 1000)
+    private String message;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getActionKind() { return actionKind; }
+    public void setActionKind(String actionKind) { this.actionKind = actionKind; }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
+}
 '''
 }

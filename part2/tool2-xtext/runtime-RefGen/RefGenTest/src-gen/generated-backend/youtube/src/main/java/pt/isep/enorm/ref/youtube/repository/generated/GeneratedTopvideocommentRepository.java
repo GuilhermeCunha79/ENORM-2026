@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.youtube.repository.generated;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pt.isep.enorm.ref.youtube.domain.Topvideocomment;
+import pt.isep.enorm.ref.youtube.domain.TopVideoComment;
 
-public interface GeneratedTopvideocommentRepository extends JpaRepository<Topvideocomment, Long> {
+public interface GeneratedTopVideoCommentRepository extends JpaRepository<TopVideoComment, Long> {
 }

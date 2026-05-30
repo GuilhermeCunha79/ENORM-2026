@@ -6,23 +6,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import pt.isep.enorm.ref.reddit.domain.Postreport;
-import pt.isep.enorm.ref.reddit.service.PostreportService;
+import pt.isep.enorm.ref.reddit.domain.PostReport;
+import pt.isep.enorm.ref.reddit.service.PostReportService;
 
-public abstract class GeneratedPostreportController {
-    private final PostreportService service;
+public abstract class GeneratedPostReportController {
+    private final PostReportService service;
 
-    protected GeneratedPostreportController(PostreportService service) {
+    protected GeneratedPostReportController(PostReportService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<Postreport> list() {
+    public List<PostReport> list() {
         return service.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Postreport> submit(@RequestBody Postreport body) {
+    public ResponseEntity<PostReport> submit(@RequestBody PostReport body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
     }
 }

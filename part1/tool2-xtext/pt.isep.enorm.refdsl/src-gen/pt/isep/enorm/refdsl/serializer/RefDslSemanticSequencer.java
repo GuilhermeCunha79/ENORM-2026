@@ -348,6 +348,7 @@ public class RefDslSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     (
 	 *         name=EString 
 	 *         version=EString? 
+	 *         description=EString? 
 	 *         (userTypes+=UserType userTypes+=UserType*)? 
 	 *         (resourceTypes+=ResourceType resourceTypes+=ResourceType*)? 
 	 *         (contextTypes+=ContextType contextTypes+=ContextType*)? 

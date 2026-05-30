@@ -8,13 +8,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import pt.isep.enorm.ref.reddit.domain.RedditUser;
 import pt.isep.enorm.ref.reddit.domain.Post;
 
 @MappedSuperclass
-public abstract class GeneratedPostvote {
+public abstract class GeneratedPostVote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +25,8 @@ public abstract class GeneratedPostvote {
 @JoinColumn(name = "subject_id", nullable = false)
 private Post subject;
 
-    @Column(nullable = false, length = 2000)
-    private String comment;
+@Column(name = "vote_value", nullable = false)
+private int value;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,6 +34,6 @@ private Post subject;
     public void setAuthor(RedditUser author) { this.author = author; }
 public Post getSubject() { return subject; }
 public void setSubject(Post subject) { this.subject = subject; }
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
+public int getValue() { return value; }
+public void setValue(int value) { this.value = value; }
 }

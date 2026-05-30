@@ -87,13 +87,22 @@ public interface RefDslPackage extends EPackage
   int REF_MODEL__VERSION = 1;
 
   /**
+   * The feature id for the '<em><b>Description</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int REF_MODEL__DESCRIPTION = 2;
+
+  /**
    * The feature id for the '<em><b>User Types</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int REF_MODEL__USER_TYPES = 2;
+  int REF_MODEL__USER_TYPES = 3;
 
   /**
    * The feature id for the '<em><b>Resource Types</b></em>' containment reference list.
@@ -102,7 +111,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__RESOURCE_TYPES = 3;
+  int REF_MODEL__RESOURCE_TYPES = 4;
 
   /**
    * The feature id for the '<em><b>Context Types</b></em>' containment reference list.
@@ -111,7 +120,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__CONTEXT_TYPES = 4;
+  int REF_MODEL__CONTEXT_TYPES = 5;
 
   /**
    * The feature id for the '<em><b>Resource Relations</b></em>' containment reference list.
@@ -120,7 +129,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__RESOURCE_RELATIONS = 5;
+  int REF_MODEL__RESOURCE_RELATIONS = 6;
 
   /**
    * The feature id for the '<em><b>Feedback Types</b></em>' containment reference list.
@@ -129,7 +138,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__FEEDBACK_TYPES = 6;
+  int REF_MODEL__FEEDBACK_TYPES = 7;
 
   /**
    * The feature id for the '<em><b>Feedback Definitions</b></em>' containment reference list.
@@ -138,7 +147,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__FEEDBACK_DEFINITIONS = 7;
+  int REF_MODEL__FEEDBACK_DEFINITIONS = 8;
 
   /**
    * The feature id for the '<em><b>Authorization Rules</b></em>' containment reference list.
@@ -147,7 +156,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__AUTHORIZATION_RULES = 8;
+  int REF_MODEL__AUTHORIZATION_RULES = 9;
 
   /**
    * The feature id for the '<em><b>Validation Rules</b></em>' containment reference list.
@@ -156,7 +165,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__VALIDATION_RULES = 9;
+  int REF_MODEL__VALIDATION_RULES = 10;
 
   /**
    * The feature id for the '<em><b>Moderation Policies</b></em>' containment reference list.
@@ -165,7 +174,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__MODERATION_POLICIES = 10;
+  int REF_MODEL__MODERATION_POLICIES = 11;
 
   /**
    * The feature id for the '<em><b>Automation Rules</b></em>' containment reference list.
@@ -174,7 +183,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__AUTOMATION_RULES = 11;
+  int REF_MODEL__AUTOMATION_RULES = 12;
 
   /**
    * The feature id for the '<em><b>Verification Policies</b></em>' containment reference list.
@@ -183,7 +192,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__VERIFICATION_POLICIES = 12;
+  int REF_MODEL__VERIFICATION_POLICIES = 13;
 
   /**
    * The feature id for the '<em><b>Sorting Policies</b></em>' containment reference list.
@@ -192,7 +201,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL__SORTING_POLICIES = 13;
+  int REF_MODEL__SORTING_POLICIES = 14;
 
   /**
    * The number of structural features of the '<em>Ref Model</em>' class.
@@ -201,7 +210,7 @@ public interface RefDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int REF_MODEL_FEATURE_COUNT = 14;
+  int REF_MODEL_FEATURE_COUNT = 15;
 
   /**
    * The meta object id for the '{@link pt.isep.enorm.refdsl.refDsl.impl.UserTypeImpl <em>User Type</em>}' class.
@@ -1585,6 +1594,17 @@ public interface RefDslPackage extends EPackage
    * @generated
    */
   EAttribute getRefModel_Version();
+
+  /**
+   * Returns the meta object for the attribute '{@link pt.isep.enorm.refdsl.refDsl.RefModel#getDescription <em>Description</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Description</em>'.
+   * @see pt.isep.enorm.refdsl.refDsl.RefModel#getDescription()
+   * @see #getRefModel()
+   * @generated
+   */
+  EAttribute getRefModel_Description();
 
   /**
    * Returns the meta object for the containment reference list '{@link pt.isep.enorm.refdsl.refDsl.RefModel#getUserTypes <em>User Types</em>}'.
@@ -3138,6 +3158,14 @@ public interface RefDslPackage extends EPackage
      * @generated
      */
     EAttribute REF_MODEL__VERSION = eINSTANCE.getRefModel_Version();
+
+    /**
+     * The meta object literal for the '<em><b>Description</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute REF_MODEL__DESCRIPTION = eINSTANCE.getRefModel_Description();
 
     /**
      * The meta object literal for the '<em><b>User Types</b></em>' containment reference list feature.
