@@ -14,7 +14,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 import pt.isep.enorm.refdsl.refDsl.Attribute;
 import pt.isep.enorm.refdsl.refDsl.AuthorizationRule;
-import pt.isep.enorm.refdsl.refDsl.ContextType;
 import pt.isep.enorm.refdsl.refDsl.FeedbackDefinition;
 import pt.isep.enorm.refdsl.refDsl.FeedbackKind;
 import pt.isep.enorm.refdsl.refDsl.RatingPolicy;
@@ -76,36 +75,28 @@ public class RefBackendGenerator {
     _builder_7.append("/src/main/java/");
     String _replace_2 = pkg.replace(".", "/");
     _builder_7.append(_replace_2);
-    _builder_7.append("/domain/generated/Generated");
-    _builder_7.append(app);
-    _builder_7.append("User.java");
+    _builder_7.append("/domain/generated/GeneratedUserType.java");
     this.write(fsa, _builder_7.toString(), this.generatedUser(model));
     StringConcatenation _builder_8 = new StringConcatenation();
     _builder_8.append(root);
     _builder_8.append("/src/main/java/");
     String _replace_3 = pkg.replace(".", "/");
     _builder_8.append(_replace_3);
-    _builder_8.append("/domain/");
-    _builder_8.append(app);
-    _builder_8.append("User.java");
+    _builder_8.append("/domain/UserType.java");
     this.writeManualOnce(fsa, _builder_8.toString(), this.userSubclass(model));
     StringConcatenation _builder_9 = new StringConcatenation();
     _builder_9.append(root);
     _builder_9.append("/src/main/java/");
     String _replace_4 = pkg.replace(".", "/");
     _builder_9.append(_replace_4);
-    _builder_9.append("/repository/generated/Generated");
-    _builder_9.append(app);
-    _builder_9.append("UserRepository.java");
+    _builder_9.append("/repository/generated/GeneratedUserTypeRepository.java");
     this.write(fsa, _builder_9.toString(), this.generatedUserRepository(model));
     StringConcatenation _builder_10 = new StringConcatenation();
     _builder_10.append(root);
     _builder_10.append("/src/main/java/");
     String _replace_5 = pkg.replace(".", "/");
     _builder_10.append(_replace_5);
-    _builder_10.append("/repository/");
-    _builder_10.append(app);
-    _builder_10.append("UserRepository.java");
+    _builder_10.append("/repository/UserTypeRepository.java");
     this.writeManualOnce(fsa, _builder_10.toString(), this.userRepositorySubclass(model));
     EList<ResourceType> _resourceTypes = model.getResourceTypes();
     for (final ResourceType rt : _resourceTypes) {
@@ -116,40 +107,6 @@ public class RefBackendGenerator {
       this.generateFeedback(model, fsa, root, pkg, fd);
     }
     final String path = pkg.replace(".", "/");
-    EList<ContextType> _contextTypes = model.getContextTypes();
-    for (final ContextType ct : _contextTypes) {
-      {
-        final String cName = this.naming.toPascalCase(ct.getName());
-        StringConcatenation _builder_11 = new StringConcatenation();
-        _builder_11.append(root);
-        _builder_11.append("/src/main/java/");
-        _builder_11.append(path);
-        _builder_11.append("/governance/domain/");
-        _builder_11.append(cName);
-        _builder_11.append(".java");
-        this.write(fsa, _builder_11.toString(), this.contextEntity(model, cName, ct.getKind().getLiteral()));
-        StringConcatenation _builder_12 = new StringConcatenation();
-        _builder_12.append(root);
-        _builder_12.append("/src/main/java/");
-        _builder_12.append(path);
-        _builder_12.append("/governance/repository/");
-        _builder_12.append(cName);
-        _builder_12.append("Repository.java");
-        this.write(fsa, _builder_12.toString(), this.governanceRepo(model, cName));
-        StringConcatenation _builder_13 = new StringConcatenation();
-        _builder_13.append(root);
-        _builder_13.append("/src/main/java/");
-        _builder_13.append(path);
-        _builder_13.append("/governance/web/");
-        _builder_13.append(cName);
-        _builder_13.append("Controller.java");
-        StringConcatenation _builder_14 = new StringConcatenation();
-        _builder_14.append("/api/contexts/");
-        String _kebabCase = this.naming.toKebabCase(ct.getName());
-        _builder_14.append(_kebabCase);
-        this.write(fsa, _builder_13.toString(), this.governanceController(model, cName, _builder_14.toString()));
-      }
-    }
     boolean _isEmpty = model.getContextTypes().isEmpty();
     boolean _not = (!_isEmpty);
     if (_not) {
@@ -157,111 +114,177 @@ public class RefBackendGenerator {
       _builder_11.append(root);
       _builder_11.append("/src/main/java/");
       _builder_11.append(path);
-      _builder_11.append("/governance/domain/ContextResource.java");
-      this.write(fsa, _builder_11.toString(), this.contextResourceEntity(model));
+      _builder_11.append("/domain/generated/GeneratedContextType.java");
+      this.write(fsa, _builder_11.toString(), this.contextTypeEntity(model));
+      StringConcatenation _builder_12 = new StringConcatenation();
+      _builder_12.append(root);
+      _builder_12.append("/src/main/java/");
+      _builder_12.append(path);
+      _builder_12.append("/domain/ContextType.java");
+      this.writeManualOnce(fsa, _builder_12.toString(), this.contextTypeSubclass(model));
+      StringConcatenation _builder_13 = new StringConcatenation();
+      _builder_13.append(root);
+      _builder_13.append("/src/main/java/");
+      _builder_13.append(path);
+      _builder_13.append("/repository/ContextTypeRepository.java");
+      this.write(fsa, _builder_13.toString(), this.governanceRepo(model, "ContextType"));
+      StringConcatenation _builder_14 = new StringConcatenation();
+      _builder_14.append(root);
+      _builder_14.append("/src/main/java/");
+      _builder_14.append(path);
+      _builder_14.append("/web/ContextTypeController.java");
+      this.write(fsa, _builder_14.toString(), this.governanceController(model, "ContextType", "/api/contexts"));
+      StringConcatenation _builder_15 = new StringConcatenation();
+      _builder_15.append(root);
+      _builder_15.append("/src/main/java/");
+      _builder_15.append(path);
+      _builder_15.append("/domain/generated/GeneratedContextResource.java");
+      this.write(fsa, _builder_15.toString(), this.contextResourceEntity(model));
+      StringConcatenation _builder_16 = new StringConcatenation();
+      _builder_16.append(root);
+      _builder_16.append("/src/main/java/");
+      _builder_16.append(path);
+      _builder_16.append("/domain/ContextResource.java");
+      this.writeManualOnce(fsa, _builder_16.toString(), this.contextResourceSubclass(model));
+      StringConcatenation _builder_17 = new StringConcatenation();
+      _builder_17.append(root);
+      _builder_17.append("/src/main/java/");
+      _builder_17.append(path);
+      _builder_17.append("/service/generated/GeneratedContextService.java");
+      this.write(fsa, _builder_17.toString(), this.generatedContextService(model));
+      StringConcatenation _builder_18 = new StringConcatenation();
+      _builder_18.append(root);
+      _builder_18.append("/src/main/java/");
+      _builder_18.append(path);
+      _builder_18.append("/service/ContextService.java");
+      this.writeManualOnce(fsa, _builder_18.toString(), this.contextServiceSubclass(model));
     }
     this.generateGovernance(model, fsa, root, pkg);
     this.generateBehaviour(model, fsa, root, pkg);
-    StringConcatenation _builder_12 = new StringConcatenation();
-    _builder_12.append(root);
-    _builder_12.append("/src/main/java/");
-    String _replace_6 = pkg.replace(".", "/");
-    _builder_12.append(_replace_6);
-    _builder_12.append("/security/SecurityConfiguration.java");
-    this.write(fsa, _builder_12.toString(), this.securityConfig(model));
-    StringConcatenation _builder_13 = new StringConcatenation();
-    _builder_13.append(root);
-    _builder_13.append("/src/main/java/");
-    String _replace_7 = pkg.replace(".", "/");
-    _builder_13.append(_replace_7);
-    _builder_13.append("/security/JwtService.java");
-    this.write(fsa, _builder_13.toString(), this.jwtService(model));
-    StringConcatenation _builder_14 = new StringConcatenation();
-    _builder_14.append(root);
-    _builder_14.append("/src/main/java/");
-    String _replace_8 = pkg.replace(".", "/");
-    _builder_14.append(_replace_8);
-    _builder_14.append("/security/AppUserDetailsService.java");
-    this.write(fsa, _builder_14.toString(), this.appUserDetailsService(model));
-    StringConcatenation _builder_15 = new StringConcatenation();
-    _builder_15.append(root);
-    _builder_15.append("/src/main/java/");
-    String _replace_9 = pkg.replace(".", "/");
-    _builder_15.append(_replace_9);
-    _builder_15.append("/security/JwtAuthenticationFilter.java");
-    this.write(fsa, _builder_15.toString(), this.jwtAuthenticationFilter(model));
-    StringConcatenation _builder_16 = new StringConcatenation();
-    _builder_16.append(root);
-    _builder_16.append("/src/main/java/");
-    String _replace_10 = pkg.replace(".", "/");
-    _builder_16.append(_replace_10);
-    _builder_16.append("/dto/RegisterRequest.java");
-    this.write(fsa, _builder_16.toString(), this.registerRequestDto(model));
-    StringConcatenation _builder_17 = new StringConcatenation();
-    _builder_17.append(root);
-    _builder_17.append("/src/main/java/");
-    String _replace_11 = pkg.replace(".", "/");
-    _builder_17.append(_replace_11);
-    _builder_17.append("/dto/LoginRequest.java");
-    this.write(fsa, _builder_17.toString(), this.loginRequestDto(model));
-    StringConcatenation _builder_18 = new StringConcatenation();
-    _builder_18.append(root);
-    _builder_18.append("/src/main/java/");
-    String _replace_12 = pkg.replace(".", "/");
-    _builder_18.append(_replace_12);
-    _builder_18.append("/dto/AuthResponse.java");
-    this.write(fsa, _builder_18.toString(), this.authResponseDto(model));
     StringConcatenation _builder_19 = new StringConcatenation();
     _builder_19.append(root);
     _builder_19.append("/src/main/java/");
-    String _replace_13 = pkg.replace(".", "/");
-    _builder_19.append(_replace_13);
-    _builder_19.append("/service/generated/GeneratedAuthenticationService.java");
-    this.write(fsa, _builder_19.toString(), this.generatedAuthService(model));
+    String _replace_6 = pkg.replace(".", "/");
+    _builder_19.append(_replace_6);
+    _builder_19.append("/security/SecurityConfiguration.java");
+    this.write(fsa, _builder_19.toString(), this.securityConfig(model));
     StringConcatenation _builder_20 = new StringConcatenation();
     _builder_20.append(root);
     _builder_20.append("/src/main/java/");
-    String _replace_14 = pkg.replace(".", "/");
-    _builder_20.append(_replace_14);
-    _builder_20.append("/service/AuthenticationService.java");
-    this.writeManualOnce(fsa, _builder_20.toString(), this.authServiceSubclass(model));
+    String _replace_7 = pkg.replace(".", "/");
+    _builder_20.append(_replace_7);
+    _builder_20.append("/security/JwtService.java");
+    this.write(fsa, _builder_20.toString(), this.jwtService(model));
     StringConcatenation _builder_21 = new StringConcatenation();
     _builder_21.append(root);
     _builder_21.append("/src/main/java/");
-    String _replace_15 = pkg.replace(".", "/");
-    _builder_21.append(_replace_15);
-    _builder_21.append("/web/generated/GeneratedAuthenticationController.java");
-    this.write(fsa, _builder_21.toString(), this.generatedAuthController(model));
+    String _replace_8 = pkg.replace(".", "/");
+    _builder_21.append(_replace_8);
+    _builder_21.append("/security/UserTypeDetailsService.java");
+    this.write(fsa, _builder_21.toString(), this.appUserDetailsService(model));
     StringConcatenation _builder_22 = new StringConcatenation();
     _builder_22.append(root);
     _builder_22.append("/src/main/java/");
-    String _replace_16 = pkg.replace(".", "/");
-    _builder_22.append(_replace_16);
-    _builder_22.append("/web/AuthenticationController.java");
-    this.writeManualOnce(fsa, _builder_22.toString(), this.authControllerSubclass(model));
+    String _replace_9 = pkg.replace(".", "/");
+    _builder_22.append(_replace_9);
+    _builder_22.append("/security/JwtAuthenticationFilter.java");
+    this.write(fsa, _builder_22.toString(), this.jwtAuthenticationFilter(model));
     StringConcatenation _builder_23 = new StringConcatenation();
     _builder_23.append(root);
     _builder_23.append("/src/main/java/");
-    String _replace_17 = pkg.replace(".", "/");
-    _builder_23.append(_replace_17);
-    _builder_23.append("/web/error/ApiError.java");
-    this.write(fsa, _builder_23.toString(), this.apiError(model));
+    String _replace_10 = pkg.replace(".", "/");
+    _builder_23.append(_replace_10);
+    _builder_23.append("/dto/RegisterRequest.java");
+    this.write(fsa, _builder_23.toString(), this.registerRequestDto(model));
     StringConcatenation _builder_24 = new StringConcatenation();
     _builder_24.append(root);
     _builder_24.append("/src/main/java/");
-    String _replace_18 = pkg.replace(".", "/");
-    _builder_24.append(_replace_18);
-    _builder_24.append("/web/error/ApiExceptionHandler.java");
-    this.write(fsa, _builder_24.toString(), this.apiExceptionHandler(model));
+    String _replace_11 = pkg.replace(".", "/");
+    _builder_24.append(_replace_11);
+    _builder_24.append("/dto/LoginRequest.java");
+    this.write(fsa, _builder_24.toString(), this.loginRequestDto(model));
     StringConcatenation _builder_25 = new StringConcatenation();
     _builder_25.append(root);
-    _builder_25.append("/src/test/java/");
+    _builder_25.append("/src/main/java/");
+    String _replace_12 = pkg.replace(".", "/");
+    _builder_25.append(_replace_12);
+    _builder_25.append("/dto/AuthenticationResult.java");
+    this.write(fsa, _builder_25.toString(), this.authResponseDto(model));
+    StringConcatenation _builder_26 = new StringConcatenation();
+    _builder_26.append(root);
+    _builder_26.append("/src/main/java/");
+    String _replace_13 = pkg.replace(".", "/");
+    _builder_26.append(_replace_13);
+    _builder_26.append("/service/generated/GeneratedAuthenticationService.java");
+    this.write(fsa, _builder_26.toString(), this.generatedAuthService(model));
+    StringConcatenation _builder_27 = new StringConcatenation();
+    _builder_27.append(root);
+    _builder_27.append("/src/main/java/");
+    String _replace_14 = pkg.replace(".", "/");
+    _builder_27.append(_replace_14);
+    _builder_27.append("/service/AuthenticationService.java");
+    this.writeManualOnce(fsa, _builder_27.toString(), this.authServiceSubclass(model));
+    StringConcatenation _builder_28 = new StringConcatenation();
+    _builder_28.append(root);
+    _builder_28.append("/src/main/java/");
+    String _replace_15 = pkg.replace(".", "/");
+    _builder_28.append(_replace_15);
+    _builder_28.append("/web/generated/GeneratedAuthenticationController.java");
+    this.write(fsa, _builder_28.toString(), this.generatedAuthController(model));
+    StringConcatenation _builder_29 = new StringConcatenation();
+    _builder_29.append(root);
+    _builder_29.append("/src/main/java/");
+    String _replace_16 = pkg.replace(".", "/");
+    _builder_29.append(_replace_16);
+    _builder_29.append("/web/AuthenticationController.java");
+    this.writeManualOnce(fsa, _builder_29.toString(), this.authControllerSubclass(model));
+    StringConcatenation _builder_30 = new StringConcatenation();
+    _builder_30.append(root);
+    _builder_30.append("/src/main/java/");
+    String _replace_17 = pkg.replace(".", "/");
+    _builder_30.append(_replace_17);
+    _builder_30.append("/web/error/ApiError.java");
+    this.write(fsa, _builder_30.toString(), this.apiError(model));
+    StringConcatenation _builder_31 = new StringConcatenation();
+    _builder_31.append(root);
+    _builder_31.append("/src/main/java/");
+    String _replace_18 = pkg.replace(".", "/");
+    _builder_31.append(_replace_18);
+    _builder_31.append("/web/error/ApiExceptionHandler.java");
+    this.write(fsa, _builder_31.toString(), this.apiExceptionHandler(model));
+    StringConcatenation _builder_32 = new StringConcatenation();
+    _builder_32.append(root);
+    _builder_32.append("/src/main/java/");
     String _replace_19 = pkg.replace(".", "/");
-    _builder_25.append(_replace_19);
-    _builder_25.append("/");
-    _builder_25.append(app);
-    _builder_25.append("BackendApplicationTests.java");
-    this.write(fsa, _builder_25.toString(), this.applicationTest(model));
+    _builder_32.append(_replace_19);
+    _builder_32.append("/web/error/ResourceNotFoundException.java");
+    this.write(fsa, _builder_32.toString(), this.resourceNotFoundException(model));
+    boolean _hasAnyGovernance = this.hasAnyGovernance(model);
+    if (_hasAnyGovernance) {
+      StringConcatenation _builder_33 = new StringConcatenation();
+      _builder_33.append(root);
+      _builder_33.append("/src/main/java/");
+      String _replace_20 = pkg.replace(".", "/");
+      _builder_33.append(_replace_20);
+      _builder_33.append("/service/generated/GeneratedPolicyService.java");
+      this.write(fsa, _builder_33.toString(), this.generatedPolicyService(model));
+      StringConcatenation _builder_34 = new StringConcatenation();
+      _builder_34.append(root);
+      _builder_34.append("/src/main/java/");
+      String _replace_21 = pkg.replace(".", "/");
+      _builder_34.append(_replace_21);
+      _builder_34.append("/service/PolicyService.java");
+      this.writeManualOnce(fsa, _builder_34.toString(), this.policyServiceSubclass(model));
+    }
+    StringConcatenation _builder_35 = new StringConcatenation();
+    _builder_35.append(root);
+    _builder_35.append("/src/test/java/");
+    String _replace_22 = pkg.replace(".", "/");
+    _builder_35.append(_replace_22);
+    _builder_35.append("/");
+    _builder_35.append(app);
+    _builder_35.append("BackendApplicationTests.java");
+    this.write(fsa, _builder_35.toString(), this.applicationTest(model));
   }
 
   public void generateResource(final RefModel model, final IFileSystemAccess2 fsa, final String root, final String pkg, final ResourceType rt) {
@@ -429,7 +452,7 @@ public class RefBackendGenerator {
       _builder_8.append(root);
       _builder_8.append("/src/main/java/");
       _builder_8.append(path);
-      _builder_8.append("/domain/generated/");
+      _builder_8.append("/domain/generated/Generated");
       _builder_8.append(entity);
       _builder_8.append("MediaReference.java");
       this.write(fsa, _builder_8.toString(), this.mediaReferenceEntity(model, entity));
@@ -437,10 +460,18 @@ public class RefBackendGenerator {
       _builder_9.append(root);
       _builder_9.append("/src/main/java/");
       _builder_9.append(path);
-      _builder_9.append("/repository/generated/");
+      _builder_9.append("/domain/");
       _builder_9.append(entity);
-      _builder_9.append("MediaReferenceRepository.java");
-      this.write(fsa, _builder_9.toString(), this.mediaReferenceRepo(model, entity));
+      _builder_9.append("MediaReference.java");
+      this.writeManualOnce(fsa, _builder_9.toString(), this.mediaReferenceSubclass(model, entity));
+      StringConcatenation _builder_10 = new StringConcatenation();
+      _builder_10.append(root);
+      _builder_10.append("/src/main/java/");
+      _builder_10.append(path);
+      _builder_10.append("/repository/generated/");
+      _builder_10.append(entity);
+      _builder_10.append("MediaReferenceRepository.java");
+      this.write(fsa, _builder_10.toString(), this.mediaReferenceRepo(model, entity));
     }
   }
 
@@ -951,26 +982,14 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.UserType;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("public interface Generated");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1);
-    _builder.append("UserRepository extends JpaRepository<");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2);
-    _builder.append("User, Long> {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public interface GeneratedUserTypeRepository extends JpaRepository<UserType, Long> {");
+    _builder.newLine();
     _builder.append("    ");
-    _builder.append("Optional<");
-    String _scenarioPascal_3 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_3, "    ");
-    _builder.append("User> findByUsername(String username);");
-    _builder.newLineIfNotEmpty();
+    _builder.append("Optional<UserType> findByUsername(String username);");
+    _builder.newLine();
     _builder.append("}");
     _builder.newLine();
     return _builder.toString();
@@ -987,20 +1006,11 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".repository.generated.Generated");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("UserRepository;");
+    _builder.append(".repository.generated.GeneratedUserTypeRepository;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("public interface ");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1);
-    _builder.append("UserRepository extends Generated");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2);
-    _builder.append("UserRepository {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public interface UserTypeRepository extends GeneratedUserTypeRepository {");
+    _builder.newLine();
     _builder.append("}");
     _builder.newLine();
     return _builder.toString();
@@ -1036,11 +1046,8 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("public abstract class Generated");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public abstract class GeneratedUserType {");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
     _builder.newLine();
@@ -1119,10 +1126,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.generated.Generated");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.generated.GeneratedUserType;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("/** Manual extension point — edit scenario-specific user logic here. */");
@@ -1131,14 +1135,8 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("@Table(name = \"users\")");
     _builder.newLine();
-    _builder.append("public class ");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1);
-    _builder.append("User extends Generated");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2);
-    _builder.append("User {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public class UserType extends GeneratedUserType {");
+    _builder.newLine();
     _builder.append("}");
     _builder.newLine();
     return _builder.toString();
@@ -1430,10 +1428,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.UserType;");
     _builder.newLineIfNotEmpty();
     {
       if ((subject != null)) {
@@ -1481,11 +1476,8 @@ public class RefBackendGenerator {
     _builder.append("@JoinColumn(name = \"author_id\", nullable = false)");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("private ");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1, "    ");
-    _builder.append("User author;");
-    _builder.newLineIfNotEmpty();
+    _builder.append("private UserType author;");
+    _builder.newLine();
     _builder.newLine();
     {
       if ((subject != null)) {
@@ -1570,17 +1562,11 @@ public class RefBackendGenerator {
     _builder.append("public void setId(Long id) { this.id = id; }");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public ");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2, "    ");
-    _builder.append("User getAuthor() { return author; }");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public UserType getAuthor() { return author; }");
+    _builder.newLine();
     _builder.append("    ");
-    _builder.append("public void setAuthor(");
-    String _scenarioPascal_3 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_3, "    ");
-    _builder.append("User author) { this.author = author; }");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public void setAuthor(UserType author) { this.author = author; }");
+    _builder.newLine();
     {
       if ((subject != null)) {
         _builder.append("public ");
@@ -1766,8 +1752,6 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
-    _builder.newLine();
     _builder.append("import jakarta.persistence.FetchType;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
@@ -1780,7 +1764,7 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.ManyToOne;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
@@ -1790,14 +1774,9 @@ public class RefBackendGenerator {
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"");
-    String _lowerCase = entity.toLowerCase();
-    _builder.append(_lowerCase);
-    _builder.append("_media\")");
-    _builder.newLineIfNotEmpty();
-    _builder.append("public class ");
+    _builder.append("public abstract class Generated");
     _builder.append(entity);
     _builder.append("MediaReference {");
     _builder.newLineIfNotEmpty();
@@ -1830,8 +1809,8 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@JoinColumn(name = \"");
-    String _lowerCase_1 = entity.toLowerCase();
-    _builder.append(_lowerCase_1, "    ");
+    String _lowerCase = entity.toLowerCase();
+    _builder.append(_lowerCase, "    ");
     _builder.append("_id\")");
     _builder.newLineIfNotEmpty();
     _builder.append("    ");
@@ -1892,6 +1871,46 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String mediaReferenceSubclass(final RefModel model, final String entity) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.Generated");
+    _builder.append(entity);
+    _builder.append("MediaReference;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"");
+    String _lowerCase = entity.toLowerCase();
+    _builder.append(_lowerCase);
+    _builder.append("_media\")");
+    _builder.newLineIfNotEmpty();
+    _builder.append("public class ");
+    _builder.append(entity);
+    _builder.append("MediaReference extends Generated");
+    _builder.append(entity);
+    _builder.append("MediaReference {");
+    _builder.newLineIfNotEmpty();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String mediaReferenceRepo(final RefModel model, final String entity) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
@@ -1905,7 +1924,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.generated.");
+    _builder.append(".domain.");
     _builder.append(entity);
     _builder.append("MediaReference;");
     _builder.newLineIfNotEmpty();
@@ -2625,10 +2644,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.UserType;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
@@ -2638,15 +2654,12 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_3 = this.naming.basePackage(model);
     _builder.append(_basePackage_3);
-    _builder.append(".dto.AuthResponse;");
+    _builder.append(".dto.AuthenticationResult;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_4 = this.naming.basePackage(model);
     _builder.append(_basePackage_4);
-    _builder.append(".repository.");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1);
-    _builder.append("UserRepository;");
+    _builder.append(".repository.UserTypeRepository;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_5 = this.naming.basePackage(model);
@@ -2659,11 +2672,8 @@ public class RefBackendGenerator {
     _builder.append("public class GeneratedAuthenticationService {");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("private final ");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2, "    ");
-    _builder.append("UserRepository userRepository;");
-    _builder.newLineIfNotEmpty();
+    _builder.append("private final UserTypeRepository userRepository;");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("private final PasswordEncoder passwordEncoder;");
     _builder.newLine();
@@ -2672,11 +2682,8 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public GeneratedAuthenticationService(");
-    String _scenarioPascal_3 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_3, "    ");
-    _builder.append("UserRepository userRepository,");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public GeneratedAuthenticationService(UserTypeRepository userRepository,");
+    _builder.newLine();
     _builder.append("                                          ");
     _builder.append("PasswordEncoder passwordEncoder, JwtService jwtService) {");
     _builder.newLine();
@@ -2694,19 +2701,11 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public ");
-    String _scenarioPascal_4 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_4, "    ");
-    _builder.append("User register(String username, String password, Role role) {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public UserType register(String username, String password, Role role) {");
+    _builder.newLine();
     _builder.append("        ");
-    String _scenarioPascal_5 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_5, "        ");
-    _builder.append("User user = new ");
-    String _scenarioPascal_6 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_6, "        ");
-    _builder.append("User();");
-    _builder.newLineIfNotEmpty();
+    _builder.append("UserType user = new UserType();");
+    _builder.newLine();
     _builder.append("        ");
     _builder.append("user.setUsername(username);");
     _builder.newLine();
@@ -2724,13 +2723,11 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public AuthResponse login(String username, String password) {");
+    _builder.append("public AuthenticationResult login(String username, String password) {");
     _builder.newLine();
     _builder.append("        ");
-    String _scenarioPascal_7 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_7, "        ");
-    _builder.append("User user = userRepository.findByUsername(username)");
-    _builder.newLineIfNotEmpty();
+    _builder.append("UserType user = userRepository.findByUsername(username)");
+    _builder.newLine();
     _builder.append("            ");
     _builder.append(".orElseThrow(() -> new IllegalArgumentException(\"Invalid credentials\"));");
     _builder.newLine();
@@ -2747,7 +2744,7 @@ public class RefBackendGenerator {
     _builder.append("String token = jwtService.generateToken(user.getUsername(), user.getRole().name());");
     _builder.newLine();
     _builder.append("        ");
-    _builder.append("return new AuthResponse(token, user.getUsername(), user.getRole().name());");
+    _builder.append("return new AuthenticationResult(token, user.getUsername(), user.getRole().name());");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("}");
@@ -2772,10 +2769,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".repository.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("UserRepository;");
+    _builder.append(".repository.UserTypeRepository;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
@@ -2793,11 +2787,8 @@ public class RefBackendGenerator {
     _builder.append("public class AuthenticationService extends GeneratedAuthenticationService {");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public AuthenticationService(");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1, "    ");
-    _builder.append("UserRepository userRepository,");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public AuthenticationService(UserTypeRepository userRepository,");
+    _builder.newLine();
     _builder.append("                                 ");
     _builder.append("PasswordEncoder passwordEncoder, JwtService jwtService) {");
     _builder.newLine();
@@ -2831,10 +2822,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.UserType;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
@@ -2844,7 +2832,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_3 = this.naming.basePackage(model);
     _builder.append(_basePackage_3);
-    _builder.append(".dto.AuthResponse;");
+    _builder.append(".dto.AuthenticationResult;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_4 = this.naming.basePackage(model);
@@ -2882,11 +2870,8 @@ public class RefBackendGenerator {
     _builder.append("@PostMapping(\"/register\")");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public ResponseEntity<");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1, "    ");
-    _builder.append("User> register(@RequestBody RegisterRequest request) {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public ResponseEntity<UserType> register(@RequestBody RegisterRequest request) {");
+    _builder.newLine();
     _builder.append("        ");
     _builder.append("Role role = Role.valueOf(request.role());");
     _builder.newLine();
@@ -2904,7 +2889,7 @@ public class RefBackendGenerator {
     _builder.append("@PostMapping(\"/login\")");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {");
+    _builder.append("public ResponseEntity<AuthenticationResult> login(@RequestBody LoginRequest request) {");
     _builder.newLine();
     _builder.append("        ");
     _builder.append("return ResponseEntity.ok(authenticationService.login(request.username(), request.password()));");
@@ -3259,37 +3244,25 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".domain.");
-    String _scenarioPascal = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal);
-    _builder.append("User;");
+    _builder.append(".domain.UserType;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
     _builder.append(_basePackage_2);
-    _builder.append(".repository.");
-    String _scenarioPascal_1 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_1);
-    _builder.append("UserRepository;");
+    _builder.append(".repository.UserTypeRepository;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("@Service");
     _builder.newLine();
-    _builder.append("public class AppUserDetailsService implements UserDetailsService {");
+    _builder.append("public class UserTypeDetailsService implements UserDetailsService {");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("private final ");
-    String _scenarioPascal_2 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_2, "    ");
-    _builder.append("UserRepository userRepository;");
-    _builder.newLineIfNotEmpty();
+    _builder.append("private final UserTypeRepository userRepository;");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("public AppUserDetailsService(");
-    String _scenarioPascal_3 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_3, "    ");
-    _builder.append("UserRepository userRepository) {");
-    _builder.newLineIfNotEmpty();
+    _builder.append("public UserTypeDetailsService(UserTypeRepository userRepository) {");
+    _builder.newLine();
     _builder.append("        ");
     _builder.append("this.userRepository = userRepository;");
     _builder.newLine();
@@ -3304,10 +3277,8 @@ public class RefBackendGenerator {
     _builder.append("public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {");
     _builder.newLine();
     _builder.append("        ");
-    String _scenarioPascal_4 = this.naming.scenarioPascal(model);
-    _builder.append(_scenarioPascal_4, "        ");
-    _builder.append("User user = userRepository.findByUsername(username)");
-    _builder.newLineIfNotEmpty();
+    _builder.append("UserType user = userRepository.findByUsername(username)");
+    _builder.newLine();
     _builder.append("            ");
     _builder.append(".orElseThrow(() -> new UsernameNotFoundException(\"User not found: \" + username));");
     _builder.newLine();
@@ -3506,7 +3477,7 @@ public class RefBackendGenerator {
     _builder.append(".dto;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("public record AuthResponse(String token, String username, String role) {");
+    _builder.append("public record AuthenticationResult(String token, String username, String role) {");
     _builder.newLine();
     _builder.append("}");
     _builder.newLine();
@@ -3548,6 +3519,19 @@ public class RefBackendGenerator {
     _builder.append("@RestControllerAdvice");
     _builder.newLine();
     _builder.append("public class ApiExceptionHandler {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("@ExceptionHandler(ResourceNotFoundException.class)");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(ex.getMessage()));");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@ExceptionHandler(IllegalArgumentException.class)");
@@ -3784,39 +3768,45 @@ public class RefBackendGenerator {
     _builder.append(root);
     _builder.append("/src/main/java/");
     _builder.append(path);
-    _builder.append("/governance/domain/");
+    _builder.append("/domain/generated/Generated");
     _builder.append(entityName);
     _builder.append(".java");
-    this.write(fsa, _builder.toString(), this.governanceEntity(model, entityName, table, fields));
+    this.write(fsa, _builder.toString(), this.governanceGeneratedEntity(model, entityName, fields));
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append(root);
     _builder_1.append("/src/main/java/");
     _builder_1.append(path);
-    _builder_1.append("/governance/repository/");
+    _builder_1.append("/domain/");
     _builder_1.append(entityName);
-    _builder_1.append("Repository.java");
-    this.write(fsa, _builder_1.toString(), this.governanceRepo(model, entityName));
+    _builder_1.append(".java");
+    this.writeManualOnce(fsa, _builder_1.toString(), this.governanceManualSubclass(model, entityName, table));
     StringConcatenation _builder_2 = new StringConcatenation();
     _builder_2.append(root);
     _builder_2.append("/src/main/java/");
     _builder_2.append(path);
-    _builder_2.append("/governance/web/");
+    _builder_2.append("/repository/");
     _builder_2.append(entityName);
-    _builder_2.append("Controller.java");
-    this.write(fsa, _builder_2.toString(), this.governanceController(model, entityName, apiPath));
+    _builder_2.append("Repository.java");
+    this.write(fsa, _builder_2.toString(), this.governanceRepo(model, entityName));
+    StringConcatenation _builder_3 = new StringConcatenation();
+    _builder_3.append(root);
+    _builder_3.append("/src/main/java/");
+    _builder_3.append(path);
+    _builder_3.append("/web/");
+    _builder_3.append(entityName);
+    _builder_3.append("Controller.java");
+    this.write(fsa, _builder_3.toString(), this.governanceController(model, entityName, apiPath));
   }
 
-  public String governanceEntity(final RefModel model, final String entityName, final String table, final List<String> fields) {
+  public String governanceGeneratedEntity(final RefModel model, final String entityName, final List<String> fields) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -3824,16 +3814,12 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.Id;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"");
-    _builder.append(table);
-    _builder.append("\")");
-    _builder.newLineIfNotEmpty();
-    _builder.append("public class ");
+    _builder.append("public abstract class Generated");
     _builder.append(entityName);
     _builder.append(" {");
     _builder.newLineIfNotEmpty();
@@ -3891,12 +3877,51 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String governanceManualSubclass(final RefModel model, final String entityName, final String table) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.Generated");
+    _builder.append(entityName);
+    _builder.append(";");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"");
+    _builder.append(table);
+    _builder.append("\")");
+    _builder.newLineIfNotEmpty();
+    _builder.append("public class ");
+    _builder.append(entityName);
+    _builder.append(" extends Generated");
+    _builder.append(entityName);
+    _builder.append(" {");
+    _builder.newLineIfNotEmpty();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String governanceRepo(final RefModel model, final String entityName) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.repository;");
+    _builder.append(".repository;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import org.springframework.data.jpa.repository.JpaRepository;");
@@ -3904,7 +3929,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".governance.domain.");
+    _builder.append(".domain.");
     _builder.append(entityName);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
@@ -3925,7 +3950,7 @@ public class RefBackendGenerator {
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.web;");
+    _builder.append(".web;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import java.util.List;");
@@ -3949,14 +3974,14 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".governance.domain.");
+    _builder.append(".domain.");
     _builder.append(entityName);
     _builder.append(";");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
     _builder.append(_basePackage_2);
-    _builder.append(".governance.repository.");
+    _builder.append(".repository.");
     _builder.append(entityName);
     _builder.append("Repository;");
     _builder.newLineIfNotEmpty();
@@ -4044,19 +4069,17 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
-  public String contextEntity(final RefModel model, final String entity, final String kind) {
+  public String contextTypeEntity(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.CascadeType;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4066,26 +4089,24 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.JoinColumn;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.OneToMany;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.OneToMany;");
     _builder.newLine();
     _builder.append("import java.util.ArrayList;");
     _builder.newLine();
     _builder.append("import java.util.List;");
     _builder.newLine();
-    _builder.newLine();
-    _builder.append("@Entity");
-    _builder.newLine();
-    _builder.append("@Table(name = \"");
-    String _lowerCase = entity.toLowerCase();
-    _builder.append(_lowerCase);
-    _builder.append("s\")");
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.ContextResource;");
     _builder.newLineIfNotEmpty();
-    _builder.append("public class ");
-    _builder.append(entity);
-    _builder.append(" {");
-    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("@MappedSuperclass");
+    _builder.newLine();
+    _builder.append("public abstract class GeneratedContextType {");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
     _builder.newLine();
@@ -4097,7 +4118,7 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("@Column(nullable = false)");
+    _builder.append("@Column(nullable = false, unique = true)");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("private String name;");
@@ -4107,20 +4128,15 @@ public class RefBackendGenerator {
     _builder.append("@Column(nullable = false)");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("private String kind = \"");
-    _builder.append(kind, "    ");
-    _builder.append("\";");
-    _builder.newLineIfNotEmpty();
+    _builder.append("private String kind;");
+    _builder.newLine();
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)");
     _builder.newLine();
     _builder.append("    ");
-    _builder.append("@JoinColumn(name = \"");
-    String _lowerCase_1 = entity.toLowerCase();
-    _builder.append(_lowerCase_1, "    ");
-    _builder.append("_id\")");
-    _builder.newLineIfNotEmpty();
+    _builder.append("@JoinColumn(name = \"context_type_id\")");
+    _builder.newLine();
     _builder.append("    ");
     _builder.append("private List<ContextResource> resources = new ArrayList<>();");
     _builder.newLine();
@@ -4154,17 +4170,46 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String contextTypeSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedContextType;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"context_types\")");
+    _builder.newLine();
+    _builder.append("public class ContextType extends GeneratedContextType {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String contextResourceEntity(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4172,14 +4217,12 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.Id;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"context_resources\")");
-    _builder.newLine();
-    _builder.append("public class ContextResource {");
+    _builder.append("public abstract class GeneratedContextResource {");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
@@ -4215,43 +4258,98 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String contextResourceSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedContextResource;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"context_resources\")");
+    _builder.newLine();
+    _builder.append("public class ContextResource extends GeneratedContextResource {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public void generateAutomation(final RefModel model, final IFileSystemAccess2 fsa, final String root, final String path) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(root);
     _builder.append("/src/main/java/");
     _builder.append(path);
-    _builder.append("/governance/domain/AutomationRule.java");
+    _builder.append("/domain/generated/GeneratedAutomationRule.java");
     this.write(fsa, _builder.toString(), this.automationRuleEntity(model));
     StringConcatenation _builder_1 = new StringConcatenation();
     _builder_1.append(root);
     _builder_1.append("/src/main/java/");
     _builder_1.append(path);
-    _builder_1.append("/governance/domain/AutomationCondition.java");
-    this.write(fsa, _builder_1.toString(), this.automationConditionEntity(model));
+    _builder_1.append("/domain/AutomationRule.java");
+    this.writeManualOnce(fsa, _builder_1.toString(), this.automationRuleSubclass(model));
     StringConcatenation _builder_2 = new StringConcatenation();
     _builder_2.append(root);
     _builder_2.append("/src/main/java/");
     _builder_2.append(path);
-    _builder_2.append("/governance/domain/ConditionValue.java");
-    this.write(fsa, _builder_2.toString(), this.conditionValueEntity(model));
+    _builder_2.append("/domain/generated/GeneratedAutomationCondition.java");
+    this.write(fsa, _builder_2.toString(), this.automationConditionEntity(model));
     StringConcatenation _builder_3 = new StringConcatenation();
     _builder_3.append(root);
     _builder_3.append("/src/main/java/");
     _builder_3.append(path);
-    _builder_3.append("/governance/domain/AutomationAction.java");
-    this.write(fsa, _builder_3.toString(), this.automationActionEntity(model));
+    _builder_3.append("/domain/AutomationCondition.java");
+    this.writeManualOnce(fsa, _builder_3.toString(), this.automationConditionSubclass(model));
     StringConcatenation _builder_4 = new StringConcatenation();
     _builder_4.append(root);
     _builder_4.append("/src/main/java/");
     _builder_4.append(path);
-    _builder_4.append("/governance/repository/AutomationRuleRepository.java");
-    this.write(fsa, _builder_4.toString(), this.governanceRepo(model, "AutomationRule"));
+    _builder_4.append("/domain/generated/GeneratedConditionValue.java");
+    this.write(fsa, _builder_4.toString(), this.conditionValueEntity(model));
     StringConcatenation _builder_5 = new StringConcatenation();
     _builder_5.append(root);
     _builder_5.append("/src/main/java/");
     _builder_5.append(path);
-    _builder_5.append("/governance/web/AutomationRuleController.java");
-    this.write(fsa, _builder_5.toString(), this.governanceController(model, "AutomationRule", "/api/policies/automation-rules"));
+    _builder_5.append("/domain/ConditionValue.java");
+    this.writeManualOnce(fsa, _builder_5.toString(), this.conditionValueSubclass(model));
+    StringConcatenation _builder_6 = new StringConcatenation();
+    _builder_6.append(root);
+    _builder_6.append("/src/main/java/");
+    _builder_6.append(path);
+    _builder_6.append("/domain/generated/GeneratedAutomationAction.java");
+    this.write(fsa, _builder_6.toString(), this.automationActionEntity(model));
+    StringConcatenation _builder_7 = new StringConcatenation();
+    _builder_7.append(root);
+    _builder_7.append("/src/main/java/");
+    _builder_7.append(path);
+    _builder_7.append("/domain/AutomationAction.java");
+    this.writeManualOnce(fsa, _builder_7.toString(), this.automationActionSubclass(model));
+    StringConcatenation _builder_8 = new StringConcatenation();
+    _builder_8.append(root);
+    _builder_8.append("/src/main/java/");
+    _builder_8.append(path);
+    _builder_8.append("/repository/AutomationRuleRepository.java");
+    this.write(fsa, _builder_8.toString(), this.governanceRepo(model, "AutomationRule"));
+    StringConcatenation _builder_9 = new StringConcatenation();
+    _builder_9.append(root);
+    _builder_9.append("/src/main/java/");
+    _builder_9.append(path);
+    _builder_9.append("/web/AutomationRuleController.java");
+    this.write(fsa, _builder_9.toString(), this.governanceController(model, "AutomationRule", "/api/policies/automation-rules"));
   }
 
   public String automationRuleEntity(final RefModel model) {
@@ -4259,14 +4357,12 @@ public class RefBackendGenerator {
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.CascadeType;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4276,20 +4372,28 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.JoinColumn;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.OneToMany;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.OneToMany;");
     _builder.newLine();
     _builder.append("import java.util.ArrayList;");
     _builder.newLine();
     _builder.append("import java.util.List;");
     _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.AutomationAction;");
+    _builder.newLineIfNotEmpty();
+    _builder.append("import ");
+    String _basePackage_2 = this.naming.basePackage(model);
+    _builder.append(_basePackage_2);
+    _builder.append(".domain.AutomationCondition;");
+    _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"automation_rules\")");
-    _builder.newLine();
-    _builder.append("public class AutomationRule {");
+    _builder.append("public abstract class GeneratedAutomationRule {");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
@@ -4417,19 +4521,48 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String automationRuleSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedAutomationRule;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"automation_rules\")");
+    _builder.newLine();
+    _builder.append("public class AutomationRule extends GeneratedAutomationRule {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String automationConditionEntity(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.CascadeType;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4439,20 +4572,23 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.JoinColumn;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.OneToMany;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.OneToMany;");
     _builder.newLine();
     _builder.append("import java.util.ArrayList;");
     _builder.newLine();
     _builder.append("import java.util.List;");
     _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.ConditionValue;");
+    _builder.newLineIfNotEmpty();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"automation_conditions\")");
-    _builder.newLine();
-    _builder.append("public class AutomationCondition {");
+    _builder.append("public abstract class GeneratedAutomationCondition {");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
@@ -4528,17 +4664,46 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String automationConditionSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedAutomationCondition;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"automation_conditions\")");
+    _builder.newLine();
+    _builder.append("public class AutomationCondition extends GeneratedAutomationCondition {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String conditionValueEntity(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4546,14 +4711,12 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.Id;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"condition_values\")");
-    _builder.newLine();
-    _builder.append("public class ConditionValue {");
+    _builder.append("public abstract class GeneratedConditionValue {");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
@@ -4589,17 +4752,46 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String conditionValueSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedConditionValue;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"condition_values\")");
+    _builder.newLine();
+    _builder.append("public class ConditionValue extends GeneratedConditionValue {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public String automationActionEntity(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.domain;");
+    _builder.append(".domain.generated;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import jakarta.persistence.Column;");
-    _builder.newLine();
-    _builder.append("import jakarta.persistence.Entity;");
     _builder.newLine();
     _builder.append("import jakarta.persistence.GeneratedValue;");
     _builder.newLine();
@@ -4607,14 +4799,12 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("import jakarta.persistence.Id;");
     _builder.newLine();
-    _builder.append("import jakarta.persistence.Table;");
+    _builder.append("import jakarta.persistence.MappedSuperclass;");
     _builder.newLine();
     _builder.newLine();
-    _builder.append("@Entity");
+    _builder.append("@MappedSuperclass");
     _builder.newLine();
-    _builder.append("@Table(name = \"automation_actions\")");
-    _builder.newLine();
-    _builder.append("public class AutomationAction {");
+    _builder.append("public abstract class GeneratedAutomationAction {");
     _builder.newLine();
     _builder.append("    ");
     _builder.append("@Id");
@@ -4674,6 +4864,37 @@ public class RefBackendGenerator {
     return _builder.toString();
   }
 
+  public String automationActionSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".domain;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Entity;");
+    _builder.newLine();
+    _builder.append("import jakarta.persistence.Table;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.generated.GeneratedAutomationAction;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("/** Manual extension point — add bespoke behaviour here. */");
+    _builder.newLine();
+    _builder.append("@Entity");
+    _builder.newLine();
+    _builder.append("@Table(name = \"automation_actions\")");
+    _builder.newLine();
+    _builder.append("public class AutomationAction extends GeneratedAutomationAction {");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
   public void generateBehaviour(final RefModel model, final IFileSystemAccess2 fsa, final String root, final String pkg) {
     final String path = pkg.replace(".", "/");
     boolean _isEmpty = model.getModerationPolicies().isEmpty();
@@ -4701,7 +4922,7 @@ public class RefBackendGenerator {
       _builder_3.append(root);
       _builder_3.append("/src/main/java/");
       _builder_3.append(path);
-      _builder_3.append("/governance/web/ModerationController.java");
+      _builder_3.append("/web/ModerationController.java");
       this.write(fsa, _builder_3.toString(), this.moderationController(model));
     }
     boolean _isEmpty_1 = model.getAutomationRules().isEmpty();
@@ -4729,7 +4950,7 @@ public class RefBackendGenerator {
       _builder_7.append(root);
       _builder_7.append("/src/main/java/");
       _builder_7.append(path);
-      _builder_7.append("/governance/web/AutomationController.java");
+      _builder_7.append("/web/AutomationController.java");
       this.write(fsa, _builder_7.toString(), this.automationEngineController(model));
     }
   }
@@ -4773,12 +4994,12 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
     _builder.append(_basePackage_2);
-    _builder.append(".governance.domain.ModerationPolicy;");
+    _builder.append(".domain.ModerationPolicy;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_3 = this.naming.basePackage(model);
     _builder.append(_basePackage_3);
-    _builder.append(".governance.repository.ModerationPolicyRepository;");
+    _builder.append(".repository.ModerationPolicyRepository;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("@Service");
@@ -4887,7 +5108,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".governance.repository.ModerationPolicyRepository;");
+    _builder.append(".repository.ModerationPolicyRepository;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
@@ -4918,7 +5139,7 @@ public class RefBackendGenerator {
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.web;");
+    _builder.append(".web;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import java.util.List;");
@@ -5022,27 +5243,27 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
     _builder.append(_basePackage_2);
-    _builder.append(".governance.domain.AutomationAction;");
+    _builder.append(".domain.AutomationAction;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_3 = this.naming.basePackage(model);
     _builder.append(_basePackage_3);
-    _builder.append(".governance.domain.AutomationCondition;");
+    _builder.append(".domain.AutomationCondition;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_4 = this.naming.basePackage(model);
     _builder.append(_basePackage_4);
-    _builder.append(".governance.domain.AutomationRule;");
+    _builder.append(".domain.AutomationRule;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_5 = this.naming.basePackage(model);
     _builder.append(_basePackage_5);
-    _builder.append(".governance.domain.ConditionValue;");
+    _builder.append(".domain.ConditionValue;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_6 = this.naming.basePackage(model);
     _builder.append(_basePackage_6);
-    _builder.append(".governance.repository.AutomationRuleRepository;");
+    _builder.append(".repository.AutomationRuleRepository;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("@Service");
@@ -5266,7 +5487,7 @@ public class RefBackendGenerator {
     _builder.append("import ");
     String _basePackage_1 = this.naming.basePackage(model);
     _builder.append(_basePackage_1);
-    _builder.append(".governance.repository.AutomationRuleRepository;");
+    _builder.append(".repository.AutomationRuleRepository;");
     _builder.newLineIfNotEmpty();
     _builder.append("import ");
     String _basePackage_2 = this.naming.basePackage(model);
@@ -5297,7 +5518,7 @@ public class RefBackendGenerator {
     _builder.append("package ");
     String _basePackage = this.naming.basePackage(model);
     _builder.append(_basePackage);
-    _builder.append(".governance.web;");
+    _builder.append(".web;");
     _builder.newLineIfNotEmpty();
     _builder.newLine();
     _builder.append("import java.util.List;");
@@ -5362,6 +5583,430 @@ public class RefBackendGenerator {
     _builder.newLine();
     _builder.append("    ");
     _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
+  public boolean hasAnyGovernance(final RefModel model) {
+    return ((((((!model.getValidationRules().isEmpty()) || (!model.getAuthorizationRules().isEmpty())) || (!model.getModerationPolicies().isEmpty())) || (!model.getVerificationPolicies().isEmpty())) || (!model.getSortingPolicies().isEmpty())) || (!model.getAutomationRules().isEmpty()));
+  }
+
+  public String resourceNotFoundException(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".web.error;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("public class ResourceNotFoundException extends RuntimeException {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public ResourceNotFoundException(String message) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("super(message);");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
+  public String generatedContextService(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".service.generated;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import java.util.List;");
+    _builder.newLine();
+    _builder.append("import org.springframework.stereotype.Service;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".domain.ContextType;");
+    _builder.newLineIfNotEmpty();
+    _builder.append("import ");
+    String _basePackage_2 = this.naming.basePackage(model);
+    _builder.append(_basePackage_2);
+    _builder.append(".repository.ContextTypeRepository;");
+    _builder.newLineIfNotEmpty();
+    _builder.append("import ");
+    String _basePackage_3 = this.naming.basePackage(model);
+    _builder.append(_basePackage_3);
+    _builder.append(".web.error.ResourceNotFoundException;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("@Service");
+    _builder.newLine();
+    _builder.append("public class GeneratedContextService {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("private final ContextTypeRepository contextTypeRepository;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public GeneratedContextService(ContextTypeRepository contextTypeRepository) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("this.contextTypeRepository = contextTypeRepository;");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public List<ContextType> findAll() {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("return contextTypeRepository.findAll();");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public ContextType findById(Long id) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("return contextTypeRepository.findById(id)");
+    _builder.newLine();
+    _builder.append("            ");
+    _builder.append(".orElseThrow(() -> new ResourceNotFoundException(\"ContextType not found: \" + id));");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public ContextType create(ContextType context) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("return contextTypeRepository.save(context);");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
+  public String contextServiceSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".service;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import org.springframework.stereotype.Service;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".repository.ContextTypeRepository;");
+    _builder.newLineIfNotEmpty();
+    _builder.append("import ");
+    String _basePackage_2 = this.naming.basePackage(model);
+    _builder.append(_basePackage_2);
+    _builder.append(".service.generated.GeneratedContextService;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("@Service");
+    _builder.newLine();
+    _builder.append("public class ContextService extends GeneratedContextService {");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("public ContextService(ContextTypeRepository contextTypeRepository) {");
+    _builder.newLine();
+    _builder.append("        ");
+    _builder.append("super(contextTypeRepository);");
+    _builder.newLine();
+    _builder.append("    ");
+    _builder.append("}");
+    _builder.newLine();
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
+  public String generatedPolicyService(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".service.generated;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import java.util.List;");
+    _builder.newLine();
+    _builder.append("import org.springframework.beans.factory.annotation.Autowired;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".web.error.ResourceNotFoundException;");
+    _builder.newLineIfNotEmpty();
+    {
+      boolean _isEmpty = model.getValidationRules().isEmpty();
+      boolean _not = (!_isEmpty);
+      if (_not) {
+        _builder.append("import ");
+        String _basePackage_2 = this.naming.basePackage(model);
+        _builder.append(_basePackage_2);
+        _builder.append(".domain.ValidationRule;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_3 = this.naming.basePackage(model);
+        _builder.append(_basePackage_3);
+        _builder.append(".repository.ValidationRuleRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      boolean _isEmpty_1 = model.getAuthorizationRules().isEmpty();
+      boolean _not_1 = (!_isEmpty_1);
+      if (_not_1) {
+        _builder.append("import ");
+        String _basePackage_4 = this.naming.basePackage(model);
+        _builder.append(_basePackage_4);
+        _builder.append(".domain.AuthorizationRule;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_5 = this.naming.basePackage(model);
+        _builder.append(_basePackage_5);
+        _builder.append(".repository.AuthorizationRuleRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      boolean _isEmpty_2 = model.getModerationPolicies().isEmpty();
+      boolean _not_2 = (!_isEmpty_2);
+      if (_not_2) {
+        _builder.append("import ");
+        String _basePackage_6 = this.naming.basePackage(model);
+        _builder.append(_basePackage_6);
+        _builder.append(".domain.ModerationPolicy;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_7 = this.naming.basePackage(model);
+        _builder.append(_basePackage_7);
+        _builder.append(".repository.ModerationPolicyRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      boolean _isEmpty_3 = model.getVerificationPolicies().isEmpty();
+      boolean _not_3 = (!_isEmpty_3);
+      if (_not_3) {
+        _builder.append("import ");
+        String _basePackage_8 = this.naming.basePackage(model);
+        _builder.append(_basePackage_8);
+        _builder.append(".domain.VerificationPolicy;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_9 = this.naming.basePackage(model);
+        _builder.append(_basePackage_9);
+        _builder.append(".repository.VerificationPolicyRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      boolean _isEmpty_4 = model.getSortingPolicies().isEmpty();
+      boolean _not_4 = (!_isEmpty_4);
+      if (_not_4) {
+        _builder.append("import ");
+        String _basePackage_10 = this.naming.basePackage(model);
+        _builder.append(_basePackage_10);
+        _builder.append(".domain.SortingPolicy;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_11 = this.naming.basePackage(model);
+        _builder.append(_basePackage_11);
+        _builder.append(".repository.SortingPolicyRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    {
+      boolean _isEmpty_5 = model.getAutomationRules().isEmpty();
+      boolean _not_5 = (!_isEmpty_5);
+      if (_not_5) {
+        _builder.append("import ");
+        String _basePackage_12 = this.naming.basePackage(model);
+        _builder.append(_basePackage_12);
+        _builder.append(".domain.AutomationRule;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("import ");
+        String _basePackage_13 = this.naming.basePackage(model);
+        _builder.append(_basePackage_13);
+        _builder.append(".repository.AutomationRuleRepository;");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    _builder.newLine();
+    _builder.append("/** Centralized CRUD for all governance policies (mirrors the manual GeneratedPolicyService). */");
+    _builder.newLine();
+    _builder.append("public class GeneratedPolicyService {");
+    _builder.newLine();
+    {
+      boolean _isEmpty_6 = model.getValidationRules().isEmpty();
+      boolean _not_6 = (!_isEmpty_6);
+      if (_not_6) {
+        _builder.append("@Autowired private ValidationRuleRepository validationRuleRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_7 = model.getAuthorizationRules().isEmpty();
+      boolean _not_7 = (!_isEmpty_7);
+      if (_not_7) {
+        _builder.append("@Autowired private AuthorizationRuleRepository authorizationRuleRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_8 = model.getModerationPolicies().isEmpty();
+      boolean _not_8 = (!_isEmpty_8);
+      if (_not_8) {
+        _builder.append("@Autowired private ModerationPolicyRepository moderationPolicyRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_9 = model.getVerificationPolicies().isEmpty();
+      boolean _not_9 = (!_isEmpty_9);
+      if (_not_9) {
+        _builder.append("@Autowired private VerificationPolicyRepository verificationPolicyRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_10 = model.getSortingPolicies().isEmpty();
+      boolean _not_10 = (!_isEmpty_10);
+      if (_not_10) {
+        _builder.append("@Autowired private SortingPolicyRepository sortingPolicyRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_11 = model.getAutomationRules().isEmpty();
+      boolean _not_11 = (!_isEmpty_11);
+      if (_not_11) {
+        _builder.append("@Autowired private AutomationRuleRepository automationRuleRepository;");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_12 = model.getValidationRules().isEmpty();
+      boolean _not_12 = (!_isEmpty_12);
+      if (_not_12) {
+        _builder.newLine();
+        _builder.append("public List<ValidationRule> listValidationRules() { return validationRuleRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public ValidationRule getValidationRule(Long id) { return validationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"ValidationRule not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public ValidationRule createValidationRule(ValidationRule request) { return validationRuleRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_13 = model.getAuthorizationRules().isEmpty();
+      boolean _not_13 = (!_isEmpty_13);
+      if (_not_13) {
+        _builder.newLine();
+        _builder.append("public List<AuthorizationRule> listAuthorizationRules() { return authorizationRuleRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public AuthorizationRule getAuthorizationRule(Long id) { return authorizationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"AuthorizationRule not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public AuthorizationRule createAuthorizationRule(AuthorizationRule request) { return authorizationRuleRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_14 = model.getModerationPolicies().isEmpty();
+      boolean _not_14 = (!_isEmpty_14);
+      if (_not_14) {
+        _builder.newLine();
+        _builder.append("public List<ModerationPolicy> listModerationPolicies() { return moderationPolicyRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public ModerationPolicy getModerationPolicy(Long id) { return moderationPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"ModerationPolicy not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public ModerationPolicy createModerationPolicy(ModerationPolicy request) { return moderationPolicyRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_15 = model.getVerificationPolicies().isEmpty();
+      boolean _not_15 = (!_isEmpty_15);
+      if (_not_15) {
+        _builder.newLine();
+        _builder.append("public List<VerificationPolicy> listVerificationPolicies() { return verificationPolicyRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public VerificationPolicy getVerificationPolicy(Long id) { return verificationPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"VerificationPolicy not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public VerificationPolicy createVerificationPolicy(VerificationPolicy request) { return verificationPolicyRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_16 = model.getSortingPolicies().isEmpty();
+      boolean _not_16 = (!_isEmpty_16);
+      if (_not_16) {
+        _builder.newLine();
+        _builder.append("public List<SortingPolicy> listSortingPolicies() { return sortingPolicyRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public SortingPolicy getSortingPolicy(Long id) { return sortingPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"SortingPolicy not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public SortingPolicy createSortingPolicy(SortingPolicy request) { return sortingPolicyRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    {
+      boolean _isEmpty_17 = model.getAutomationRules().isEmpty();
+      boolean _not_17 = (!_isEmpty_17);
+      if (_not_17) {
+        _builder.newLine();
+        _builder.append("public List<AutomationRule> listAutomationRules() { return automationRuleRepository.findAll(); }");
+        _builder.newLine();
+        _builder.append("public AutomationRule getAutomationRule(Long id) { return automationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(\"AutomationRule not found: \" + id)); }");
+        _builder.newLine();
+        _builder.append("public AutomationRule createAutomationRule(AutomationRule request) { return automationRuleRepository.save(request); }");
+        _builder.newLine();
+      }
+    }
+    _builder.append("}");
+    _builder.newLine();
+    return _builder.toString();
+  }
+
+  public String policyServiceSubclass(final RefModel model) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package ");
+    String _basePackage = this.naming.basePackage(model);
+    _builder.append(_basePackage);
+    _builder.append(".service;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("import org.springframework.stereotype.Service;");
+    _builder.newLine();
+    _builder.append("import ");
+    String _basePackage_1 = this.naming.basePackage(model);
+    _builder.append(_basePackage_1);
+    _builder.append(".service.generated.GeneratedPolicyService;");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    _builder.append("@Service");
+    _builder.newLine();
+    _builder.append("public class PolicyService extends GeneratedPolicyService {");
     _builder.newLine();
     _builder.append("}");
     _builder.newLine();

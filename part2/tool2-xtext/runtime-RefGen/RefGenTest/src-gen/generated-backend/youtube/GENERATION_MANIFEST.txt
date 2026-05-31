@@ -1,7 +1,7 @@
 REF backend generation manifest
 Model: Youtube v"1.0.0"
 Scenario slug: youtube
-Package: pt.isep.enorm.ref.youtube
+Package: pt.isep.enorm.ref
 
 Resources: Channel, Video
 Feedbacks: VideoReview, TopVideoComment, ReplyVideoComment, VideoLike

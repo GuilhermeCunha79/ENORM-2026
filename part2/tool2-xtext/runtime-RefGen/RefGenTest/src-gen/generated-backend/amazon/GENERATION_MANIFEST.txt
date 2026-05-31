@@ -1,10 +1,10 @@
 REF backend generation manifest
 Model: Amazon v"1.0.0"
 Scenario slug: amazon
-Package: pt.isep.enorm.ref.amazon
+Package: pt.isep.enorm.ref
 
-Resources: Product, Order
-Feedbacks: ProductReview, TopThreadComment, ReplyComment
+Resources: Product, Order, OrderItem
+Feedbacks: ProductReview, TopThreadComment, ReplyComment, HelpfulVote
 User kinds: GENERIC, BUYER, SELLER, MODERATOR
 
 Common (always): pom, application, security baseline, user entity, API error handler

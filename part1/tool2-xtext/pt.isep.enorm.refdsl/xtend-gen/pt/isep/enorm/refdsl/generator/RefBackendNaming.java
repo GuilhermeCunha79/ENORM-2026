@@ -38,9 +38,7 @@ public class RefBackendNaming {
 
   public String basePackage(final RefModel model) {
     StringConcatenation _builder = new StringConcatenation();
-    _builder.append("pt.isep.enorm.ref.");
-    String _scenarioSlug = this.scenarioSlug(model);
-    _builder.append(_scenarioSlug);
+    _builder.append("pt.isep.enorm.ref");
     return _builder.toString();
   }
 
