@@ -12,7 +12,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import pt.isep.enorm.ref.domain.Product;
 
-
 @MappedSuperclass
 public abstract class GeneratedCommentReview {
   @Id
@@ -27,7 +26,7 @@ public abstract class GeneratedCommentReview {
 
 
   @ManyToOne(fetch = FetchType.LAZY, optional = true)
-  @JoinColumn(name = "Product", nullable = true)
+  @JoinColumn(name = "product", nullable = true)
   private Product Product;
 
 

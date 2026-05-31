@@ -660,6 +660,10 @@
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
       <ref role="3lhOvi" node="6Hrz6iyZqa4" resolve="GeneratedAuthorizationRule" />
     </node>
+    <node concept="3lhOvk" id="3bcNvc3rbI" role="3lj3bC">
+      <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
+      <ref role="3lhOvi" node="3bcNvbMCBJ" resolve="ApiExceptionHandler" />
+    </node>
     <node concept="3lhOvk" id="6C4luQlte9x" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36UM" resolve="ValidationRule" />
       <ref role="3lhOvi" node="5thN_UREqJa" resolve="GeneratedValidationRule" />
@@ -30145,6 +30149,240 @@
       </node>
     </node>
     <node concept="n94m4" id="3bcNv5WOX4" role="lGtFl">
+      <ref role="n9lRv" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
+    </node>
+  </node>
+  <node concept="312cEu" id="3bcNvbMCBJ">
+    <property role="TrG5h" value="ApiExceptionHandler" />
+    <property role="3GE5qa" value="web" />
+    <property role="2HnT6v" value="pt.isep.enorm.ref.web" />
+    <node concept="3Tm1VV" id="3bcNvbMCBK" role="1B3o_S" />
+    <node concept="2AHcQZ" id="3bcNvbMCBL" role="2AJF6D">
+      <ref role="2AI5Lk" to="uepr:~RestControllerAdvice" resolve="RestControllerAdvice" />
+    </node>
+    <node concept="3clFb_" id="3bcNvbMCBM" role="jymVt">
+      <property role="TrG5h" value="handleNotFound" />
+      <node concept="2AHcQZ" id="3bcNvbMCBN" role="2AJF6D">
+        <ref role="2AI5Lk" to="uepr:~ExceptionHandler" resolve="ExceptionHandler" />
+        <node concept="2B6LJw" id="3bcNvbMCBO" role="2B76xF">
+          <ref role="2B6OnR" to="uepr:~ExceptionHandler.value()" resolve="value" />
+          <node concept="3VsKOn" id="3bcNvbMCBQ" role="2B70Vg">
+            <ref role="3VsUkX" node="6Hrz6izEsw8" resolve="ResourceNotFoundException" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="3bcNvbMCBR" role="3clF46">
+        <property role="TrG5h" value="ex" />
+        <node concept="3uibUv" id="3bcNvbMCBS" role="1tU5fm">
+          <ref role="3uigEE" node="6Hrz6izEsw8" resolve="ResourceNotFoundException" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="3bcNvbMCBT" role="3clF47">
+        <node concept="3cpWs6" id="3bcNvbMCBU" role="3cqZAp">
+          <node concept="2OqwBi" id="3bcNvbMHnD" role="3cqZAk">
+            <node concept="2YIFZM" id="3bcNvbMGsT" role="2Oq$k0">
+              <ref role="1Pybhc" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+              <ref role="37wK5l" to="qd1r:~ResponseEntity.status(org.springframework.http.HttpStatusCode)" resolve="status" />
+              <node concept="Rm8GO" id="3bcNvbMGsU" role="37wK5m">
+                <ref role="1Px2BO" to="qd1r:~HttpStatus" resolve="HttpStatus" />
+                <ref role="Rm8GQ" to="qd1r:~HttpStatus.NOT_FOUND" resolve="NOT_FOUND" />
+              </node>
+            </node>
+            <node concept="liA8E" id="3bcNvbMHnE" role="2OqNvi">
+              <ref role="37wK5l" to="qd1r:~ResponseEntity$BodyBuilder.body(java.lang.Object)" resolve="body" />
+              <node concept="2YIFZM" id="3bcNvbMVay" role="37wK5m">
+                <ref role="37wK5l" to="33ny:~Map.of(java.lang.Object,java.lang.Object)" resolve="of" />
+                <ref role="1Pybhc" to="33ny:~Map" resolve="Map" />
+                <node concept="Xl_RD" id="3bcNvbMVMA" role="37wK5m">
+                  <property role="Xl_RC" value="message" />
+                </node>
+                <node concept="2OqwBi" id="3bcNvbMVMB" role="37wK5m">
+                  <node concept="37vLTw" id="3bcNvbMVMC" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3bcNvbMCBR" resolve="ex" />
+                  </node>
+                  <node concept="liA8E" id="3bcNvbMVMD" role="2OqNvi">
+                    <ref role="37wK5l" to="wyt6:~Throwable.getMessage()" resolve="getMessage" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3bcNvbMCC1" role="1B3o_S" />
+      <node concept="3uibUv" id="3bcNvbMCC2" role="3clF45">
+        <ref role="3uigEE" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+        <node concept="3uibUv" id="3bcNvbMCC3" role="11_B2D">
+          <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
+          <node concept="3uibUv" id="3bcNvbMCC4" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+          <node concept="3uibUv" id="3bcNvbMCC5" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="3clFb_" id="3bcNvbMCC6" role="jymVt">
+      <property role="TrG5h" value="handleAccessDenied" />
+      <node concept="2AHcQZ" id="3bcNvbMCC7" role="2AJF6D">
+        <ref role="2AI5Lk" to="uepr:~ExceptionHandler" resolve="ExceptionHandler" />
+        <node concept="2B6LJw" id="3bcNvbMCC8" role="2B76xF">
+          <ref role="2B6OnR" to="uepr:~ExceptionHandler.value()" resolve="value" />
+          <node concept="3VsKOn" id="3bcNvbMCCa" role="2B70Vg">
+            <ref role="3VsUkX" to="eoo2:~AccessDeniedException" resolve="AccessDeniedException" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="3bcNvbMCCb" role="3clF46">
+        <property role="TrG5h" value="ex" />
+        <node concept="3uibUv" id="3bcNvbMCCc" role="1tU5fm">
+          <ref role="3uigEE" to="eoo2:~AccessDeniedException" resolve="AccessDeniedException" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="3bcNvbMCCd" role="3clF47">
+        <node concept="3cpWs6" id="3bcNvbMCCe" role="3cqZAp">
+          <node concept="2OqwBi" id="3bcNvbMItc" role="3cqZAk">
+            <node concept="2YIFZM" id="3bcNvbMGkd" role="2Oq$k0">
+              <ref role="1Pybhc" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+              <ref role="37wK5l" to="qd1r:~ResponseEntity.status(org.springframework.http.HttpStatusCode)" resolve="status" />
+              <node concept="Rm8GO" id="3bcNvbMGVx" role="37wK5m">
+                <ref role="1Px2BO" to="qd1r:~HttpStatus" resolve="HttpStatus" />
+                <ref role="Rm8GQ" to="qd1r:~HttpStatus.FORBIDDEN" resolve="FORBIDDEN" />
+              </node>
+            </node>
+            <node concept="liA8E" id="3bcNvbMItd" role="2OqNvi">
+              <ref role="37wK5l" to="qd1r:~ResponseEntity$BodyBuilder.body(java.lang.Object)" resolve="body" />
+              <node concept="2YIFZM" id="3bcNvbMPmM" role="37wK5m">
+                <ref role="37wK5l" to="33ny:~Map.of(java.lang.Object,java.lang.Object)" resolve="of" />
+                <ref role="1Pybhc" to="33ny:~Map" resolve="Map" />
+                <node concept="Xl_RD" id="3bcNvbMPWo" role="37wK5m">
+                  <property role="Xl_RC" value="message" />
+                </node>
+                <node concept="2OqwBi" id="3bcNvbMPWp" role="37wK5m">
+                  <node concept="37vLTw" id="3bcNvbMPWq" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3bcNvbMCCb" resolve="ex" />
+                  </node>
+                  <node concept="liA8E" id="3bcNvbMPWr" role="2OqNvi">
+                    <ref role="37wK5l" to="eoo2:~FileSystemException.getMessage()" resolve="getMessage" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3bcNvbMCCl" role="1B3o_S" />
+      <node concept="3uibUv" id="3bcNvbMCCm" role="3clF45">
+        <ref role="3uigEE" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+        <node concept="3uibUv" id="3bcNvbMCCn" role="11_B2D">
+          <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
+          <node concept="3uibUv" id="3bcNvbMCCo" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+          <node concept="3uibUv" id="3bcNvbMCCp" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="3clFb_" id="3bcNvbMCCq" role="jymVt">
+      <property role="TrG5h" value="handleIllegalArgument" />
+      <node concept="2AHcQZ" id="3bcNvbMCCr" role="2AJF6D">
+        <ref role="2AI5Lk" to="uepr:~ExceptionHandler" resolve="ExceptionHandler" />
+        <node concept="2B6LJw" id="3bcNvbMCCs" role="2B76xF">
+          <ref role="2B6OnR" to="uepr:~ExceptionHandler.value()" resolve="value" />
+          <node concept="3VsKOn" id="3bcNvbMCCu" role="2B70Vg">
+            <ref role="3VsUkX" to="wyt6:~IllegalArgumentException" resolve="IllegalArgumentException" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="3bcNvbMCCv" role="3clF46">
+        <property role="TrG5h" value="ex" />
+        <node concept="3uibUv" id="3bcNvbMCCw" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~IllegalArgumentException" resolve="IllegalArgumentException" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="3bcNvbMCCx" role="3clF47">
+        <node concept="3cpWs8" id="3bcNvbMCCz" role="3cqZAp">
+          <node concept="3cpWsn" id="3bcNvbMCCy" role="3cpWs9">
+            <property role="TrG5h" value="status" />
+            <node concept="3uibUv" id="3bcNvbMCC$" role="1tU5fm">
+              <ref role="3uigEE" to="qd1r:~HttpStatus" resolve="HttpStatus" />
+            </node>
+            <node concept="3K4zz7" id="3bcNvbMCCE" role="33vP2m">
+              <node concept="2OqwBi" id="3bcNvbMGnW" role="3K4Cdx">
+                <node concept="Xl_RD" id="3bcNvbMCCA" role="2Oq$k0">
+                  <property role="Xl_RC" value="Moderator is required." />
+                </node>
+                <node concept="liA8E" id="3bcNvbMGnX" role="2OqNvi">
+                  <ref role="37wK5l" to="wyt6:~String.equals(java.lang.Object)" resolve="equals" />
+                  <node concept="2OqwBi" id="3bcNvbMHg5" role="37wK5m">
+                    <node concept="37vLTw" id="3bcNvbMGnZ" role="2Oq$k0">
+                      <ref role="3cqZAo" node="3bcNvbMCCv" resolve="ex" />
+                    </node>
+                    <node concept="liA8E" id="3bcNvbMHg6" role="2OqNvi">
+                      <ref role="37wK5l" to="wyt6:~Throwable.getMessage()" resolve="getMessage" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="Rm8GO" id="3bcNvbMGrq" role="3K4E3e">
+                <ref role="1Px2BO" to="qd1r:~HttpStatus" resolve="HttpStatus" />
+                <ref role="Rm8GQ" to="qd1r:~HttpStatus.UNAUTHORIZED" resolve="UNAUTHORIZED" />
+              </node>
+              <node concept="Rm8GO" id="3bcNvbMGo2" role="3K4GZi">
+                <ref role="1Px2BO" to="qd1r:~HttpStatus" resolve="HttpStatus" />
+                <ref role="Rm8GQ" to="qd1r:~HttpStatus.BAD_REQUEST" resolve="BAD_REQUEST" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="3bcNvbMCCF" role="3cqZAp">
+          <node concept="2OqwBi" id="3bcNvbMH5R" role="3cqZAk">
+            <node concept="2YIFZM" id="3bcNvbMGo9" role="2Oq$k0">
+              <ref role="1Pybhc" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+              <ref role="37wK5l" to="qd1r:~ResponseEntity.status(org.springframework.http.HttpStatusCode)" resolve="status" />
+              <node concept="37vLTw" id="3bcNvbMGoa" role="37wK5m">
+                <ref role="3cqZAo" node="3bcNvbMCCy" resolve="status" />
+              </node>
+            </node>
+            <node concept="liA8E" id="3bcNvbMH5S" role="2OqNvi">
+              <ref role="37wK5l" to="qd1r:~ResponseEntity$BodyBuilder.body(java.lang.Object)" resolve="body" />
+              <node concept="2YIFZM" id="3bcNvbMKQO" role="37wK5m">
+                <ref role="37wK5l" to="33ny:~Map.of(java.lang.Object,java.lang.Object)" resolve="of" />
+                <ref role="1Pybhc" to="33ny:~Map" resolve="Map" />
+                <node concept="Xl_RD" id="3bcNvbMH5U" role="37wK5m">
+                  <property role="Xl_RC" value="message" />
+                </node>
+                <node concept="2OqwBi" id="3bcNvbMI2o" role="37wK5m">
+                  <node concept="37vLTw" id="3bcNvbMH5W" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3bcNvbMCCv" resolve="ex" />
+                  </node>
+                  <node concept="liA8E" id="3bcNvbMI2p" role="2OqNvi">
+                    <ref role="37wK5l" to="wyt6:~Throwable.getMessage()" resolve="getMessage" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3bcNvbMCCM" role="1B3o_S" />
+      <node concept="3uibUv" id="3bcNvbMCCN" role="3clF45">
+        <ref role="3uigEE" to="qd1r:~ResponseEntity" resolve="ResponseEntity" />
+        <node concept="3uibUv" id="3bcNvbMCCO" role="11_B2D">
+          <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
+          <node concept="3uibUv" id="3bcNvbMCCP" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+          <node concept="3uibUv" id="3bcNvbMCCQ" role="11_B2D">
+            <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="n94m4" id="3bcNvc3rAk" role="lGtFl">
       <ref role="n9lRv" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
     </node>
   </node>
