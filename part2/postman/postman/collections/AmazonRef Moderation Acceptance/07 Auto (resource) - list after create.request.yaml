@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}{{resourceListPath}}"
+method: GET
+headers:
+  Authorization: Bearer {{moderatorToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Resource list after create returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Resource list after create is a collection", function () {
+        pm.expect(body).to.be.an("array");
+      });
+
+      const beforeCount = parseInt(pm.collectionVariables.get("resourceBeforeCount") || "0", 10);
+      pm.test("Resource count increased after create", function () {
+        pm.expect(body.length).to.equal(beforeCount + 1);
+      });
+    language: text/javascript
+order: 7000

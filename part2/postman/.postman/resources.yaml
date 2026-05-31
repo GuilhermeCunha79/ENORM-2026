@@ -1,0 +1,15 @@
+# Use this workspace to collaborate
+workspace:
+  id: e7b108b8-76e4-4d88-86cb-bea75e51dce8
+
+localResources:
+  collections:
+    - ..\amazonref-generated-moderation.postman_collection.json
+    - ..\redditref-generated-moderation.postman_collection.json
+    - ..\youtuberef-generated-moderation.postman_collection.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ..\postman\collections\RedditRef Moderation Acceptance: aa14701a-fdb2-427e-ba20-4fd352d738e9

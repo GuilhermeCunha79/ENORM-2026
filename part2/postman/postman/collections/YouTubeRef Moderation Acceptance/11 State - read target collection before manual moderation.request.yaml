@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}{{manualTargetListPath}}"
+method: GET
+headers:
+  Authorization: Bearer {{moderatorToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Target collection can be read before moderation", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Target state response is a collection", function () {
+        pm.expect(body).to.be.an("array");
+      });
+
+      pm.collectionVariables.set("targetStateBeforeCount", String(body.length));
+    language: text/javascript
+order: 11000

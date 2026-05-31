@@ -1,0 +1,44 @@
+$kind: collection
+name: RedditRef Moderation Acceptance
+description: "MPS-only collection generated from part2/tool1-mps/languages/Ref.sandbox.one/source_gen. Uses the generated auth, policy, and moderation simulation endpoints. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox.one/source_gen/pom.xml spring-boot:run"
+variables:
+  baseUrl: http://localhost:8081
+  mpsGeneratedRoot: part2/tool1-mps/languages/Ref.sandbox.one/source_gen
+  startCommand: mvn -q -f part2/tool1-mps/languages/Ref.sandbox.one/source_gen/pom.xml spring-boot:run
+  smokePath: /api/posts
+  resourceListPath: /api/posts
+  resourceContentField: bodyName
+  resourceAutoTargetType: Post
+  resourceBeforeCount: ""
+  resourceId: ""
+  resourceContent: ""
+  manualTargetListPath: /api/reportonposts
+  moderatorUsername: Moderator
+  moderatorPassword: Moderator
+  nonModeratorUsername: User
+  nonModeratorPassword: User
+  blockedKeyword: ISSUE
+  expectedPolicyCount: "1"
+  expectedBlockedMatch: "true"
+  expectedBlockedStatus: FLAG_CONTENT
+  baselineDecision: ""
+  baselineStatus: ""
+  policyResourceTargetType: ""
+  policyFeedbackTargetType: ""
+  autoFixturePath: /api/comments
+  autoFixtureContentField: bodyName
+  autoFixtureContent: ISSUE automatic moderation fixture
+  autoTargetType: Resource
+  autoTrigger: ON_RESOURCE_CREATE
+  expectedAutoStatus: SKIPPED
+  expectedAutoMatchedKeyword: "false"
+  autoStatus: ""
+  autoFixtureId: ""
+  feedbackBeforeCount: ""
+  targetStateBeforeCount: ""
+  targetType: ReportOnPost
+  trigger: ON_REPORT_THRESHOLD
+  wrongTargetType: CommentReview
+  wrongTrigger: ON_FEEDBACK_CREATE
+  moderatorToken: ""
+  nonModeratorToken: ""

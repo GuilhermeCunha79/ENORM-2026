@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}{{autoFixturePath}}"
+method: GET
+headers:
+  Authorization: Bearer {{moderatorToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Feedback list returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Feedback list response is a collection", function () {
+        pm.expect(body).to.be.an("array");
+      });
+
+      pm.collectionVariables.set("feedbackBeforeCount", String(body.length));
+    language: text/javascript
+order: 18000

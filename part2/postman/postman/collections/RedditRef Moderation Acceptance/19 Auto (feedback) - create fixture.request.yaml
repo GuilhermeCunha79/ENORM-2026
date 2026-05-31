@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}{{autoFixturePath}}"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: '{ "bodyName": "ISSUE automatic moderation fixture", "creationDateName": "2026-05-31" }'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Automatic moderation fixture is created", function () {
+        pm.response.to.have.status(201);
+      });
+
+      const body = pm.response.json();
+      pm.test("Created fixture has an id", function () {
+        pm.expect(body.id, "id").to.be.a("number");
+      });
+
+      const field = pm.collectionVariables.get("autoFixtureContentField");
+      const content = pm.collectionVariables.get("autoFixtureContent");
+      pm.test("Created fixture keeps the moderated attribute value", function () {
+        pm.expect(String(body[field] || ""), field).to.include(content);
+      });
+
+      pm.collectionVariables.set("autoFixtureId", String(body.id));
+      pm.collectionVariables.set("autoFixtureContent", String(body[field] || ""));
+    language: text/javascript
+order: 19000

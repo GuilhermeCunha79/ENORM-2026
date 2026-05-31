@@ -1,0 +1,48 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{targetType}}",
+      "targetId": 1,
+      "trigger": "{{trigger}}",
+      "content": "This content includes {{blockedKeyword}} and should trigger moderation if configured."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Moderator blocked content returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      const baselineDecision = pm.collectionVariables.get("baselineDecision");
+      const baselineStatus = pm.collectionVariables.get("baselineStatus");
+      const keyword = pm.collectionVariables.get("blockedKeyword");
+      const expectedStatus = pm.collectionVariables.get("expectedBlockedStatus") || "FLAG_CONTENT";
+      const expectMatch = String(pm.collectionVariables.get("expectedBlockedMatch") || "true").toLowerCase() === "true";
+
+      if (expectMatch) {
+        pm.test("Blocked keyword triggers moderation action", function () {
+          pm.expect(body.decision).to.equal("FLAGGED");
+          pm.expect(body.status).to.equal(expectedStatus);
+          const matched = (body.matchedKeywords || []).map(String);
+          pm.expect(matched).to.include(keyword);
+        });
+      } else {
+        pm.test("Blocked request is evaluated successfully", function () {
+          pm.expect(body.status).to.be.a("string").and.not.empty;
+        });
+      }
+
+      pm.test("Blocked moderation differs from clean baseline", function () {
+        pm.expect(body.decision).to.not.equal(baselineDecision);
+        pm.expect(body.status).to.not.equal(baselineStatus);
+      });
+    language: text/javascript
+order: 15000

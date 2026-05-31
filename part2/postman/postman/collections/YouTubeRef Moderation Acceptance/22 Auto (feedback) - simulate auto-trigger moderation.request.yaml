@@ -1,0 +1,45 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{autoTargetType}}",
+      "targetId": {{autoFixtureId}},
+      "trigger": "{{autoTrigger}}",
+      "content": "{{autoFixtureContent}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Automatic-hook equivalent moderation request returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      const expectedStatus = pm.collectionVariables.get("expectedAutoStatus") || "SKIPPED";
+      const expectMatch = String(pm.collectionVariables.get("expectedAutoMatchedKeyword") || "false").toLowerCase() === "true";
+      const keyword = pm.collectionVariables.get("blockedKeyword");
+
+      pm.test("Automatic-hook equivalent status matches current MPS policy wiring", function () {
+        pm.expect(body.status).to.equal(expectedStatus);
+      });
+
+      if (expectMatch) {
+        pm.test("Automatic-hook equivalent matched the configured keyword", function () {
+          const matched = (body.matchedKeywords || []).map(String);
+          pm.expect(matched).to.include(keyword);
+        });
+      } else {
+        pm.test("Automatic-hook equivalent has no matched keywords in current MPS wiring", function () {
+          pm.expect(body.matchedKeywords || []).to.be.an("array").that.is.empty;
+        });
+      }
+
+      pm.collectionVariables.set("autoStatus", body.status);
+    language: text/javascript
+order: 22000

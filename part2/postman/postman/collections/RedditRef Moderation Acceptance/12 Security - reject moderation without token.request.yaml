@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{targetType}}",
+      "targetId": 1,
+      "trigger": "{{trigger}}",
+      "content": "This content includes {{blockedKeyword}} and should trigger moderation if configured."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Moderation without token is rejected", function () {
+        pm.expect([401, 403]).to.include(pm.response.code);
+      });
+    language: text/javascript
+order: 12000

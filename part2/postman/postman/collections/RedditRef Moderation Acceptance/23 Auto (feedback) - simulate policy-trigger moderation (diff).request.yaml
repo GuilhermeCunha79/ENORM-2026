@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{policyFeedbackTargetType}}",
+      "targetId": {{autoFixtureId}},
+      "trigger": "{{trigger}}",
+      "content": "{{autoFixtureContent}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Policy-trigger moderation request returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      const autoStatus = pm.collectionVariables.get("autoStatus");
+      pm.test("Policy-trigger moderation differs from auto-trigger moderation", function () {
+        pm.expect(body.status).to.not.equal(autoStatus);
+      });
+    language: text/javascript
+order: 23000

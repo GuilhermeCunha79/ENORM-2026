@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}{{resourceListPath}}/{{resourceId}}"
+method: GET
+headers:
+  Authorization: Bearer {{moderatorToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Created resource can be read back", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      const expectedId = parseInt(pm.collectionVariables.get("resourceId"), 10);
+      pm.test("Read-back resource id matches created id", function () {
+        pm.expect(body.id).to.equal(expectedId);
+      });
+
+      const field = pm.collectionVariables.get("resourceContentField");
+      pm.collectionVariables.set("resourceContent", String(body[field] || ""));
+    language: text/javascript
+order: 8000

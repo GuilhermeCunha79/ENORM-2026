@@ -55,8 +55,8 @@ These parts are generated for all scenarios:
 
 ## 6) Output targets in this repository
 
-- `part2/amazon-backend`
-- `part2/reddit-backend`
-- `part2/youtube-backend`
+- `part2/ai-generated-backends-prototypes/amazon-backend`
+- `part2/ai-generated-backends-prototypes/reddit-backend`
+- `part2/ai-generated-backends-prototypes/youtube-backend`
 
 The three backends are scenario specializations of the same generator architecture.

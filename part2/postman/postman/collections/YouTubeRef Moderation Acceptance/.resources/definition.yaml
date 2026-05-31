@@ -1,0 +1,44 @@
+$kind: collection
+name: YouTubeRef Moderation Acceptance
+description: "MPS-only collection generated from part2/tool1-mps/languages/Ref.sandbox.two/source_gen. Uses the generated auth, policy, and moderation simulation endpoints. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox.two/source_gen/pom.xml spring-boot:run"
+variables:
+  baseUrl: http://localhost:8081
+  mpsGeneratedRoot: part2/tool1-mps/languages/Ref.sandbox.two/source_gen
+  startCommand: mvn -q -f part2/tool1-mps/languages/Ref.sandbox.two/source_gen/pom.xml spring-boot:run
+  smokePath: /api/videos
+  resourceListPath: /api/videos
+  resourceContentField: titleName
+  resourceAutoTargetType: Video
+  resourceBeforeCount: ""
+  resourceId: ""
+  resourceContent: ""
+  manualTargetListPath: /api/reportonvideos
+  moderatorUsername: Moderator
+  moderatorPassword: Moderator
+  nonModeratorUsername: User
+  nonModeratorPassword: User
+  blockedKeyword: WAR
+  expectedPolicyCount: "2"
+  expectedBlockedMatch: "true"
+  expectedBlockedStatus: FLAG_CONTENT
+  baselineDecision: ""
+  baselineStatus: ""
+  policyResourceTargetType: ""
+  policyFeedbackTargetType: ""
+  autoFixturePath: /api/comments
+  autoFixtureContentField: textName
+  autoFixtureContent: WAR automatic moderation fixture
+  autoTargetType: Resource
+  autoTrigger: ON_RESOURCE_CREATE
+  expectedAutoStatus: SKIPPED
+  expectedAutoMatchedKeyword: "false"
+  autoStatus: ""
+  autoFixtureId: ""
+  feedbackBeforeCount: ""
+  targetStateBeforeCount: ""
+  targetType: ReportOnVideo
+  trigger: ON_REPORT_THRESHOLD
+  wrongTargetType: CommentReview
+  wrongTrigger: ON_FEEDBACK_CREATE
+  moderatorToken: ""
+  nonModeratorToken: ""

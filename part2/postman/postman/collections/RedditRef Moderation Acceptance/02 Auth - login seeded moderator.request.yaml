@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: '{ "username": "{{moderatorUsername}}", "password": "{{moderatorPassword}}" }'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Moderator login returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Moderator token is returned", function () {
+        pm.expect(body.token, "token").to.be.a("string").and.not.empty;
+      });
+
+      pm.collectionVariables.set("moderatorToken", body.token);
+    language: text/javascript
+order: 2000

@@ -1,816 +1,468 @@
-# ENORM Part 2 - Team Report (DSL and Code Generation)
+# ENORM Part 2 - Team Report
 
 **Course:** MEI - ENORM (2025/26)  
-**Deliverable:** Team report for the team tasks of Part 2 (Activities 1, 2, 4, 5 and team integration tasks of Activity 6) defined in the assignment ([diagrams/enunciado/part2/enunciado-p2.md](../diagrams/enunciado/part2/enunciado-p2.md)).  
-**Repository root:** project root containing `part2/`, `diagrams/`, and tool-specific subprojects.
+**Deliverable:** Team report for Part 2 - DSL concrete syntax, backend generation and validation.
+**Assignment reference:** [diagrams/enunciado/part2/enunciado-p2.md](../diagrams/enunciado/part2/enunciado-p2.md)
+
+This report consolidates the team-level work for Part 2. It follows the assignment activities and uses the individual tool reports as supporting evidence:
+
+- [Tool 1 - JetBrains MPS](tool1-mps/readme.md)
+- [Tool 2 - Eclipse Xtext](tool2-xtext/readme.md)
+- [Tool 3 - Eclipse Sirius](tool3-sirius/readme.md)
+
+The team kept the same REF domain from Part 1 and extended it with concrete syntaxes and generators capable of producing REST backend applications for the Amazon, Reddit and YouTube scenarios.
 
 ---
 
-## 1. Team composition and tool assignment
+## 1. Team Composition and Tool Assignment
 
-| Member            | Primary tool (individual implementation)                                                              | Tool report (.md) |
-|-------------------|-------------------------------------------------------------------------------------------------------|-------------------|
-| Guilherme Cunha   | **JetBrains MPS** - projectional/textual DSL and generator implementation (`part2/tool1-mps/`, `part2/tool1-mps/languages/`) | [tool1-mps/readme.md](tool1-mps/readme.md) |
-| Pedro Vilarinho   | **Eclipse Xtext** - textual DSL, validation, generator (`part2/tool2-xtext/`)                         | [tool2-xtext/readme.md](tool2-xtext/readme.md) |
-| Francisco Peixoto | **Eclipse Sirius** - graphical views / Viewpoint Specification (`part2/tool3-sirius/`)                | [tool3-sirius/readme.md](tool3-sirius/readme.md) |
+| Member | Tool | Main responsibility |
+|---|---|---|
+| Guilherme Cunha | JetBrains MPS | Projectional/textual syntax and MPS code generator. |
+| Pedro Vilarinho | Eclipse Xtext | Textual grammar, validation and Xtend backend generator. |
+| Francisco Peixoto | Eclipse Sirius | Graphical notation, EMF instances and Acceleo backend generator. |
 
-The team works with a **single domain metamodel (REF)** and three **reference scenarios** (YouTube, Amazon, Reddit). Each member implements the required artifacts in the assigned tool. This report covers the team-level Part 2 decisions: concrete syntax design, common backend features, commonality/variability analysis, code generation design, and cross-tool compatibility of generated applications.
+All tools describe the same REF concepts, but each one provides a different authoring experience:
 
-Tool-specific implementation details remain in each individual tool report.
+- Sirius gives a graphical notation for domain review and model inspection.
+- Xtext gives a parser-based textual DSL suited for versioned text files and CI-style generation.
+- MPS gives a projectional textual notation with typed editors and direct model-to-text generation.
 
 ---
 
-## 2. Activity 1 - Design Concrete Syntax for the DSL
+## 2. Assignment Scope and Traceability
 
-### 2.1 Graphical notation
-The Sirius editor is used to provide a single overview diagram for each REF model instance. The diagram is centered on
-the `RefModel` root and shows the model as a navigable canvas with typed nodes, labeled connectors, and visual grouping by concern.
-The notation is meant to make the model readable for a domain expert without exposing implementation details. Each metamodel element
-uses a compact shape, a clear label, and a small set of visual cues for type and relationship semantics.
+| Assignment activity | Team outcome | Main repository evidence |
+|---|---|---|
+| Activity 1 - Concrete syntax | Graphical and textual notations for REF. | Sirius `.odesign`, Xtext grammar, MPS editors, and Section 3 of this report. |
+| Activity 2 - Common backend features | Shared REST backend architecture and manual extension strategy. | Section 4 and generated backend structures. |
+| Activity 3 - Prototypes | Reference backend prototypes used to identify generated code. | `part2/ai-generated-backends-prototypes/amazon-backend`, `part2/ai-generated-backends-prototypes/reddit-backend`, `part2/ai-generated-backends-prototypes/youtube-backend`. |
+| Activity 4 - Commonality/variability | Mapping from REF model elements to generated artifacts and hooks. | Section 6 and individual generator reports. |
+| Activity 5 - Code generation | Tool-specific template implementations for the common generation design. | MPS generator templates, Xtext Xtend generator, Sirius Acceleo generator. |
+| Activity 6 - Generated applications | Generation of Amazon, Reddit and YouTube backends, manual extension support, tests/issues and evolution plan. | Section 8 and the individual reports. |
 
-#### Diagram structure
-- The root element is `RefModel`, shown as a large container node with the model name and version in its title.
-- The remaining elements are displayed as typed nodes placed around the root and organized by functional area: actors, structure, feedback, and governance/behavior.
-- Relationships are drawn as directed edges between typed nodes. Containment and optional references use different line styles so the meaning is visible at a glance.
-- Enumerated properties are rendered inside the node label or as a short secondary line, instead of creating separate nodes.
+---
 
-#### Visual mapping by metamodel element
-| Metamodel element | Graphical representation in Sirius |
-|---|---|
-| `RefModel` | Large root container / overview frame titled with `<name> (v<version>)`. It acts as the diagram entry point and groups all other elements. |
-| `UserType` | Square node with a blue actor-style accent. The label shows the user type name, with `kind` as a short property line when needed. |
-| `ContextType` | Square node used as a context container, with a neutral gray fill. Label shows the context name and `kind`. |
-| `ResourceType` | Square node with orange accent to represent domain entities. Attributes are displayed inside the same node as a compartment-style list. |
-| `Attribute` | Small row/line inside the owning `ResourceType` node using `name : type` plus markers such as `required` and `multiValued`. |
-| `ResourceRelation` | Directed edge between two `ResourceType` nodes. The edge label shows the relation name and cardinalities. Containment and recursion use edge decoration or line style. |
-| `FeedbackType` | Square node with green accent to identify feedback families such as comments, reviews, votes, or reports. |
-| `FeedbackDefinition` | Distinct node linked to its `FeedbackType`, author, and subject. The label shows the feedback name, with policy and rating data as short inline details. |
-| `FeedbackPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node. The status is shown directly as `enabled` or `disabled`. |
-| `RatingPolicy` | Small attached node or inline property panel on the `FeedbackDefinition` node, showing the rating range as `min..max`. |
-| `AuthorizationRule` | Square node with a blue governance accent. The label includes the allowed action, and edges connect it to the actor, context, resource, and optional feedback target. |
-| `ValidationRule` | Square node with a green validation accent. The label shows the rule name and severity. Optional links indicate the affected resource, feedback, and invoking automation. |
-| `ModerationPolicy` | Square node with a yellow moderation accent. The node label shows the policy name, and edges connect the monitored resource, monitored feedback, executor, and optional context. |
-| `AutomationRule` | Square node with a light-purple behavior accent. The label includes the rule name and trigger event. Nested `Condition` and `Action` nodes are shown as owned children. |
-| `Condition` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the condition name and operator. |
-| `ConditionKeywords` | Leaf child node under `Condition`, used to represent each keyword checked by keyword-based condition operators. |
-| `Action` | Small child node inside an `AutomationRule`, rendered with a light-yellow background. The label shows the action name and result kind. |
-| `VerificationPolicy` | Square node with a cyan verification accent. The label shows the policy name and the verification mode. |
-| `SortingPolicy` | Square node with a light-blue sorting accent. The label shows the policy name together with the criterion and direction. |
+## 3. Activity 1 - Concrete Syntax Design
 
-#### Relationship notation
-- Solid arrows represent mandatory typed references, such as a feedback definition pointing to its type or author.
-- Dashed arrows represent optional references, such as optional context, optional feedback targets, or optional subject links.
-- Containment uses a stronger composite visual treatment, especially for owned `Attribute`, `Condition`, and `Action` elements.
-- Self-relations and recursive relations are drawn with explicit labels so the reader can distinguish hierarchy from recursion.
-- Edges are color-coded by concern: actor/security links, structure links, feedback links, moderation/validation links, and automation/sorting links.
+The Part 2 assignment required a concrete syntax for the DSL, including one graphical notation and textual/projectional notations. The team designed all notations around the same principles:
 
-#### How this supports the domain expert
-The editor keeps the same vocabulary as the metamodel, but the diagram removes most technical noise. A domain expert can
-scan the model by reading the main nodes first, then inspect the connectors to understand who can act, what is being
-described, and which rules govern the scenario. The Sirius diagram can be used in validation sessions and for scenario
-comparison across YouTube, Amazon, and Reddit models.
+- keep REF concepts visible to domain experts;
+- preserve strong typing for references, enums and model relationships;
+- represent both structure and behavior, including feedback, validation, moderation, automation, verification and sorting;
+- avoid tool-specific semantic shortcuts that would make the same model mean different things in different tools;
+- keep the notation close enough to the metamodel to support generation without ambiguous interpretation.
 
+### 3.1 Shared textual notation
 
-### 2.2 Textual notation
-
-### Scope and Intent
-
-This is the proposed textual concrete syntax for REF in Part 2.
-It follows the REF metamodel v3 used in the project and includes the concepts shown in the MPS model instances, such as `SortingPolicy`, `Condition`, `ConditionKeywords`, `Action`, `TriggerEvent`, `FeedbackPolarity`, and `VerificationRequirement`.
-
-Two equivalent textual views are supported in the report:
-
-- A canonical SME-oriented syntax with section headers, minimal repeated keywords, and indentation (no braces).
-- A projection-compatible syntax (properties/children/references) matching MPS exports.
-
-### Design Principles
-
-A domain expert should be able to read and validate a model without developer help.
-
-"Close to natural language" here means familiar keywords and clear structure. It does not mean full prose sentences.
-
-The notation uses one declaration per line, keyword-based properties, and indentation under section headers. Braces are optional and omitted in the SME view. This keeps models easy to read and review.
-
-The syntax follows these principles:
-
-- Keep the syntax traceable to REF v3, including the `ConditionKeywords` child elements used by automation conditions.
-- Use domain words close to natural language (for example: `authorize`, `moderation`, `automation`, `verification`).
-- Keep strong typing through explicit enum tokens and typed references.
-- Reduce noise through optional defaults and keyword modifiers.
-- Keep models readable in code review and version control.
-
-### Global Document Structure
-
-The full model is organized in named sections so users can navigate by domain concern.
+The team textual notation is organized by domain concern. A model starts with a `RefModel` declaration and then declares users, resources, contexts, feedback, policies and behavior in named sections.
 
 ```refdsl
-ref "ModelName" version "1.0.0"
+ref AmazonRef version "1.0.0"
 
 users:
-  ...
+  user Reviewer kind GENERIC
+  user Buyer kind BUYER
+  user Moderator kind MODERATOR
 
 resources:
-  ...
-
-contexts:
-  ...
-
-relations:
-  ...
-
-feedback types:
-  ...
+  Product supports media false with fields:
+    - Name is required true and multi valued false, TEXT
+    - Description is required true and multi valued false, TEXT
 
 feedback definitions:
-  ...
-
-sorting policies:
-  ...
-
-authorizations:
-  ...
-
-validations:
-  ...
+  ProductReview authored by Reviewer on resource Product
+    policy ENABLED
+    rated between 1 and 5 step 1
 
 moderations:
-  ...
+  ReviewModerationPolicy mode HYBRID decision FLAGGED
+    trigger ON_REPORT_THRESHOLD on feedback ProductReview
 
 automations:
-  ...
-
-verifications:
-  ...
+  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE on feedback ProductReview
+    when:
+      - DescriptionCheck field Description CONTAINS_KEYWORDS:
+          - restricted
+    then:
+      - FlagReview FLAG_CONTENT message "Content restricted"
 ```
 
-In the automation section, behavior detail is represented with nested conditions and actions.
+The textual syntax is intentionally close to natural language, but it is not free prose. Keywords, enum literals and references remain explicit so that tools can type-check models and generators can consume them deterministically.
 
-### Textual Representation for Each Metamodel Element
+### 3.2 Mapping from REF concepts to textual syntax
 
-| Metamodel element | Textual representation in editor |
+| REF concept | Textual representation |
 |---|---|
-| RefModel | `ref [name] version [semver]` followed by section headers `[section]:` |
-| UserType | In `users:` section: `user [Name] with [UserKind] kind extends [UserTypeName], ...` |
-| ContextType | In `contexts:` section: `[Name] with [ContextKind] kind, contains [ResourceTypeName], ...` |
-| ResourceType | In `resources:` section: `[Name] [ supports media [bool] ] , extends [ResourceTypeName], ... with fields: [Attribute], ...` |
-| Attribute | In `fields` list: `- [name] is a required: [bool] and multi valued : [bool] , [PrimitiveType]` |
-| ResourceRelation | In `relations:` section: `[Name] from [ResourceType] [[srcCard]] to [ResourceType] [[tgtCard]], containment: [bool], recursive: [bool]` |
-| FeedbackType | In `feedback types:` section: `[Name] kind: [FeedbackKind] applies on [FeedbackSubjectScope] , has rating: [bool], recursive: [bool], allows media: [bool], allows text: [bool], with polarity: [FeedbackPolarity]` |
-| FeedbackDefinition | In `feedback definitions:` section: `[Name] authored by [UserType] on resource [ResourceType] or feedback [FeedbackDefinition] requires a verified context: [bool], verification requirement: [VerificationRequirement], unique per author target: [bool], feedback policy: [FeedbackPolicyName] policy status [FeedbackStatus], [ rated between [min] and [max] with [step] step ]` |
-| FeedbackPolicy | Named policy under a feedback definition: `[Name] policy status [FeedbackStatus]` (inline with FeedbackDefinition) |
-| RatingPolicy | Inline under a feedback definition: `rated between [min] and [max] with [step] step` |
-| ValidationRule | In `validations:` section: `[Name] with [ValidationKind] and severity [RuleSeverity] for expression [expression] , was invoked by [UserType] in context of [ContextType] with implementation id [implementationId] and applies to resource [ResourceType] \| applies to feedback [FeedbackDefinition]` |
-| ModerationPolicy | In `moderations:` section: `[Name] in [ModerationMode] mode set to [ModerationDecision] when trigger [TriggerEvent] on resource [ResourceType] \| feedback [FeedbackDefinition] executed by [UserType] in [ContextType] context` |
-| AuthorizationRule | In `authorizations:` section: `[AuthName] for [ActionKind] performed by [UserType] in [ContextType] context , on resource [ResourceType] \| on feedback [FeedbackDefinition]` |
-| AutomationRule | In `automations:` section: `[Name] trigger [TriggerEvent] in [ContextType] context on feedback [FeedbackDefinition] \| resource [ResourceType] using [ValidationRule] when condition(s) :` followed by nested conditions, `then :`, and nested actions |
-| Condition | In an automation condition list: `- [Name] should check if [AttributeName] field [ConditionOperator] as :` followed by nested `ConditionKeywords` entries |
-| ConditionKeywords | In a condition keyword list: `- [word]` |
-| Action | In an automation action list: `- [Name] should [ActionResultKind] with message [message]` |
-| VerificationPolicy | In `verifications:` section: `[Name] in [ValidationKind] mode is applied on [TriggerEvent]` |
-| SortingPolicy | In `sorting policies:` section: `[Name] applies to resource [ResourceType] \| applies to feedback [FeedbackDefinition] in [ContextType] context , sorted by [SortCriterion] with [SortDirection] direction` |
+| `RefModel` | Root declaration with model name and version. |
+| `UserType` | Entry in `users:` with name and `UserKind`. |
+| `ContextType` | Entry in `contexts:` with context kind and contained resources. |
+| `ResourceType` | Entry in `resources:` with media support, optional supertype and fields. |
+| `Attribute` | Field line with name, required flag, multi-valued flag and primitive type. |
+| `ResourceRelation` | Relation line with source, target, cardinalities, containment and recursion flags. |
+| `FeedbackType` | Feedback family declaration, such as review, comment, vote, report or subscription. |
+| `FeedbackDefinition` | Concrete feedback relation between author, resource/feedback target and policies. |
+| `RatingPolicy` | Inline rating range and step associated with a feedback definition. |
+| `AuthorizationRule` | Rule connecting action, actor, context and target. |
+| `ValidationRule` | Rule with kind, severity, expression and `implementationId` hook. |
+| `ModerationPolicy` | Policy with mode, decision, trigger, executor and monitored target. |
+| `AutomationRule` | Triggered behavior with nested `Condition` and `Action` entries. |
+| `Condition` / `ConditionValue` | Typed condition over an attribute or target value, including keywords when needed. |
+| `Action` | Generated moderation/automation result such as flag, hide, remove, notify or approve. |
+| `VerificationPolicy` | Verification mode and trigger. |
+| `SortingPolicy` | Sort target, context, criterion and direction. |
 
-## Enum Token Notation
+### 3.3 MPS projectional syntax
 
-All enum literals are written as uppercase keywords to preserve type safety and align with the existing P1 model vocabulary.
+In MPS, the syntax is implemented with **Editors** instead of a parser. The root `RefModel` editor acts as the global editor and embeds child editors for users, resources, feedback definitions, moderation policies, automation rules and other elements.
 
-- UserKind: `GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`
-- ContextKind: `GLOBAL`, `COMMUNITY`, `CHANNEL`, `CATALOG`
-- PrimitiveType: `TEXT`, `NUMBER`, `BOOLEAN`, `DATE`, `DATETIME`, `IMAGE`, `VIDEO`, `URL`
-- FeedbackKind: `COMMENT`, `REVIEW`, `REACTION`, `VOTE`, `REPORT`, `SUBSCRIPTION`
-- FeedbackSubjectScope: `RESOURCE_ONLY`, `FEEDBACK_ONLY`, `RESOURCE_OR_FEEDBACK`
-- FeedbackPolarity: `NONE`, `LIKE_DISLIKE`, `UP_DOWN`
-- FeedbackStatus: `ENABLED`, `DISABLED`
-- VerificationRequirement: `NONE`, `OPTIONAL`, `REQUIRED`
-- ValidationKind: `AUTOMATIC`, `MANUAL`
-- RuleSeverity: `INFO`, `WARNING`, `ERROR`
-- ModerationMode: `AUTOMATIC`, `MANUAL`, `HYBRID`
-- ModerationDecision: `APPROVED`, `FLAGGED`, `HIDDEN`, `REMOVED`, `BLOCKED`, `REJECTED`
-- ActionKind: `READ`, `CREATE`, `UPDATE`, `DELETE`, `COMMENT`, `RATE`, `VOTE`, `REPORT`, `SUBSCRIBE`, `MODERATE`, `VALIDATE`
-- TriggerEvent: `ON_RESOURCE_CREATE`, `ON_RESOURCE_UPDATE`, `ON_RESOURCE_DELETE`, `ON_FEEDBACK_CREATE`, `ON_FEEDBACK_UPDATE`, `ON_FEEDBACK_DELETE`, `ON_REPORT_SUBMITTED`, `ON_REPORT_THRESHOLD`, `ON_MANUAL_REQUEST`
-- ConditionOperator: `CONTAINS_KEYWORDS`, `NOT_CONTAINS_KEYWORDS`, `MATCH_REGEX`, `NOT_MATCH_REGEX`, `HAS_PROPERTY`, `NOT_HAS_PROPERTY`, `HAS_SPECIFIC_PROPERTY`, `NOT_HAS_SPECIFIC_PROPERTY`
-- ActionResultKind: `DISPLAY_MESSAGE`, `FLAG_CONTENT`, `HIDE_CONTENT`, `REMOVE_CONTENT`, `BLOCK_SUBMISSION`, `NOTIFY_MODERATOR`, `AUTO_APPROVE`, `AUTO_REJECT`
-- SortCriterion: `DATE`, `VALUE`, `RELEVANCE`
-- SortDirection: `ASC`, `DESC`
+The MPS notation keeps the model strongly typed while presenting it as readable text. For example, the `ResourceType` editor contains the resource name, media support, optional supertype and a list of attributes:
 
-
-
-### End-to-End Textual Example
-
-```refdsl
-ref AmazonRef version 1.0.0
-
-users:
-  user Reviewer with GENERIC kind extends << ... >>
-  user Buyer with BUYER kind extends << ... >>
-  user Seller with SELLER kind extends << ... >>
-  user Moderator with MODERATOR kind extends << ... >>
-
-resources:
-  Product [ supports media false ] , extends Order with fields:
-    - Id is a required: true and multi valued : false , TEXT
-    - Name is a required: true and multi valued : false , TEXT
-    - Description is a required: true and multi valued : false , TEXT
-    - CreatedAt is a required: false and multi valued : false , DATE
-  Order [ supports media false ] , extends << ... >> with fields:
-    - Id is a required: true and multi valued : false , TEXT
-    - Date is a required: true and multi valued : false , DATE
-  OrderItem [ supports media false ] , extends << ... >> with fields:
-    - Quantity is a required: true and multi valued : false , NUMBER
-  CommentReview [ supports media true ] , extends << ... >> with fields:
-    - Id is a required: true and multi valued : false , TEXT
-    - Text is a required: true and multi valued : false , TEXT
-    - CreatedAt is a required: true and multi valued : false , DATE
-
-contexts:
-  CatalogContext with CATALOG kind, contains Product, Order, OrderItem, CommentReview
-  ModerationContext with CATALOG kind, contains Product
-  SearchContext with CATALOG kind, contains Product
-  RecommendationContext with CATALOG kind, contains Product
-
-relations:
-  OrderContainsOrderItem from Order [1] to OrderItem [2], containment: false, recursive: false
-  OrderItemTargetsProduct from OrderItem [2] to Product [1], containment: false, recursive: false
-  ProductContainsComment from Product [1] to CommentReview [2], containment: true, recursive: false
-
-feedback types:
-  ReviewType kind: REVIEW applies on RESOURCE_ONLY , has rating: true, recursive: false, allows media: true, allows text: true, with polarity: NONE
-  HelpfulVoteType kind: VOTE applies on RESOURCE_ONLY , has rating: false, recursive: false, allows media: false, allows text: false, with polarity: UP_DOWN
-
-feedback definitions:
-  ProductReview authored by Reviewer on resource Product or feedback <no subjectFeedback> requires a verified context: false, verification requirement: OPTIONAL, unique per author target: true, feedback policy: ProductReviewPolicy policy status ENABLED, rated between 1 and 5 with 1 step
-  HelpfulVoteOnComment authored by Buyer on resource CommentReview or feedback <no subjectFeedback> requires a verified context: false, verification requirement: OPTIONAL, unique per author target: false, feedback policy: HelpfulVotePolicy policy status ENABLED, <no ratingPolicy>
-
-sorting policies:
-  ProductListingSort applies to resource Product | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by VALUE with DESC direction
-  ProductSearchSort applies to resource Product | applies to feedback <no appliesToFeedback> in <no inContext> context , sorted by DATE with DESC direction
-  CommentSortByDate applies to resource CommentReview | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by DATE with DESC direction
-  CommentSortByRating applies to resource CommentReview | applies to feedback <no appliesToFeedback> in CatalogContext context , sorted by VALUE with DESC direction
-
-authorizations:
-  BuyerCanCreateReview for CREATE performed by Reviewer in CatalogContext context , on resource Product | on feedback ProductReview
-  ReviewerCanCreateReview for CREATE performed by Reviewer in CatalogContext context , on resource Product | on feedback ProductReview
-  ModeratorCanModerateReviews for MODERATE performed by Moderator in ModerationContext context , on resource Product | on feedback ProductReview
-  BuyerCanVoteHelpful for VOTE performed by Buyer in CatalogContext context , on resource CommentReview | on feedback HelpfulVoteOnComment
-
-validations:
-  ReviewValidationRule with AUTOMATIC and severity ERROR for expression rating_in_range_and_non_empty_text , was invoked by Reviewer in context of CatalogContext with implementation id amazon_review_validation and applies to resource Product | applies to feedback ProductReview
-
-moderations:
-  ReviewModerationPolicy in HYBRID mode set to FLAGGED when trigger ON_REPORT_THRESHOLD on resource Product | feedback ProductReview executed by Moderator in ModerationContext context
-
-automations:
-  ReviewGuardAutomation trigger ON_FEEDBACK_CREATE in ModerationContext context on feedback ProductReview | resource Product using ReviewValidationRule when condition(s) :
-    - DescriptionCheck should check if Description field CONTAINS_KEYWORDS as :
-      - WAR
-    then :
-      - FlagReview should FLAG_CONTENT with message Content Restricted
-
-verifications:
-  ProductReviewVerificationAuto in AUTOMATIC mode is applied on ON_FEEDBACK_CREATE
-  ProductReviewVerificationManual in MANUAL mode is applied on ON_MANUAL_REQUEST
+```text
+{ name } [ supports media { supportsMedia } ] ,
+extends (- % superType % /empty cell: <default> -)
+with fields:
+(- % attribute % /empty cell: <default> -)
 ```
 
-### Adaptations Relative to P1 and Justification
+The `Attribute` editor is a child editor reused inside resource declarations:
 
-The syntax is projection-compatible with REF v3 and documents the current `ConditionKeywords` structure used by automation conditions.
+```text
+{ name } is a required : { required }
+and multi valued : { multiValued } , { type }
+```
 
-1. Section headers remove repeated concept keywords (for example, under `users:` the entry is just `Buyer kind BUYER`, not `user Buyer ...`). Indentation replaces braces in the SME view.
-2. Trigger values are typed with `TriggerEvent` instead of free text. This prevents invalid event names at parse time.
-3. `AutomationRule` includes explicit condition and action lists. A `Condition` owns one or more `ConditionKeywords` entries instead of a single free-text value.
-4. `SortingPolicy` is first-class in the syntax as a named `sorting policies` section. This captures ordering behavior that is central to Amazon, Reddit, and YouTube-like scenarios.
-5. Feedback semantics include `allowsText`, `polarity`, and `verificationRequirement` as explicit optional tokens. This supports vote and reaction differences and verification strictness without workarounds.
-6. Projection helper concepts (`ContextResourceTypeLink`, `UserTypeSuperType`) are rendered as inline modifiers (`contains`, `extends`) instead of named declarations. This hides implementation details from the surface notation and keeps the abstract syntax tree traceable.
+This gives domain users a textual view, while MPS still stores and validates a typed AST. The projectional approach also avoids parsing ambiguity and makes references explicit through editor cells.
 
-### 2.3 Adaptations from P1 metamodel and justification
+### 3.4 Xtext textual syntax
 
-The Part 2 assignment requires the team to keep using the P1 metamodel, while allowing adaptations when necessary, as long as they are justified in the report. In practice, the transition from P1 to the current REF v3 metamodel required refining the language so that both graphical and textual editors could represent not only resources and feedback, but also governance and behavioral concepts such as sorting, validation, moderation, automation, and verification in a first-class way.
+The Xtext implementation uses an ANTLR-based grammar and therefore adapts the team notation where needed. The main adaptation is that some constructs use explicit keywords and braces so the parser can distinguish containment, references and optional sections reliably.
 
-From the Sirius/tooling perspective, the most relevant metamodel adaptations were the following:
+The Xtext implementation is documented in [tool2-xtext/readme.md](tool2-xtext/readme.md). The main grammar and generator are located under the Xtext project, including:
 
-- `SortingPolicy` was promoted as an explicit concept, because ordering behavior is central in the three reference scenarios and needs to be visible in the graphical editor rather than being hidden in generated code or documentation.
-- `AutomationRule`, `Condition`, `ConditionKeywords`, and `Action` were kept as explicit model elements so that the DSL can capture executable moderation/automation intent instead of relying only on free-text notes.
-- Governance concepts such as `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, and `VerificationPolicy` were treated as first-class nodes, which makes the DSL more complete and better aligned with the assignment goal of generating most of the backend structure from the model.
-- Some concrete-syntax helper constructs used in tools, such as inline `contains` and `extends` views, were intentionally kept as presentation choices rather than as extra domain concepts, so the metamodel remains stable while editors stay readable for domain experts.
+- `part1/tool2-xtext/pt.isep.enorm.refdsl/src/pt/isep/enorm/refdsl/RefDsl.xtext`
+- `part1/tool2-xtext/pt.isep.enorm.refdsl/src/pt/isep/enorm/refdsl/generator/RefDslGenerator.xtend`
+- `part1/tool2-xtext/pt.isep.enorm.refdsl/src/pt/isep/enorm/refdsl/generator/RefBackendGenerator.xtend`
 
-These adaptations are justified by the assignment requirements for a DSL that is simple, strongly typed, complete, flexible, and evolvable. They also improve Sirius modeling usability, because the diagram can show high-level domain structure together with policy and automation concerns without forcing users to encode important semantics outside the model.
+The Xtext syntax preserves the same REF vocabulary and uses validation/quick fixes to catch model errors before generation.
+
+### 3.5 Sirius graphical syntax
+
+The graphical syntax is implemented with Eclipse Sirius. The main artifacts are:
+
+- Ecore metamodel: `part2/tool3-sirius/model/enorm.ecore`
+- generated EMF code: `part2/tool3-sirius/src-gen/enorm`
+- viewpoint specification: `part2/eclipse_sirius_2nd_Instance/enorm.design/description/enorm.odesign`
+- scenario instances: `part2/eclipse_sirius_2nd_Instance/enorm.design/instances/*.enorm`
+
+The Sirius diagram is centered on `RefModel` and shows typed nodes and edges:
+
+| REF concept | Sirius representation |
+|---|---|
+| `RefModel` | Root container / overview diagram. |
+| `UserType` | Actor node. |
+| `ContextType` | Context node with contained resources. |
+| `ResourceType` | Resource node with nested attributes. |
+| `Attribute` | Nested row inside a resource node. |
+| `ResourceRelation` | Directed edge between resources. |
+| `FeedbackDefinition` | Feedback node linked to author and target. |
+| `AuthorizationRule` | Governance node linked to actor, action context and target. |
+| `ValidationRule` | Validation node with severity and affected target. |
+| `ModerationPolicy` | Moderation node linked to monitored target and executor. |
+| `AutomationRule` | Behavior node with nested conditions and actions. |
+| `Condition` / `Action` | Child nodes inside automation rules. |
+| `VerificationPolicy` / `SortingPolicy` | Policy nodes with labels and property views. |
+
+The graphical view is intended for review and validation sessions. It makes structural links and governance rules easier to inspect than in a long textual file.
+
+### 3.6 Adaptations from Part 1
+
+Part 2 reused the Part 1 REF language direction but made it more generation-oriented. The main adaptations were:
+
+- explicit representation of behavior concepts such as `AutomationRule`, `Condition`, `Action`, `ModerationPolicy`, `VerificationPolicy` and `SortingPolicy`;
+- clearer distinction between resource structure, feedback definitions and policy behavior;
+- use of typed trigger events and enum literals to avoid free-text behavior descriptions;
+- addition of manual implementation hooks, especially through `implementationId`, for behavior that cannot be completely generated;
+- tool-specific syntax adaptations without changing the shared model semantics.
 
 ---
 
-## 3. Activity 2 - Specify Common Features for Applications of the Domain
+## 4. Activity 2 - Common Backend Features
 
-### 3.1 Target language, frameworks, and platform
+The team selected a Java/Spring backend architecture because it is familiar, testable and maps naturally to the REF model.
 
-The reference backend platform for generated REF applications is Java 21 with Spring Boot 3. The stack was selected because it supports a direct implementation of the REF concepts as layered, strongly typed application artifacts:
+### 4.1 Target stack
 
-- Spring Web for JSON REST APIs and controller generation.
-- Spring Data JPA with Hibernate for generated repositories and persistence mappings.
-- H2 for lightweight prototype execution and repeatable tests.
-- Jakarta Bean Validation for request-level constraints derived from resource attributes, rating policies, and required fields.
-- Spring Security with JWT for prototype-level authentication and authorization checks derived from REF user types and authorization rules.
-- Maven as the build tool for standalone backend prototypes.
+| Concern | Team decision |
+|---|---|
+| Language | Java 21. |
+| Build tool | Maven. |
+| Runtime framework | Spring Boot. |
+| REST API | Spring Web controllers returning JSON. |
+| Persistence | Spring Data JPA. |
+| Database | H2 database for generated demos and tests. |
+| Validation/security hooks | Generated service checks plus manual extension points. |
+| Tests | JUnit and MockMvc-style API tests where available. |
 
-Generated applications should behave like normal Spring Boot applications. The generated code is compiled, tested, and executed without depending on the modeling tools at runtime. Scenario-specific prototypes instantiate this common platform with the concrete resources, feedback definitions, rules, and authorization policies of each REF model.
+The generated applications are not intended to be production systems. They are demonstrators that show how a REF model can generate a useful REST backend skeleton with enough behavior to validate the modeled scenario.
 
-### 3.2 Architecture of generated backend applications
+### 4.2 Common architecture
 
-Generated backend applications follow a layered architecture:
+Each generated backend follows the same package-level structure:
 
-- **Domain layer:** JPA entities for REF `ResourceType`, feedback instances, context/policy concepts, and user types.
-- **Repository layer:** Spring Data repositories for generated CRUD access and query methods.
-- **Service layer:** application use cases, validation, verification, moderation, and business rules.
-- **Web layer:** REST controllers and DTOs for external API contracts.
-- **Security layer:** authentication and role-based authorization based on REF `UserType` and `AuthorizationRule`.
+| Package/area | Purpose |
+|---|---|
+| `domain` / `domain.generated` | Entities, enums and generated domain structures. |
+| `repository` / `repository.generated` | Spring Data repositories. |
+| `service` / `service.generated` | Use-case logic, generated bases and manual extension classes. |
+| `web` / `web.generated` | REST controllers and request/response endpoints. |
+| `security` | Authentication, authorization or security stubs depending on the tool implementation. |
+| `config` | Runtime configuration, seed data or generated Spring configuration. |
+| `error` | API error models and exception handling. |
 
-The implementation applies the Generation Gap pattern. Generated/common artifacts are placed under `generated` packages, while handwritten extension points use the same package level without the `generated` segment. For example, `GeneratedProductReview` contains the common JPA mapping and `ProductReview` is the manual extension class. The same split is used for repositories, services, and controllers.
+The common rule is that generated code provides the baseline and handwritten code completes the behavior that is scenario-specific or depends on external data.
 
-The common feedback flow is:
+### 4.3 Manual extension strategy
 
-1. An authorized actor submits feedback for a resource or for another feedback item.
-2. The service validates the feedback payload against the relevant `FeedbackDefinition`, `RatingPolicy`, and `ValidationRule`.
-3. The verification policy decides whether validation is automatic, manual, optional, or required.
-4. Moderation and automation rules may update the feedback status or trigger additional actions.
-5. Read endpoints expose the resulting feedback, resource summaries, and sorted/aggregated views where the REF model requires them.
+Part 2 explicitly asks for support for manual code adaptations. The team adopted a **Generation Gap** style:
 
-### 3.3 Common code/artifacts to be generated
+- generated artifacts are placed in `generated` packages or named with a `Generated*` prefix;
+- manual classes extend, wrap or call generated bases;
+- regeneration replaces generated files but preserves manual classes;
+- model fields such as `ValidationRule.implementationId` identify handwritten behavior hooks;
+- complex authorization, moderation and validation logic can be implemented in Java without editing generated files directly.
 
-The common generator output should include:
-
-- JPA entity base classes for resources, feedback, contexts, policies, automation rules, validation rules, and verification rules.
-- Spring Data repository interfaces with scenario-specific query methods where the REF model implies them.
-- DTOs for create/update/read operations, including nested references for target resources and media attachments.
-- Command objects used by services to decouple controllers from business logic.
-- Services implementing common submission, validation, sorting, verification, and aggregation behavior.
-- REST controllers exposing resource, feedback, and policy endpoints.
-- Security configuration mapping user types and authorization rules to endpoint access.
-- Consistent API error handling.
-- Integration tests for the generated use cases.
-
-For each concrete scenario, the generator instantiates these artifacts from the REF model. A marketplace scenario may generate products, orders, reviews, verified purchase checks, and star averages. A community scenario may generate posts, comments, votes, reports, and moderation actions. A media platform scenario may generate channels, videos, comments, reactions, subscriptions, and content moderation rules. The generator should treat these as variations of the same REF concepts rather than as unrelated applications.
-
-### 3.4 Extensibility points for manual code
-
-Manual code is expected for scenario-specific behavior that cannot be safely inferred from the metamodel alone. The main extension points are:
-
-- Manual entity subclasses for domain-specific helper methods or invariants.
-- Manual repository interfaces for additional derived queries.
-- Service hooks for scenario-specific rules, such as context verification, duplicate vote prevention, reputation checks, ownership checks, or platform-specific moderation decisions.
-- Manual controller subclasses or extra endpoints when a scenario needs a more ergonomic REST shape.
-- Security and authorization refinements when generated rules need to be adapted to framework-level route matching.
-
-The Generation Gap keeps the generated layer reusable while allowing each scenario to implement rules that depend on external state or domain-specific interpretation. The generated service defines the common algorithms and protected hooks. The manual service only overrides the parts that are scenario-specific.
-
-### 3.5 Prompts for backend generation
-
-Use this prompt as a scenario-independent template for backend generation. The placeholders are filled from the REF model being processed.
-
-```
-Generate a complete backend for the <SCENARIO_NAME> scenario of the ENORM/REF DSL.
-Stack: Java 21, Spring Boot 3, Maven, JPA/Hibernate, H2 file-backed DB.
-Architecture: Generation Gap (Generated* base classes + manual subclasses).
-Requirements: REST API, JWT authentication, role-based authorization, validation, consistent API error responses, and basic integration tests.
-Domain model:
-- User types: <USER_TYPES>
-- Resource types and attributes: <RESOURCE_TYPES>
-- Context types and relations: <CONTEXTS_AND_RELATIONS>
-- Feedback types and feedback definitions: <FEEDBACK_DEFINITIONS>
-- Rating, verification, sorting, validation, moderation, authorization, and automation policies: <POLICIES>
-Endpoints:
-- Authentication endpoints when the scenario has user-based actions.
-- Resource CRUD/read endpoints derived from `ResourceType`.
-- Feedback submission/read endpoints derived from `FeedbackDefinition`.
-- Aggregation endpoints derived from `RatingPolicy` or `SortingPolicy`.
-- Policy/administration endpoints where the prototype needs runtime inspection or configuration.
-Deliverables: entities, DTOs, repositories, services, controllers, security config, sample data seeding, and tests. Ensure extensibility with manual override points.
-```
+This strategy is important because the REF DSL describes the shape and policy of an application, but not every business decision can be derived safely from a model.
 
 ---
 
-## 4. Activity 3 - Implement Prototypes of Applications of the Domain
+## 5. Activity 3 - Reference Prototypes
 
-### 4.1 Prototype goals and scope
+Before implementing the generators, the team used scenario-specific backend prototypes to identify what should be common, what should vary, and what must remain manually extensible.
 
-Each team member implemented one Spring Boot REF backend prototype following Activity 2 (Java 21, Spring Boot 3, JPA/H2, Generation Gap). Prototypes are reference implementations for Activity 4–5 and are **not** overwritten by DSL generation.
+The reference prototypes are stored in:
 
-### 4.2 Prototype summary by tool
+| Scenario | Prototype path | Main focus |
+|---|---|---|
+| Amazon | `part2/ai-generated-backends-prototypes/amazon-backend` | Product reviews, rating constraints, helpful votes, verification and review moderation. |
+| Reddit | `part2/ai-generated-backends-prototypes/reddit-backend` | Communities, posts, comments, voting, reports and community moderation. |
+| YouTube | `part2/ai-generated-backends-prototypes/youtube-backend` | Channels, videos, comments, reactions, subscriptions and media moderation. |
 
-| Tool | Member | Prototype | Path |
-|------|--------|-----------|------|
-| Xtext | Pedro Vilarinho | Amazon | `part2/amazon-backend` |
-| MPS | Guilherme Cunha | Reddit | `part2/reddit-backend` |
-| Sirius | Francisco Peixoto | YouTube | `part2/youtube-backend` |
+These applications were used as reference material for the generation design. They helped the team identify repeated backend structures such as project setup, entities, repositories, CRUD services, controllers and error handling, as well as scenario-specific behavior such as review verification, voting, subscriptions and moderation workflows.
 
-### 4.3 Inputs for code generation design
+Each individual tool then used the same scenario family:
 
-The three prototypes supply concrete examples of common vs variable code (entities, feedback flows, policies, manual services). Xtext generation (`RefBackendGenerator`) targets the same architecture; see `part2/tool2-xtext/readme.md`.
+- MPS generated/compiled applications under `part2/tool1-mps/prototypes/amazon-prototype`, `part2/tool1-mps/prototypes/reddit-prototype` and `part2/tool1-mps/prototypes/youtube-prototype`.
+- Xtext generates scenario backends under the Xtext runtime `src-gen/generated-backend/<scenario>` output when the models are saved. In this checkout, generated backend examples are present under the reused Xtext runtime workspace in `part1/tool2-xtext/runtime-New_configuration/TestRef/src-gen/generated-backend`, while Part 2 projection exports are present under `part2/tool2-xtext/runtime-RefGen/RefGenTest/src-gen/projections`.
+- Sirius maintained `.enorm` scenario models and generated Spring Boot backends with Acceleo.
 
 ---
 
-## 5. Activity 4 - Identify Commonality and Variability in the Code
+## 6. Activity 4 - Commonality and Variability
 
-This compares the three Spring Boot prototypes (`part2/amazon-backend`, `part2/reddit-backend`, `part2/youtube-backend`) against the REF metamodel in [`diagrams/metamodel/ref-metamodel-v3.puml`](../diagrams/metamodel/ref-metamodel-v3.puml). The comparison treats the prototypes as **instances** of the same generation architecture described in Section 3 (Generation Gap, layered backend).
+The commonality/variability analysis was done from the metamodel, the reference prototypes and the three scenario models.
 
-### 5.1 Common parts in the prototypes
+### 6.1 Common parts generated for every backend
 
-These parts are **shared in structure and technology** across Amazon, Reddit, and YouTube backends, even when class names differ.
+| Common part | Reason |
+|---|---|
+| Maven project files | Every generated backend must build independently. |
+| Spring Boot application class | Common runtime entry point. |
+| `application.properties` | Database, JPA and server configuration. |
+| Domain package | Persistent representation of REF resources and feedback concepts. |
+| Repository package | Standard persistence access for generated entities. |
+| Service package | Shared CRUD and scenario behavior entry points. |
+| Web/controllers package | REST API surface. |
+| Error handling | Consistent JSON error responses. |
+| Security/authentication baseline | Common user and permission infrastructure, even when simplified. |
+| Test scaffolding | Smoke/acceptance tests for generated applications. |
+| Manual extension structure | Preservation of handwritten code across regeneration. |
 
-- **Platform and build:** Java 21, Spring Boot 3, Maven, JPA/Hibernate, H2 (including console-friendly security headers where applicable), consistent package layering (`domain`, `repository`, `service`, `web`, `security`, `config`).
-- **Generation Gap pattern:** For each major persistent concept there is a `generated.Generated*` mapped superclass or base type and a thin manual subtype (`Product`, `Post`, `Video`, …) that exists primarily as an **extension point** (often empty today, but reserved for scenario-specific logic).
-- **Security baseline:** Password hashing, JWT issuance/filtering, stateless sessions, role literals carried on the user entity and mirrored in Spring Security (`Role` enum aligned with `UserKind` values used in each scenario).
-- **Cross-cutting web concerns:** Shared patterns for REST controllers, JSON bodies bound directly to JPA-backed types or DTOs in the same shape, and centralized API error handling (`ApiExceptionHandler`, `ApiError`).
-- **Governance primitives present in all three:** Persistent `SortingPolicy`, `ValidationRule` (or a renamed variant with the same responsibility), and moderation-related types (either a reusable `ModerationPolicy` entity as in Amazon, or **moderation check** records attached to posts/videos/comments in Reddit/YouTube that materialize moderation outcomes).
-- **Feedback-shaped domain services:** Dedicated services for primary feedback flows (comments, votes/likes, reports, subscriptions) following the same use-case style: load actor, authorize, validate, persist, expose.
-- **Policy administration surface:** A `PolicyService` / `PolicyController` pair (manually or generated) listing and mutating policy-like aggregates scoped to a **context root** (catalog/subreddit/channel), even when the underlying tables differ.
+### 6.2 Variable parts generated from model values
 
-These commonalities match the team decision in Activity 2: one reference generator target (Spring/JPA/JWT) with scenario-specific **slots** filled from the REF model.
+| REF model element/value | Generated variability |
+|---|---|
+| `RefModel.name` and version | Artifact id, package names, application class name, response labels and H2 database name. |
+| `UserType` | User roles, actor enums, ownership/authorization references and seed/test data. |
+| `ContextType` | Context entities or service-level grouping, depending on the generator. |
+| `ResourceType` | Entity, repository, service and controller stacks. |
+| `Attribute` and primitive type | Entity fields, DTO fields, validation hints and generated accessor methods. |
+| `ResourceRelation` | JPA relationships, link endpoints or service relation methods. |
+| `FeedbackType` / `FeedbackDefinition` | Comment, review, vote, report, reaction or subscription endpoints and services. |
+| `RatingPolicy` | Rating range checks, score fields and average/ranking helpers. |
+| `AuthorizationRule` | Permission checks, generated guards and manual authorization hooks. |
+| `ValidationRule` | Generated validation call sites and `implementationId` hooks. |
+| `ModerationPolicy` | Moderation decisions, status fields and policy service methods. |
+| `AutomationRule` | Triggered checks over conditions and actions. |
+| `Condition` / `ConditionValue` | Keyword/attribute checks and generated rule descriptors. |
+| `Action` | Generated moderation outcomes such as flag, hide, remove, notify, approve or reject. |
+| `VerificationPolicy` | Verification checks, review gating and manual verification hooks. |
+| `SortingPolicy` | Sorting metadata, query parameters or service sorting helpers. |
 
-### 5.2 Variable parts in the prototypes
+### 6.3 Manual-only or partially generated behavior
 
-Variability appears at three levels: **domain vocabulary**, **persistence shape of the same REF concept**, and **behavior encoded outside generated entities**.
+Some behavior is intentionally not fully generated:
 
-| Variability area | Amazon | Reddit | YouTube |
+| Behavior | Reason for manual support |
+|---|---|
+| Authentication provider integration | Real deployments depend on infrastructure outside the REF model. |
+| Validation expressions with `implementationId` | The model names the rule, but Java implements the specific predicate. |
+| Scenario-specific endpoints | Some APIs are convenience workflows rather than direct metamodel elements. |
+
+This separation keeps the generated code useful while avoiding the false assumption that every application behavior can be inferred from the DSL.
+
+---
+
+## 7. Activity 5 - Code Generation Design and Implementation
+
+The team generation design follows two rules:
+
+1. common infrastructure is always generated;
+2. scenario-specific code is generated only when the corresponding REF model element exists.
+
+### 7.1 Shared generation workflow
+
+Each tool performs the same conceptual pipeline:
+
+1. read a REF model;
+2. compute available features, such as resources, feedback definitions, moderation policies and automation rules;
+3. generate common project infrastructure;
+4. generate resource, feedback and policy code from model contents;
+5. keep handwritten extension classes outside the overwritten generated area;
+6. compile and test the generated backend.
+
+### 7.2 Tool-specific generator implementations
+
+| Tool | Generator implementation | Relevant details |
+|---|---|---|
+| MPS | `part2/tool1-mps/languages/Ref/generator/templates/Ref.generator.templates@generator.mps` | Uses the MPS Generator and `PlainTextGenerator`. `PlainTextGenerator` is used for text files such as `pom.xml` and `application.properties`. |
+| Xtext | `RefDslGenerator.xtend`, `RefBackendGenerator.xtend`, `RefBackendNaming.xtend` | Uses Xtend templates from parsed textual models. Generates project structure, backend code and Part 1 projections. |
+| Sirius | `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/src/org/eclipse/acceleo/module/sample/common/generate.mtl` | Uses Acceleo templates over EMF `.enorm` instances. Generates Spring Boot applications under `scr-gen`. |
+
+### 7.3 MPS macro usage
+
+The MPS generator uses macros to make code generation compact and maintainable:
+
+| Macro type | Use in the generator |
+|---|---|
+| `LOOP` | Iterates over model collections such as `resourceType`, `feedbackDefinition`, `moderationPolicy`, `automationRule`, `conditions` and `actions`. |
+| `IF` | Includes code only when a model feature exists, for example rating policies, feedback targets, moderation rules or automation blocks. |
+| `Reference` (`->`) | Resolves references between model elements, such as a feedback definition pointing to its author/resource or an automation rule pointing to its validation rule. |
+| `Property` | Injects model values into generated Java or configuration files, such as names, enum literals, flags, messages and numeric rating bounds. |
+
+This is especially visible in generated moderation code. The input is a `RefModel`, and templates traverse policies, automation rules, conditions and actions to produce generated descriptors such as policy specs, rule specs, condition specs and action specs.
+
+### 7.4 Generated artifact families
+
+Across tools, the generators produce the following artifact families:
+
+| Artifact family | Examples |
+|---|---|
+| Project/configuration | `pom.xml`, `application.properties`, Spring Boot entry point. |
+| Domain | resource entities, feedback entities, enums and generated model descriptors. |
+| Persistence | repositories for generated entities. |
+| Services | CRUD services, feedback services, moderation services, validation hooks. |
+| Web/API | controllers for resources, feedback and scenario operations. |
+| Security | user/role structures, authentication endpoints or security configuration. |
+| Tests | smoke tests, generated acceptance tests or scenario-specific API checks. |
+
+---
+
+## 8. Activity 6 - Generated Applications, Tests and Evolution
+
+Activity 6 required generating the three applications, supporting manual code, testing the result, reporting issues and considering model evolution.
+
+### 8.1 Generated application locations
+
+| Tool | Amazon | Reddit | YouTube |
 |---|---|---|---|
-| **Core resources** | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Subreddit`, `Post`, `Comment`, … | `Channel`, `Video`, `Comment`, … |
-| **Context (`ContextType`)** | Explicit `ContextType` + `ContextResource` linking resources to catalog/search/moderation contexts | `Subreddit` as the community container, with policies scoped to it | `Channel` as the channel container, with channel-scoped permission rows |
-| **Authorization (`AuthorizationRule`)** | First-class `AuthorizationRule` JPA aggregate with `ActionKind`, actor role, optional `ContextType`, string targets for resource/feedback | No `AuthorizationRule` entity. **Participation** is modeled as `ParticipationPolicy` (`PermissionAction`, `PermissionAudience`) + **hard-coded** HTTP method/path rules in `SecurityConfiguration` | Same split as Reddit using `ChannelPermissionPolicy` + `SecurityConfiguration` |
-| **Automation (`AutomationRule`, `Condition`, `Action`)** | Full persistent automation model (`AutomationRule`, `AutomationCondition`, `AutomationAction`) close to the metamodel | No automation tables. Rule-like behavior is distributed in services or omitted | No automation tables |
-| **Verification (`VerificationPolicy`)** | Persistent `VerificationPolicy` CRUD via policy service | Not modeled as the same entity. Verification behavior appears in service logic when needed | Same as Reddit |
-| **Votes vs reactions** | `HelpfulVote` on comments (up/down style) | `Vote` + `VoteHistory` on posts | `Like` + `LikeHistory` on videos (like/dislike style enums) |
-| **Extra domain concepts** | Order-based “verified buyer” checks, review media references | `CommunityRule`, `ParticipationPolicy`, post/comment moderation check entities | `ChannelPermissionPolicy`, `ContentValidationRule` naming, `CommentSettingsChange` |
-| **Manual extensions (Activity 2)** | Example: `ProductEvaluationService` overrides generated verification to combine **role flag** and **order history** (`OrderItemRepository`) | Overrides expected in vote/report services for thresholds, duplicate votes, subreddit membership | Overrides expected for like toggling, channel ownership, video publication rules |
+| MPS | `part2/tool1-mps/prototypes/amazon-prototype` | `part2/tool1-mps/prototypes/reddit-prototype` | `part2/tool1-mps/prototypes/youtube-prototype` |
+| Xtext | `part1/tool2-xtext/runtime-New_configuration/TestRef/src-gen/generated-backend/amazon` | `part1/tool2-xtext/runtime-New_configuration/TestRef/src-gen/generated-backend/reddit` | `part1/tool2-xtext/runtime-New_configuration/TestRef/src-gen/generated-backend/youtube` |
+| Sirius | `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/amazon-backend` | `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/reddit-backend` | `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/youtube-backend` |
 
-**Structural governance** (automation + declarative authorization + verification policies) is **richest in Amazon** and **thinner in Reddit/YouTube**, where equivalent concerns are split between **smaller policy tables** and **imperative security/service code**. This matters for the generator because not every REF construct is always emitted as the same kind of artifact (entity vs configuration vs Java code).
+The MPS paths above contain the compiled/generated applications used by that tool. The Sirius outputs are generated from the `.enorm` models with Acceleo. The Xtext outputs are generated from textual REF models through the Xtext generator; the Part 2 Xtext report documents the equivalent runtime output convention as `src-gen/generated-backend/<scenario>`.
 
-### 5.3 Mapping of variability to metamodel elements
+### 8.2 Scenario coverage
 
-The next tables map **every metamodel type and enumeration** from REF v3 to **variable or fixed parts** of the three codebases (Java packages, artifacts, or non-code artifacts). “Manual” marks places where the team expects handwritten completion per Activity 2.
+| Scenario | Main modeled focus | Representative generated concerns |
+|---|---|---|
+| Amazon | E-commerce reviews and verification. | Products, orders, reviews, helpful votes, rating bounds, review verification, moderation. |
+| Reddit | Community discussion and moderation. | Subreddits, posts, comments, votes, reports, participation rules, moderation. |
+| YouTube | Media publication and audience feedback. | Channels, videos, comments, likes/dislikes, subscriptions, validation and moderation. |
 
-#### 5.3.1 Metamodel classes and relationships
+The three scenarios were selected because they exercise different REF features. Together they test structural resources, nested feedback, ratings, votes, reports, automation, verification and sorting.
 
-| Metamodel element | Amazon (`amazon-backend`) | Reddit (`reddit-backend`) | YouTube (`youtube-backend`) | Notes / manual completion |
-|---|---|---|---|---|
-| `RefModel` | Scenario identity implied by package `...ref`, `pom.xml` artifactId, and seed data | Package `...ref.reddit`, artifactId, and seed data | Package `...ref`, artifactId, and seed data | No single `RefModel` entity. It could be generated as metadata or documentation |
-| `UserType` | `AmazonUser` + `Role` enum | `RedditUser` + `Role` | `YoutubeUser` + `Role` | Subtype is manual extension point on `Generated*` user |
-| `ContextType` | `ContextType`, `ContextResource` | `Subreddit` (community container) | `Channel` | Different REF `ContextKind` realizations |
-| `ResourceType` | `Product`, `Order`, `OrderItem`, `CommentReview`, … | `Post`, `Comment`, … | `Video`, `Comment`, … | Each scenario’s resource set |
-| `Attribute` | Fields inside each `Generated*` mapped superclass | Same | Same | Types map from `PrimitiveType` to Java/Hibernate types |
-| `ResourceRelation` | JPA associations on generated entities (e.g., order lines, product containment) | Associations on `Post`, `Comment`, `Vote`, … | Associations on `Video`, `Like`, … | Cardinality/containment in annotations |
-| `FeedbackType` | Implicit in distinct entities/services (`ProductReview`, `HelpfulVote`) | Implicit (`Comment`, `Vote`, `Report`, `Subscription`) | Implicit (`Comment`, `Like`, `Report`, `Subscription`) | Could be generated as type codes or separate metadata tables |
-| `FeedbackDefinition` | Composite of review + rating + verification hooks in services | Composite of comment/vote/report models + policies | Same as Reddit | Much behavior in **service overrides** (manual) |
-| `FeedbackPolicy` | Carried on review/feedback entities and service checks | Status enums on entities (`CommentStatus`, `ContentStatus`, …) | Same style | Often **manual** if not extracted to entities |
-| `RatingPolicy` | Star ratings on reviews (fields + validation) | N/A for core Reddit prototype focus | N/A for likes | Variable: only some scenarios use numeric ratings |
-| `FeedbackDefinition.uniquePerAuthorTarget` | Enforced in `ProductEvaluationService` / review repository constraints | Enforced in vote/comment services | Enforced in like/comment services | **Manual** hook in generated service template |
-| `ValidationRule` | `ValidationRule` entity + `ValidationKind`, `RuleSeverity`, `expression`, `implementationId` | `ValidationRule` (+ Reddit-specific `CommunityRule` as extra domain) | `ContentValidationRule` (same role, different name) | `implementationId` → pluggable Java validators (**manual** classes) |
-| `ModerationPolicy` | `ModerationPolicy` entity | Moderation split into `PostModerationCheck`, `CommentModerationCheck` rows | `VideoModerationCheck`, `CommentModerationCheck` | Same REF concept, **different persistence projection** |
-| `AuthorizationRule` | `AuthorizationRule` entity + policy CRUD | **Not** a dedicated entity. Approximated by `ParticipationPolicy` + `SecurityConfiguration` rules | `ChannelPermissionPolicy` + `SecurityConfiguration` | Reddit/YouTube variability: **rules split** between data and code |
-| `AutomationRule` | `AutomationRule` + nested conditions/actions | Absent as persisted model | Absent | Generator may omit or emit stubs. Execution is **manual** if present |
-| `Condition` | `AutomationCondition` | — (no direct type) | — | Amazon-only in current prototypes |
-| `ConditionKeywords` | `ConditionKeyword` / keyword list owned by `AutomationCondition` | — | — | Amazon-only |
-| `Action` (governance action) | `AutomationAction` | — | — | Amazon-only |
-| `VerificationPolicy` | `VerificationPolicy` entity | Not as separate aggregate | Not as separate aggregate | Reddit/YouTube may need **manual** service/policy classes to reach parity |
-| `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | `SortingPolicy` | Good example of **identical** metamodel → entity mapping |
+### 8.3 Test evidence from individual reports
 
-#### 5.3.2 Metamodel enumerations
+The individual reports provide the detailed test evidence. At team level, the relevant result is:
 
-| Metamodel enum | Code mapping (all backends unless noted) |
+| Tool | Reported verification |
 |---|---|
-| `UserKind` | `Role` literals (`GENERIC`, `BUYER`, `SELLER`, `CREATOR`, `MODERATOR`, …) on the user entity. Each scenario uses its own subset |
-| `ContextKind` | `ContextKind` enum (Amazon) or implied by root entity (`Subreddit`, `Channel`) |
-| `PrimitiveType` | Field types in generated entities (`String`, `BigDecimal`, `boolean`, `Instant`, …) |
-| `FeedbackKind` | Packages/services: comment, vote/like, report, subscription class names |
-| `FeedbackSubjectScope` | Service methods that accept either resource id or parent feedback id |
-| `FeedbackPolarity` | `VoteValue`, `LikeValue`, or vote direction fields |
-| `FeedbackStatus` | Enabled/disabled gates in services or enums on feedback |
-| `VerificationRequirement` | Amazon: verification toggles on review flow. Others: **manual** parity |
-| `ValidationKind`, `RuleSeverity` | `ValidationKind`, `ValidationSeverity` enums in domain |
-| `ModerationMode`, `ModerationDecision`, `TriggerEvent` | Present in Amazon. Reddit/YouTube include a partial mirror in moderation check enums |
-| `ActionKind` | Amazon: `ActionKind`. Reddit/YouTube: `PermissionAction` + Spring Security `requestMatchers` |
-| `ConditionOperator` | Amazon: `ConditionOperator` on `AutomationCondition` |
-| `ActionResultKind` | Amazon: result kind on `AutomationAction` |
-| `SortCriterion`, `SortDirection` | Shared enums under `domain/enums` in each backend |
+| MPS | Generated/compiled Spring Boot prototypes exist for Amazon, Reddit and YouTube under `part2/tool1-mps/prototypes`. Postman and moderation test material is available under `part2/postman`. |
+| Xtext | The generated Amazon, Reddit and YouTube backends were checked with Maven tests according to the Xtext individual report. |
+| Sirius | The generated Amazon, Reddit and YouTube backends were checked with Maven tests according to the Sirius individual report. |
 
-#### 5.3.3 Coverage of “every metamodel part” and gaps
+The team also keeps Postman material for generated API and moderation acceptance checks under `part2/postman`.
 
-- **Fully materialized in all three:** sorting, validation (under different names), core persistence of resources and feedback-shaped aggregates, JWT security shell, Generation Gap entity/repository/service/controller layout.
-- **Fully materialized only in Amazon today:** `AutomationRule` subtree (`Condition`, `ConditionKeywords`, `Action`), first-class `AuthorizationRule`, `VerificationPolicy`, richer `ContextType` linking.
-- **Metamodel concepts mainly realized as manual Java in Reddit/YouTube:** large parts of `AuthorizationRule` (HTTP-level authorization matrix), some `FeedbackPolicy` / `VerificationPolicy` semantics, and any future `AutomationRule` execution.
+### 8.5 Cross-tool compatibility
 
-This matches the Activity 2 requirement: the generator should emit **stable generated bases** plus **narrow override points** (subclasses, `@Override` service methods, optional `implementationId` classes) so teams can extend behavior where the DSL cannot express fine details.
+Cross-tool compatibility refers to the **generated Java backends**, not to exchanging the internal files of each generator or editor.
+
+The generated Java code from MPS, Xtext and Sirius is compatible: the backends can be understood, built and used in the same way because they follow the same backend conventions:
+
+- Spring Boot REST applications generated from the same REF scenario family;
+- comparable domain, repository, service, controller, security/config and error-handling layers;
+- equivalent mapping from REF resources, feedback definitions, policies and automation rules into Java artifacts;
+- same generated/manual extension strategy, so handwritten Java code can be added without modifying generated bases;
+- compatible runtime assumptions, such as Maven builds, Spring Data JPA and H2-based execution for demos/tests.
+
+Because the tools are different by nature, the path used to generate the Java code is not identical. MPS uses projectional models and generator macros, Xtext uses parsed textual models and Xtend templates, and Sirius uses EMF graphical models and Acceleo templates. As a result, there can be small differences in how the generated code is written, such as class organization, helper classes, naming style or extension hook placement.
+
+These are implementation-level differences only. They do not affect the final result: the generated Java applications are compatible for Part 2 because they implement the same REF scenario semantics using the same Java/Spring architectural style.
+
+### 8.6 Model evolution and migration plan
+
+The assignment asks the team to consider language evolution. The proposed team strategy is:
+
+1. version the REF metamodel and scenario models;
+2. prefer additive changes, such as optional attributes or new enum literals;
+3. for breaking changes, define an explicit migration step for existing models;
+4. update MPS concepts/editors/generators, Xtext grammar/validators/generators and Sirius Ecore/VSM/Acceleo templates in the same change set;
+5. regenerate Amazon, Reddit and YouTube;
+6. rerun Maven and acceptance tests;
+7. preserve handwritten Java code through the Generation Gap structure.
+
+Tool-specific migration mechanisms differ:
+
+- MPS can use model migration scripts and editor/generator updates.
+- Xtext can update the grammar and migrate textual models manually or with scripts.
+- Sirius/EMF can update Ecore, regenerate EMF code and migrate `.enorm` instances.
+
+The three reference scenarios act as regression models for future DSL changes.
 
 ---
 
-## 6. Activity 5 - Design and Implement Code Generation
+## 9. Final Compliance Summary
 
-### 6.1 Generation rules and templates
-
-The code generation strategy is based on a deterministic pipeline from REF model to Spring Boot backend artifacts.
-
-**Generation pipeline**
-
-1. Parse and validate the REF model (Xtext/MPS/Sirius source) into a normalized in-memory representation.
-2. Build a `GenerationPlan` with scenario name, packages, resources, feedback definitions, policies, and endpoint matrix.
-3. Execute templates in dependency order (domain -> repository -> service -> web -> security -> config/tests/docs).
-4. Write generated artifacts under `generated` packages and preserve manual extension classes (Generation Gap).
-5. Run formatting and compile checks.
-
-**Template catalog implemented by the team**
-
-- **Project templates:** `pom.xml`, `application.properties`, `README.md`, boot application class, H2 configuration.
-- **Domain templates:** `Generated<Entity>` mapped superclasses, enums, and manual subclasses per entity.
-- **Repository templates:** `Generated<Entity>Repository` + manual repository interfaces.
-- **Service templates:** `Generated<Entity>Service` CRUD/use-case skeletons + manual services for scenario rules.
-- **Web templates:** `Generated<Entity>Controller` REST endpoints + manual controllers.
-- **Security templates:** user details service, JWT service/filter, security configuration with role mapping.
-- **Error/API templates:** `ApiError`, `ApiExceptionHandler`, common response style.
-- **Test templates:** application context test and scenario smoke tests.
-
-**Generation rules (high level)**
-
-- For each `ResourceType`, generate one persistent entity, repository, service, and controller stack.
-- For each `FeedbackDefinition`, generate dedicated entity and endpoints bound to its subject scope.
-- For each `SortingPolicy`, generate repository query strategy and public read endpoint ordering options.
-- For each `AuthorizationRule`, generate route-level security matchers and service-level ownership checks.
-- For each `ValidationRule`, generate validation hook method and bind to `implementationId` extension point.
-- For each `ModerationPolicy` and `AutomationRule`, generate policy storage/handler artifacts when modeled; otherwise generate no-op hooks in services.
-
-### 6.2 Common parts generation
-
-The following artifacts are always generated for every REF application, independent of scenario content.
-
-- **Build/runtime baseline:** Maven project, Spring Boot dependencies, Java 21 config, H2 persistence setup.
-- **Core architecture:** package structure (`domain`, `repository`, `service`, `web`, `security`, `config`) and Generation Gap split (`generated` + manual subclasses).
-- **Authentication baseline:** user entity/repository, password hashing, JWT issuance and filter chain.
-- **Cross-cutting web layer:** consistent exception mapping, error payload shape, and JSON REST conventions.
-- **Base CRUD infrastructure:** generic create/read/list/update/delete scaffolding for generated entities.
-- **Testing baseline:** context startup test plus generated API smoke checks for core flows.
-
-These common parts are generated unconditionally because they implement team decisions from Activity 2 (single Spring/JPA/JWT target architecture).
-
-### 6.3 Variable parts generation
-
-Variable parts are generated from model values. The generator reads concrete REF elements and activates templates conditionally.
-
-| Model-driven variability | Trigger in model | Generated output | Generation condition |
-|---|---|---|---|
-| Scenario identity | `RefModel.name`, `RefModel.version` | Package names, artifactId, app title, README header | Always |
-| Roles/actors | `UserType.kind` values | `Role` enum literals and auth checks | Only literals present in model are generated |
-| Resource data model | `ResourceType` + `Attribute` | Entity fields, DTO fields, validation annotations | One field per attribute, mapped by `PrimitiveType` |
-| Media capabilities | `ResourceType.supportsMedia` or feedback media flags | Media reference fields/endpoints | Generated only when media is enabled |
-| Feedback operations | `FeedbackDefinition`, `FeedbackType`, `FeedbackSubjectScope` | Comment/review/vote/report/subscription entities + endpoints | Generated per feedback definition |
-| Rating behavior | `FeedbackType.hasRating` + `RatingPolicy` | Numeric rating constraints, aggregation endpoints | Generated only when rating is enabled |
-| Verification flow | `VerificationRequirement`, `VerificationPolicy` | Required/optional verification guards, policy service hooks | Generated when verification is present |
-| Authorization matrix | `AuthorizationRule` + actor/context/targets | Route policies + service guards | Generated per rule; if missing, defaults are deny-by-default except auth endpoints |
-| Sorting/read views | `SortingPolicy` | Sort enums, query methods, controller parameters | Generated per sorting policy |
-| Moderation and automation | `ModerationPolicy`, `AutomationRule`, `Condition`, `Action` | Policy entities/handlers or moderation check artifacts | Generated only when those elements exist |
-
-**How generation is decided**
-
-- The generator first computes feature flags from the model (for example: `hasRatings`, `hasSubscriptions`, `hasAutomation`).
-- Templates are organized by feature; each template has a clear activation predicate.
-- Generated service methods include protected hooks for behavior that depends on external data (manual override point).
-- Existing manual classes are never overwritten; only generated classes are replaced on regeneration.
-
-### 6.4 Notes per implementation tool
-
-Each tool contributes to Activity 5 using the same metamodel semantics and target architecture.
-
-- **Tool 1 (MPS):** projectional definitions emit structured model instances and can generate backend code through model-to-text templates; useful for strict model editing and immediate generator feedback.
-- **Tool 2 (Xtext):** textual DSL parsing/validation drives deterministic generation templates; best suited for versioned model files and CI-friendly regeneration.
-- **Tool 3 (Sirius):** graphical editor creates/updates EMF instances that feed the same generation pipeline after model serialization/export.
-
-To keep cross-tool compatibility, generation uses a normalized intermediate representation independent of source notation (graphical/textual/projectional). This allows the same rules to generate Amazon, Reddit, and YouTube backends with scenario-specific variability.
-
-For the Sirius contribution specifically, the graphical editor does not directly compete with textual generators; instead, it provides a model-authoring and inspection front-end for the same EMF instance consumed by downstream generation steps. This is aligned with the assignment, which states that Sirius is the tool selected for the graphical notation, while Xtext and MPS support textual or projectional notations over the same domain concepts.
-
-Within this team architecture, Sirius contributes in four concrete ways:
-
-- It offers a visual overview of all REF concepts in one navigable diagram, which is useful for domain review sessions and for checking whether a model is complete before generation.
-- It exposes typed properties through node labels and property views, reducing visual clutter while still preserving the strongly typed structure expected by the assignment.
-- It helps validate cross-reference consistency at the model level, since users can visually inspect links among actors, resources, feedback definitions, and governance rules before code generation starts.
-- It produces EMF model instances that can be serialized and handed to the same generation pipeline used by the other tools, which supports the team goal of notation-independent generation.
-
+| Requirement from Part 2 | Fulfilment |
+|---|---|
+| DSL with concrete syntax | Provided through Sirius graphical syntax, Xtext textual syntax and MPS projectional/textual syntax. |
+| High-level language for domain experts | The notations use domain terms such as resources, feedback, moderation, automation, verification and sorting. |
+| Strong typing | References, enum literals and typed properties are preserved in all tools. |
+| Complete structural and behavioral coverage | The model covers users, contexts, resources, attributes, feedback, authorization, validation, moderation, automation, verification and sorting. |
+| Common backend features | Java/Spring Boot/Maven/JPA/H2 architecture with REST controllers, services, repositories and error handling. |
+| Prototypes before generation | Reference prototypes are stored under `part2/ai-generated-backends-prototypes`. |
+| Commonality/variability mapping | Section 6 maps REF elements to common and variable generated artifacts. |
+| Code generation in each tool | Implemented with MPS Generator/PlainTextGenerator, Xtext Xtend templates and Sirius Acceleo templates. |
+| Manual code support | Generation Gap, generated packages/classes and manual hooks. |
+| Generation of three scenarios | Amazon, Reddit and YouTube generated applications are present for the tools. |
+| Testing and issue reporting | Individual reports document compilation/testing evidence and generator issues. |
+| Model evolution | Team migration strategy defined in Section 8.6. |
 
 ---
 
-## 7. Activity 6 - Generate Applications
+## 10. Conclusion
 
-### 7.1 Generation of the three REF scenarios
+Part 2 produced a complete DSL implementation path around the REF domain: concrete syntax in three tools, a shared backend generation target, reference prototypes, commonality/variability analysis, generators and generated applications for Amazon, Reddit and YouTube.
 
-The team generated or prepared the three reference applications corresponding to the scenarios used throughout Part 2: Amazon, Reddit, and YouTube. These scenarios exercise different subsets of the REF metamodel and therefore act as complementary validation cases for both syntax design and backend generation.
-
-At team level, Activity 6 is understood as the point where the common generation architecture is instantiated with concrete REF models and verified against the expected scenario behavior. The generated applications share the same target platform and architectural conventions described earlier in the report, but differ in the resources, feedback flows, policies, and automation features activated by each model.
-
-A concise view of the scenario coverage is shown below.
-
-| Scenario | Main modeled focus | Representative generated/backend concerns |
-|---|---|---|
-| Amazon | Product evaluation and verified review flows | Products, orders, reviews, helpful votes, rating constraints, verification checks, moderation and automation support. |
-| Reddit | Community discussion and moderation | Subreddits, posts, threaded comments, voting, reports, participation policies, community moderation. |
-| YouTube | Media publication and audience feedback | Channels, videos, comments, likes/dislikes, subscriptions, validation rules, moderation checks, channel permission policies. |
-
-These three cases are important because they demonstrate that the DSL is not restricted to a single application style; instead, it covers e-commerce, discussion-community, and media-feedback scenarios using the same REF metamodel family.
-
-### 7.2 Manual extension integration
-
-The assignment explicitly requires support for manual adaptations or extensions in the generated code, so that software engineers can complete the remaining behavior that is not practical to derive automatically from the DSL. The team addressed this through the Generation Gap strategy already described in Sections 3 and 6, where generated classes provide the stable base and handwritten classes provide controlled extension points.
-
-In practical terms, manual extension integration follows these principles:
-
-- Regeneration only replaces artifacts under `generated` packages; handwritten subclasses, additional repositories, and specialized services are preserved.
-- Scenario-specific logic that depends on external state or richer domain interpretation is implemented in manual services or controllers, not by editing generated classes directly.
-- `implementationId`-style hooks and protected service methods are used as integration points for validation, moderation, verification, and authorization refinements that cannot be fully inferred from the model.
-- This separation allows the team to regenerate the backend when the REF model evolves, while minimizing merge conflicts and preserving custom logic.
-
-This solution matches the project brief, which states that some generated-code aspects should allow user extension in the base programming language and be integrated with the generated solution.
-
-### 7.3 Cross-tool compatibility tests
-
-Cross-tool compatibility means that the same REF concepts can be edited with different concrete syntaxes or tools, while still producing semantically equivalent model instances for generation. This is especially important in this project because each team member used a different tool, but all tools had to target the same domain metamodel and overall application family.
-
-The team compatibility strategy is based on a shared EMF/Ecore metamodel and on the normalization of model contents before generation. Under this approach, Sirius contributes the graphical notation, Xtext contributes a textual notation, and MPS contributes a projectional/textual notation, but all of them ultimately describe the same REF structures.
-
-At report level, the main compatibility checks are the following:
-
-- The same scenario concepts can be represented in each tool without introducing tool-specific semantic elements.
-- Core relationships such as resource containment, feedback targets, authorization links, and policy ownership remain consistent after serialization/export.
-- The generated backend architecture remains stable regardless of whether the model originated in Sirius, Xtext, or MPS, because generation is driven by normalized model semantics rather than editor-specific syntax.
-- Scenario-level differences are caused by the REF model itself, not by the concrete syntax tool used to create it.
-
-For the Sirius part in particular, compatibility depends on keeping the graphical notation close to the metamodel and avoiding editor-only modeling shortcuts that would make exported models diverge from the common team interpretation.
-
-### 7.4 Model evolution and migration proposal
-
-Model evolution is an explicit project concern, since the assignment characterizes the DSL as evolvable and allows justified adaptations to the metamodel across project stages. The team therefore treats evolution not as an exception but as a normal part of refining the REF language and its generators.
-
-The proposed migration strategy is incremental:
-
-1. Preserve the Ecore metamodel as the single source of truth for structural concepts and enumerations.
-2. When a new concept is added, first update the metamodel, then align the concrete syntaxes (Sirius, Xtext, MPS), and only after that adapt generators and prototypes.
-3. Prefer additive changes, such as introducing new optional concepts or enum literals, over breaking renames/removals whenever possible.
-4. When breaking changes are necessary, provide model transformation or migration rules so older scenario models can still be upgraded consistently.
-5. Preserve manual code through the Generation Gap so that model evolution mainly affects generated artifacts and controlled extension contracts, rather than handwritten business logic.
-
-From the Sirius viewpoint, this proposal is especially important because viewpoint specifications, mappings, and property views depend directly on the metamodel structure. Keeping metamodel evolution disciplined reduces editor breakage and makes it easier to update diagram mappings while preserving existing model instances and scenario diagrams.
-
----
-
-## 8. Final compliance summary for the Part 2 assignment
-
-This section complements the previous team report content with a direct mapping between the Part 2 assignment activities
-and the artifacts currently present in the repository. It does not replace the preceding sections; it records the final
-state reached by the team after the implementation and test iterations.
-
-### 8.1 Activity-to-artifact mapping
-
-| Assignment activity | Required team/individual outcome | Repository evidence |
-|---|---|---|
-| Activity 1 - Concrete syntax | Graphical and textual notations; tool-specific implementations. | Team syntax design in Sections 2.1 and 2.2; Sirius VSM in `part2/eclipse_sirius_2nd_Instance/enorm.design/description/enorm.odesign`; individual tool reports under `tool1-mps`, `tool2-xtext`, and `tool3-sirius`. |
-| Activity 2 - Common application features | Common language, framework, architecture, generated baseline, and manual extension strategy. | Spring Boot/JPA/H2/JWT-oriented backend architecture described in Sections 3 and 6; generated project templates in `generate.mtl`; manual extension strategy through generated/manual class split. |
-| Activity 3 - Prototypes | Manual/example REF backend applications used to understand code to generate. | Scenario backends and generated counterparts for Amazon, Reddit, and YouTube under `part2/` and `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen`. |
-| Activity 4 - Commonality and variability | Mapping between metamodel parts and variable/generated code. | Section 5 tables mapping REF classes/enums to generated domain, repository, service, controller, policy, and manual hook code. |
-| Activity 5 - Code generation | Templates/rules; common parts always generated; variable parts generated from model values. | Acceleo generator in `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/src/org/eclipse/acceleo/module/sample/common/generate.mtl`; generated app outputs in `scr-gen`. |
-| Activity 6 - Generate applications | Each tool can generate all three scenarios; generated code supports manual additions; tests and issues are reported. | Three `.enorm` scenario models, generated Spring Boot apps, Maven tests, acceptance tests, and individual report issue sections. |
-
-### 8.2 Final common backend architecture
-
-The generated backend target selected by the team is a Java Spring Boot REST application using:
-
-- Spring Web for REST controllers;
-- Spring Data JPA for persistence;
-- H2 in-memory database for runtime demonstration;
-- Maven as build system;
-- generated domain/repository/service/web/security/config packages;
-- a Generation Gap style split between generated bases and manual extension classes;
-- `ApiError` and `ApiExceptionHandler` for consistent JSON error responses;
-- JUnit/MockMvc acceptance tests for API-level verification.
-
-All generated applications use H2 memory URLs, for example:
-
-```properties
-spring.datasource.url=jdbc:h2:mem:amazon;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-spring.jpa.hibernate.ddl-auto=update
-```
-
-Therefore, data is persisted only while the backend process is running and is intentionally lost after the app stops. This
-keeps the demos reproducible and avoids committing persistent local database state as part of the generated application.
-
-### 8.3 Final model coverage for the three scenarios
-
-The team maintains explicit REF models for the three required scenarios. In the Sirius/EMF instance set, the final coverage
-is:
-
-| Scenario model | Resource types | Feedback definitions | Authorization rules | Validation rules | Moderation policies | Automation rules | Verification policies | Sorting policies |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Amazon | 20 | 2 | 4 | 1 | 1 | 1 | 1 | 2 |
-| Reddit | 15 | 7 | 9 | 3 | 3 | 3 | 1 | 3 |
-| YouTube | 15 | 5 | 11 | 4 | 3 | 4 | 2 | 3 |
-
-This demonstrates that the models cover not only structural resources but also feedback, authorization, validation,
-moderation, automation, verification, and sorting concerns, as required by the assignment.
-
-### 8.4 Common parts that are always generated
-
-The final generator emits the following common artifacts for every generated backend:
-
-| Common generated part | Purpose |
-|---|---|
-| Maven project and README | Build, dependency, and usage baseline. |
-| Boot application class | Spring Boot entry point. |
-| `application.properties` | H2, JPA, server port, and runtime configuration. |
-| Domain package structure | Persistent entities and generated mapped superclasses. |
-| Repository package structure | Spring Data repositories for generated entities. |
-| Service package structure | CRUD/use-case services and generated service bases. |
-| Web package structure | REST controllers and generated controller bases. |
-| Security stubs | JWT service/filter, user details service, and security configuration shell. |
-| API error handling | `ApiError` and `ApiExceptionHandler`. |
-| Tests | `AcceptanceTest`, test properties, and context/test scaffolding. |
-
-### 8.5 Variable parts generated from model values
-
-Variable generation is controlled by the REF model contents:
-
-| Model element/value | Generated variability |
-|---|---|
-| `RefModel.name` | Package names, artifact identifiers, app class names, H2 database name, response model name. |
-| `ResourceType` | Entity/repository/service/controller stacks, except conceptual resources intentionally skipped. |
-| `Attribute` | Entity fields or flexible attribute maps, depending on the selected scenario template. |
-| `FeedbackDefinition` and feedback kind | Review/comment/vote/like/report/subscription endpoints and services. |
-| `RatingPolicy` | Rating validation and product average rating support where applicable. |
-| `AuthorizationRule` and user kinds | Security and permission artifacts, sometimes completed manually in scenario services. |
-| `ValidationRule.implementationId` | Hook for Java-side validation logic that cannot be fully expressed in the DSL. |
-| `ModerationPolicy` and `AutomationRule` | Moderation checks, simulation endpoints, rule models, and scenario-specific automation behavior. |
-| `SortingPolicy` | Sorting policy entities and read-order metadata. |
-| `VerificationPolicy` | Verification entities or service hooks, especially in the Amazon review scenario. |
-
-This satisfies the assignment requirement to explain both what is generated unconditionally and what is generated only
-when specific model values are present.
-
-### 8.6 Manual extension support
-
-The team addressed the new Part 2 requirement for manual adaptations by adopting a Generation Gap approach:
-
-- generated files are placed under `generated` packages or named with a `Generated*` prefix;
-- handwritten classes extend or wrap generated bases;
-- regeneration can replace generated code while preserving manual classes;
-- scenario logic that is too specific for the DSL is implemented in manual services/controllers;
-- `implementationId` and protected methods act as stable hooks for validation, moderation, authorization, and automation logic.
-
-Examples include moderation services, product evaluation behavior, authorization/security decisions, and validation behavior
-that depends on Java code rather than only on model data.
-
-### 8.7 Generated application test evidence
-
-The generated applications were checked with Maven after the final generator and model updates:
-
-| Generated backend | Command | Result |
-|---|---|---|
-| Amazon | `mvn test` | Passed |
-| Reddit | `mvn test` | Passed |
-| YouTube | `mvn test` | Passed |
-
-The generated `AcceptanceTest` classes use `MockMvc` and validate:
-
-- registration through `POST /api/auth/register`;
-- login through `POST /api/auth/login`;
-- reachability of a generated collection endpoint;
-- JSON API error handling for missing resources through `ApiExceptionHandler`.
-
-### 8.8 Issues found during integration tests
-
-The main integration issues found and corrected were:
-
-- inconsistent user entity naming across models and templates (`RedditUser`/`YoutubeUser` versus the shared `UserType`);
-- generated Amazon automation controller code calling child-linking methods that were not generated in the domain classes;
-- generated test expectation mismatch for the exact YouTube model name capitalization;
-- the need to keep conceptual resources such as shared content abstractions out of concrete entity generation while still
-  preserving their semantic role in the model.
-
-These issues were useful because they confirmed that Activity 6 must test the generated code, not only inspect templates.
-
-### 8.9 Cross-tool compatibility conclusion
-
-The team compatibility objective is achieved at the semantic and architectural levels:
-
-1. all tools target the same REF concepts and metamodel vocabulary;
-2. generated applications share the same Spring Boot/JPA/H2 architecture;
-3. manual extension points follow the same generated/manual split;
-4. the three scenario models exercise the same family of features across tools;
-5. generated code can be compared and combined because package structure, entity/service/controller layering, and API
-   conventions are intentionally aligned.
-
-The main limitation is that each tool still has tool-specific authoring mechanics, so perfect interchangeability of editor
-artifacts is less important than preserving semantic equivalence of the REF model and compatibility of generated code.
-
-### 8.10 Model evolution and migration plan
-
-The final team migration plan is:
-
-1. version the Ecore metamodel and scenario models;
-2. prefer additive metamodel changes where possible;
-3. when breaking changes are necessary, define an explicit migration step for existing REF instances;
-4. update Sirius `.odesign`, Xtext grammar, MPS language concepts, and generators in the same change set;
-5. regenerate the three scenario backends;
-6. run the generated acceptance tests as regression checks;
-7. preserve handwritten Java extensions through the Generation Gap structure.
-
-This provides a realistic path for the evolvable DSL requirement in the assignment and uses Amazon, Reddit, and YouTube
-as regression scenarios for future language changes.
+The strongest team decision was to keep the generated architecture common while allowing each tool to implement its own authoring and generation mechanics. This kept the work aligned with the assignment: the DSL remains high-level and strongly typed, generated code is useful but extensible, and future model evolution has a clear migration and regression-testing strategy.

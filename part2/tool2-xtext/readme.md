@@ -136,7 +136,7 @@ To demonstrate: add a method to `ProductService.java`, save `amazon.refdsl` agai
 | I1 | Output under `src-gen/`, not project root | Low | Document path; F5 refresh |
 | I2 | Java names `Productreview` vs `ProductReview` | Low | Generator `toPascalCase` limitation |
 | I3 | `subjectFeedback` not emitted in JPA (e.g. `ReplyComment`) | Medium | Manual entity extension or future generator fix |
-| I4 | REF policies (`AuthorizationRule`, `AutomationRule`, …) not in generated Java | Medium | Use `part2/amazon-backend` prototype; hooks in manual services |
+| I4 | REF policies (`AuthorizationRule`, `AutomationRule`, …) not in generated Java | Medium | Use `part2/ai-generated-backends-prototypes/amazon-backend` prototype; hooks in manual services |
 | I5 | Security is `permitAll()`, not JWT from DSL | Medium | Reference prototype in `part2/*-backend` |
 | I6 | All feedback entities have `comment` field even for votes | Low | Accept as placeholder or override in manual service |
 | I7 | Early `pom.xml` missing `spring-boot-starter-security` | Fixed | Template updated in `RefBackendGenerator.xtend` |
@@ -154,7 +154,7 @@ To demonstrate: add a method to `ProductService.java`, save `amazon.refdsl` agai
 
 ### 5. Comparison with manual prototype (Activity 3)
 
-| Aspect | Generated `generated-backend/amazon` | Manual `part2/amazon-backend` |
+| Aspect | Generated `generated-backend/amazon` | Manual `part2/ai-generated-backends-prototypes/amazon-backend` |
 |--------|--------------------------------------|-------------------------------|
 | Purpose | DSL-driven skeleton (A5/A6) | Full REF behaviour reference (A3) |
 | JWT / auth rules | No | Yes |
@@ -245,4 +245,4 @@ POST http://localhost:8081/api/auth/register?username=demo&password=demo&role=BU
 - Team report: `part2/TeamReport.md`
 - Generation design: `part2/tool2-xtext/generation-design.md`
 - Scenario models: `part1/tool2-xtext/scenarios-a7/*.refdsl`
-- Manual prototype: `part2/amazon-backend/`
+- Manual prototype: `part2/ai-generated-backends-prototypes/amazon-backend/`

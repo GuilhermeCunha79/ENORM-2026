@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{targetType}}",
+      "targetId": 1,
+      "trigger": "{{trigger}}",
+      "content": "Neutral content for moderation simulation."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Moderator clean content returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Clean content is approved", function () {
+        pm.expect(body.decision).to.equal("APPROVED");
+        pm.expect(body.status).to.equal("APPROVED");
+      });
+
+      pm.collectionVariables.set("baselineDecision", body.decision);
+      pm.collectionVariables.set("baselineStatus", body.status);
+    language: text/javascript
+order: 14000

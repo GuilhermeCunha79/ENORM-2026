@@ -1,0 +1,44 @@
+$kind: collection
+name: AmazonRef Moderation Acceptance
+description: "MPS-only collection generated from part2/tool1-mps/languages/Ref.sandbox/source_gen. Uses the generated auth, policy, and moderation simulation endpoints. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox/source_gen/pom.xml spring-boot:run"
+variables:
+  baseUrl: http://localhost:8081
+  mpsGeneratedRoot: part2/tool1-mps/languages/Ref.sandbox/source_gen
+  startCommand: mvn -q -f part2/tool1-mps/languages/Ref.sandbox/source_gen/pom.xml spring-boot:run
+  smokePath: /api/products
+  resourceListPath: /api/products
+  resourceContentField: descriptionName
+  resourceAutoTargetType: Resource
+  resourceBeforeCount: ""
+  resourceId: ""
+  resourceContent: ""
+  manualTargetListPath: /api/productreviews
+  moderatorUsername: Moderator
+  moderatorPassword: Moderator
+  nonModeratorUsername: Buyer
+  nonModeratorPassword: Buyer
+  blockedKeyword: WAR
+  expectedPolicyCount: "1"
+  expectedBlockedMatch: "true"
+  expectedBlockedStatus: FLAG_CONTENT
+  baselineDecision: ""
+  baselineStatus: ""
+  policyResourceTargetType: ""
+  policyFeedbackTargetType: ""
+  autoFixturePath: /api/commentreviews
+  autoFixtureContentField: textName
+  autoFixtureContent: WAR automatic moderation fixture
+  autoTargetType: Resource
+  autoTrigger: ON_RESOURCE_CREATE
+  expectedAutoStatus: SKIPPED
+  expectedAutoMatchedKeyword: "false"
+  autoStatus: ""
+  autoFixtureId: ""
+  feedbackBeforeCount: ""
+  targetStateBeforeCount: ""
+  targetType: ProductReview
+  trigger: ON_REPORT_THRESHOLD
+  wrongTargetType: CommentReview
+  wrongTrigger: ON_FEEDBACK_CREATE
+  moderatorToken: ""
+  nonModeratorToken: ""

@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}{{autoFixturePath}}/{{autoFixtureId}}"
+method: GET
+headers:
+  Authorization: Bearer {{moderatorToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Created fixture can be read after the automatic hook", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      const expectedId = parseInt(pm.collectionVariables.get("autoFixtureId"), 10);
+      const field = pm.collectionVariables.get("autoFixtureContentField");
+      const content = pm.collectionVariables.get("autoFixtureContent");
+
+      pm.test("Read-back fixture is the created entity", function () {
+        pm.expect(body.id).to.equal(expectedId);
+      });
+
+      pm.test("Read-back state still exposes the moderated attribute", function () {
+        pm.expect(String(body[field] || ""), field).to.include(content);
+      });
+
+      pm.collectionVariables.set("autoFixtureContent", String(body[field] || ""));
+    language: text/javascript
+order: 21000

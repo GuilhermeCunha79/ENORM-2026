@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{wrongTargetType}}",
+      "targetId": 1,
+      "trigger": "{{trigger}}",
+      "content": "This content includes {{blockedKeyword}} and should be skipped because the target is wrong."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Wrong target request returns 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      const body = pm.response.json();
+      pm.test("Wrong target is skipped", function () {
+        pm.expect(body.status).to.equal("SKIPPED");
+      });
+    language: text/javascript
+order: 17000

@@ -2,7 +2,7 @@
 param(
     [string]$GeneratedRoot = "part2/tool1-mps/languages/Ref.sandbox/source_gen",
     [string]$BlueprintRoot = "part2/tool1-mps/mps-generator-blueprint",
-    [string[]]$ReferenceBackends = @("part2/amazon-backend", "part2/reddit-backend", "part2/youtube-backend"),
+    [string[]]$ReferenceBackends = @("part2/ai-generated-backends-prototypes/amazon-backend", "part2/ai-generated-backends-prototypes/reddit-backend", "part2/ai-generated-backends-prototypes/youtube-backend"),
     [string]$EndpointsFile = "part2/ENDPOINTS.md",
     [string[]]$ExpectedRelationEntities = @("Product", "Order", "OrderItem", "CommentReview"),
     [switch]$RunMavenTest,

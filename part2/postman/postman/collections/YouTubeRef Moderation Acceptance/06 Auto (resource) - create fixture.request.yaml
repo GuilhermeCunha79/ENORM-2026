@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}{{resourceListPath}}"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{moderatorToken}}
+body:
+  type: json
+  content: '{ "titleName": "WAR resource fixture", "videoName": "https://example.com/video", "uploadDateName": "2026-05-31", "durationName": 60, "commentStatusName": "OPEN" }'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Resource fixture is created", function () {
+        pm.response.to.have.status(201);
+      });
+
+      const body = pm.response.json();
+      pm.test("Created resource has an id", function () {
+        pm.expect(body.id, "id").to.be.a("number");
+      });
+
+      const field = pm.collectionVariables.get("resourceContentField");
+      const keyword = pm.collectionVariables.get("blockedKeyword");
+      pm.test("Created resource includes the blocked keyword in the chosen content field", function () {
+        pm.expect(String(body[field] || ""), field).to.include(keyword);
+      });
+
+      pm.collectionVariables.set("resourceId", String(body.id));
+      pm.collectionVariables.set("resourceContent", String(body[field] || ""));
+    language: text/javascript
+order: 6000

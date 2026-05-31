@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/moderation/simulate"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{nonModeratorToken}}
+body:
+  type: json
+  content: |-
+    {
+      "targetType": "{{targetType}}",
+      "targetId": 1,
+      "trigger": "{{trigger}}",
+      "content": "This content includes {{blockedKeyword}} and should trigger moderation if configured."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Moderation with non-moderator token is forbidden", function () {
+        pm.response.to.have.status(403);
+      });
+    language: text/javascript
+order: 13000
