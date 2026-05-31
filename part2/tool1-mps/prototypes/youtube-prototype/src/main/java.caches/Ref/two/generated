@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <product version="3" modelHash="-8tg8yfwtu31v0zi0p244b72onb6z4dd">
   <files dir="Ref/two/../../../../.." names="pom.xml" />
-  <files dir="Ref/two/../../../../resources" names="application.properties" />
+  <files dir="Ref/two/../../../../main/resources" names="application.properties" />
   <files dir="pt/isep/enorm/ref" names="YoutubeRefApplication.java" />
   <files dir="pt/isep/enorm/ref/config" names="H2ServerConfiguration.java:InitialDataConfiguration.java" />
   <files dir="pt/isep/enorm/ref/domain" names="AuthorizationRule.java:AutomationAction.java:AutomationCondition.java:AutomationRule.java:Channel.java:Comment.java:ConditionValue.java:ContextResource.java:ContextType.java:LikeOnComment.java:LikeOnCommentMediaReference.java:LikeOnVideo.java:LikeOnVideoMediaReference.java:ModerationPolicy.java:ReportOnComment.java:ReportOnCommentMediaReference.java:ReportOnVideo.java:ReportOnVideoMediaReference.java:SortingPolicy.java:SubscriptionOnChannel.java:SubscriptionOnChannelMediaReference.java:UserType.java:ValidationRule.java:VerificationPolicy.java:Video.java" />

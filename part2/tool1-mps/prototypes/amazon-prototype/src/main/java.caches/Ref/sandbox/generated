@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <product version="3" modelHash="-7xhbbuvu2wq5incuy6vrekp84jllikp">
   <files dir="Ref/sandbox/../../../../.." names="pom.xml" />
-  <files dir="Ref/sandbox/../../../../resources" names="application.properties" />
+  <files dir="Ref/sandbox/../../../../main/resources" names="application.properties" />
   <files dir="pt/isep/enorm/ref" names="AmazonRefApplication.java" />
   <files dir="pt/isep/enorm/ref/config" names="H2ServerConfiguration.java:InitialDataConfiguration.java" />
   <files dir="pt/isep/enorm/ref/domain" names="AuthorizationRule.java:AutomationAction.java:AutomationCondition.java:AutomationRule.java:CommentReview.java:ConditionValue.java:ContextResource.java:ContextType.java:HelpfulVoteOnComment.java:HelpfulVoteOnCommentMediaReference.java:ModerationPolicy.java:Order.java:OrderItem.java:Product.java:ProductReview.java:ProductReviewMediaReference.java:SortingPolicy.java:UserType.java:ValidationRule.java:VerificationPolicy.java" />

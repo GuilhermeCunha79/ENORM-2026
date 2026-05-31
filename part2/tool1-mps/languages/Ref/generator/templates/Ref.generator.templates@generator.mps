@@ -450,7 +450,7 @@
     </node>
     <node concept="3lhOvk" id="33dPD0BfzAA" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
-      <ref role="3lhOvi" node="33dPD0BeUr0" resolve="../../../../resources/application" />
+      <ref role="3lhOvi" node="33dPD0BeUr0" resolve="../../../../main/resources/application" />
     </node>
     <node concept="3lhOvk" id="1kk75F4x$35" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
@@ -1785,7 +1785,7 @@
     </node>
   </node>
   <node concept="356sEV" id="33dPD0BeUr0">
-    <property role="TrG5h" value="../../../../resources/application" />
+    <property role="TrG5h" value="../../../../main/resources/application" />
     <property role="3Le9LX" value=".properties" />
     <property role="3GE5qa" value="resources" />
     <node concept="356WMU" id="33dPD0BeZhZ" role="356KY_">
@@ -30509,27 +30509,6 @@
                 <property role="TrG5h" value="&lt;/resource&gt;" />
               </node>
               <node concept="2EixSi" id="3bcNv5WPc2" role="2EinRH" />
-            </node>
-            <node concept="356sEK" id="3bcNv5WPc3" role="383Ya9">
-              <node concept="356sEF" id="3bcNv5WPc4" role="356sEH">
-                <property role="TrG5h" value="&lt;resource&gt;" />
-              </node>
-              <node concept="2EixSi" id="3bcNv5WPc6" role="2EinRH" />
-            </node>
-            <node concept="356sEQ" id="3bcNv5WPcb" role="383Ya9">
-              <property role="333NGx" value="    " />
-              <node concept="356sEK" id="3bcNv5WPc7" role="383Ya9">
-                <node concept="356sEF" id="3bcNv5WPc8" role="356sEH">
-                  <property role="TrG5h" value="&lt;directory&gt;src/main/resources&lt;/directory&gt;" />
-                </node>
-                <node concept="2EixSi" id="3bcNv5WPca" role="2EinRH" />
-              </node>
-            </node>
-            <node concept="356sEK" id="3bcNv5WPcc" role="383Ya9">
-              <node concept="356sEF" id="3bcNv5WPcd" role="356sEH">
-                <property role="TrG5h" value="&lt;/resource&gt;" />
-              </node>
-              <node concept="2EixSi" id="3bcNv5WPcf" role="2EinRH" />
             </node>
           </node>
           <node concept="356sEK" id="3bcNv5WPcg" role="383Ya9">
