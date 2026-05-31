@@ -650,3 +650,167 @@ The proposed migration strategy is incremental:
 5. Preserve manual code through the Generation Gap so that model evolution mainly affects generated artifacts and controlled extension contracts, rather than handwritten business logic.
 
 From the Sirius viewpoint, this proposal is especially important because viewpoint specifications, mappings, and property views depend directly on the metamodel structure. Keeping metamodel evolution disciplined reduces editor breakage and makes it easier to update diagram mappings while preserving existing model instances and scenario diagrams.
+
+---
+
+## 8. Final compliance summary for the Part 2 assignment
+
+This section complements the previous team report content with a direct mapping between the Part 2 assignment activities
+and the artifacts currently present in the repository. It does not replace the preceding sections; it records the final
+state reached by the team after the implementation and test iterations.
+
+### 8.1 Activity-to-artifact mapping
+
+| Assignment activity | Required team/individual outcome | Repository evidence |
+|---|---|---|
+| Activity 1 - Concrete syntax | Graphical and textual notations; tool-specific implementations. | Team syntax design in Sections 2.1 and 2.2; Sirius VSM in `part2/eclipse_sirius_2nd_Instance/enorm.design/description/enorm.odesign`; individual tool reports under `tool1-mps`, `tool2-xtext`, and `tool3-sirius`. |
+| Activity 2 - Common application features | Common language, framework, architecture, generated baseline, and manual extension strategy. | Spring Boot/JPA/H2/JWT-oriented backend architecture described in Sections 3 and 6; generated project templates in `generate.mtl`; manual extension strategy through generated/manual class split. |
+| Activity 3 - Prototypes | Manual/example REF backend applications used to understand code to generate. | Scenario backends and generated counterparts for Amazon, Reddit, and YouTube under `part2/` and `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen`. |
+| Activity 4 - Commonality and variability | Mapping between metamodel parts and variable/generated code. | Section 5 tables mapping REF classes/enums to generated domain, repository, service, controller, policy, and manual hook code. |
+| Activity 5 - Code generation | Templates/rules; common parts always generated; variable parts generated from model values. | Acceleo generator in `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/src/org/eclipse/acceleo/module/sample/common/generate.mtl`; generated app outputs in `scr-gen`. |
+| Activity 6 - Generate applications | Each tool can generate all three scenarios; generated code supports manual additions; tests and issues are reported. | Three `.enorm` scenario models, generated Spring Boot apps, Maven tests, acceptance tests, and individual report issue sections. |
+
+### 8.2 Final common backend architecture
+
+The generated backend target selected by the team is a Java Spring Boot REST application using:
+
+- Spring Web for REST controllers;
+- Spring Data JPA for persistence;
+- H2 in-memory database for runtime demonstration;
+- Maven as build system;
+- generated domain/repository/service/web/security/config packages;
+- a Generation Gap style split between generated bases and manual extension classes;
+- `ApiError` and `ApiExceptionHandler` for consistent JSON error responses;
+- JUnit/MockMvc acceptance tests for API-level verification.
+
+All generated applications use H2 memory URLs, for example:
+
+```properties
+spring.datasource.url=jdbc:h2:mem:amazon;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.jpa.hibernate.ddl-auto=update
+```
+
+Therefore, data is persisted only while the backend process is running and is intentionally lost after the app stops. This
+keeps the demos reproducible and avoids committing persistent local database state as part of the generated application.
+
+### 8.3 Final model coverage for the three scenarios
+
+The team maintains explicit REF models for the three required scenarios. In the Sirius/EMF instance set, the final coverage
+is:
+
+| Scenario model | Resource types | Feedback definitions | Authorization rules | Validation rules | Moderation policies | Automation rules | Verification policies | Sorting policies |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Amazon | 20 | 2 | 4 | 1 | 1 | 1 | 1 | 2 |
+| Reddit | 15 | 7 | 9 | 3 | 3 | 3 | 1 | 3 |
+| YouTube | 15 | 5 | 11 | 4 | 3 | 4 | 2 | 3 |
+
+This demonstrates that the models cover not only structural resources but also feedback, authorization, validation,
+moderation, automation, verification, and sorting concerns, as required by the assignment.
+
+### 8.4 Common parts that are always generated
+
+The final generator emits the following common artifacts for every generated backend:
+
+| Common generated part | Purpose |
+|---|---|
+| Maven project and README | Build, dependency, and usage baseline. |
+| Boot application class | Spring Boot entry point. |
+| `application.properties` | H2, JPA, server port, and runtime configuration. |
+| Domain package structure | Persistent entities and generated mapped superclasses. |
+| Repository package structure | Spring Data repositories for generated entities. |
+| Service package structure | CRUD/use-case services and generated service bases. |
+| Web package structure | REST controllers and generated controller bases. |
+| Security stubs | JWT service/filter, user details service, and security configuration shell. |
+| API error handling | `ApiError` and `ApiExceptionHandler`. |
+| Tests | `AcceptanceTest`, test properties, and context/test scaffolding. |
+
+### 8.5 Variable parts generated from model values
+
+Variable generation is controlled by the REF model contents:
+
+| Model element/value | Generated variability |
+|---|---|
+| `RefModel.name` | Package names, artifact identifiers, app class names, H2 database name, response model name. |
+| `ResourceType` | Entity/repository/service/controller stacks, except conceptual resources intentionally skipped. |
+| `Attribute` | Entity fields or flexible attribute maps, depending on the selected scenario template. |
+| `FeedbackDefinition` and feedback kind | Review/comment/vote/like/report/subscription endpoints and services. |
+| `RatingPolicy` | Rating validation and product average rating support where applicable. |
+| `AuthorizationRule` and user kinds | Security and permission artifacts, sometimes completed manually in scenario services. |
+| `ValidationRule.implementationId` | Hook for Java-side validation logic that cannot be fully expressed in the DSL. |
+| `ModerationPolicy` and `AutomationRule` | Moderation checks, simulation endpoints, rule models, and scenario-specific automation behavior. |
+| `SortingPolicy` | Sorting policy entities and read-order metadata. |
+| `VerificationPolicy` | Verification entities or service hooks, especially in the Amazon review scenario. |
+
+This satisfies the assignment requirement to explain both what is generated unconditionally and what is generated only
+when specific model values are present.
+
+### 8.6 Manual extension support
+
+The team addressed the new Part 2 requirement for manual adaptations by adopting a Generation Gap approach:
+
+- generated files are placed under `generated` packages or named with a `Generated*` prefix;
+- handwritten classes extend or wrap generated bases;
+- regeneration can replace generated code while preserving manual classes;
+- scenario logic that is too specific for the DSL is implemented in manual services/controllers;
+- `implementationId` and protected methods act as stable hooks for validation, moderation, authorization, and automation logic.
+
+Examples include moderation services, product evaluation behavior, authorization/security decisions, and validation behavior
+that depends on Java code rather than only on model data.
+
+### 8.7 Generated application test evidence
+
+The generated applications were checked with Maven after the final generator and model updates:
+
+| Generated backend | Command | Result |
+|---|---|---|
+| Amazon | `mvn test` | Passed |
+| Reddit | `mvn test` | Passed |
+| YouTube | `mvn test` | Passed |
+
+The generated `AcceptanceTest` classes use `MockMvc` and validate:
+
+- registration through `POST /api/auth/register`;
+- login through `POST /api/auth/login`;
+- reachability of a generated collection endpoint;
+- JSON API error handling for missing resources through `ApiExceptionHandler`.
+
+### 8.8 Issues found during integration tests
+
+The main integration issues found and corrected were:
+
+- inconsistent user entity naming across models and templates (`RedditUser`/`YoutubeUser` versus the shared `UserType`);
+- generated Amazon automation controller code calling child-linking methods that were not generated in the domain classes;
+- generated test expectation mismatch for the exact YouTube model name capitalization;
+- the need to keep conceptual resources such as shared content abstractions out of concrete entity generation while still
+  preserving their semantic role in the model.
+
+These issues were useful because they confirmed that Activity 6 must test the generated code, not only inspect templates.
+
+### 8.9 Cross-tool compatibility conclusion
+
+The team compatibility objective is achieved at the semantic and architectural levels:
+
+1. all tools target the same REF concepts and metamodel vocabulary;
+2. generated applications share the same Spring Boot/JPA/H2 architecture;
+3. manual extension points follow the same generated/manual split;
+4. the three scenario models exercise the same family of features across tools;
+5. generated code can be compared and combined because package structure, entity/service/controller layering, and API
+   conventions are intentionally aligned.
+
+The main limitation is that each tool still has tool-specific authoring mechanics, so perfect interchangeability of editor
+artifacts is less important than preserving semantic equivalence of the REF model and compatibility of generated code.
+
+### 8.10 Model evolution and migration plan
+
+The final team migration plan is:
+
+1. version the Ecore metamodel and scenario models;
+2. prefer additive metamodel changes where possible;
+3. when breaking changes are necessary, define an explicit migration step for existing REF instances;
+4. update Sirius `.odesign`, Xtext grammar, MPS language concepts, and generators in the same change set;
+5. regenerate the three scenario backends;
+6. run the generated acceptance tests as regression checks;
+7. preserve handwritten Java extensions through the Generation Gap structure.
+
+This provides a realistic path for the evolvable DSL requirement in the assignment and uses Amazon, Reddit, and YouTube
+as regression scenarios for future language changes.
