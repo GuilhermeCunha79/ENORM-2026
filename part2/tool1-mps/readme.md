@@ -59,6 +59,10 @@ This solution makes the DSL closer to the domain language while keeping it stron
 
 ![Attribute Editor](images/attributeEditor.png)
 
+### Result Example
+
+<img width="989" height="962" alt="image" src="https://github.com/user-attachments/assets/c79c9ec4-4ce5-4f60-8679-39f22d573e36" />
+
 ## 3. Code Generation Approach
 
 Code generation was implemented with the MPS Generator. The main input of the generation process is a `RefModel`, which contains the structural and behavioral elements of the scenario to generate. From this model, the generator produces backend projects compatible with the architecture defined by the team: Java, Spring Boot, Spring Data JPA, Maven, H2, and a separation between generated code and manual code.
