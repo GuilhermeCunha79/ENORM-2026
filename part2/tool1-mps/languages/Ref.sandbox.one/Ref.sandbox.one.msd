@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<solution name="Ref.sandbox.one" uuid="20517fc2-c271-4f33-9b30-f47362d11e58" moduleVersion="0" generatorOutputPath="${module}/source_gen/src/main/java">
+<solution name="Ref.sandbox.one" uuid="20517fc2-c271-4f33-9b30-f47362d11e58" moduleVersion="0" generatorOutputPath="${module}/../../prototypes/reddit-prototype/src/main/java">
   <models>
     <modelRoot contentPath="${module}" type="default">
       <sourceRoot location="models" />

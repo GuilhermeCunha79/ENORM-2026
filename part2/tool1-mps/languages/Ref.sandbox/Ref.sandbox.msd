@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<solution name="Ref.sandbox" uuid="b3276595-6059-4bd7-9cde-2cec8c00bc75" moduleVersion="0" generatorOutputPath="${module}/source_gen/src/main/java">
+<solution name="Ref.sandbox" uuid="b3276595-6059-4bd7-9cde-2cec8c00bc75" moduleVersion="0" generatorOutputPath="${module}/../../prototypes/amazon-prototype/src/main/java">
   <models>
     <modelRoot contentPath="${module}" type="default">
       <sourceRoot path="${module}/models" />

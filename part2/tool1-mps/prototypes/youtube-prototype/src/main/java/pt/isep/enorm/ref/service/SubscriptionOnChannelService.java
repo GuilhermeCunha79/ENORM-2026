@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedSubscriptionOnChannelService;
 import pt.isep.enorm.ref.repository.SubscriptionOnChannelRepository;
+import pt.isep.enorm.ref.domain.SubscriptionOnChannel;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class SubscriptionOnChannelService extends GeneratedSubscriptionOnChannelService {
 
+  private final ModerationService moderationService;
 
-  public SubscriptionOnChannelService(SubscriptionOnChannelRepository feedbackRepository) {
+  public SubscriptionOnChannelService(SubscriptionOnChannelRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterSubscriptionOnChannelCreated(SubscriptionOnChannel savedResource) {
+    moderationService.moderateAutomatically("SubscriptionOnChannel", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationSubscriptionOnChannelContent(savedResource));
+  }
+
+
+  protected String moderationSubscriptionOnChannelContent(SubscriptionOnChannel savedResource) {
+    return savedResource.toString();
+  }
 }

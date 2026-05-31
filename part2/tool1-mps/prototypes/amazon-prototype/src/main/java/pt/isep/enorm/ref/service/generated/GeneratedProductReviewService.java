@@ -32,4 +32,6 @@ public abstract class GeneratedProductReviewService {
     ProductReviewRepository.delete(getProductReview(id));
   }
 
+  protected void afterProductReviewCreated(ProductReview savedResource) {
+  }
 }

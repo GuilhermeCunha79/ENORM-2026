@@ -20,9 +20,11 @@ public class PostService extends GeneratedPostService {
 
   @Override
   protected void afterPostCreated(Post savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Post", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationPostContent(savedResource));
   }
-  protected String moderationContent(Post savedResource) {
+
+
+  protected String moderationPostContent(Post savedResource) {
     return savedResource.toString();
   }
 

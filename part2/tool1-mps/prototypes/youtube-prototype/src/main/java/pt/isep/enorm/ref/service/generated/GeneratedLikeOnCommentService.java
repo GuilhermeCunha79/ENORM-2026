@@ -32,4 +32,6 @@ public abstract class GeneratedLikeOnCommentService {
     LikeOnCommentRepository.delete(getLikeOnComment(id));
   }
 
+  protected void afterLikeOnCommentCreated(LikeOnComment savedResource) {
+  }
 }

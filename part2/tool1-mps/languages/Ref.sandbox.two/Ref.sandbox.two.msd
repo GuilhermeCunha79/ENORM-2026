@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<solution name="Ref.sandbox.two" uuid="37afe2a2-acac-444d-8ce3-dcc5bc4460cd" moduleVersion="0" generatorOutputPath="${module}/source_gen/src/main/java">
+<solution name="Ref.sandbox.two" uuid="37afe2a2-acac-444d-8ce3-dcc5bc4460cd" moduleVersion="0" generatorOutputPath="${module}/../../prototypes/youtube-prototype/src/main/java">
   <models>
     <modelRoot contentPath="${module}" type="default">
       <sourceRoot location="models" />

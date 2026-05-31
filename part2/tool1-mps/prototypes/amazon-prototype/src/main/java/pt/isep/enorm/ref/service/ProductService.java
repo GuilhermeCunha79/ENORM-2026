@@ -20,9 +20,11 @@ public class ProductService extends GeneratedProductService {
 
   @Override
   protected void afterProductCreated(Product savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Product", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationProductContent(savedResource));
   }
-  protected String moderationContent(Product savedResource) {
+
+
+  protected String moderationProductContent(Product savedResource) {
     return savedResource.toString();
   }
 

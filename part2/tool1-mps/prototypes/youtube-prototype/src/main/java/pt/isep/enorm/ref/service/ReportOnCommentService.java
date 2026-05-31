@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedReportOnCommentService;
 import pt.isep.enorm.ref.repository.ReportOnCommentRepository;
+import pt.isep.enorm.ref.domain.ReportOnComment;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class ReportOnCommentService extends GeneratedReportOnCommentService {
 
+  private final ModerationService moderationService;
 
-  public ReportOnCommentService(ReportOnCommentRepository feedbackRepository) {
+  public ReportOnCommentService(ReportOnCommentRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterReportOnCommentCreated(ReportOnComment savedResource) {
+    moderationService.moderateAutomatically("ReportOnComment", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationReportOnCommentContent(savedResource));
+  }
+
+
+  protected String moderationReportOnCommentContent(ReportOnComment savedResource) {
+    return savedResource.toString();
+  }
 }

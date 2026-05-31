@@ -32,4 +32,6 @@ public abstract class GeneratedReportOnCommentService {
     ReportOnCommentRepository.delete(getReportOnComment(id));
   }
 
+  protected void afterReportOnCommentCreated(ReportOnComment savedResource) {
+  }
 }

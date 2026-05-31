@@ -32,4 +32,6 @@ public abstract class GeneratedReportOnPostService {
     ReportOnPostRepository.delete(getReportOnPost(id));
   }
 
+  protected void afterReportOnPostCreated(ReportOnPost savedResource) {
+  }
 }

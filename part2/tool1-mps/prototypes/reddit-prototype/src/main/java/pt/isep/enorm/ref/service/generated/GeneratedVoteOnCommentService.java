@@ -32,4 +32,6 @@ public abstract class GeneratedVoteOnCommentService {
     VoteOnCommentRepository.delete(getVoteOnComment(id));
   }
 
+  protected void afterVoteOnCommentCreated(VoteOnComment savedResource) {
+  }
 }

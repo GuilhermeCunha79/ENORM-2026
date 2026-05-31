@@ -20,9 +20,11 @@ public class VideoService extends GeneratedVideoService {
 
   @Override
   protected void afterVideoCreated(Video savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Video", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationVideoContent(savedResource));
   }
-  protected String moderationContent(Video savedResource) {
+
+
+  protected String moderationVideoContent(Video savedResource) {
     return savedResource.toString();
   }
 

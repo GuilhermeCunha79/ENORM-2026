@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedReportOnVideoService;
 import pt.isep.enorm.ref.repository.ReportOnVideoRepository;
+import pt.isep.enorm.ref.domain.ReportOnVideo;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class ReportOnVideoService extends GeneratedReportOnVideoService {
 
+  private final ModerationService moderationService;
 
-  public ReportOnVideoService(ReportOnVideoRepository feedbackRepository) {
+  public ReportOnVideoService(ReportOnVideoRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterReportOnVideoCreated(ReportOnVideo savedResource) {
+    moderationService.moderateAutomatically("ReportOnVideo", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationReportOnVideoContent(savedResource));
+  }
+
+
+  protected String moderationReportOnVideoContent(ReportOnVideo savedResource) {
+    return savedResource.toString();
+  }
 }

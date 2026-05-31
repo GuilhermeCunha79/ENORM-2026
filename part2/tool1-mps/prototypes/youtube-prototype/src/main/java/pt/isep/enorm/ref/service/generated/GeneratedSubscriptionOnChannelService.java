@@ -32,4 +32,6 @@ public abstract class GeneratedSubscriptionOnChannelService {
     SubscriptionOnChannelRepository.delete(getSubscriptionOnChannel(id));
   }
 
+  protected void afterSubscriptionOnChannelCreated(SubscriptionOnChannel savedResource) {
+  }
 }

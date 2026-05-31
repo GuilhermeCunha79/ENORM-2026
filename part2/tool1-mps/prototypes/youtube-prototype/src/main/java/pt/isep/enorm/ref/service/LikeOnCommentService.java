@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedLikeOnCommentService;
 import pt.isep.enorm.ref.repository.LikeOnCommentRepository;
+import pt.isep.enorm.ref.domain.LikeOnComment;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class LikeOnCommentService extends GeneratedLikeOnCommentService {
 
+  private final ModerationService moderationService;
 
-  public LikeOnCommentService(LikeOnCommentRepository feedbackRepository) {
+  public LikeOnCommentService(LikeOnCommentRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterLikeOnCommentCreated(LikeOnComment savedResource) {
+    moderationService.moderateAutomatically("LikeOnComment", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationLikeOnCommentContent(savedResource));
+  }
+
+
+  protected String moderationLikeOnCommentContent(LikeOnComment savedResource) {
+    return savedResource.toString();
+  }
 }

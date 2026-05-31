@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedProductReviewService;
 import pt.isep.enorm.ref.repository.ProductReviewRepository;
+import pt.isep.enorm.ref.domain.ProductReview;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class ProductReviewService extends GeneratedProductReviewService {
 
+  private final ModerationService moderationService;
 
-  public ProductReviewService(ProductReviewRepository feedbackRepository) {
+  public ProductReviewService(ProductReviewRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterProductReviewCreated(ProductReview savedResource) {
+    moderationService.moderateAutomatically("ProductReview", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationProductReviewContent(savedResource));
+  }
+
+
+  protected String moderationProductReviewContent(ProductReview savedResource) {
+    return savedResource.toString();
+  }
 }

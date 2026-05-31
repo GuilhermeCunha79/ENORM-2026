@@ -32,4 +32,6 @@ public abstract class GeneratedLikeOnVideoService {
     LikeOnVideoRepository.delete(getLikeOnVideo(id));
   }
 
+  protected void afterLikeOnVideoCreated(LikeOnVideo savedResource) {
+  }
 }

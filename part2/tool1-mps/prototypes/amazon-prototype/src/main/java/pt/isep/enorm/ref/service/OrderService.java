@@ -20,9 +20,11 @@ public class OrderService extends GeneratedOrderService {
 
   @Override
   protected void afterOrderCreated(Order savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Order", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationOrderContent(savedResource));
   }
-  protected String moderationContent(Order savedResource) {
+
+
+  protected String moderationOrderContent(Order savedResource) {
     return savedResource.toString();
   }
 

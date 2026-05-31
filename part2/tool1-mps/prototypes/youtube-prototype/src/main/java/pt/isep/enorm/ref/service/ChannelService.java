@@ -20,9 +20,11 @@ public class ChannelService extends GeneratedChannelService {
 
   @Override
   protected void afterChannelCreated(Channel savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Channel", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationChannelContent(savedResource));
   }
-  protected String moderationContent(Channel savedResource) {
+
+
+  protected String moderationChannelContent(Channel savedResource) {
     return savedResource.toString();
   }
 

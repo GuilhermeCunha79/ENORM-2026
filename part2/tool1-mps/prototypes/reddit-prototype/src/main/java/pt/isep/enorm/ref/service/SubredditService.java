@@ -20,9 +20,11 @@ public class SubredditService extends GeneratedSubredditService {
 
   @Override
   protected void afterSubredditCreated(Subreddit savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("Subreddit", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationSubredditContent(savedResource));
   }
-  protected String moderationContent(Subreddit savedResource) {
+
+
+  protected String moderationSubredditContent(Subreddit savedResource) {
     return savedResource.toString();
   }
 

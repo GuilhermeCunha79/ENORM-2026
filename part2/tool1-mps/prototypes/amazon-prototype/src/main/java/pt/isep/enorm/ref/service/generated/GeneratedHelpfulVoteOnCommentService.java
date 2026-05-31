@@ -32,4 +32,6 @@ public abstract class GeneratedHelpfulVoteOnCommentService {
     HelpfulVoteOnCommentRepository.delete(getHelpfulVoteOnComment(id));
   }
 
+  protected void afterHelpfulVoteOnCommentCreated(HelpfulVoteOnComment savedResource) {
+  }
 }

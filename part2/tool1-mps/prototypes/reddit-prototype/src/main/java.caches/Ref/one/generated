@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<product version="3" modelHash="274f13lofcxh2avwy0d5a6si80c27bc">
+<product version="3" modelHash="-a7w1ibskbqjvmgq6vp2j7whumwyizpx">
   <files dir="Ref/one/../../../../.." names="pom.xml" />
   <files dir="Ref/one/../../../../resources" names="application.properties" />
   <files dir="pt/isep/enorm/ref" names="RedditRefApplication.java" />

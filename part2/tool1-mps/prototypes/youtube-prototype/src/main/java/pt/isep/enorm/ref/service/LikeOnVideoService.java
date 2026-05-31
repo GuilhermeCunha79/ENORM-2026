@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedLikeOnVideoService;
 import pt.isep.enorm.ref.repository.LikeOnVideoRepository;
+import pt.isep.enorm.ref.domain.LikeOnVideo;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class LikeOnVideoService extends GeneratedLikeOnVideoService {
 
+  private final ModerationService moderationService;
 
-  public LikeOnVideoService(LikeOnVideoRepository feedbackRepository) {
+  public LikeOnVideoService(LikeOnVideoRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterLikeOnVideoCreated(LikeOnVideo savedResource) {
+    moderationService.moderateAutomatically("LikeOnVideo", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationLikeOnVideoContent(savedResource));
+  }
+
+
+  protected String moderationLikeOnVideoContent(LikeOnVideo savedResource) {
+    return savedResource.toString();
+  }
 }

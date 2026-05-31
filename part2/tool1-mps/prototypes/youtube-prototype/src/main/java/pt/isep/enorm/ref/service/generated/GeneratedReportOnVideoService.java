@@ -32,4 +32,6 @@ public abstract class GeneratedReportOnVideoService {
     ReportOnVideoRepository.delete(getReportOnVideo(id));
   }
 
+  protected void afterReportOnVideoCreated(ReportOnVideo savedResource) {
+  }
 }

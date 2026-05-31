@@ -32,4 +32,6 @@ public abstract class GeneratedVoteOnPostService {
     VoteOnPostRepository.delete(getVoteOnPost(id));
   }
 
+  protected void afterVoteOnPostCreated(VoteOnPost savedResource) {
+  }
 }

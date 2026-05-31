@@ -5,14 +5,27 @@ package pt.isep.enorm.ref.service;
 import org.springframework.stereotype.Service;
 import pt.isep.enorm.ref.service.generated.GeneratedHelpfulVoteOnCommentService;
 import pt.isep.enorm.ref.repository.HelpfulVoteOnCommentRepository;
+import pt.isep.enorm.ref.domain.HelpfulVoteOnComment;
+import pt.isep.enorm.ref.domain.enums.TriggerEvent;
 
 @Service
 public class HelpfulVoteOnCommentService extends GeneratedHelpfulVoteOnCommentService {
 
+  private final ModerationService moderationService;
 
-  public HelpfulVoteOnCommentService(HelpfulVoteOnCommentRepository feedbackRepository) {
+  public HelpfulVoteOnCommentService(HelpfulVoteOnCommentRepository feedbackRepository, ModerationService moderationServices) {
     super(feedbackRepository);
+    this.moderationService = moderationServices;
   }
 
 
+  @Override
+  protected void afterHelpfulVoteOnCommentCreated(HelpfulVoteOnComment savedResource) {
+    moderationService.moderateAutomatically("HelpfulVoteOnComment", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationHelpfulVoteOnCommentContent(savedResource));
+  }
+
+
+  protected String moderationHelpfulVoteOnCommentContent(HelpfulVoteOnComment savedResource) {
+    return savedResource.toString();
+  }
 }

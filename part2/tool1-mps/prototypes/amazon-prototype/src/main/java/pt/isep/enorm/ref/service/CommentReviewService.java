@@ -20,9 +20,11 @@ public class CommentReviewService extends GeneratedCommentReviewService {
 
   @Override
   protected void afterCommentReviewCreated(CommentReview savedResource) {
-    moderationService.moderateAutomatically("Resource", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationContent(savedResource));
+    moderationService.moderateAutomatically("CommentReview", savedResource.getId(), TriggerEvent.ON_RESOURCE_CREATE, moderationCommentReviewContent(savedResource));
   }
-  protected String moderationContent(CommentReview savedResource) {
+
+
+  protected String moderationCommentReviewContent(CommentReview savedResource) {
     return savedResource.toString();
   }
 

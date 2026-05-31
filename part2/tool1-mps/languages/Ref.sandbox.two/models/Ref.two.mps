@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model ref="r:9ba50f7b-920d-4b57-b421-a94853f78ad0(Ref.two)">
+<model ref="r:9ba50f7b-920d-4b57-b421-a94853f78ad0(Ref.sandbox.two)">
   <persistence version="9" />
   <languages>
     <use id="75b0389b-83f9-4003-b95d-1b8432efd2b6" name="Ref" version="0" />
