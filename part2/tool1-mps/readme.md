@@ -165,7 +165,7 @@ These macros are important because they preserve the link between the MPS model 
 
 These macros are the main mechanism for making each scenario generate code with the correct names. For example, the same template can generate `GeneratedProductService`, `GeneratedPostService`, or `GeneratedVideoService`, depending on the `ResourceType` processed by the loop.
 
-### Screenshot Placeholder
+### GeneratedModerationModel template
 
 ![MPS GeneratedModerationModel template](images/generatedModerationModelTemplate.png)
 
