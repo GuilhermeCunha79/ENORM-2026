@@ -1,7 +1,6 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.VideoModerationResult;
-import pt.isep.enorm.ref.domain.enums.VideoModerationType;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.domain.Video;
 import pt.isep.enorm.ref.domain.UserType;
 import jakarta.persistence.Column;
@@ -21,10 +20,9 @@ public abstract class GeneratedVideoModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private VideoModerationType type;
-    @Enumerated(EnumType.STRING)
-    private VideoModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -36,10 +34,10 @@ public abstract class GeneratedVideoModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public VideoModerationType getType() { return type; }
-    public void setType(VideoModerationType type) { this.type = type; }
-    public VideoModerationResult getResult() { return result; }
-    public void setResult(VideoModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Video getVideo() { return video; }

@@ -1,7 +1,6 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.CommentModerationResult;
-import pt.isep.enorm.ref.domain.enums.CommentModerationType;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.domain.Comment;
 import pt.isep.enorm.ref.domain.UserType;
 import jakarta.persistence.Column;
@@ -21,10 +20,9 @@ public abstract class GeneratedCommentModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private CommentModerationType type;
-    @Enumerated(EnumType.STRING)
-    private CommentModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -36,10 +34,10 @@ public abstract class GeneratedCommentModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public CommentModerationType getType() { return type; }
-    public void setType(CommentModerationType type) { this.type = type; }
-    public CommentModerationResult getResult() { return result; }
-    public void setResult(CommentModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Comment getComment() { return comment; }

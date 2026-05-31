@@ -180,7 +180,7 @@ public class GeneratedModerationService {
             return;
         }
 
-        invokeSetter(content, "setStatus", enumValue("pt.isep.enorm.ref.domain.enums.ContentStatus", status, "UNDER_REVIEW"));
+        invokeSetter(content, "setStatus", enumValue("pt.isep.enorm.ref.domain.enums.ModerationDecision", status, "FLAGGED"));
         invokeSetter(content, "setStatus", status);
     }
 
@@ -239,16 +239,16 @@ public class GeneratedModerationService {
             String type = matchedRules.isEmpty() ? "CONTENT" : moderationTypeFor(matchedRules.get(0));
             String result = "APPROVED".equals(decision) ? "APPROVED" : "FLAGGED";
             if ("comment".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("pt.isep.enorm.ref.domain.enums.CommentModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.CommentModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setComment", content);
             } else if ("post".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("pt.isep.enorm.ref.domain.enums.PostModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.PostModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setPost", content);
             } else if ("video".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("pt.isep.enorm.ref.domain.enums.VideoModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.VideoModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("pt.isep.enorm.ref.domain.enums.ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setVideo", content);
             }
             invokeSetter(check, "setTimestamp", timestamp);

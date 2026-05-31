@@ -2,8 +2,6 @@ package pt.isep.enorm.ref.service.generated;
 
 import java.util.List;
 
-import pt.isep.enorm.ref.domain.enums.CommentModerationType;
-import pt.isep.enorm.ref.domain.enums.PostModerationType;
 import pt.isep.enorm.ref.domain.enums.UserKind;
 
 public final class GeneratedModerationModel {
@@ -11,23 +9,23 @@ public final class GeneratedModerationModel {
     public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
     public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
     public enum ConditionOperator { CONTAINS_KEYWORDS }
-    public enum ActionKind { FLAG_CONTENT }
+    public enum ActionResultKind { FLAG_CONTENT }
 
     public static final List<PolicySpec> POLICIES = List.of(
         new PolicySpec("PostModeration", "Post", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("RedditAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("BlockedPostKeywords", ConditionOperator.CONTAINS_KEYWORDS, "content", List.of("spam", "malware", "phishing"))),
-                List.of(new ActionSpec("FlagPost", ActionKind.FLAG_CONTENT, "Post flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagPost", ActionResultKind.FLAG_CONTENT, "Post flagged for moderator review"))))),
         new PolicySpec("CommentModeration", "Comment", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("RedditCommentAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("BlockedCommentKeywords", ConditionOperator.CONTAINS_KEYWORDS, "text", List.of("spam", "malware", "phishing"))),
-                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review")))))
+                List.of(new ActionSpec("FlagComment", ActionResultKind.FLAG_CONTENT, "Comment flagged for moderator review")))))
     );
 
     public static final PolicySpec DEFAULT_POLICY = POLICIES.get(0);
     public static final AutomationRuleSpec DEFAULT_AUTOMATION_RULE = DEFAULT_POLICY.getAutomationRules().get(0);
-    public static final PostModerationType POST_CHECK_TYPE = PostModerationType.CONTENT;
-    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
+    public static final String POST_CHECK_TYPE = "CONTENT";
+    public static final String COMMENT_CHECK_TYPE = "BLOCKED_WORD";
 
     public static final class PolicySpec {
         private final String name;
@@ -89,11 +87,11 @@ public final class GeneratedModerationModel {
 
     public static final class ActionSpec {
         private final String name;
-        private final ActionKind kind;
+        private final ActionResultKind kind;
         private final String message;
-        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public ActionSpec(String name, ActionResultKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
         public String getName() { return name; }
-        public ActionKind getKind() { return kind; }
+        public ActionResultKind getKind() { return kind; }
         public String getMessage() { return message; }
     }
 

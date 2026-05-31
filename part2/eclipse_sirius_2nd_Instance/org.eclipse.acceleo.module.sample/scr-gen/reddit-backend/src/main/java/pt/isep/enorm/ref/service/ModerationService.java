@@ -5,8 +5,7 @@ import pt.isep.enorm.ref.domain.Comment;
 import pt.isep.enorm.ref.domain.Post;
 import pt.isep.enorm.ref.domain.UserType;
 import pt.isep.enorm.ref.domain.Report;
-import pt.isep.enorm.ref.domain.enums.ContentStatus;
-import pt.isep.enorm.ref.domain.enums.ReportStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.repository.CommentModerationCheckRepository;
 import pt.isep.enorm.ref.repository.CommentRepository;
 import pt.isep.enorm.ref.repository.PostModerationCheckRepository;
@@ -41,14 +40,14 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public void approvePost(UserType moderator, Long postId) {
         Post post = loadPost(postId);
-        post.setStatus(ContentStatus.ACTIVE);
+        post.setStatus(ModerationDecision.APPROVED);
         postRepository.save(post);
     }
 
     @Transactional
     public void approveComment(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
-        comment.setStatus(ContentStatus.ACTIVE);
+        comment.setStatus(ModerationDecision.APPROVED);
         commentRepository.save(comment);
     }
 
@@ -56,7 +55,7 @@ public class ModerationService extends GeneratedModerationService {
     public void approveReport(UserType moderator, Long reportId) {
         Report report = loadReport(reportId);
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 
@@ -77,7 +76,7 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public List<ModerationSimulationResult> simulateReportModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
-        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+        for (Report report : reportRepository.findByStatus(ModerationDecision.FLAGGED)) {
             if (report.getPost() != null) {
                 results.add(moderateReportedPost(report, moderator));
             } else if (report.getComment() != null) {
@@ -125,7 +124,7 @@ public class ModerationService extends GeneratedModerationService {
 
     private void closeReport(Report report, UserType moderator) {
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 

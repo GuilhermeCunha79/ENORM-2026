@@ -34,9 +34,10 @@
 [query public sqlTableName(name : String) : String = if name = 'Order' then 'orders' else if name = 'User' then 'users' else if name = 'Group' then 'groups' else if name = 'Key' then 'keys_table' else if name = 'Like' then 'likes_table' else name.toLowerFirst() endif endif endif endif endif /]
 [query public isReferenceBackend(m : RefModel) : Boolean = m.resourceTypes->exists(r | r.name = 'UserType') /]
 [query public isDomainPairOnlyResource(rt : ResourceType) : Boolean = rt.name = 'AutomationAction' or rt.name = 'AutomationCondition' or rt.name = 'ConditionValue' or rt.name = 'ContextResource' or rt.name.matches('.*MediaReference') /]
+[query public isPolicyEntityName(name : String) : Boolean = name = 'SortingPolicy' or name = 'ValidationRule' or name = 'ModerationPolicy' or name = 'AuthorizationRule' or name = 'AutomationRule' or name = 'VerificationPolicy' /]
 [query public isNonMaterializedResource(m : RefModel, rt : ResourceType) : Boolean = rt.name = 'Content' or rt.name = 'MediaAttachment' or (baseName(m) = 'Reddit' and rt.name = 'ContentValidationRule') or rt.name = 'ReviewPolicy' or rt.name = 'ReviewModerationCheck' or rt.name = 'RatingPolicy' or rt.name = 'VerificationProcess' /]
 [query public hasCustomDomainOverride(m : RefModel, rt : ResourceType) : Boolean = (baseName(m) = 'Amazon' and rt.name = 'ProductReview') or (baseName(m) = 'Reddit' and (rt.name = 'Post' or rt.name = 'Comment' or rt.name = 'Report' or rt.name = 'PostModerationCheck' or rt.name = 'CommentModerationCheck')) or (baseName(m) = 'Youtube' and (rt.name = 'Video' or rt.name = 'Comment' or rt.name = 'Report' or rt.name = 'VideoModerationCheck' or rt.name = 'CommentModerationCheck')) /]
-[query public shouldGenerateReferenceEntityStack(m : RefModel, rt : ResourceType) : Boolean = isReferenceBackend(m) and not isDomainPairOnlyResource(rt) and not isNonMaterializedResource(m, rt) and not hasCustomDomainOverride(m, rt) /]
+[query public shouldGenerateReferenceEntityStack(m : RefModel, rt : ResourceType) : Boolean = isReferenceBackend(m) and not isPolicyEntityName(rt.name) and not isDomainPairOnlyResource(rt) and not isNonMaterializedResource(m, rt) and not hasCustomDomainOverride(m, rt) /]
 [query public shouldGenerateReferenceDomainPair(m : RefModel, rt : ResourceType) : Boolean = isReferenceBackend(m) and isDomainPairOnlyResource(rt) /]
 [query public baseJavaType(p : PrimitiveType) : String = if p = PrimitiveType::TEXT then 'String' else if p = PrimitiveType::NUMBER then 'Double' else if p = PrimitiveType::BOOLEAN then 'Boolean' else if p = PrimitiveType::DATE then 'LocalDate' else if p = PrimitiveType::DATETIME then 'LocalDateTime' else if p = PrimitiveType::URL then 'URI' else 'String' endif endif endif endif endif endif /]
 [query public javaType(p : PrimitiveType, multi : Boolean) : String = if multi then 'List<' + baseJavaType(p) + '>' else baseJavaType(p) endif /]
@@ -430,6 +431,7 @@ public interface [rt.name/]Repository extends Generated[rt.name/]Repository {
 [template public generateReferenceBackendScaffold(m : RefModel)]
 [generateConfigAndSharedWeb(m)/]
 [generateSecurityStubs(m)/]
+[generatePolicyEntityStacks(m)/]
 [if (baseName(m) = 'Amazon')]
 [generateAmazonReferenceScaffold(m)/]
 [/if]
@@ -439,6 +441,15 @@ public interface [rt.name/]Repository extends Generated[rt.name/]Repository {
 [if (baseName(m) = 'Youtube')]
 [generateYoutubeReferenceScaffold(m)/]
 [/if]
+[/template]
+
+[template public generatePolicyEntityStacks(m : RefModel)]
+[generateEntityStack(m, 'SortingPolicy')/]
+[generateEntityStack(m, 'ValidationRule')/]
+[generateEntityStack(m, 'ModerationPolicy')/]
+[generateEntityStack(m, 'AuthorizationRule')/]
+[generateEntityStack(m, 'AutomationRule')/]
+[generateEntityStack(m, 'VerificationPolicy')/]
 [/template]
 
 [template public generateConfigAndSharedWeb(m : RefModel)]
@@ -451,6 +462,54 @@ import org.springframework.context.annotation.Configuration;
 public class H2ServerConfiguration {
 }
 [/file]
+[if (isReferenceBackend(m))]
+[file (rootPath(m) + '/config/InitialDataConfiguration.java', false, 'UTF-8')]
+package [basePackage(m)/].config;
+
+import [domainPackage(m)/].AuthorizationRule;
+import [domainPackage(m)/].ModerationPolicy;
+import [repositoryPackage(m)/].AuthorizationRuleRepository;
+import [repositoryPackage(m)/].ModerationPolicyRepository;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class InitialDataConfiguration {
+    @Bean
+    ApplicationRunner seedDslAuthorizationRules(AuthorizationRuleRepository authorizationRuleRepository) {
+        return args -> seedAuthorizationRule(authorizationRuleRepository, "DefaultAuthorizationRule");
+    }
+
+    @Bean
+    ApplicationRunner seedDslModerationPolicies(ModerationPolicyRepository moderationPolicyRepository) {
+        return args -> seedModerationPolicy(moderationPolicyRepository, "DefaultModerationPolicy");
+    }
+
+    private void seedAuthorizationRule(AuthorizationRuleRepository authorizationRuleRepository, String name) {
+        boolean exists = authorizationRuleRepository.findAll().stream()
+            .anyMatch(rule -> name.equals(rule.getAttributes().get("name")));
+        if (exists) {
+            return;
+        }
+        AuthorizationRule rule = new AuthorizationRule();
+        rule.setAttribute("name", name);
+        authorizationRuleRepository.save(rule);
+    }
+
+    private void seedModerationPolicy(ModerationPolicyRepository moderationPolicyRepository, String name) {
+        boolean exists = moderationPolicyRepository.findAll().stream()
+            .anyMatch(policy -> name.equals(policy.getAttributes().get("name")));
+        if (exists) {
+            return;
+        }
+        ModerationPolicy policy = new ModerationPolicy();
+        policy.setAttribute("name", name);
+        moderationPolicyRepository.save(policy);
+    }
+}
+[/file]
+[/if]
 [file (webPath(m) + '/ApiError.java', false, 'UTF-8')]
 package [webPackage(m)/];
 
@@ -694,12 +753,12 @@ package [repositoryGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[className/];
 [if (className = 'Report')]
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import java.util.List;
 import java.util.Optional;
 [/if]
 [if (className = 'ProductReview')]
-import [domainEnumsPackage(m)/].ReviewStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import java.util.List;
 [/if]
 [if (className = 'PostModerationCheck' or className = 'CommentModerationCheck' or className = 'VideoModerationCheck')]
@@ -720,17 +779,17 @@ public interface Generated[className/]Repository extends JpaRepository<[classNam
     List<VideoModerationCheck> findByVideoId(Long videoId);
 [/if]
 [if (className = 'Report')]
-    List<Report> findByStatus(ReportStatus status);
+    List<Report> findByStatus(ModerationDecision status);
 [if (baseName(m) = 'Reddit')]
-    Optional<Report> findFirstByPostIdAndStatusOrderByTimestampDesc(Long postId, ReportStatus status);
+    Optional<Report> findFirstByPostIdAndStatusOrderByTimestampDesc(Long postId, ModerationDecision status);
 [/if]
 [if (baseName(m) = 'Youtube')]
-    Optional<Report> findFirstByVideoIdAndStatusOrderByTimestampDesc(Long videoId, ReportStatus status);
+    Optional<Report> findFirstByVideoIdAndStatusOrderByTimestampDesc(Long videoId, ModerationDecision status);
 [/if]
-    Optional<Report> findFirstByCommentIdAndStatusOrderByTimestampDesc(Long commentId, ReportStatus status);
+    Optional<Report> findFirstByCommentIdAndStatusOrderByTimestampDesc(Long commentId, ModerationDecision status);
 [/if]
 [if (className = 'ProductReview')]
-    List<ProductReview> findByStatus(ReviewStatus status);
+    List<ProductReview> findByStatus(ModerationDecision status);
 [/if]
 }
 [/file]
@@ -788,7 +847,7 @@ package [serviceGeneratedPackage(m)/];
 
 import [domainPackage(m)/].[className/];
 [if (className = 'Report')]
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import java.time.Instant;
 [/if]
 import [repositoryGeneratedPackage(m)/].Generated[className/]Repository;
@@ -815,7 +874,7 @@ public class Generated[className/]Service {
     public [className/] create([className/] entity) {
 [if (className = 'Report')]
         if (entity.getStatus() == null) {
-            entity.setStatus(ReportStatus.PENDING);
+            entity.setStatus(ModerationDecision.FLAGGED);
         }
         if (entity.getTimestamp() == null) {
             entity.setTimestamp(Instant.now());
@@ -1115,7 +1174,7 @@ public class GeneratedModerationService {
             return;
         }
 
-        invokeSetter(content, "setStatus", enumValue("[domainEnumsPackage(m)/].ContentStatus", status, "UNDER_REVIEW"));
+        invokeSetter(content, "setStatus", enumValue("[domainEnumsPackage(m)/].ModerationDecision", status, "FLAGGED"));
         invokeSetter(content, "setStatus", status);
     }
 
@@ -1174,16 +1233,16 @@ public class GeneratedModerationService {
             String type = matchedRules.isEmpty() ? "CONTENT" : moderationTypeFor(matchedRules.get(0));
             String result = "APPROVED".equals(decision) ? "APPROVED" : "FLAGGED";
             if ("comment".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].CommentModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].CommentModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setComment", content);
             } else if ("post".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].PostModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].PostModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setPost", content);
             } else if ("video".equals(contentType)) {
-                invokeSetter(check, "setType", enumValue("[domainEnumsPackage(m)/].VideoModerationType", type, "SPAM"));
-                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].VideoModerationResult", result, "FLAGGED"));
+                invokeSetter(check, "setType", type == null ? "SPAM" : type);
+                invokeSetter(check, "setResult", enumValue("[domainEnumsPackage(m)/].ModerationDecision", result, "FLAGGED"));
                 invokeSetter(check, "setVideo", content);
             }
             invokeSetter(check, "setTimestamp", timestamp);
@@ -1402,8 +1461,7 @@ import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].Post;
 import [domainPackage(m)/].UserType;
 import [domainPackage(m)/].Report;
-import [domainEnumsPackage(m)/].ContentStatus;
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [repositoryPackage(m)/].CommentModerationCheckRepository;
 import [repositoryPackage(m)/].CommentRepository;
 import [repositoryPackage(m)/].PostModerationCheckRepository;
@@ -1415,8 +1473,7 @@ import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].Report;
 import [domainPackage(m)/].Video;
 import [domainPackage(m)/].UserType;
-import [domainEnumsPackage(m)/].ContentStatus;
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [repositoryPackage(m)/].CommentModerationCheckRepository;
 import [repositoryPackage(m)/].CommentRepository;
 import [repositoryPackage(m)/].ReportRepository;
@@ -1426,7 +1483,7 @@ import [repositoryPackage(m)/].VideoRepository;
 [if (baseName(m) = 'Amazon')]
 import [domainPackage(m)/].[appUserClass(m)/];
 import [domainPackage(m)/].ProductReview;
-import [domainEnumsPackage(m)/].ReviewStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [repositoryPackage(m)/].ProductReviewRepository;
 import [serviceGeneratedPackage(m)/].GeneratedModerationModel;
 import [serviceGeneratedPackage(m)/].GeneratedModerationModel.AutomationRuleSpec;
@@ -1463,14 +1520,14 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public void approvePost(UserType moderator, Long postId) {
         Post post = loadPost(postId);
-        post.setStatus(ContentStatus.ACTIVE);
+        post.setStatus(ModerationDecision.APPROVED);
         postRepository.save(post);
     }
 
     @Transactional
     public void approveComment(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
-        comment.setStatus(ContentStatus.ACTIVE);
+        comment.setStatus(ModerationDecision.APPROVED);
         commentRepository.save(comment);
     }
 
@@ -1478,7 +1535,7 @@ public class ModerationService extends GeneratedModerationService {
     public void approveReport(UserType moderator, Long reportId) {
         Report report = loadReport(reportId);
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 
@@ -1499,7 +1556,7 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public List<ModerationSimulationResult> simulateReportModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
-        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+        for (Report report : reportRepository.findByStatus(ModerationDecision.FLAGGED)) {
             if (report.getPost() != null) {
                 results.add(moderateReportedPost(report, moderator));
             } else if (report.getComment() != null) {
@@ -1547,7 +1604,7 @@ public class ModerationService extends GeneratedModerationService {
 
     private void closeReport(Report report, UserType moderator) {
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 
@@ -1583,14 +1640,14 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public void approveVideo(UserType moderator, Long videoId) {
         Video video = loadVideo(videoId);
-        video.setStatus(ContentStatus.ACTIVE);
+        video.setStatus(ModerationDecision.APPROVED);
         videoRepository.save(video);
     }
 
     @Transactional
     public void approveComment(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
-        comment.setStatus(ContentStatus.ACTIVE);
+        comment.setStatus(ModerationDecision.APPROVED);
         commentRepository.save(comment);
     }
 
@@ -1598,7 +1655,7 @@ public class ModerationService extends GeneratedModerationService {
     public void approveReport(UserType moderator, Long reportId) {
         Report report = loadReport(reportId);
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 
@@ -1619,7 +1676,7 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public List<ModerationSimulationResult> simulateReportModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
-        for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
+        for (Report report : reportRepository.findByStatus(ModerationDecision.FLAGGED)) {
             if (report.getVideo() != null) {
                 results.add(moderateReportedVideo(report, moderator));
             } else if (report.getComment() != null) {
@@ -1667,7 +1724,7 @@ public class ModerationService extends GeneratedModerationService {
 
     private void closeReport(Report report, UserType moderator) {
         report.setReviewedBy(moderator);
-        report.setStatus(ReportStatus.REVIEWED);
+        report.setStatus(ModerationDecision.APPROVED);
         reportRepository.save(report);
     }
 
@@ -1694,7 +1751,7 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public void approveReview([appUserClass(m)/] moderator, Long reviewId) {
         ProductReview review = loadReview(reviewId);
-        review.setStatus(ReviewStatus.APPROVED);
+        review.setStatus(ModerationDecision.APPROVED);
         productReviewRepository.save(review);
     }
 
@@ -1707,7 +1764,7 @@ public class ModerationService extends GeneratedModerationService {
     public List<ModerationSimulationResult> simulatePendingReviewModeration([appUserClass(m)/] moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         PolicySpec policy = policyForReportThreshold();
-        for (ProductReview review : productReviewRepository.findByStatus(ReviewStatus.PENDING)) {
+        for (ProductReview review : productReviewRepository.findByStatus(ModerationDecision.FLAGGED)) {
             results.add(moderateReview(review, policy));
         }
         return results;
@@ -1724,7 +1781,7 @@ public class ModerationService extends GeneratedModerationService {
         AutomationRuleSpec rule = primaryRule(policy);
         List<String> matches = matchedKeywords(review.getComment(), rule);
         String decision = matches.isEmpty() ? "APPROVED" : policy.getDecision().name();
-        ReviewStatus status = matches.isEmpty() ? ReviewStatus.APPROVED : ReviewStatus.PENDING;
+        ModerationDecision status = matches.isEmpty() ? ModerationDecision.APPROVED : ModerationDecision.FLAGGED;
         review.setStatus(status);
         productReviewRepository.save(review);
         return new ModerationSimulationResult("REVIEW", review.getId(), null, null, policy.getTrigger().name(), policy.getMode().name(), decision, status.name(), matches, explanation(policy, rule, matches));
@@ -2039,8 +2096,8 @@ public record ProductRatingSummary(Long productId, double averageRating, long to
 [file (domainGeneratedPath(m) + '/GeneratedProductReview.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].ReviewStatus;
-import [domainEnumsPackage(m)/].VerificationType;
+import [domainEnumsPackage(m)/].ModerationDecision;
+import [domainEnumsPackage(m)/].ValidationKind;
 import [domainPackage(m)/].[appUserClass(m)/];
 import [domainPackage(m)/].Product;
 import jakarta.persistence.Column;
@@ -2071,9 +2128,9 @@ public abstract class GeneratedProductReview {
     private Integer rating;
     private Integer grade;
     @Enumerated(EnumType.STRING)
-    private ReviewStatus status = ReviewStatus.PENDING;
+    private ModerationDecision status = ModerationDecision.FLAGGED;
     @Enumerated(EnumType.STRING)
-    private VerificationType verificationType = VerificationType.AUTOMATIC;
+    private ValidationKind verificationMode = ValidationKind.AUTOMATIC;
     private boolean verifiedBuyerAtSubmission;
     private Instant submittedAt = Instant.now();
 
@@ -2089,10 +2146,10 @@ public abstract class GeneratedProductReview {
     public void setRating(Integer rating) { this.rating = rating; }
     public Integer getGrade() { return grade == null ? rating : grade; }
     public void setGrade(Integer grade) { this.grade = grade; }
-    public ReviewStatus getStatus() { return status; }
-    public void setStatus(ReviewStatus status) { this.status = status; }
-    public VerificationType getVerificationType() { return verificationType; }
-    public void setVerificationType(VerificationType verificationType) { this.verificationType = verificationType; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
+    public ValidationKind getVerificationMode() { return verificationMode; }
+    public void setVerificationMode(ValidationKind verificationMode) { this.verificationMode = verificationMode; }
     public boolean isVerifiedBuyerAtSubmission() { return verifiedBuyerAtSubmission; }
     public void setVerifiedBuyerAtSubmission(boolean verifiedBuyerAtSubmission) { this.verifiedBuyerAtSubmission = verifiedBuyerAtSubmission; }
     public Instant getSubmittedAt() { return submittedAt; }
@@ -2305,10 +2362,6 @@ public enum ConditionOperator { CONTAINS_KEYWORDS, NOT_CONTAINS_KEYWORDS, MATCH_
 package [domainEnumsPackage(m)/];
 public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }
 [/file]
-[file (domainEnumsPath(m) + '/MediaType.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum MediaType { IMAGE, VIDEO }
-[/file]
 [file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
 public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
@@ -2317,13 +2370,25 @@ public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, RE
 package [domainEnumsPackage(m)/];
 public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
 [/file]
-[file (domainEnumsPath(m) + '/ReviewStatus.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ReviewStatus { PENDING, APPROVED, REJECTED }
+public enum FeedbackKind { COMMENT, REVIEW, REACTION, VOTE, REPORT, SUBSCRIPTION }
 [/file]
-[file (domainEnumsPath(m) + '/Role.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackPolarity.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum Role { GENERIC, BUYER, SELLER, MODERATOR }
+public enum FeedbackPolarity { NONE, LIKE_DISLIKE, UP_DOWN }
+[/file]
+[file (domainEnumsPath(m) + '/FeedbackStatus.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum FeedbackStatus { ENABLED, DISABLED }
+[/file]
+[file (domainEnumsPath(m) + '/FeedbackSubjectScope.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum FeedbackSubjectScope { RESOURCE_ONLY, FEEDBACK_ONLY, RESOURCE_OR_FEEDBACK }
+[/file]
+[file (domainEnumsPath(m) + '/PrimitiveType.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum PrimitiveType { TEXT, NUMBER, BOOLEAN, DATE, DATETIME, IMAGE, VIDEO, URL }
 [/file]
 [file (domainEnumsPath(m) + '/RuleSeverity.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
@@ -2349,13 +2414,9 @@ public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }
 package [domainEnumsPackage(m)/];
 public enum ValidationKind { AUTOMATIC, MANUAL }
 [/file]
-[file (domainEnumsPath(m) + '/VerificationType.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/VerificationRequirement.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum VerificationType { MANUAL, AUTOMATIC }
-[/file]
-[file (domainEnumsPath(m) + '/VoteValue.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum VoteValue { HELPFUL, NOT_HELPFUL }
+public enum VerificationRequirement { NONE, OPTIONAL, REQUIRED }
 [/file]
 [/template]
 
@@ -2437,8 +2498,8 @@ public enum VoteValue { HELPFUL, NOT_HELPFUL }
 [file (domainGeneratedPath(m) + '/GeneratedPost.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].CommentStatus;
-import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].FeedbackStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -2463,9 +2524,9 @@ public abstract class GeneratedPost {
     private LocalDate uploadDate;
     private Integer duration;
     @Enumerated(EnumType.STRING)
-    private CommentStatus commentStatus;
+    private FeedbackStatus commentStatus;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -2481,17 +2542,17 @@ public abstract class GeneratedPost {
     public void setUploadDate(LocalDate uploadDate) { this.uploadDate = uploadDate; }
     public Integer getDuration() { return duration; }
     public void setDuration(Integer duration) { this.duration = duration; }
-    public CommentStatus getCommentStatus() { return commentStatus; }
-    public void setCommentStatus(CommentStatus commentStatus) { this.commentStatus = commentStatus; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public FeedbackStatus getCommentStatus() { return commentStatus; }
+    public void setCommentStatus(FeedbackStatus commentStatus) { this.commentStatus = commentStatus; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }
 [/file]
 
 [file (domainGeneratedPath(m) + '/GeneratedComment.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -2512,7 +2573,7 @@ public abstract class GeneratedComment {
     private String body;
     private LocalDate creationDate;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -2522,16 +2583,15 @@ public abstract class GeneratedComment {
     public void setBody(String body) { this.body = body; }
     public LocalDate getCreationDate() { return creationDate; }
     public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }
 [/file]
 
 [file (domainGeneratedPath(m) + '/GeneratedPostModerationCheck.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].PostModerationResult;
-import [domainEnumsPackage(m)/].PostModerationType;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Post;
 import [domainPackage(m)/].UserType;
 import jakarta.persistence.Column;
@@ -2551,10 +2611,9 @@ public abstract class GeneratedPostModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private PostModerationType type;
-    @Enumerated(EnumType.STRING)
-    private PostModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -2566,10 +2625,10 @@ public abstract class GeneratedPostModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public PostModerationType getType() { return type; }
-    public void setType(PostModerationType type) { this.type = type; }
-    public PostModerationResult getResult() { return result; }
-    public void setResult(PostModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Post getPost() { return post; }
@@ -2582,8 +2641,7 @@ public abstract class GeneratedPostModerationCheck {
 [file (domainGeneratedPath(m) + '/GeneratedCommentModerationCheck.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].CommentModerationResult;
-import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].UserType;
 import jakarta.persistence.Column;
@@ -2603,10 +2661,9 @@ public abstract class GeneratedCommentModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private CommentModerationType type;
-    @Enumerated(EnumType.STRING)
-    private CommentModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -2618,10 +2675,10 @@ public abstract class GeneratedCommentModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public CommentModerationType getType() { return type; }
-    public void setType(CommentModerationType type) { this.type = type; }
-    public CommentModerationResult getResult() { return result; }
-    public void setResult(CommentModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Comment getComment() { return comment; }
@@ -2634,7 +2691,7 @@ public abstract class GeneratedCommentModerationCheck {
 [file (domainGeneratedPath(m) + '/GeneratedReport.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].Post;
 import [domainPackage(m)/].UserType;
@@ -2658,7 +2715,7 @@ public abstract class GeneratedReport {
     @Column(length = 500)
     private String reason;
     @Enumerated(EnumType.STRING)
-    private ReportStatus status = ReportStatus.PENDING;
+    private ModerationDecision status = ModerationDecision.FLAGGED;
     private Instant timestamp = Instant.now();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
@@ -2677,8 +2734,8 @@ public abstract class GeneratedReport {
     public void setId(Long id) { this.id = id; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
-    public ReportStatus getStatus() { return status; }
-    public void setStatus(ReportStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public UserType getSubmitter() { return submitter; }
@@ -2707,8 +2764,8 @@ public abstract class GeneratedReport {
 [file (domainGeneratedPath(m) + '/GeneratedVideo.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].CommentStatus;
-import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].FeedbackStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -2731,9 +2788,9 @@ public abstract class GeneratedVideo {
     private LocalDate uploadDate;
     private Integer duration;
     @Enumerated(EnumType.STRING)
-    private CommentStatus commentStatus;
+    private FeedbackStatus commentStatus;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -2747,17 +2804,17 @@ public abstract class GeneratedVideo {
     public void setUploadDate(LocalDate uploadDate) { this.uploadDate = uploadDate; }
     public Integer getDuration() { return duration; }
     public void setDuration(Integer duration) { this.duration = duration; }
-    public CommentStatus getCommentStatus() { return commentStatus; }
-    public void setCommentStatus(CommentStatus commentStatus) { this.commentStatus = commentStatus; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public FeedbackStatus getCommentStatus() { return commentStatus; }
+    public void setCommentStatus(FeedbackStatus commentStatus) { this.commentStatus = commentStatus; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }
 [/file]
 
 [file (domainGeneratedPath(m) + '/GeneratedComment.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].ContentStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -2776,7 +2833,7 @@ public abstract class GeneratedComment {
     private String text;
     private LocalDate creationDate;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -2784,16 +2841,15 @@ public abstract class GeneratedComment {
     public void setText(String text) { this.text = text; }
     public LocalDate getCreationDate() { return creationDate; }
     public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }
 [/file]
 
 [file (domainGeneratedPath(m) + '/GeneratedVideoModerationCheck.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].VideoModerationResult;
-import [domainEnumsPackage(m)/].VideoModerationType;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Video;
 import [domainPackage(m)/].UserType;
 import jakarta.persistence.Column;
@@ -2813,10 +2869,9 @@ public abstract class GeneratedVideoModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private VideoModerationType type;
-    @Enumerated(EnumType.STRING)
-    private VideoModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -2828,10 +2883,10 @@ public abstract class GeneratedVideoModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public VideoModerationType getType() { return type; }
-    public void setType(VideoModerationType type) { this.type = type; }
-    public VideoModerationResult getResult() { return result; }
-    public void setResult(VideoModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Video getVideo() { return video; }
@@ -2844,8 +2899,7 @@ public abstract class GeneratedVideoModerationCheck {
 [file (domainGeneratedPath(m) + '/GeneratedCommentModerationCheck.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].CommentModerationResult;
-import [domainEnumsPackage(m)/].CommentModerationType;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].UserType;
 import jakarta.persistence.Column;
@@ -2865,10 +2919,9 @@ public abstract class GeneratedCommentModerationCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String type;
     @Enumerated(EnumType.STRING)
-    private CommentModerationType type;
-    @Enumerated(EnumType.STRING)
-    private CommentModerationResult result;
+    private ModerationDecision result;
     @Column(nullable = false)
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -2880,10 +2933,10 @@ public abstract class GeneratedCommentModerationCheck {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public CommentModerationType getType() { return type; }
-    public void setType(CommentModerationType type) { this.type = type; }
-    public CommentModerationResult getResult() { return result; }
-    public void setResult(CommentModerationResult result) { this.result = result; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+    public ModerationDecision getResult() { return result; }
+    public void setResult(ModerationDecision result) { this.result = result; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Comment getComment() { return comment; }
@@ -2896,7 +2949,7 @@ public abstract class GeneratedCommentModerationCheck {
 [file (domainGeneratedPath(m) + '/GeneratedReport.java', false, 'UTF-8')]
 package [domainGeneratedPackage(m)/];
 
-import [domainEnumsPackage(m)/].ReportStatus;
+import [domainEnumsPackage(m)/].ModerationDecision;
 import [domainPackage(m)/].Comment;
 import [domainPackage(m)/].Video;
 import [domainPackage(m)/].UserType;
@@ -2920,7 +2973,7 @@ public abstract class GeneratedReport {
     @Column(length = 500)
     private String reason;
     @Enumerated(EnumType.STRING)
-    private ReportStatus status = ReportStatus.PENDING;
+    private ModerationDecision status = ModerationDecision.FLAGGED;
     private Instant timestamp = Instant.now();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
@@ -2939,8 +2992,8 @@ public abstract class GeneratedReport {
     public void setId(Long id) { this.id = id; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
-    public ReportStatus getStatus() { return status; }
-    public void setStatus(ReportStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public UserType getSubmitter() { return submitter; }
@@ -3103,8 +3156,6 @@ public final class GeneratedModerationModel {
 [if (baseName(m) = 'Reddit')]
 import java.util.List;
 
-import [domainEnumsPackage(m)/].CommentModerationType;
-import [domainEnumsPackage(m)/].PostModerationType;
 import [domainEnumsPackage(m)/].UserKind;
 
 public final class GeneratedModerationModel {
@@ -3112,23 +3163,23 @@ public final class GeneratedModerationModel {
     public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
     public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
     public enum ConditionOperator { CONTAINS_KEYWORDS }
-    public enum ActionKind { FLAG_CONTENT }
+    public enum ActionResultKind { FLAG_CONTENT }
 
     public static final List<PolicySpec> POLICIES = List.of(
         new PolicySpec("PostModeration", "Post", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("RedditAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("BlockedPostKeywords", ConditionOperator.CONTAINS_KEYWORDS, "content", List.of("spam", "malware", "phishing"))),
-                List.of(new ActionSpec("FlagPost", ActionKind.FLAG_CONTENT, "Post flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagPost", ActionResultKind.FLAG_CONTENT, "Post flagged for moderator review"))))),
         new PolicySpec("CommentModeration", "Comment", "PostThreadComment", ModerationMode.HYBRID, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("RedditCommentAutoValidate", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("BlockedCommentKeywords", ConditionOperator.CONTAINS_KEYWORDS, "text", List.of("spam", "malware", "phishing"))),
-                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review")))))
+                List.of(new ActionSpec("FlagComment", ActionResultKind.FLAG_CONTENT, "Comment flagged for moderator review")))))
     );
 
     public static final PolicySpec DEFAULT_POLICY = POLICIES.get(0);
     public static final AutomationRuleSpec DEFAULT_AUTOMATION_RULE = DEFAULT_POLICY.getAutomationRules().get(0);
-    public static final PostModerationType POST_CHECK_TYPE = PostModerationType.CONTENT;
-    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
+    public static final String POST_CHECK_TYPE = "CONTENT";
+    public static final String COMMENT_CHECK_TYPE = "BLOCKED_WORD";
 
     public static final class PolicySpec {
         private final String name;
@@ -3190,11 +3241,11 @@ public final class GeneratedModerationModel {
 
     public static final class ActionSpec {
         private final String name;
-        private final ActionKind kind;
+        private final ActionResultKind kind;
         private final String message;
-        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public ActionSpec(String name, ActionResultKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
         public String getName() { return name; }
-        public ActionKind getKind() { return kind; }
+        public ActionResultKind getKind() { return kind; }
         public String getMessage() { return message; }
     }
 
@@ -3205,42 +3256,38 @@ public final class GeneratedModerationModel {
 [if (baseName(m) = 'Youtube')]
 import java.util.List;
 
-import [domainEnumsPackage(m)/].CommentModerationResult;
-import [domainEnumsPackage(m)/].CommentModerationType;
 import [domainEnumsPackage(m)/].UserKind;
-import [domainEnumsPackage(m)/].VideoModerationResult;
-import [domainEnumsPackage(m)/].VideoModerationType;
 
 public final class GeneratedModerationModel {
     public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
     public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
     public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
     public enum ConditionOperator { CONTAINS_KEYWORDS, HAS_PROPERTY, HAS_SPECIFIC_PROPERTY }
-    public enum ActionKind { FLAG_CONTENT, HIDE_CONTENT, NOTIFY_MODERATOR }
+    public enum ActionResultKind { FLAG_CONTENT, HIDE_CONTENT, NOTIFY_MODERATOR }
 
     public static final List<PolicySpec> POLICIES = List.of(
         new PolicySpec("VideoCreationModeration", "Video", null, ModerationMode.HYBRID, TriggerEvent.ON_RESOURCE_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoVideoCopyrightCheck", TriggerEvent.ON_RESOURCE_CREATE,
                 List.of(new ConditionSpec("VideoContainsCopyrightRiskKeywords", ConditionOperator.CONTAINS_KEYWORDS, "video_title_and_description", List.of("copyright", "reupload", "unlicensed"))),
-                List.of(new ActionSpec("FlagVideo", ActionKind.FLAG_CONTENT, "Video flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagVideo", ActionResultKind.FLAG_CONTENT, "Video flagged for moderator review"))))),
         new PolicySpec("CommentCreationModeration", "Video", "CommentOnVideo", ModerationMode.HYBRID, TriggerEvent.ON_FEEDBACK_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoCommentModerationCheck", TriggerEvent.ON_FEEDBACK_CREATE,
                 List.of(new ConditionSpec("CommentContainsRiskyTerms", ConditionOperator.CONTAINS_KEYWORDS, "comment_text", List.of("spam", "toxicity", "blocked-word"))),
-                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagComment", ActionResultKind.FLAG_CONTENT, "Comment flagged for moderator review"))))),
         new PolicySpec("ReportedContentModeration", "Content", "ReportContent", ModerationMode.MANUAL, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.HIDDEN, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoReportEscalation", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("ReportThresholdReached", ConditionOperator.HAS_SPECIFIC_PROPERTY, "report_status", List.of("PENDING"))),
-                List.of(new ActionSpec("HideReportedContent", ActionKind.HIDE_CONTENT, "Hide reported content and notify moderator")))))
+                List.of(new ActionSpec("HideReportedContent", ActionResultKind.HIDE_CONTENT, "Hide reported content and notify moderator")))))
     );
 
     public static final PolicySpec VIDEO_POLICY = POLICIES.get(0);
     public static final PolicySpec COMMENT_POLICY = POLICIES.get(1);
     public static final PolicySpec REPORT_POLICY = POLICIES.get(2);
     public static final PolicySpec DEFAULT_POLICY = VIDEO_POLICY;
-    public static final VideoModerationType VIDEO_CHECK_TYPE = VideoModerationType.COPYRIGHT;
-    public static final VideoModerationResult VIDEO_DECISION_ON_MATCH = VideoModerationResult.FLAGGED;
-    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
-    public static final CommentModerationResult COMMENT_DECISION_ON_MATCH = CommentModerationResult.FLAGGED;
+    public static final String VIDEO_CHECK_TYPE = "COPYRIGHT";
+    public static final ModerationDecision VIDEO_DECISION_ON_MATCH = ModerationDecision.FLAGGED;
+    public static final String COMMENT_CHECK_TYPE = "BLOCKED_WORD";
+    public static final ModerationDecision COMMENT_DECISION_ON_MATCH = ModerationDecision.FLAGGED;
 
     public static final class PolicySpec {
         private final String name;
@@ -3290,11 +3337,11 @@ public final class GeneratedModerationModel {
 
     public static final class ActionSpec {
         private final String name;
-        private final ActionKind kind;
+        private final ActionResultKind kind;
         private final String message;
-        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public ActionSpec(String name, ActionResultKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
         public String getName() { return name; }
-        public ActionKind getKind() { return kind; }
+        public ActionResultKind getKind() { return kind; }
         public String getMessage() { return message; }
     }
 
@@ -3312,57 +3359,53 @@ public final class GeneratedModerationModel {
 [/template]
 
 [template public generateForumEnums(m : RefModel, app : String)]
-[file (domainEnumsPath(m) + '/CommentModerationResult.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ActionKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum CommentModerationResult { APPROVED, FLAGGED, HIDDEN }
+public enum ActionKind { READ, CREATE, UPDATE, DELETE, COMMENT, RATE, VOTE, REPORT, SUBSCRIBE, MODERATE, VALIDATE }
 [/file]
-[file (domainEnumsPath(m) + '/CommentModerationType.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ActionResultKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum CommentModerationType { SPAM, TOXICITY, BLOCKED_WORD }
+public enum ActionResultKind { DISPLAY_MESSAGE, FLAG_CONTENT, HIDE_CONTENT, REMOVE_CONTENT, BLOCK_SUBMISSION, NOTIFY_MODERATOR, AUTO_APPROVE, AUTO_REJECT }
 [/file]
-[file (domainEnumsPath(m) + '/CommentStatus.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ConditionOperator.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum CommentStatus { ENABLED, DISABLED }
+public enum ConditionOperator { CONTAINS_KEYWORDS, NOT_CONTAINS_KEYWORDS, MATCH_REGEX, NOT_MATCH_REGEX, HAS_PROPERTY, NOT_HAS_PROPERTY, HAS_SPECIFIC_PROPERTY, NOT_HAS_SPECIFIC_PROPERTY }
 [/file]
-[file (domainEnumsPath(m) + '/ContentStatus.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ContextKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ContentStatus { ACTIVE, FLAGGED, REMOVED, UNDER_REVIEW }
+public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }
 [/file]
-[if (app = 'youtube')]
-[file (domainEnumsPath(m) + '/LikeAction.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum LikeAction { LIKE, DISLIKE, REMOVED }
+public enum FeedbackKind { COMMENT, REVIEW, REACTION, VOTE, REPORT, SUBSCRIPTION }
 [/file]
-[file (domainEnumsPath(m) + '/LikeValue.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackPolarity.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum LikeValue { LIKE, DISLIKE }
+public enum FeedbackPolarity { NONE, LIKE_DISLIKE, UP_DOWN }
 [/file]
-[/if]
-[file (domainEnumsPath(m) + '/PermissionAction.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackStatus.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum PermissionAction { COMMENT, LIVE_CHAT, UPLOAD, MODERATE }
+public enum FeedbackStatus { ENABLED, DISABLED }
 [/file]
-[file (domainEnumsPath(m) + '/PermissionAudience.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/FeedbackSubjectScope.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum PermissionAudience { EVERYONE, SUBSCRIBERS, MEMBERS, MODERATORS }
+public enum FeedbackSubjectScope { RESOURCE_ONLY, FEEDBACK_ONLY, RESOURCE_OR_FEEDBACK }
 [/file]
-[if (app = 'reddit')]
-[file (domainEnumsPath(m) + '/PostModerationResult.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/PrimitiveType.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum PostModerationResult { APPROVED, FLAGGED, BLOCKED }
+public enum PrimitiveType { TEXT, NUMBER, BOOLEAN, DATE, DATETIME, IMAGE, VIDEO, URL }
 [/file]
-[file (domainEnumsPath(m) + '/PostModerationType.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum PostModerationType { COPYRIGHT, CONTENT, SPAM }
+public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
 [/file]
-[/if]
-[file (domainEnumsPath(m) + '/ReportStatus.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ModerationMode.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ReportStatus { PENDING, REVIEWED, REMOVED }
+public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
 [/file]
-[file (domainEnumsPath(m) + '/Role.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/RuleSeverity.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum Role { GENERIC, CREATOR, MODERATOR }
+public enum RuleSeverity { INFO, WARNING, ERROR }
 [/file]
 [file (domainEnumsPath(m) + '/SortCriterion.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
@@ -3372,42 +3415,22 @@ public enum SortCriterion { DATE, VALUE, RELEVANCE }
 package [domainEnumsPackage(m)/];
 public enum SortDirection { ASC, DESC }
 [/file]
+[file (domainEnumsPath(m) + '/TriggerEvent.java', false, 'UTF-8')]
+package [domainEnumsPackage(m)/];
+public enum TriggerEvent { ON_RESOURCE_CREATE, ON_RESOURCE_UPDATE, ON_RESOURCE_DELETE, ON_FEEDBACK_CREATE, ON_FEEDBACK_UPDATE, ON_FEEDBACK_DELETE, ON_REPORT_SUBMITTED, ON_REPORT_THRESHOLD, ON_MANUAL_REQUEST }
+[/file]
 [file (domainEnumsPath(m) + '/UserKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum UserKind { GENERIC, CREATOR, MODERATOR }
+public enum UserKind { GENERIC, BUYER, SELLER, CREATOR, MODERATOR }
 [/file]
-[file (domainEnumsPath(m) + '/ValidationPolicyType.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/ValidationKind.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ValidationPolicyType { COPYRIGHT, COMMUNITY_GUIDELINES, SPAM }
+public enum ValidationKind { AUTOMATIC, MANUAL }
 [/file]
-[file (domainEnumsPath(m) + '/ValidationSeverity.java', false, 'UTF-8')]
+[file (domainEnumsPath(m) + '/VerificationRequirement.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ValidationSeverity { WARNING, STRIKE, REMOVAL }
+public enum VerificationRequirement { NONE, OPTIONAL, REQUIRED }
 [/file]
-[file (domainEnumsPath(m) + '/ValidationTarget.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum ValidationTarget { VIDEO, COMMENT }
-[/file]
-[if (app = 'youtube')]
-[file (domainEnumsPath(m) + '/VideoModerationResult.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum VideoModerationResult { APPROVED, FLAGGED, BLOCKED }
-[/file]
-[file (domainEnumsPath(m) + '/VideoModerationType.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum VideoModerationType { COPYRIGHT, CONTENT, SPAM }
-[/file]
-[/if]
-[if (app = 'reddit')]
-[file (domainEnumsPath(m) + '/VoteAction.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum VoteAction { UPVOTE, DOWNVOTE, REMOVED }
-[/file]
-[file (domainEnumsPath(m) + '/VoteValue.java', false, 'UTF-8')]
-package [domainEnumsPackage(m)/];
-public enum VoteValue { UPVOTE, DOWNVOTE }
-[/file]
-[/if]
 [/template]
 
 

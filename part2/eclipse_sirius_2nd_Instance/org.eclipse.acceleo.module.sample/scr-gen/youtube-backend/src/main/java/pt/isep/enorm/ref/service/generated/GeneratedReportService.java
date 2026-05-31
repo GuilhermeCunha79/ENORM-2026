@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.service.generated;
 
 import pt.isep.enorm.ref.domain.Report;
-import pt.isep.enorm.ref.domain.enums.ReportStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import java.time.Instant;
 import pt.isep.enorm.ref.repository.generated.GeneratedReportRepository;
 import java.util.List;
@@ -26,7 +26,7 @@ public class GeneratedReportService {
 
     public Report create(Report entity) {
         if (entity.getStatus() == null) {
-            entity.setStatus(ReportStatus.PENDING);
+            entity.setStatus(ModerationDecision.FLAGGED);
         }
         if (entity.getTimestamp() == null) {
             entity.setTimestamp(Instant.now());

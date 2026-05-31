@@ -1,6 +1,6 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.ContentStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,7 +19,7 @@ public abstract class GeneratedComment {
     private String text;
     private LocalDate creationDate;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -27,6 +27,6 @@ public abstract class GeneratedComment {
     public void setText(String text) { this.text = text; }
     public LocalDate getCreationDate() { return creationDate; }
     public void setCreationDate(LocalDate creationDate) { this.creationDate = creationDate; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }

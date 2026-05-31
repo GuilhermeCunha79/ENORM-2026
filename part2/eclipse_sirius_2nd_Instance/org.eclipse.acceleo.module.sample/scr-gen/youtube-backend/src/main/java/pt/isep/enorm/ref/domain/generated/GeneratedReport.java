@@ -1,6 +1,6 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.ReportStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.domain.Comment;
 import pt.isep.enorm.ref.domain.Video;
 import pt.isep.enorm.ref.domain.UserType;
@@ -24,7 +24,7 @@ public abstract class GeneratedReport {
     @Column(length = 500)
     private String reason;
     @Enumerated(EnumType.STRING)
-    private ReportStatus status = ReportStatus.PENDING;
+    private ModerationDecision status = ModerationDecision.FLAGGED;
     private Instant timestamp = Instant.now();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
@@ -43,8 +43,8 @@ public abstract class GeneratedReport {
     public void setId(Long id) { this.id = id; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
-    public ReportStatus getStatus() { return status; }
-    public void setStatus(ReportStatus status) { this.status = status; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public UserType getSubmitter() { return submitter; }

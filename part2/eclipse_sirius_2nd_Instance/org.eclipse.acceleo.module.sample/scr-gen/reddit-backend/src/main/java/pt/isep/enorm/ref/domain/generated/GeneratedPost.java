@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.CommentStatus;
-import pt.isep.enorm.ref.domain.enums.ContentStatus;
+import pt.isep.enorm.ref.domain.enums.FeedbackStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,9 +26,9 @@ public abstract class GeneratedPost {
     private LocalDate uploadDate;
     private Integer duration;
     @Enumerated(EnumType.STRING)
-    private CommentStatus commentStatus;
+    private FeedbackStatus commentStatus;
     @Enumerated(EnumType.STRING)
-    private ContentStatus status = ContentStatus.ACTIVE;
+    private ModerationDecision status = ModerationDecision.APPROVED;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -44,8 +44,8 @@ public abstract class GeneratedPost {
     public void setUploadDate(LocalDate uploadDate) { this.uploadDate = uploadDate; }
     public Integer getDuration() { return duration; }
     public void setDuration(Integer duration) { this.duration = duration; }
-    public CommentStatus getCommentStatus() { return commentStatus; }
-    public void setCommentStatus(CommentStatus commentStatus) { this.commentStatus = commentStatus; }
-    public ContentStatus getStatus() { return status; }
-    public void setStatus(ContentStatus status) { this.status = status; }
+    public FeedbackStatus getCommentStatus() { return commentStatus; }
+    public void setCommentStatus(FeedbackStatus commentStatus) { this.commentStatus = commentStatus; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
 }

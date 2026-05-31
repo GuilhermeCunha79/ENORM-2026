@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.domain.generated;
 
-import pt.isep.enorm.ref.domain.enums.ReviewStatus;
-import pt.isep.enorm.ref.domain.enums.VerificationType;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
+import pt.isep.enorm.ref.domain.enums.ValidationKind;
 import pt.isep.enorm.ref.domain.UserType;
 import pt.isep.enorm.ref.domain.Product;
 import jakarta.persistence.Column;
@@ -32,9 +32,9 @@ public abstract class GeneratedProductReview {
     private Integer rating;
     private Integer grade;
     @Enumerated(EnumType.STRING)
-    private ReviewStatus status = ReviewStatus.PENDING;
+    private ModerationDecision status = ModerationDecision.FLAGGED;
     @Enumerated(EnumType.STRING)
-    private VerificationType verificationType = VerificationType.AUTOMATIC;
+    private ValidationKind verificationMode = ValidationKind.AUTOMATIC;
     private boolean verifiedBuyerAtSubmission;
     private Instant submittedAt = Instant.now();
 
@@ -50,10 +50,10 @@ public abstract class GeneratedProductReview {
     public void setRating(Integer rating) { this.rating = rating; }
     public Integer getGrade() { return grade == null ? rating : grade; }
     public void setGrade(Integer grade) { this.grade = grade; }
-    public ReviewStatus getStatus() { return status; }
-    public void setStatus(ReviewStatus status) { this.status = status; }
-    public VerificationType getVerificationType() { return verificationType; }
-    public void setVerificationType(VerificationType verificationType) { this.verificationType = verificationType; }
+    public ModerationDecision getStatus() { return status; }
+    public void setStatus(ModerationDecision status) { this.status = status; }
+    public ValidationKind getVerificationMode() { return verificationMode; }
+    public void setVerificationMode(ValidationKind verificationMode) { this.verificationMode = verificationMode; }
     public boolean isVerifiedBuyerAtSubmission() { return verifiedBuyerAtSubmission; }
     public void setVerifiedBuyerAtSubmission(boolean verifiedBuyerAtSubmission) { this.verifiedBuyerAtSubmission = verifiedBuyerAtSubmission; }
     public Instant getSubmittedAt() { return submittedAt; }

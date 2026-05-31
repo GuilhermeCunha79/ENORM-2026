@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.service;
 import pt.isep.enorm.ref.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.domain.UserType;
 import pt.isep.enorm.ref.domain.ProductReview;
-import pt.isep.enorm.ref.domain.enums.ReviewStatus;
+import pt.isep.enorm.ref.domain.enums.ModerationDecision;
 import pt.isep.enorm.ref.repository.ProductReviewRepository;
 import pt.isep.enorm.ref.service.generated.GeneratedModerationModel;
 import pt.isep.enorm.ref.service.generated.GeneratedModerationModel.AutomationRuleSpec;
@@ -29,7 +29,7 @@ public class ModerationService extends GeneratedModerationService {
     @Transactional
     public void approveReview(UserType moderator, Long reviewId) {
         ProductReview review = loadReview(reviewId);
-        review.setStatus(ReviewStatus.APPROVED);
+        review.setStatus(ModerationDecision.APPROVED);
         productReviewRepository.save(review);
     }
 
@@ -42,7 +42,7 @@ public class ModerationService extends GeneratedModerationService {
     public List<ModerationSimulationResult> simulatePendingReviewModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         PolicySpec policy = policyForReportThreshold();
-        for (ProductReview review : productReviewRepository.findByStatus(ReviewStatus.PENDING)) {
+        for (ProductReview review : productReviewRepository.findByStatus(ModerationDecision.FLAGGED)) {
             results.add(moderateReview(review, policy));
         }
         return results;
@@ -59,7 +59,7 @@ public class ModerationService extends GeneratedModerationService {
         AutomationRuleSpec rule = primaryRule(policy);
         List<String> matches = matchedKeywords(review.getComment(), rule);
         String decision = matches.isEmpty() ? "APPROVED" : policy.getDecision().name();
-        ReviewStatus status = matches.isEmpty() ? ReviewStatus.APPROVED : ReviewStatus.PENDING;
+        ModerationDecision status = matches.isEmpty() ? ModerationDecision.APPROVED : ModerationDecision.FLAGGED;
         review.setStatus(status);
         productReviewRepository.save(review);
         return new ModerationSimulationResult("REVIEW", review.getId(), null, null, policy.getTrigger().name(), policy.getMode().name(), decision, status.name(), matches, explanation(policy, rule, matches));

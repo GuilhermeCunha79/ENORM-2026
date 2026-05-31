@@ -2,42 +2,38 @@ package pt.isep.enorm.ref.service.generated;
 
 import java.util.List;
 
-import pt.isep.enorm.ref.domain.enums.CommentModerationResult;
-import pt.isep.enorm.ref.domain.enums.CommentModerationType;
 import pt.isep.enorm.ref.domain.enums.UserKind;
-import pt.isep.enorm.ref.domain.enums.VideoModerationResult;
-import pt.isep.enorm.ref.domain.enums.VideoModerationType;
 
 public final class GeneratedModerationModel {
     public enum ModerationMode { AUTOMATIC, MANUAL, HYBRID }
     public enum TriggerEvent { ON_RESOURCE_CREATE, ON_FEEDBACK_CREATE, ON_REPORT_THRESHOLD }
     public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
     public enum ConditionOperator { CONTAINS_KEYWORDS, HAS_PROPERTY, HAS_SPECIFIC_PROPERTY }
-    public enum ActionKind { FLAG_CONTENT, HIDE_CONTENT, NOTIFY_MODERATOR }
+    public enum ActionResultKind { FLAG_CONTENT, HIDE_CONTENT, NOTIFY_MODERATOR }
 
     public static final List<PolicySpec> POLICIES = List.of(
         new PolicySpec("VideoCreationModeration", "Video", null, ModerationMode.HYBRID, TriggerEvent.ON_RESOURCE_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoVideoCopyrightCheck", TriggerEvent.ON_RESOURCE_CREATE,
                 List.of(new ConditionSpec("VideoContainsCopyrightRiskKeywords", ConditionOperator.CONTAINS_KEYWORDS, "video_title_and_description", List.of("copyright", "reupload", "unlicensed"))),
-                List.of(new ActionSpec("FlagVideo", ActionKind.FLAG_CONTENT, "Video flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagVideo", ActionResultKind.FLAG_CONTENT, "Video flagged for moderator review"))))),
         new PolicySpec("CommentCreationModeration", "Video", "CommentOnVideo", ModerationMode.HYBRID, TriggerEvent.ON_FEEDBACK_CREATE, ModerationDecision.FLAGGED, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoCommentModerationCheck", TriggerEvent.ON_FEEDBACK_CREATE,
                 List.of(new ConditionSpec("CommentContainsRiskyTerms", ConditionOperator.CONTAINS_KEYWORDS, "comment_text", List.of("spam", "toxicity", "blocked-word"))),
-                List.of(new ActionSpec("FlagComment", ActionKind.FLAG_CONTENT, "Comment flagged for moderator review"))))),
+                List.of(new ActionSpec("FlagComment", ActionResultKind.FLAG_CONTENT, "Comment flagged for moderator review"))))),
         new PolicySpec("ReportedContentModeration", "Content", "ReportContent", ModerationMode.MANUAL, TriggerEvent.ON_REPORT_THRESHOLD, ModerationDecision.HIDDEN, UserKind.MODERATOR, null,
             List.of(new AutomationRuleSpec("AutoReportEscalation", TriggerEvent.ON_REPORT_THRESHOLD,
                 List.of(new ConditionSpec("ReportThresholdReached", ConditionOperator.HAS_SPECIFIC_PROPERTY, "report_status", List.of("PENDING"))),
-                List.of(new ActionSpec("HideReportedContent", ActionKind.HIDE_CONTENT, "Hide reported content and notify moderator")))))
+                List.of(new ActionSpec("HideReportedContent", ActionResultKind.HIDE_CONTENT, "Hide reported content and notify moderator")))))
     );
 
     public static final PolicySpec VIDEO_POLICY = POLICIES.get(0);
     public static final PolicySpec COMMENT_POLICY = POLICIES.get(1);
     public static final PolicySpec REPORT_POLICY = POLICIES.get(2);
     public static final PolicySpec DEFAULT_POLICY = VIDEO_POLICY;
-    public static final VideoModerationType VIDEO_CHECK_TYPE = VideoModerationType.COPYRIGHT;
-    public static final VideoModerationResult VIDEO_DECISION_ON_MATCH = VideoModerationResult.FLAGGED;
-    public static final CommentModerationType COMMENT_CHECK_TYPE = CommentModerationType.BLOCKED_WORD;
-    public static final CommentModerationResult COMMENT_DECISION_ON_MATCH = CommentModerationResult.FLAGGED;
+    public static final String VIDEO_CHECK_TYPE = "COPYRIGHT";
+    public static final ModerationDecision VIDEO_DECISION_ON_MATCH = ModerationDecision.FLAGGED;
+    public static final String COMMENT_CHECK_TYPE = "BLOCKED_WORD";
+    public static final ModerationDecision COMMENT_DECISION_ON_MATCH = ModerationDecision.FLAGGED;
 
     public static final class PolicySpec {
         private final String name;
@@ -87,11 +83,11 @@ public final class GeneratedModerationModel {
 
     public static final class ActionSpec {
         private final String name;
-        private final ActionKind kind;
+        private final ActionResultKind kind;
         private final String message;
-        public ActionSpec(String name, ActionKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
+        public ActionSpec(String name, ActionResultKind kind, String message) { this.name = name; this.kind = kind; this.message = message; }
         public String getName() { return name; }
-        public ActionKind getKind() { return kind; }
+        public ActionResultKind getKind() { return kind; }
         public String getMessage() { return message; }
     }
 
