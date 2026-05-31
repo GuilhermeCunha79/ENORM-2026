@@ -2,10 +2,10 @@
 <project version="4">
   <component name="MPSProject">
     <projectModules>
+      <modulePath path="$PROJECT_DIR$/languages/Ref.sandbox.one/Ref.sandbox.one.msd" folder="" />
+      <modulePath path="$PROJECT_DIR$/languages/Ref.sandbox.two/Ref.sandbox.two.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/languages/Ref.sandbox/Ref.sandbox.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/languages/Ref/Ref.mpl" folder="" />
-      <modulePath path="$PROJECT_DIR$/solutions/Ref.sandbox1/Ref.sandbox1.msd" folder="" />
-      <modulePath path="$PROJECT_DIR$/solutions/Ref.sandbox2/Ref.sandbox2.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/dependency.importer/dependency.importer.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/prototype.application/prototype.application.msd" folder="" />
     </projectModules>

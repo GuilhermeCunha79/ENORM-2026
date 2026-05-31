@@ -1,0 +1,547 @@
+{
+  "info": {
+    "name": "RedditRef Generated Moderation Acceptance",
+    "description": "Generated moderation acceptance tests for part2/tool1-mps/languages/Ref.sandbox.one/source_gen. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox.one/source_gen/pom.xml spring-boot:run",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "smokePath",
+      "value": "/api/posts",
+      "type": "string"
+    },
+    {
+      "key": "moderatorUsername",
+      "value": "Moderator",
+      "type": "string"
+    },
+    {
+      "key": "moderatorPassword",
+      "value": "Moderator",
+      "type": "string"
+    },
+    {
+      "key": "nonModeratorUsername",
+      "value": "User",
+      "type": "string"
+    },
+    {
+      "key": "nonModeratorPassword",
+      "value": "User",
+      "type": "string"
+    },
+    {
+      "key": "blockedKeyword",
+      "value": "ISSUE",
+      "type": "string"
+    },
+    {
+      "key": "expectedPolicyCount",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "expectedBlockedMatch",
+      "value": "true",
+      "type": "string"
+    },
+    {
+      "key": "expectedBlockedStatus",
+      "value": "FLAG_CONTENT",
+      "type": "string"
+    },
+    {
+      "key": "targetType",
+      "value": "ReportOnPost",
+      "type": "string"
+    },
+    {
+      "key": "trigger",
+      "value": "ON_REPORT_THRESHOLD",
+      "type": "string"
+    },
+    {
+      "key": "wrongTargetType",
+      "value": "CommentReview",
+      "type": "string"
+    },
+    {
+      "key": "wrongTrigger",
+      "value": "ON_FEEDBACK_CREATE",
+      "type": "string"
+    },
+    {
+      "key": "moderatorToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "nonModeratorToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Smoke endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}{{smokePath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Smoke endpoint returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Login moderator",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"{{moderatorUsername}}\", \"password\": \"{{moderatorPassword}}\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Moderator login returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Moderator token is returned\", function () {",
+              "  pm.expect(body.token, \"token\").to.be.a(\"string\").and.not.empty;",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"moderatorToken\", body.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Login non-moderator",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"username\": \"{{nonModeratorUsername}}\", \"password\": \"{{nonModeratorPassword}}\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Non-moderator login returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Non-moderator token is returned\", function () {",
+              "  pm.expect(body.token, \"token\").to.be.a(\"string\").and.not.empty;",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"nonModeratorToken\", body.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Policy seed / resolve model inputs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/policies/moderation"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Policy seed endpoint returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const policies = pm.response.json();",
+              "pm.test(\"Moderation policies are seeded\", function () {",
+              "  pm.expect(policies).to.be.an(\"array\").that.is.not.empty;",
+              "});",
+              "",
+              "const expectedCount = parseInt(pm.collectionVariables.get(\"expectedPolicyCount\") || \"0\", 10);",
+              "if (expectedCount > 0) {",
+              "  pm.test(\"Policy count matches this backend\", function () {",
+              "    pm.expect(policies.length).to.equal(expectedCount);",
+              "  });",
+              "}",
+              "",
+              "const policy = policies[0] || {};",
+              "const targetType = policy.monitorsFeedback || policy.monitorsResource || pm.collectionVariables.get(\"targetType\");",
+              "const trigger = policy.trigger || pm.collectionVariables.get(\"trigger\");",
+              "",
+              "pm.test(\"Policy targetType and trigger are resolved\", function () {",
+              "  pm.expect(targetType, \"targetType\").to.be.a(\"string\").and.not.empty;",
+              "  pm.expect(trigger, \"trigger\").to.be.a(\"string\").and.not.empty;",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"targetType\", targetType);",
+              "pm.collectionVariables.set(\"trigger\", trigger);",
+              "",
+              "const wrongTargetCandidates = [",
+              "  pm.collectionVariables.get(\"wrongTargetType\"),",
+              "  \"ProductReview\",",
+              "  \"CommentReview\",",
+              "  \"ReportOnPost\",",
+              "  \"ReportOnComment\",",
+              "  \"ReportOnVideo\",",
+              "  \"Video\",",
+              "  \"Comment\",",
+              "  \"Post\"",
+              "].filter(Boolean);",
+              "const wrongTargetType = wrongTargetCandidates.find(function (candidate) {",
+              "  return candidate !== targetType;",
+              "}) || (targetType + \"_WRONG\");",
+              "",
+              "let wrongTrigger = pm.collectionVariables.get(\"wrongTrigger\") || \"ON_FEEDBACK_CREATE\";",
+              "if (wrongTrigger === trigger) {",
+              "  wrongTrigger = trigger === \"ON_REPORT_THRESHOLD\" ? \"ON_FEEDBACK_CREATE\" : \"ON_REPORT_THRESHOLD\";",
+              "}",
+              "",
+              "pm.collectionVariables.set(\"wrongTargetType\", wrongTargetType);",
+              "pm.collectionVariables.set(\"wrongTrigger\", wrongTrigger);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Moderation without token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{targetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"This content includes {{blockedKeyword}} and should trigger moderation if configured.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Moderation without token is rejected\", function () {",
+              "  pm.expect([401, 403]).to.include(pm.response.code);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Moderation with non-moderator token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{nonModeratorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{targetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"This content includes {{blockedKeyword}} and should trigger moderation if configured.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Moderation with non-moderator token is forbidden\", function () {",
+              "  pm.response.to.have.status(403);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Moderator clean content",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{targetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"Neutral content for moderation simulation.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Moderator clean content returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Clean content is approved\", function () {",
+              "  pm.expect(body.decision).to.equal(\"APPROVED\");",
+              "  pm.expect(body.status).to.equal(\"APPROVED\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Moderator blocked content",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{targetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"This content includes {{blockedKeyword}} and should trigger moderation if configured.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Moderator blocked content returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const keyword = pm.collectionVariables.get(\"blockedKeyword\");",
+              "const expectedStatus = pm.collectionVariables.get(\"expectedBlockedStatus\") || \"FLAG_CONTENT\";",
+              "const expectMatch = String(pm.collectionVariables.get(\"expectedBlockedMatch\") || \"true\").toLowerCase() === \"true\";",
+              "",
+              "if (expectMatch) {",
+              "  pm.test(\"Blocked keyword triggers moderation action\", function () {",
+              "    pm.expect(body.decision).to.equal(\"FLAGGED\");",
+              "    pm.expect(body.status).to.equal(expectedStatus);",
+              "    const matched = (body.matchedKeywords || []).map(String);",
+              "    pm.expect(matched).to.include(keyword);",
+              "  });",
+              "} else {",
+              "  pm.test(\"Blocked request is evaluated successfully\", function () {",
+              "    pm.expect(body.status).to.be.a(\"string\").and.not.empty;",
+              "  });",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Moderator wrong trigger",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{targetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{wrongTrigger}}\",\n  \"content\": \"This content includes {{blockedKeyword}} and should be skipped because the trigger is wrong.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Wrong trigger request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Wrong trigger is skipped\", function () {",
+              "  pm.expect(body.status).to.equal(\"SKIPPED\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Moderator wrong target",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{wrongTargetType}}\",\n  \"targetId\": 1,\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"This content includes {{blockedKeyword}} and should be skipped because the target is wrong.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Wrong target request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Wrong target is skipped\", function () {",
+              "  pm.expect(body.status).to.equal(\"SKIPPED\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
