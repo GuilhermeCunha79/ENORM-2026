@@ -1,230 +1,190 @@
-# ENORM Part 2 — Tool 2 (Xtext / RefDSL)
+# ENORM Part 2 — Tool 2 (Xtext / REF DSL)
 
-**Author:** Pedro Vilarinho  
-**Tool:** Eclipse Xtext  
-**Repository paths:** `part1/tool2-xtext/` (DSL plugins), `part2/tool2-xtext/` (P2 individual report)
+**Author:** Pedro Vilarinho
+**Tool:** Eclipse Xtext
+**Repository paths:** `part1/tool2-xtext/` (DSL plugins + generator), `part2/tool2-xtext/` (this individual report + generated evidence)
 
-**Evidence exports in repo:** `part2/tool2-xtext/runtime-RefGen/RefGenTest/` (or `part1/tool2-xtext/runtime-New_configuration/TestRef/`)
+**Generated evidence in repo:** `part2/tool2-xtext/runtime-RefGen/RefGenTest/src-gen/generated-backend/{amazon,reddit,youtube}/`
 
 ---
 
-## Activity 1 — Concrete syntax (individual / Xtext)
+## Mapping to the P2 individual tasks (enunciado §2.4)
+
+| Enunciado task | Where it is addressed |
+|----------------|-----------------------|
+| **A1** — Implement the designed notation in the tool + describe adaptations | [Activity 1](#activity-1--concrete-syntax-textual-notation) |
+| **A5** — Implement the code-generation templates/rules; generate all 3 applications | [Activity 5](#activity-5--code-generation) |
+| **A6** — Generate the 3 REF models; support manual code; test; report issues; model evolution | [Activity 6](#activity-6--generate-applications) |
+| **A2 requirement** — generated code supports manual extension (SME extensibility) | [Generation Gap](#manual-extension--generation-gap-a2-requirement) |
+| **Team task** — code from different tools is compatible (mix/combine) | [Cross-tool compatibility](#cross-tool-compatibility-team-task) |
+
+---
+
+## Activity 1 — Concrete syntax (textual notation)
+
+Only the **textual** concrete syntax is implemented (Xtext supports the textual notation; the graphical notation is Sirius — see `part2/TeamReport.md` §2.1).
 
 ### Implementation
 
 | Asset | Path |
 |-------|------|
 | Grammar | `part1/tool2-xtext/pt.isep.enorm.refdsl/src/pt/isep/enorm/refdsl/RefDsl.xtext` |
+| Derived metamodel | `generate refDsl "http://www.example.org/refdsl"` → Ecore metamodel auto-derived from the grammar (REF v3) |
 | Validator | `.../validation/RefDslValidator.java` |
 | Quick fixes | `pt.isep.enorm.refdsl.ui/.../RefDslQuickfixProvider.java` |
-| Editor | RefDsl Editor on `.refdsl` files (runtime Eclipse) |
-| Metamodel | REF v3 — aligned with `diagrams/metamodel/ref-metamodel-v3.puml` and `part1/eclipse/pt.isep.enorm.ref/ model/ref.ecore` |
+| Editor | RefDsl Editor on `.refdsl` files (runtime Eclipse: syntax highlighting, content assist, validation) |
 
-Only **textual** concrete syntax is implemented (no graphical editor). Graphical notation is team/Sirius (`part2/TeamReport.md` §2.1).
+### Adaptations for Xtext (and why)
 
-### Team design vs Xtext implementation
+1. **Braced blocks + commas** instead of indentation-only SME view — required by ANTLR/Xtext for unambiguous parsing.
+2. **Explicit type keywords** (`UserType`, `ResourceType`, …) — better content assist and clearer error messages.
+3. **Typed enums** (`TriggerEvent`, `UserKind`, `ConditionOperator`, …) — parse-time validation instead of free text (supports the "strongly typed" aim, §1.2.2).
+4. **`ConditionValue`** in the grammar matches the Ecore v3 name (the team SME notation may say `ConditionKeywords`).
+5. **Metamodel v3 preserved** — changes are concrete-syntax only, not domain semantics.
 
-The team SME notation (`part2/TeamReport.md` §2.2) uses section headers and minimal keywords. Xtext uses **explicit type keywords** and **braced blocks** (ANTLR/Xtext requirement).
-
-| Metamodel element | Team notation (§2.2) | Xtext (`RefDsl.xtext`) | Adaptation reason |
-|-------------------|------------------------|-------------------------|-------------------|
-| `RefModel` | `ref "Name" version "1.0.0"` + sections | `RefModel Name version "…" { … }` | Root keyword + EMF-compatible blocks |
-| `UserType` | `users:` → `Buyer kind BUYER` | `userTypes { UserType Buyer kind BUYER, … }` | Typed list under `userTypes` |
-| `ContextType` | `contexts:` + `contains` | `contextTypes { ContextType X kind CATALOG contains ( A, B ) }` | Same semantics, block syntax |
-| `ResourceType` | `resources:` + `fields:` | `resourceTypes { ResourceType P supportsMedia true { attributes { … } } }` | Attributes nested in resource block |
-| `Attribute` | `- name is required …` | `required true multiValued false Attribute name type TEXT` | Modifiers before `Attribute` keyword |
-| `ResourceRelation` | `relations:` | `resourceRelations { ResourceRelation … source … target … }` | |
-| `FeedbackType` | `feedback types:` | `feedbackTypes { FeedbackType … kind REVIEW … }` | |
-| `FeedbackDefinition` | `feedback definitions:` | `FeedbackDefinition Name type … author … subjectResource …` | Cross-references `[Type\|EString]` |
-| `FeedbackPolicy` | inline policy | `policy FeedbackPolicy status ENABLED` | |
-| `RatingPolicy` | inline rating | `rating RatingPolicy min 1 max 5 step 1` | |
-| `AuthorizationRule` | `authorizations:` | `authorizationRules { AuthorizationRule name … allowedAction READ … }` | |
-| `ValidationRule` | `validations:` | `validationRules { ValidationRule … invokedBy … }` | |
-| `ModerationPolicy` | `moderations:` | `moderationPolicies { ModerationPolicy … }` | |
-| `AutomationRule` | `automations:` + nested conditions/actions | `automationRules { AutomationRule … conditions { … } actions { … } }` | |
-| `Condition` | list under automation | `Condition Name operator HAS_PROPERTY attribute attr` | |
-| `ConditionValue` | keyword list | `values { ConditionValue value "…", … }` | Team uses `ConditionKeywords`; Xtext uses `ConditionValue` (v3 Ecore name) |
-| `Action` | `then:` list | `actions { Action Name kind DISPLAY_MESSAGE message "…" }` | |
-| `VerificationPolicy` | `verifications:` | `verificationPolicies { VerificationPolicy … }` | |
-| `SortingPolicy` | `sorting policies:` | `sortingPolicies { SortingPolicy … criterion VALUE direction DESC }` | |
-
-### Adaptations for Xtext (summary)
-
-1. **Braces and commas** instead of indentation-only SME view — required for unambiguous parsing.
-2. **Explicit type keywords** (`UserType`, `ResourceType`, …) — better content assist and error messages.
-3. **Typed enums** (`TriggerEvent`, `UserKind`, …) — parse-time validation instead of free text.
-4. **Metamodel v3 preserved** — changes are concrete syntax only, not domain semantics.
-5. **`ConditionValue`** in grammar matches Ecore v3 (team doc may say `ConditionKeywords`).
-
-### Evidence (screenshot — add by author)
-
-<!-- Replace with your screenshot after capture -->
-![RefDsl Editor — Amazon model](screenshots/a1-editor-amazon.png)
-
-*Capture: `amazon.refdsl` open in **RefDsl Editor** with syntax highlighting (runtime Eclipse).*
+The full element-by-element mapping (team SME notation ↔ Xtext grammar) is kept in `part2/TeamReport.md` §2.2.
 
 ---
 
-## Activity 5 — Code generation (individual)
+## Activity 5 — Code generation
 
-### Overview
+### Pipeline (how it works)
 
-The Xtext generator produces:
-
-1. **P1 projections:** `projections/<Model>.txt` and `.puml`
-2. **P2 backends:** `generated-backend/<scenario>/` — Maven/Spring Boot project per `RefModel` name
+The grammar defines the language; `generate refDsl` derives the EMF metamodel; on every **save** of a `.refdsl` file the Xtext builder runs: **parse → EMF model (AST) → link cross-references → validate → generate**. The generation step calls `doGenerate`, which runs the Xtend templates.
 
 | Class | Role |
 |-------|------|
-| `RefDslGenerator.xtend` | Entry point (`doGenerate`) |
-| `RefBackendGenerator.xtend` | Spring Boot templates |
-| `RefBackendNaming.xtend` | Package names, Java types, API paths |
+| `generator/RefDslGenerator.xtend` | Entry point (`AbstractGenerator.doGenerate`); emits text/PlantUML projections and delegates the backend to `RefBackendGenerator` |
+| `generator/RefBackendGenerator.xtend` | All Spring Boot templates — the heart of the generator |
+| `generator/RefBackendNaming.xtend` | Package name (`pt.isep.enorm.ref`), Java type mapping, REST collection paths, ports |
 
-See also `generation-design.md` and `part2/TeamReport.md` §6.
+### Output
 
-### Common parts (always generated)
+For each `RefModel` a complete, compilable **Maven / Spring Boot 3.4.5 (Java 21)** project is produced under `src-gen/generated-backend/<scenario>/`, plus the P1 projections `projections/<Model>.{txt,puml}`.
 
-- `pom.xml`, `application.properties`, `*BackendApplication.java`
-- `domain/enums/Role.java` from `UserType.kind`
-- User entity + repository (`Generated*` + manual subclass)
-- `SecurityConfiguration` (permit-all MVP), auth register endpoint
-- `ApiError`, `ApiExceptionHandler`, smoke test
+**Target platform of the generated code:** Spring Boot Web + Spring Data JPA + Spring Security (JWT, JJWT 0.12.6) + H2 (file). Base package `pt.isep.enorm.ref` (the **same** root used by the Sirius and MPS tools — see compatibility section).
 
-### Variable parts (model-driven)
+### Common parts (always generated, independent of the model)
 
-| REF element | Generated artifacts |
-|-------------|---------------------|
-| Each `ResourceType` | Entity, repository, service, REST controller stack |
-| Each `FeedbackDefinition` | Same + `subjectResource` link; `grade` if `RatingPolicy` present |
-| `Attribute` / `PrimitiveType` | JPA fields on resource entities |
+- `pom.xml`, `application.properties` (`open-in-view=true`), `*BackendApplication.java`
+- **Security stack:** `JwtService`, `JwtAuthenticationFilter`, `SecurityConfiguration`, `UserTypeDetailsService`
+- **Authentication:** `AuthenticationController` (`POST /api/auth/register`, `POST /api/auth/login`) + `AuthenticationService` + DTOs (`RegisterRequest`, `LoginRequest`, `AuthenticationResult`)
+- **User entity** `UserType` + repository (Generation Gap pair) + `domain/enums/Role.java` (literals from `UserType.kind`)
+- **Error handling:** `web/error/ResourceNotFoundException`, `ApiError`, `ApiExceptionHandler`
+- Smoke test (`*ApplicationTests`) + acceptance tests (see [Testing](#testing))
 
-**Generation Gap:** `**/generated/**` overwritten on save; manual classes in `domain/`, `service/`, etc. created once (`writeManualOnce`).
+### Variable parts (driven by the model)
 
-### How to run generation
+| REF element in the model | Generated artifacts |
+|--------------------------|---------------------|
+| each `ResourceType` (Product, Post, Video, …) | JPA entity + repository + service + REST controller — full **CRUD** (`GET` list, `GET /{id}`, `POST`, `PUT /{id}`, `DELETE /{id}`) |
+| each `FeedbackDefinition` (ProductReview, …) | feedback entity + stack; `grade` field if a `RatingPolicy` exists; `author`/`subject`/`parentFeedback` links; uniqueness check if `uniquePerAuthorTarget` |
+| `supportsMedia` / `allowsMedia` = true | `XMediaReference` entity + repository |
+| each `AuthorizationRule` | a `hasRole("<actor>")` rule in `SecurityConfiguration` (JWT-protected endpoints) |
+| `ContextType` / `ContextResource` | context entities + repository + `ContextController` + `ContextService` |
+| `ValidationRule` / `ModerationPolicy` / `VerificationPolicy` / `SortingPolicy` | governance entities + `/api/policies/...` endpoints |
+| `SortingPolicy` | the `?sortBy=&direction=` query parameters on resource `GET` |
+| `ModerationPolicy` | **moderation engine**: `ModerationController` (`POST /api/moderation/simulate`) + `ModerationService` |
+| `AutomationRule` (+ `Condition`/`Action`) | **automation engine**: `AutomationRuleController` (`/api/policies/automation-rules`) + `AutomationEngineService` + `AutomationController` (`POST /api/automation/evaluate`) |
 
-See section **Appendix — Commands** below.
+> **Traceability example (model → code):** `AuthorizationRule name BuyerThreadAuth allowedAction COMMENT actor Buyer …` in `amazon.refdsl` becomes `requestMatchers(HttpMethod.POST, "/api/top-thread-comments").hasRole("BUYER")` in the generated `SecurityConfiguration.java`. No Java was written by hand for this — it is generated from the model.
 
 ---
 
-## Activity 6 — Generate applications (individual)
+## Activity 6 — Generate applications
 
 ### 1. Generated scenarios (repository evidence)
 
-| Scenario | Input model | Output folder | `mvn test` (verified) |
-|----------|-------------|---------------|------------------------|
-| Amazon | `amazon.refdsl` → `RefModel Amazon` | `src-gen/generated-backend/amazon/` | OK |
-| Reddit | `reddit.refdsl` → `RefModel Reddit` | `src-gen/generated-backend/reddit/` | OK |
-| Youtube | `youtube.refdsl` → `RefModel Youtube` | `src-gen/generated-backend/youtube/` | OK |
+| Scenario | Input model | Output folder | Port | `mvn test` |
+|----------|-------------|---------------|------|-----------|
+| Amazon | `amazon.refdsl` → `RefModel Amazon` | `src-gen/generated-backend/amazon/` | 8081 | BUILD SUCCESS |
+| Reddit | `reddit.refdsl` → `RefModel Reddit` | `src-gen/generated-backend/reddit/` | 8083 | BUILD SUCCESS |
+| Youtube | `youtube.refdsl` → `RefModel Youtube` | `src-gen/generated-backend/youtube/` | 8082 | BUILD SUCCESS |
 
-Reference export: `part2/tool2-xtext/runtime-RefGen/RefGenTest/src-gen/`
+Also generated: `projections/Amazon.{txt,puml}`, `Reddit.*`, `Youtube.*`.
 
-Also generated: `projections/Amazon.txt`, `Amazon.puml`, `Reddit.*`, `Youtube.*`
+### Manual extension — Generation Gap (A2 requirement)
 
-### 2. Manual extension (Generation Gap)
+The enunciado (A2) requires that the generated code lets the SME's software engineer add manual logic in the base language, integrated with the generated code. This is implemented with the **Generation Gap pattern**, applied uniformly:
 
-Example after first save of `amazon.refdsl`:
+- Every concept is split into `GeneratedX` (`@MappedSuperclass` / abstract / interface, in a `generated/` sub-package) and a manual `X` subclass in the parent package.
+- `GeneratedX` files are **overwritten on every save**; manual `X` files are **created once and never overwritten** (`writeManualOnce`).
+- This makes `domain/` and `domain/generated/` symmetric (entities, repositories, services, controllers).
 
-- Generated: `.../domain/generated/GeneratedProduct.java` — **overwritten** on each save
-- Manual: `.../domain/Product.java` — **preserved** (empty subclass for custom logic)
+**To demonstrate:** add a method to `service/ProductService.java`, save `amazon.refdsl` again → `service/generated/GeneratedProductService.java` is refreshed, but the manual `ProductService.java` keeps the edit.
 
-To demonstrate: add a method to `ProductService.java`, save `amazon.refdsl` again → manual file unchanged, `GeneratedProductService.java` refreshed.
+### 2. Testing
 
-### 3. Issues found during testing
+- **`mvn test`** on the three backends → BUILD SUCCESS.
+- **Acceptance tests** (black-box over the real HTTP API on a random port, in-memory H2): `AmazonAcceptanceTests` (7), `RedditAcceptanceTests` (5), `YoutubeAcceptanceTests` (6) — **18 tests, 0 failures**. They exercise: JWT register/login, role-based authorization (e.g. `GET /api/product-reviews` allowed to BUYER, forbidden to SELLER), resource CRUD + sorting, governance policy endpoints and the automation engine (a rule is posted and `/api/automation/evaluate` fires its action).
 
-| ID | Issue | Severity | Workaround |
-|----|-------|----------|------------|
-| I1 | Output under `src-gen/`, not project root | Low | Document path; F5 refresh |
-| I2 | Java names `Productreview` vs `ProductReview` | Low | Generator `toPascalCase` limitation |
-| I3 | `subjectFeedback` not emitted in JPA (e.g. `ReplyComment`) | Medium | Manual entity extension or future generator fix |
-| I4 | REF policies (`AuthorizationRule`, `AutomationRule`, …) not in generated Java | Medium | Use `part2/amazon-backend` prototype; hooks in manual services |
-| I5 | Security is `permitAll()`, not JWT from DSL | Medium | Reference prototype in `part2/*-backend` |
-| I6 | All feedback entities have `comment` field even for votes | Low | Accept as placeholder or override in manual service |
-| I7 | Early `pom.xml` missing `spring-boot-starter-security` | Fixed | Template updated in `RefBackendGenerator.xtend` |
+```powershell
+mvn -f "<base>\amazon\pom.xml"  -Dtest=AmazonAcceptanceTests  test
+mvn -f "<base>\reddit\pom.xml"  -Dtest=RedditAcceptanceTests  test
+mvn -f "<base>\youtube\pom.xml" -Dtest=YoutubeAcceptanceTests test
+```
 
-### 4. Screenshots (add by author)
+### 3. Issues found during tests
 
-| File | Content |
-|------|---------|
-| `screenshots/a1-editor-amazon.png` | RefDsl Editor + `amazon.refdsl` |
-| `screenshots/a6-generated-tree.png` | Package Explorer: `src-gen/generated-backend/amazon` |
-| `screenshots/a6-mvn-test.png` | Terminal `mvn test` BUILD SUCCESS |
-| `screenshots/a6-rest-products.png` | `GET http://localhost:8081/api/products` |
-| `screenshots/a6-manual-extension.png` | Manual `Product.java` vs `GeneratedProduct.java` |
-| `screenshots/a6-evolution-after.png` | Migrated model, Problems view clean |
+| ID | Issue | Status |
+|----|-------|--------|
+| I1 | `description` collided with a grammar keyword (`no viable alternative`) | **Fixed** — added to `EString`, re-ran MWE2 |
+| I2 | H2 reserved words (`value`, `trigger`, `context`) broke DDL | **Fixed** — mapped to `vote_value`, `trigger_event`, `context_name`, etc. |
+| I3 | `GET` of an aggregate (e.g. `AutomationRule`) failed to serialize lazy collections with `open-in-view=false` | **Fixed** — template now generates `open-in-view=true` |
+| I4 | `register` throws `NullPointerException` if the JSON omits `role` | **Known** — workaround: always send a valid `role`; could be hardened to return `400` |
+| I5 | Output lands under `src-gen/`, not the project root; needs `F5` refresh | Low — documented in the workflow |
+| I6 | `toPascalCase` edge cases on compound names | Low — handled for the current models |
 
-### 5. Comparison with manual prototype (Activity 3)
+### 4. Model evolution and migration
 
-| Aspect | Generated `generated-backend/amazon` | Manual `part2/amazon-backend` |
-|--------|--------------------------------------|-------------------------------|
-| Purpose | DSL-driven skeleton (A5/A6) | Full REF behaviour reference (A3) |
-| JWT / auth rules | No | Yes |
-| Moderation / verification | Hooks only | Implemented |
-| Libraries | Minimal Spring stack | Full team stack (JJWT, etc.) |
+**Strategy:** the grammar and `.refdsl` models are versioned in Git. A metamodel/grammar change is: edit `RefDsl.xtext` → run **MWE2** (`GenerateRefDsl.mwe2`) → **Project → Clean** → migrate `.refdsl` files → re-validate in the editor → save to regenerate.
+
+| Change type | Example | Migration effort |
+|-------------|---------|------------------|
+| Additive optional field | `description` on `RefModel` | old models stay valid (no change needed) |
+| New enum literal | new `TriggerEvent` | add only to models that use it |
+| Syntax rename | section headers → blocks | search/replace + validate |
+| Breaking delete | remove an attribute | edit every model |
+
+**Demonstration (v3.0 → v3.1, optional `description` on `RefModel`):** since the change is *additive optional*, the previous models parse unchanged and new models may add `description "…"`. This shows the DSL is **evolvable** (§1.2.5) and that additive evolution needs no automatic migrator.
 
 ---
 
-## Model evolution and migration (Activity 6)
+## Cross-tool compatibility (team task)
 
-### Strategy
+The team task requires that code generated by different tools is compatible (mix/combine). The three tools (Xtext, Sirius, MPS) all generate into the **same base package** `pt.isep.enorm.ref`, which is the enabler.
 
-1. **Version control** — grammar/Xtext projects and `.refdsl` models tagged in Git (e.g. v3.0, v3.1).
-2. **Metamodel/grammar change** — edit `RefDsl.xtext` → run **MWE2** (`GenerateRefDsl.mwe2`) → **Project → Clean**.
-3. **Model migration** — update `.refdsl` files (manual edit or script) to match new syntax.
-4. **Re-validate** — open in RefDsl Editor; fix issues reported in **Problems**.
-5. **Regenerate** — save model → projections + `generated-backend/` updated.
+**Verified swap:** `web/error/ResourceNotFoundException` is contract-identical across the three tools (byte-identical Xtext↔Sirius; identical modulo comment/formatting in MPS). Replacing the Xtext backend's class with the **MPS-generated** one and running the Amazon acceptance suite → **7/7 still pass**. A class generated by one tool runs inside another tool's backend.
 
-### Change types
+This shows two levels of compatibility:
+1. **Class level** — `ResourceNotFoundException` is swappable (same package + contract).
+2. **API-contract level** — all three expose the same REST contract (`/api/auth/login`, `/api/products`, …) under the same package, so a single Postman collection works as a client against any of the backends. Compatibility means a *shared contract*, not byte-identical code.
 
-| Type | Example | Migration effort |
-|------|---------|------------------|
-| Additive optional field | `description` on `RefModel` | Old models valid without change |
-| New enum literal | New `TriggerEvent` | Add to models using new trigger |
-| Syntax rename | Section headers vs blocks | Search/replace + validate |
-| Breaking delete | Remove attribute | Edit all models |
-
-### Demonstration: v3.0 → v3.1 (optional `description` on `RefModel`)
-
-Files in `part2/tool2-xtext/examples/`:
-
-| File | Role |
-|------|------|
-| `amazon-v3.0.refdsl` | Model before change (current syntax) |
-| `amazon-v3.1.refdsl` | Model after adding `description "…"` |
-| `GRAMMAR-PATCH-v3.1.txt` | Exact line to add in `RefDsl.xtext` |
-
-**Steps (author must run in Eclipse):**
-
-1. Apply patch from `examples/GRAMMAR-PATCH-v3.1.txt` to `RefDsl.xtext` (`RefModel` rule).
-2. Run **MWE2** on `GenerateRefDsl.mwe2` → **Clean** `pt.isep.enorm.refdsl`.
-3. Open `amazon-v3.0.refdsl` — should still parse (no `description`).
-4. Open `amazon-v3.1.refdsl` — should parse with new optional property.
-5. Screenshot Problems view (both valid).
-
-No automatic `.refdsl` migrator is shipped; additive changes need one new line per model when desired.
+Classes that are **not** swappable (and why): `JwtService` (different internal APIs per tool), `SecurityConfiguration` (rules derived from each model's `AuthorizationRule`s), domain entities (Sirius uses value objects), `UserDetailsService` (different names). Details in `part2/TeamReport.md` §6.
 
 ---
 
 ## Appendix — Commands
 
-### Eclipse development
+### Eclipse development (Host workspace)
 
 1. Import: `pt.isep.enorm.ref`, `pt.isep.enorm.refdsl`, `pt.isep.enorm.refdsl.ui`, `pt.isep.enorm.refdsl.ide`
-2. After `.xtend` changes: **Project → Clean**
-3. After `.xtext` changes: **Run MWE2** on `GenerateRefDsl.mwe2`
+2. After `.xtend` changes → **Project → Clean**
+3. After `.xtext` changes → **Run As → MWE2 Workflow** on `GenerateRefDsl.mwe2`
 
-### Runtime generation
+### Runtime generation (RefGen)
 
-1. **Run → Eclipse Application** (plugins `pt.isep.enorm.refdsl*`)
+1. **Run As → Eclipse Application** (launches a second Eclipse with the REF DSL plugin)
 2. Project `RefGenTest` with `amazon.refdsl`, `reddit.refdsl`, `youtube.refdsl`
-3. **Open With → RefDsl Editor** → **Yes** (Xtext project) → **Ctrl+S** each → **F5**
+3. **Ctrl+S** each model → the builder regenerates `src-gen/generated-backend/<scenario>/` → **F5** to refresh
 
-### Maven (generated Amazon backend)
+### Maven (generated backends)
 
 ```powershell
-$base = "c:\Users\Utilizador\Documents\isep-dei-mei-enorm-25-26-project-enorm-25-26-m1a-4\part2\tool2-xtext\runtime-RefGen\RefGenTest\src-gen\generated-backend"
+$base = "C:\Users\Utilizador\Documents\isep-dei-mei-enorm-25-26-project-enorm-25-26-m1a-4\part2\tool2-xtext\runtime-RefGen\RefGenTest\src-gen\generated-backend"
 
 mvn -f "$base\amazon\pom.xml" test
-mvn -f "$base\amazon\pom.xml" spring-boot:run
+mvn -f "$base\amazon\pom.xml" spring-boot:run     # http://localhost:8081
 ```
 
 | Scenario | Port |
@@ -233,10 +193,22 @@ mvn -f "$base\amazon\pom.xml" spring-boot:run
 | Reddit | 8083 |
 | Youtube | 8082 |
 
+### Sample requests (Amazon, port 8081)
+
 ```http
-GET http://localhost:8081/api/products
-POST http://localhost:8081/api/auth/register?username=demo&password=demo&role=BUYER
+POST http://localhost:8081/api/auth/register
+Content-Type: application/json
+{ "username": "alice", "password": "secret", "role": "BUYER" }
+
+POST http://localhost:8081/api/auth/login
+Content-Type: application/json
+{ "username": "alice", "password": "secret" }
+
+GET  http://localhost:8081/api/products
+Authorization: Bearer <token>
 ```
+
+> H2 console: `http://localhost:8081/h2-console` — JDBC `jdbc:h2:file:./data/amazonappdb`, user `sa`, no password.
 
 ---
 
@@ -244,5 +216,6 @@ POST http://localhost:8081/api/auth/register?username=demo&password=demo&role=BU
 
 - Team report: `part2/TeamReport.md`
 - Generation design: `part2/tool2-xtext/generation-design.md`
+- Per-activity Xtext notes: `part2/tool2-xtext/atividades-xtext-p2.md`
 - Scenario models: `part1/tool2-xtext/scenarios-a7/*.refdsl`
-- Manual prototype: `part2/amazon-backend/`
+- Manual prototype (Activity 3 reference): `part2/amazon-backend/`
