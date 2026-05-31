@@ -13,10 +13,19 @@
   <userTypes xmi:id="ut_moderator" name="Moderator" kind="MODERATOR" superTypes="ut_user"/>
 
   <!-- Resource types -->
+  <resourceTypes xmi:id="rt_reddit_user" name="UserType" supportsMedia="false">
+    <attributes xmi:id="attr_reddit_user_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reddit_user_username" name="username" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reddit_user_password" name="password" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reddit_user_role" name="role" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reddit_user_registration_date" name="registrationDate" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
   <resourceTypes xmi:id="rt_subreddit" name="Subreddit" supportsMedia="false">
     <attributes xmi:id="attr_subreddit_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_subreddit_name" name="name" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_subreddit_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_subreddit_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_content" name="Content" supportsMedia="true">
@@ -26,61 +35,56 @@
 
   <resourceTypes xmi:id="rt_post" name="Post" supportsMedia="true" superTypes="rt_content">
     <attributes xmi:id="attr_post_title" name="title" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_post_body" name="body" type="TEXT" required="false" multiValued="false"/>
-    <attributes xmi:id="attr_post_type" name="type" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_post_supports_vote" name="supportsVote" type="BOOLEAN" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_post_supports_report" name="supportsReport" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_post_upload_date" name="uploadDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_duration" name="duration" type="NUMBER" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_post_comment_status" name="commentStatus" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_comment" name="Comment" supportsMedia="true" superTypes="rt_content">
-    <attributes xmi:id="attr_comment_body" name="body" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_comment_supports_vote" name="supportsVote" type="BOOLEAN" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_comment_supports_report" name="supportsReport" type="BOOLEAN" required="true" multiValued="false"/>
-  </resourceTypes>
-
-  <resourceTypes xmi:id="rt_media_attachment" name="MediaAttachment" supportsMedia="true">
-    <attributes xmi:id="attr_media_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_media_type" name="type" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_media_url" name="url" type="URL" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_text" name="text" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_status" name="status" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_community_rule" name="CommunityRule" supportsMedia="false">
     <attributes xmi:id="attr_community_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_community_rule_title" name="title" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_community_rule_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_community_rule_new_status" name="newStatus" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_community_rule_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_participation_policy" name="ParticipationPolicy" supportsMedia="false">
     <attributes xmi:id="attr_participation_policy_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_participation_policy_action" name="action" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_participation_policy_allowed_when" name="allowedWhen" type="TEXT" required="true" multiValued="false"/>
-  </resourceTypes>
-
-  <resourceTypes xmi:id="rt_content_validation_rule" name="ContentValidationRule" supportsMedia="false">
-    <attributes xmi:id="attr_content_validation_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_content_validation_target" name="target" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_content_validation_severity" name="severity" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_content_validation_condition" name="condition" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_participation_policy_allowed_for" name="allowedFor" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_post_moderation_check" name="PostModerationCheck" supportsMedia="false">
     <attributes xmi:id="attr_post_mod_check_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_post_mod_check_type" name="type" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_post_mod_check_result" name="result" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_post_mod_check_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_post_mod_check_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_comment_moderation_check" name="CommentModerationCheck" supportsMedia="false">
     <attributes xmi:id="attr_comment_mod_check_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_comment_mod_check_type" name="type" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_comment_mod_check_result" name="result" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_comment_mod_check_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_check_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_vote" name="Vote" supportsMedia="false">
     <attributes xmi:id="attr_vote_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_vote_value" name="value" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_vote_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_vote_history" name="VoteHistory" supportsMedia="false">
+    <attributes xmi:id="attr_vote_history_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_vote_history_action" name="action" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_vote_history_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_report" name="Report" supportsMedia="false">
@@ -95,15 +99,28 @@
     <attributes xmi:id="attr_subscription_date" name="date" type="DATE" required="true" multiValued="false"/>
   </resourceTypes>
 
+  <resourceTypes xmi:id="rt_sorting_policy" name="SortingPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_sorting_policy_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sorting_policy_criterion" name="criterion" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sorting_policy_direction" name="direction" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_validation_rule" name="ValidationRule" supportsMedia="false">
+    <attributes xmi:id="attr_validation_rule_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validation_rule_target" name="target" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validation_rule_policy_type" name="policyType" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validation_rule_severity" name="severity" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
   <!-- Contexts -->
   <contextTypes xmi:id="ctx_subreddit_community" name="SubredditCommunity" kind="COMMUNITY"
-      contains="rt_subreddit rt_post rt_comment rt_media_attachment rt_community_rule rt_participation_policy rt_content_validation_rule rt_subscription"/>
+      contains="rt_reddit_user rt_subreddit rt_post rt_comment rt_community_rule rt_participation_policy rt_subscription rt_sorting_policy rt_validation_rule"/>
 
   <contextTypes xmi:id="ctx_content_channel" name="ContentChannel" kind="CHANNEL"
-      contains="rt_post rt_comment rt_media_attachment rt_post_moderation_check rt_comment_moderation_check rt_vote rt_report"/>
+      contains="rt_post rt_comment rt_post_moderation_check rt_comment_moderation_check rt_vote rt_vote_history rt_report"/>
 
   <contextTypes xmi:id="ctx_platform_global" name="RedditPlatform" kind="GLOBAL"
-      contains="rt_subreddit rt_post rt_comment rt_participation_policy rt_content_validation_rule rt_post_moderation_check rt_comment_moderation_check rt_vote rt_report rt_subscription"/>
+      contains="rt_reddit_user rt_subreddit rt_post rt_comment rt_participation_policy rt_post_moderation_check rt_comment_moderation_check rt_vote rt_vote_history rt_report rt_subscription rt_sorting_policy rt_validation_rule"/>
 
   <!-- Resource relations -->
   <resourceRelations xmi:id="rr_subreddit_contains_posts" name="subredditContainsPosts"
@@ -118,10 +135,6 @@
       sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
       source="rt_subreddit" target="rt_participation_policy"/>
 
-  <resourceRelations xmi:id="rr_subreddit_validates_content" name="subredditValidatesContent"
-      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
-      source="rt_subreddit" target="rt_content_validation_rule"/>
-
   <resourceRelations xmi:id="rr_comment_on_post" name="commentOnPost"
       sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
       source="rt_comment" target="rt_post"/>
@@ -129,10 +142,6 @@
   <resourceRelations xmi:id="rr_comment_replies_to_comment" name="commentRepliesToComment"
       sourceCardinality="0..1" targetCardinality="*" containment="false" recursive="true"
       source="rt_comment" target="rt_comment"/>
-
-  <resourceRelations xmi:id="rr_comment_has_attachments" name="commentHasMediaAttachments"
-      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
-      source="rt_comment" target="rt_media_attachment"/>
 
   <resourceRelations xmi:id="rr_post_checked_by" name="postCheckedByModerationCheck"
       sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
@@ -153,6 +162,58 @@
   <resourceRelations xmi:id="rr_subscription_on_subreddit" name="subscriptionOnSubreddit"
       sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
       source="rt_subscription" target="rt_subreddit"/>
+
+  <resourceRelations xmi:id="rr_subreddit_owner" name="subredditOwner"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_subreddit" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_post_author" name="postAuthor"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_post" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_comment_author" name="commentAuthor"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_vote_user" name="voteUser"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_vote" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_vote_history_user" name="voteHistoryUser"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_vote_history" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_vote_history_post" name="voteHistoryPost"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_vote_history" target="rt_post"/>
+
+  <resourceRelations xmi:id="rr_vote_history_comment" name="voteHistoryComment"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_vote_history" target="rt_comment"/>
+
+  <resourceRelations xmi:id="rr_report_submitter" name="reportSubmitter"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_report_reviewed_by" name="reportReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_subscription_subscriber" name="subscriptionSubscriber"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_subscription" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_moderation_check_reviewer" name="moderationCheckReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_post_moderation_check" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_comment_check_reviewer" name="commentCheckReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment_moderation_check" target="rt_reddit_user"/>
+
+  <resourceRelations xmi:id="rr_sorting_policy_subreddit" name="sortingPolicySubreddit"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_sorting_policy" target="rt_subreddit"/>
 
   <!-- Feedback types -->
   <feedbackTypes xmi:id="ft_comment_on_post" name="PostComment" kind="COMMENT"
@@ -257,13 +318,13 @@
   <validationRules xmi:id="vr_post_content_policy" name="PostContentPolicyCheck"
       kind="AUTOMATIC" severity="WARNING"
       expression="Validate post content against subreddit rules, keyword screens, and platform-level moderation heuristics."
-      implementationId="impl: let body = lower(coalesce(attr_post_body,'')); let title = lower(coalesce(attr_post_title,'')); let risky = containsAny(title + ' ' + body, ['spam','offensive','banned-link']); if risky then create PostModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set post.status='UNDER_REVIEW'; notify moderator with subreddit id, post id, and matched terms; return WARNING; else return OK; end" appliesToResource="rt_post"
+      implementationId="impl: let body = lower(coalesce(attr_post_description,'')); let title = lower(coalesce(attr_post_title,'')); let risky = containsAny(title + ' ' + body, ['spam','offensive','banned-link']); if risky then create PostModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set post.status='UNDER_REVIEW'; notify moderator with subreddit id, post id, and matched terms; return WARNING; else return OK; end" appliesToResource="rt_post"
       invokedBy="auto_post_content_screening"/>
 
   <validationRules xmi:id="vr_comment_content_policy" name="CommentContentPolicyCheck"
       kind="AUTOMATIC" severity="WARNING"
       expression="Validate comment content against subreddit rules and abusive-language moderation patterns."
-      implementationId="impl: let body = lower(trim(attr_comment_body)); let risky = containsAny(body, ['spam','offensive','abuse']); if risky then create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set comment.status='UNDER_REVIEW'; notify moderator with comment id and matched terms; return WARNING; else return OK; end" appliesToResource="rt_comment"
+      implementationId="impl: let body = lower(trim(attr_comment_text)); let risky = containsAny(body, ['spam','offensive','abuse']); if risky then create CommentModerationCheck(type='POLICY', result='FLAGGED', timestamp=now()); set comment.status='UNDER_REVIEW'; notify moderator with comment id and matched terms; return WARNING; else return OK; end" appliesToResource="rt_comment"
       invokedBy="auto_comment_content_screening"/>
 
   <validationRules xmi:id="vr_report_threshold" name="ReportThresholdEscalation"
@@ -291,11 +352,11 @@
       trigger="ON_RESOURCE_CREATE" context="rt_post" inContext="ctx_content_channel"
       onFeedback="fd_post_comment" uses="vr_post_content_policy">
     <conditions xmi:id="cond_post_body_present" name="PostBodyPresent"
-        operator="HAS_PROPERTY" attribute="attr_post_body">
+        operator="HAS_PROPERTY" attribute="attr_post_description">
       <children xmi:id="condval_post_body_present" value="body"/>
     </conditions>
     <conditions xmi:id="cond_post_keywords" name="PostContainsRiskKeywords"
-        operator="CONTAINS_KEYWORDS" attribute="attr_post_body">
+        operator="CONTAINS_KEYWORDS" attribute="attr_post_description">
       <children xmi:id="condval_post_spam" value="spam"/>
       <children xmi:id="condval_post_offensive" value="offensive"/>
       <children xmi:id="condval_post_banned" value="banned-link"/>
@@ -310,11 +371,11 @@
       trigger="ON_RESOURCE_CREATE" context="rt_comment" inContext="ctx_content_channel"
       onFeedback="fd_post_comment" uses="vr_comment_content_policy">
     <conditions xmi:id="cond_comment_body_present" name="CommentBodyPresent"
-        operator="HAS_PROPERTY" attribute="attr_comment_body">
+        operator="HAS_PROPERTY" attribute="attr_comment_text">
       <children xmi:id="condval_comment_body_present" value="body"/>
     </conditions>
     <conditions xmi:id="cond_comment_keywords" name="CommentContainsRiskKeywords"
-        operator="CONTAINS_KEYWORDS" attribute="attr_comment_body">
+        operator="CONTAINS_KEYWORDS" attribute="attr_comment_text">
       <children xmi:id="condval_comment_spam" value="spam"/>
       <children xmi:id="condval_comment_offensive" value="offensive"/>
       <children xmi:id="condval_comment_abuse" value="abuse"/>

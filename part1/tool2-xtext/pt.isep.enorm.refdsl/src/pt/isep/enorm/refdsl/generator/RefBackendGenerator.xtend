@@ -29,10 +29,10 @@ class RefBackendGenerator {
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/«app»BackendApplication.java''', applicationClass(model))
 
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/domain/enums/Role.java''', roleEnum(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/domain/generated/Generated«app»User.java''', generatedUser(model))
-		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/domain/«app»User.java''', userSubclass(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/repository/generated/Generated«app»UserRepository.java''', generatedUserRepository(model))
-		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/repository/«app»UserRepository.java''', userRepositorySubclass(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/domain/generated/GeneratedUserType.java''', generatedUser(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/domain/UserType.java''', userSubclass(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/repository/generated/GeneratedUserTypeRepository.java''', generatedUserRepository(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/repository/UserTypeRepository.java''', userRepositorySubclass(model))
 
 		for (rt : model.resourceTypes) {
 			generateResource(model, fsa, root, pkg, rt)
@@ -41,16 +41,18 @@ class RefBackendGenerator {
 			generateFeedback(model, fsa, root, pkg, fd)
 		}
 
-		// Fase D.1: ContextType -> entity (name + kind + resources) + ContextResource link entity
+		// Fase D.1: ContextType -> ONE generic entity (name + kind + resources) + ContextResource link entity.
+		// Context instances from the model (e.g. AmazonCatalog) become rows, matching the manual/Sirius backends.
 		val path = pkg.replace('.', '/')
-		for (ct : model.contextTypes) {
-			val cName = naming.toPascalCase(ct.name)
-			write(fsa, '''«root»/src/main/java/«path»/governance/domain/«cName».java''', contextEntity(model, cName, ct.kind.literal))
-			write(fsa, '''«root»/src/main/java/«path»/governance/repository/«cName»Repository.java''', governanceRepo(model, cName))
-			write(fsa, '''«root»/src/main/java/«path»/governance/web/«cName»Controller.java''', governanceController(model, cName, '''/api/contexts/«naming.toKebabCase(ct.name)»'''))
-		}
 		if (!model.contextTypes.empty) {
-			write(fsa, '''«root»/src/main/java/«path»/governance/domain/ContextResource.java''', contextResourceEntity(model))
+			write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedContextType.java''', contextTypeEntity(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/ContextType.java''', contextTypeSubclass(model))
+			write(fsa, '''«root»/src/main/java/«path»/repository/ContextTypeRepository.java''', governanceRepo(model, "ContextType"))
+			write(fsa, '''«root»/src/main/java/«path»/web/ContextTypeController.java''', governanceController(model, "ContextType", "/api/contexts"))
+			write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedContextResource.java''', contextResourceEntity(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/ContextResource.java''', contextResourceSubclass(model))
+			write(fsa, '''«root»/src/main/java/«path»/service/generated/GeneratedContextService.java''', generatedContextService(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/ContextService.java''', contextServiceSubclass(model))
 		}
 
 		// Fase E: governance artifacts (validation/authorization/moderation/verification/sorting/automation)
@@ -61,17 +63,22 @@ class RefBackendGenerator {
 
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/SecurityConfiguration.java''', securityConfig(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/JwtService.java''', jwtService(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/AppUserDetailsService.java''', appUserDetailsService(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/UserTypeDetailsService.java''', appUserDetailsService(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/security/JwtAuthenticationFilter.java''', jwtAuthenticationFilter(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/RegisterRequest.java''', registerRequestDto(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/LoginRequest.java''', loginRequestDto(model))
-		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/AuthResponse.java''', authResponseDto(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/dto/AuthenticationResult.java''', authResponseDto(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/generated/GeneratedAuthenticationService.java''', generatedAuthService(model))
 		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/AuthenticationService.java''', authServiceSubclass(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/generated/GeneratedAuthenticationController.java''', generatedAuthController(model))
 		writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/AuthenticationController.java''', authControllerSubclass(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/error/ApiError.java''', apiError(model))
 		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/error/ApiExceptionHandler.java''', apiExceptionHandler(model))
+		write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/web/error/ResourceNotFoundException.java''', resourceNotFoundException(model))
+		if (hasAnyGovernance(model)) {
+			write(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/generated/GeneratedPolicyService.java''', generatedPolicyService(model))
+			writeManualOnce(fsa, '''«root»/src/main/java/«pkg.replace('.', '/')»/service/PolicyService.java''', policyServiceSubclass(model))
+		}
 		write(fsa, '''«root»/src/test/java/«pkg.replace('.', '/')»/«app»BackendApplicationTests.java''', applicationTest(model))
 	}
 
@@ -106,7 +113,8 @@ class RefBackendGenerator {
 		writeManualOnce(fsa, '''«root»/src/main/java/«path»/web/«entity»Controller.java''', feedbackControllerSubclass(model, entity))
 
 		if (feedbackHasMedia(fd)) {
-			write(fsa, '''«root»/src/main/java/«path»/domain/generated/«entity»MediaReference.java''', mediaReferenceEntity(model, entity))
+			write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entity»MediaReference.java''', mediaReferenceEntity(model, entity))
+			writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/«entity»MediaReference.java''', mediaReferenceSubclass(model, entity))
 			write(fsa, '''«root»/src/main/java/«path»/repository/generated/«entity»MediaReferenceRepository.java''', mediaReferenceRepo(model, entity))
 		}
 	}
@@ -336,19 +344,19 @@ package «naming.basePackage(model)».repository.generated;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».domain.UserType;
 
-public interface Generated«naming.scenarioPascal(model)»UserRepository extends JpaRepository<«naming.scenarioPascal(model)»User, Long> {
-    Optional<«naming.scenarioPascal(model)»User> findByUsername(String username);
+public interface GeneratedUserTypeRepository extends JpaRepository<UserType, Long> {
+    Optional<UserType> findByUsername(String username);
 }
 '''
 
 	def String userRepositorySubclass(RefModel model) '''
 package «naming.basePackage(model)».repository;
 
-import «naming.basePackage(model)».repository.generated.Generated«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».repository.generated.GeneratedUserTypeRepository;
 
-public interface «naming.scenarioPascal(model)»UserRepository extends Generated«naming.scenarioPascal(model)»UserRepository {
+public interface UserTypeRepository extends GeneratedUserTypeRepository {
 }
 '''
 
@@ -365,7 +373,7 @@ import jakarta.persistence.MappedSuperclass;
 import «naming.basePackage(model)».domain.enums.Role;
 
 @MappedSuperclass
-public abstract class Generated«naming.scenarioPascal(model)»User {
+public abstract class GeneratedUserType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -396,12 +404,12 @@ package «naming.basePackage(model)».domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import «naming.basePackage(model)».domain.generated.Generated«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».domain.generated.GeneratedUserType;
 
 /** Manual extension point — edit scenario-specific user logic here. */
 @Entity
 @Table(name = "users")
-public class «naming.scenarioPascal(model)»User extends Generated«naming.scenarioPascal(model)»User {
+public class UserType extends GeneratedUserType {
 }
 '''
 
@@ -475,7 +483,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 «ENDIF»
-import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».domain.UserType;
 «IF subject !== null»
 import «naming.basePackage(model)».domain.«subject»;
 «ENDIF»
@@ -491,7 +499,7 @@ public abstract class Generated«entity» {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_id", nullable = false)
-    private «naming.scenarioPascal(model)»User author;
+    private UserType author;
 
 «IF subject !== null»
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -529,8 +537,8 @@ public abstract class Generated«entity» {
 «ENDIF»
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public «naming.scenarioPascal(model)»User getAuthor() { return author; }
-    public void setAuthor(«naming.scenarioPascal(model)»User author) { this.author = author; }
+    public UserType getAuthor() { return author; }
+    public void setAuthor(UserType author) { this.author = author; }
 «IF subject !== null»
     public «subject» getSubject() { return subject; }
     public void setSubject(«subject» subject) { this.subject = subject; }
@@ -602,19 +610,17 @@ public interface Generated«entity»Repository extends JpaRepository<«entity»,
 package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 import «naming.basePackage(model)».domain.«entity»;
 
-@Entity
-@Table(name = "«entity.toLowerCase»_media")
-public class «entity»MediaReference {
+@MappedSuperclass
+public abstract class Generated«entity»MediaReference {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -640,11 +646,25 @@ public class «entity»MediaReference {
 }
 '''
 
+	def String mediaReferenceSubclass(RefModel model, String entity) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.Generated«entity»MediaReference;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "«entity.toLowerCase»_media")
+public class «entity»MediaReference extends Generated«entity»MediaReference {
+}
+'''
+
 	def String mediaReferenceRepo(RefModel model, String entity) '''
 package «naming.basePackage(model)».repository.generated;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import «naming.basePackage(model)».domain.generated.«entity»MediaReference;
+import «naming.basePackage(model)».domain.«entity»MediaReference;
 
 public interface «entity»MediaReferenceRepository extends JpaRepository<«entity»MediaReference, Long> {
 }
@@ -876,41 +896,41 @@ package «naming.basePackage(model)».service.generated;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».domain.UserType;
 import «naming.basePackage(model)».domain.enums.Role;
-import «naming.basePackage(model)».dto.AuthResponse;
-import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».dto.AuthenticationResult;
+import «naming.basePackage(model)».repository.UserTypeRepository;
 import «naming.basePackage(model)».security.JwtService;
 
 @Service
 public class GeneratedAuthenticationService {
-    private final «naming.scenarioPascal(model)»UserRepository userRepository;
+    private final UserTypeRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public GeneratedAuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository,
+    public GeneratedAuthenticationService(UserTypeRepository userRepository,
                                           PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
 
-    public «naming.scenarioPascal(model)»User register(String username, String password, Role role) {
-        «naming.scenarioPascal(model)»User user = new «naming.scenarioPascal(model)»User();
+    public UserType register(String username, String password, Role role) {
+        UserType user = new UserType();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
         return userRepository.save(user);
     }
 
-    public AuthResponse login(String username, String password) {
-        «naming.scenarioPascal(model)»User user = userRepository.findByUsername(username)
+    public AuthenticationResult login(String username, String password) {
+        UserType user = userRepository.findByUsername(username)
             .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");
         }
         String token = jwtService.generateToken(user.getUsername(), user.getRole().name());
-        return new AuthResponse(token, user.getUsername(), user.getRole().name());
+        return new AuthenticationResult(token, user.getUsername(), user.getRole().name());
     }
 }
 '''
@@ -920,13 +940,13 @@ package «naming.basePackage(model)».service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».repository.UserTypeRepository;
 import «naming.basePackage(model)».security.JwtService;
 import «naming.basePackage(model)».service.generated.GeneratedAuthenticationService;
 
 @Service
 public class AuthenticationService extends GeneratedAuthenticationService {
-    public AuthenticationService(«naming.scenarioPascal(model)»UserRepository userRepository,
+    public AuthenticationService(UserTypeRepository userRepository,
                                  PasswordEncoder passwordEncoder, JwtService jwtService) {
         super(userRepository, passwordEncoder, jwtService);
     }
@@ -940,9 +960,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
+import «naming.basePackage(model)».domain.UserType;
 import «naming.basePackage(model)».domain.enums.Role;
-import «naming.basePackage(model)».dto.AuthResponse;
+import «naming.basePackage(model)».dto.AuthenticationResult;
 import «naming.basePackage(model)».dto.LoginRequest;
 import «naming.basePackage(model)».dto.RegisterRequest;
 import «naming.basePackage(model)».service.AuthenticationService;
@@ -955,14 +975,14 @@ public abstract class GeneratedAuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<«naming.scenarioPascal(model)»User> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<UserType> register(@RequestBody RegisterRequest request) {
         Role role = Role.valueOf(request.role());
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(authenticationService.register(request.username(), request.password(), role));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthenticationResult> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authenticationService.login(request.username(), request.password()));
     }
 }
@@ -1099,20 +1119,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import «naming.basePackage(model)».domain.«naming.scenarioPascal(model)»User;
-import «naming.basePackage(model)».repository.«naming.scenarioPascal(model)»UserRepository;
+import «naming.basePackage(model)».domain.UserType;
+import «naming.basePackage(model)».repository.UserTypeRepository;
 
 @Service
-public class AppUserDetailsService implements UserDetailsService {
-    private final «naming.scenarioPascal(model)»UserRepository userRepository;
+public class UserTypeDetailsService implements UserDetailsService {
+    private final UserTypeRepository userRepository;
 
-    public AppUserDetailsService(«naming.scenarioPascal(model)»UserRepository userRepository) {
+    public UserTypeDetailsService(UserTypeRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        «naming.scenarioPascal(model)»User user = userRepository.findByUsername(username)
+        UserType user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
         return User.withUsername(user.getUsername())
             .password(user.getPassword())
@@ -1193,7 +1213,7 @@ public record LoginRequest(String username, String password) {
 	def String authResponseDto(RefModel model) '''
 package «naming.basePackage(model)».dto;
 
-public record AuthResponse(String token, String username, String role) {
+public record AuthenticationResult(String token, String username, String role) {
 }
 '''
 
@@ -1214,6 +1234,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiError(ex.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiError(ex.getMessage()));
@@ -1323,24 +1348,23 @@ Manual: subclasses in domain/repository/service/web without "generated" in packa
 	}
 
 	def void writeGovernance(IFileSystemAccess2 fsa, String root, String path, RefModel model, String entityName, String table, String apiPath, java.util.List<String> fields) {
-		write(fsa, '''«root»/src/main/java/«path»/governance/domain/«entityName».java''', governanceEntity(model, entityName, table, fields))
-		write(fsa, '''«root»/src/main/java/«path»/governance/repository/«entityName»Repository.java''', governanceRepo(model, entityName))
-		write(fsa, '''«root»/src/main/java/«path»/governance/web/«entityName»Controller.java''', governanceController(model, entityName, apiPath))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/Generated«entityName».java''', governanceGeneratedEntity(model, entityName, fields))
+		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/«entityName».java''', governanceManualSubclass(model, entityName, table))
+		write(fsa, '''«root»/src/main/java/«path»/repository/«entityName»Repository.java''', governanceRepo(model, entityName))
+		write(fsa, '''«root»/src/main/java/«path»/web/«entityName»Controller.java''', governanceController(model, entityName, apiPath))
 	}
 
-	def String governanceEntity(RefModel model, String entityName, String table, java.util.List<String> fields) '''
-package «naming.basePackage(model)».governance.domain;
+	def String governanceGeneratedEntity(RefModel model, String entityName, java.util.List<String> fields) '''
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "«table»")
-public class «entityName» {
+@MappedSuperclass
+public abstract class Generated«entityName» {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1359,18 +1383,32 @@ public class «entityName» {
 }
 '''
 
+	def String governanceManualSubclass(RefModel model, String entityName, String table) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.Generated«entityName»;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "«table»")
+public class «entityName» extends Generated«entityName» {
+}
+'''
+
 	def String governanceRepo(RefModel model, String entityName) '''
-package «naming.basePackage(model)».governance.repository;
+package «naming.basePackage(model)».repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import «naming.basePackage(model)».governance.domain.«entityName»;
+import «naming.basePackage(model)».domain.«entityName»;
 
 public interface «entityName»Repository extends JpaRepository<«entityName», Long> {
 }
 '''
 
 	def String governanceController(RefModel model, String entityName, String apiPath) '''
-package «naming.basePackage(model)».governance.web;
+package «naming.basePackage(model)».web;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -1381,8 +1419,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import «naming.basePackage(model)».governance.domain.«entityName»;
-import «naming.basePackage(model)».governance.repository.«entityName»Repository;
+import «naming.basePackage(model)».domain.«entityName»;
+import «naming.basePackage(model)».repository.«entityName»Repository;
 
 @RestController
 @RequestMapping("«apiPath»")
@@ -1410,36 +1448,35 @@ public class «entityName»Controller {
 }
 '''
 
-	def String contextEntity(RefModel model, String entity, String kind) '''
-package «naming.basePackage(model)».governance.domain;
+	def String contextTypeEntity(RefModel model) '''
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import «naming.basePackage(model)».domain.ContextResource;
 
-@Entity
-@Table(name = "«entity.toLowerCase»s")
-public class «entity» {
+@MappedSuperclass
+public abstract class GeneratedContextType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
-    private String kind = "«kind»";
+    private String kind;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "«entity.toLowerCase»_id")
+    @JoinColumn(name = "context_type_id")
     private List<ContextResource> resources = new ArrayList<>();
 
     public Long getId() { return id; }
@@ -1453,19 +1490,31 @@ public class «entity» {
 }
 '''
 
+	def String contextTypeSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedContextType;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "context_types")
+public class ContextType extends GeneratedContextType {
+}
+'''
+
 	def String contextResourceEntity(RefModel model) '''
-package «naming.basePackage(model)».governance.domain;
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "context_resources")
-public class ContextResource {
+@MappedSuperclass
+public abstract class GeneratedContextResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1480,35 +1529,53 @@ public class ContextResource {
 }
 '''
 
+	def String contextResourceSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedContextResource;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "context_resources")
+public class ContextResource extends GeneratedContextResource {
+}
+'''
+
 	// ----- Fase E.3: Automation (rule -> conditions -> values, rule -> actions) -----
 
 	def void generateAutomation(RefModel model, IFileSystemAccess2 fsa, String root, String path) {
-		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationRule.java''', automationRuleEntity(model))
-		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationCondition.java''', automationConditionEntity(model))
-		write(fsa, '''«root»/src/main/java/«path»/governance/domain/ConditionValue.java''', conditionValueEntity(model))
-		write(fsa, '''«root»/src/main/java/«path»/governance/domain/AutomationAction.java''', automationActionEntity(model))
-		write(fsa, '''«root»/src/main/java/«path»/governance/repository/AutomationRuleRepository.java''', governanceRepo(model, "AutomationRule"))
-		write(fsa, '''«root»/src/main/java/«path»/governance/web/AutomationRuleController.java''', governanceController(model, "AutomationRule", "/api/policies/automation-rules"))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedAutomationRule.java''', automationRuleEntity(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/AutomationRule.java''', automationRuleSubclass(model))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedAutomationCondition.java''', automationConditionEntity(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/AutomationCondition.java''', automationConditionSubclass(model))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedConditionValue.java''', conditionValueEntity(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/ConditionValue.java''', conditionValueSubclass(model))
+		write(fsa, '''«root»/src/main/java/«path»/domain/generated/GeneratedAutomationAction.java''', automationActionEntity(model))
+		writeManualOnce(fsa, '''«root»/src/main/java/«path»/domain/AutomationAction.java''', automationActionSubclass(model))
+		write(fsa, '''«root»/src/main/java/«path»/repository/AutomationRuleRepository.java''', governanceRepo(model, "AutomationRule"))
+		write(fsa, '''«root»/src/main/java/«path»/web/AutomationRuleController.java''', governanceController(model, "AutomationRule", "/api/policies/automation-rules"))
 	}
 
 	def String automationRuleEntity(RefModel model) '''
-package «naming.basePackage(model)».governance.domain;
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import «naming.basePackage(model)».domain.AutomationAction;
+import «naming.basePackage(model)».domain.AutomationCondition;
 
-@Entity
-@Table(name = "automation_rules")
-public class AutomationRule {
+@MappedSuperclass
+public abstract class GeneratedAutomationRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1555,24 +1622,37 @@ public class AutomationRule {
 }
 '''
 
+	def String automationRuleSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedAutomationRule;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "automation_rules")
+public class AutomationRule extends GeneratedAutomationRule {
+}
+'''
+
 	def String automationConditionEntity(RefModel model) '''
-package «naming.basePackage(model)».governance.domain;
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import «naming.basePackage(model)».domain.ConditionValue;
 
-@Entity
-@Table(name = "automation_conditions")
-public class AutomationCondition {
+@MappedSuperclass
+public abstract class GeneratedAutomationCondition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1601,19 +1681,31 @@ public class AutomationCondition {
 }
 '''
 
+	def String automationConditionSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedAutomationCondition;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "automation_conditions")
+public class AutomationCondition extends GeneratedAutomationCondition {
+}
+'''
+
 	def String conditionValueEntity(RefModel model) '''
-package «naming.basePackage(model)».governance.domain;
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "condition_values")
-public class ConditionValue {
+@MappedSuperclass
+public abstract class GeneratedConditionValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1628,19 +1720,31 @@ public class ConditionValue {
 }
 '''
 
+	def String conditionValueSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedConditionValue;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "condition_values")
+public class ConditionValue extends GeneratedConditionValue {
+}
+'''
+
 	def String automationActionEntity(RefModel model) '''
-package «naming.basePackage(model)».governance.domain;
+package «naming.basePackage(model)».domain.generated;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "automation_actions")
-public class AutomationAction {
+@MappedSuperclass
+public abstract class GeneratedAutomationAction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -1663,6 +1767,20 @@ public class AutomationAction {
 }
 '''
 
+	def String automationActionSubclass(RefModel model) '''
+package «naming.basePackage(model)».domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import «naming.basePackage(model)».domain.generated.GeneratedAutomationAction;
+
+/** Manual extension point — add bespoke behaviour here. */
+@Entity
+@Table(name = "automation_actions")
+public class AutomationAction extends GeneratedAutomationAction {
+}
+'''
+
 	// ----- Fase E.5: Behaviour engines (moderation + automation) -----
 
 	def void generateBehaviour(RefModel model, IFileSystemAccess2 fsa, String root, String pkg) {
@@ -1671,13 +1789,13 @@ public class AutomationAction {
 			write(fsa, '''«root»/src/main/java/«path»/dto/ModerationSimulationResult.java''', moderationSimulationDto(model))
 			write(fsa, '''«root»/src/main/java/«path»/service/generated/GeneratedModerationService.java''', generatedModerationService(model))
 			writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/ModerationService.java''', moderationServiceSubclass(model))
-			write(fsa, '''«root»/src/main/java/«path»/governance/web/ModerationController.java''', moderationController(model))
+			write(fsa, '''«root»/src/main/java/«path»/web/ModerationController.java''', moderationController(model))
 		}
 		if (!model.automationRules.empty) {
 			write(fsa, '''«root»/src/main/java/«path»/dto/AutomationActionResult.java''', automationActionResultDto(model))
 			write(fsa, '''«root»/src/main/java/«path»/service/generated/GeneratedAutomationEngineService.java''', generatedAutomationEngineService(model))
 			writeManualOnce(fsa, '''«root»/src/main/java/«path»/service/AutomationEngineService.java''', automationEngineServiceSubclass(model))
-			write(fsa, '''«root»/src/main/java/«path»/governance/web/AutomationController.java''', automationEngineController(model))
+			write(fsa, '''«root»/src/main/java/«path»/web/AutomationController.java''', automationEngineController(model))
 		}
 	}
 
@@ -1696,8 +1814,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import «naming.basePackage(model)».dto.ModerationSimulationResult;
-import «naming.basePackage(model)».governance.domain.ModerationPolicy;
-import «naming.basePackage(model)».governance.repository.ModerationPolicyRepository;
+import «naming.basePackage(model)».domain.ModerationPolicy;
+import «naming.basePackage(model)».repository.ModerationPolicyRepository;
 
 @Service
 public class GeneratedModerationService {
@@ -1738,7 +1856,7 @@ public class GeneratedModerationService {
 package «naming.basePackage(model)».service;
 
 import org.springframework.stereotype.Service;
-import «naming.basePackage(model)».governance.repository.ModerationPolicyRepository;
+import «naming.basePackage(model)».repository.ModerationPolicyRepository;
 import «naming.basePackage(model)».service.generated.GeneratedModerationService;
 
 @Service
@@ -1750,7 +1868,7 @@ public class ModerationService extends GeneratedModerationService {
 '''
 
 	def String moderationController(RefModel model) '''
-package «naming.basePackage(model)».governance.web;
+package «naming.basePackage(model)».web;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -1793,11 +1911,11 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import «naming.basePackage(model)».dto.AutomationActionResult;
-import «naming.basePackage(model)».governance.domain.AutomationAction;
-import «naming.basePackage(model)».governance.domain.AutomationCondition;
-import «naming.basePackage(model)».governance.domain.AutomationRule;
-import «naming.basePackage(model)».governance.domain.ConditionValue;
-import «naming.basePackage(model)».governance.repository.AutomationRuleRepository;
+import «naming.basePackage(model)».domain.AutomationAction;
+import «naming.basePackage(model)».domain.AutomationCondition;
+import «naming.basePackage(model)».domain.AutomationRule;
+import «naming.basePackage(model)».domain.ConditionValue;
+import «naming.basePackage(model)».repository.AutomationRuleRepository;
 
 @Service
 public class GeneratedAutomationEngineService {
@@ -1877,7 +1995,7 @@ public class GeneratedAutomationEngineService {
 package «naming.basePackage(model)».service;
 
 import org.springframework.stereotype.Service;
-import «naming.basePackage(model)».governance.repository.AutomationRuleRepository;
+import «naming.basePackage(model)».repository.AutomationRuleRepository;
 import «naming.basePackage(model)».service.generated.GeneratedAutomationEngineService;
 
 @Service
@@ -1889,7 +2007,7 @@ public class AutomationEngineService extends GeneratedAutomationEngineService {
 '''
 
 	def String automationEngineController(RefModel model) '''
-package «naming.basePackage(model)».governance.web;
+package «naming.basePackage(model)».web;
 
 import java.util.List;
 import java.util.Map;
@@ -1916,6 +2034,171 @@ public class AutomationController {
             @RequestBody(required = false) Map<String, String> content) {
         return automationEngineService.evaluate(trigger, content);
     }
+}
+'''
+
+	// ----- Generic infrastructure aligned with the manual backend -----
+
+	def boolean hasAnyGovernance(RefModel model) {
+		!model.validationRules.empty || !model.authorizationRules.empty || !model.moderationPolicies.empty
+			|| !model.verificationPolicies.empty || !model.sortingPolicies.empty || !model.automationRules.empty
+	}
+
+	def String resourceNotFoundException(RefModel model) '''
+package «naming.basePackage(model)».web.error;
+
+public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+}
+'''
+
+	def String generatedContextService(RefModel model) '''
+package «naming.basePackage(model)».service.generated;
+
+import java.util.List;
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».domain.ContextType;
+import «naming.basePackage(model)».repository.ContextTypeRepository;
+import «naming.basePackage(model)».web.error.ResourceNotFoundException;
+
+@Service
+public class GeneratedContextService {
+    private final ContextTypeRepository contextTypeRepository;
+
+    public GeneratedContextService(ContextTypeRepository contextTypeRepository) {
+        this.contextTypeRepository = contextTypeRepository;
+    }
+
+    public List<ContextType> findAll() {
+        return contextTypeRepository.findAll();
+    }
+
+    public ContextType findById(Long id) {
+        return contextTypeRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("ContextType not found: " + id));
+    }
+
+    public ContextType create(ContextType context) {
+        return contextTypeRepository.save(context);
+    }
+}
+'''
+
+	def String contextServiceSubclass(RefModel model) '''
+package «naming.basePackage(model)».service;
+
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».repository.ContextTypeRepository;
+import «naming.basePackage(model)».service.generated.GeneratedContextService;
+
+@Service
+public class ContextService extends GeneratedContextService {
+    public ContextService(ContextTypeRepository contextTypeRepository) {
+        super(contextTypeRepository);
+    }
+}
+'''
+
+	def String generatedPolicyService(RefModel model) '''
+package «naming.basePackage(model)».service.generated;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import «naming.basePackage(model)».web.error.ResourceNotFoundException;
+«IF !model.validationRules.empty»
+import «naming.basePackage(model)».domain.ValidationRule;
+import «naming.basePackage(model)».repository.ValidationRuleRepository;
+«ENDIF»
+«IF !model.authorizationRules.empty»
+import «naming.basePackage(model)».domain.AuthorizationRule;
+import «naming.basePackage(model)».repository.AuthorizationRuleRepository;
+«ENDIF»
+«IF !model.moderationPolicies.empty»
+import «naming.basePackage(model)».domain.ModerationPolicy;
+import «naming.basePackage(model)».repository.ModerationPolicyRepository;
+«ENDIF»
+«IF !model.verificationPolicies.empty»
+import «naming.basePackage(model)».domain.VerificationPolicy;
+import «naming.basePackage(model)».repository.VerificationPolicyRepository;
+«ENDIF»
+«IF !model.sortingPolicies.empty»
+import «naming.basePackage(model)».domain.SortingPolicy;
+import «naming.basePackage(model)».repository.SortingPolicyRepository;
+«ENDIF»
+«IF !model.automationRules.empty»
+import «naming.basePackage(model)».domain.AutomationRule;
+import «naming.basePackage(model)».repository.AutomationRuleRepository;
+«ENDIF»
+
+/** Centralized CRUD for all governance policies (mirrors the manual GeneratedPolicyService). */
+public class GeneratedPolicyService {
+«IF !model.validationRules.empty»
+    @Autowired private ValidationRuleRepository validationRuleRepository;
+«ENDIF»
+«IF !model.authorizationRules.empty»
+    @Autowired private AuthorizationRuleRepository authorizationRuleRepository;
+«ENDIF»
+«IF !model.moderationPolicies.empty»
+    @Autowired private ModerationPolicyRepository moderationPolicyRepository;
+«ENDIF»
+«IF !model.verificationPolicies.empty»
+    @Autowired private VerificationPolicyRepository verificationPolicyRepository;
+«ENDIF»
+«IF !model.sortingPolicies.empty»
+    @Autowired private SortingPolicyRepository sortingPolicyRepository;
+«ENDIF»
+«IF !model.automationRules.empty»
+    @Autowired private AutomationRuleRepository automationRuleRepository;
+«ENDIF»
+«IF !model.validationRules.empty»
+
+    public List<ValidationRule> listValidationRules() { return validationRuleRepository.findAll(); }
+    public ValidationRule getValidationRule(Long id) { return validationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ValidationRule not found: " + id)); }
+    public ValidationRule createValidationRule(ValidationRule request) { return validationRuleRepository.save(request); }
+«ENDIF»
+«IF !model.authorizationRules.empty»
+
+    public List<AuthorizationRule> listAuthorizationRules() { return authorizationRuleRepository.findAll(); }
+    public AuthorizationRule getAuthorizationRule(Long id) { return authorizationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("AuthorizationRule not found: " + id)); }
+    public AuthorizationRule createAuthorizationRule(AuthorizationRule request) { return authorizationRuleRepository.save(request); }
+«ENDIF»
+«IF !model.moderationPolicies.empty»
+
+    public List<ModerationPolicy> listModerationPolicies() { return moderationPolicyRepository.findAll(); }
+    public ModerationPolicy getModerationPolicy(Long id) { return moderationPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ModerationPolicy not found: " + id)); }
+    public ModerationPolicy createModerationPolicy(ModerationPolicy request) { return moderationPolicyRepository.save(request); }
+«ENDIF»
+«IF !model.verificationPolicies.empty»
+
+    public List<VerificationPolicy> listVerificationPolicies() { return verificationPolicyRepository.findAll(); }
+    public VerificationPolicy getVerificationPolicy(Long id) { return verificationPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("VerificationPolicy not found: " + id)); }
+    public VerificationPolicy createVerificationPolicy(VerificationPolicy request) { return verificationPolicyRepository.save(request); }
+«ENDIF»
+«IF !model.sortingPolicies.empty»
+
+    public List<SortingPolicy> listSortingPolicies() { return sortingPolicyRepository.findAll(); }
+    public SortingPolicy getSortingPolicy(Long id) { return sortingPolicyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("SortingPolicy not found: " + id)); }
+    public SortingPolicy createSortingPolicy(SortingPolicy request) { return sortingPolicyRepository.save(request); }
+«ENDIF»
+«IF !model.automationRules.empty»
+
+    public List<AutomationRule> listAutomationRules() { return automationRuleRepository.findAll(); }
+    public AutomationRule getAutomationRule(Long id) { return automationRuleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("AutomationRule not found: " + id)); }
+    public AutomationRule createAutomationRule(AutomationRule request) { return automationRuleRepository.save(request); }
+«ENDIF»
+}
+'''
+
+	def String policyServiceSubclass(RefModel model) '''
+package «naming.basePackage(model)».service;
+
+import org.springframework.stereotype.Service;
+import «naming.basePackage(model)».service.generated.GeneratedPolicyService;
+
+@Service
+public class PolicyService extends GeneratedPolicyService {
 }
 '''
 }

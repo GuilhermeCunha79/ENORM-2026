@@ -72,7 +72,7 @@ public abstract class GeneratedModerationService {
     if (matchedKeywords == null || matchedKeywords.isEmpty()) {
       return "No generated moderation keywords matched.";
     }
-    GeneratedModerationModel.ActionSpec action = primaryAction(rule);
+    pt.isep.enorm.ref.service.generated.GeneratedModerationModel.ActionSpec action = primaryAction(rule);
     String actionText = (action == null ? "" : " Action " + action.getName() + " uses " + action.getKind() + ".");
     String ruleName = (rule == null ? "NoAutomationRule" : rule.getName());
     return ruleName + " matched generated moderation keywords: " + String.join(", ", matchedKeywords) + "." + actionText;

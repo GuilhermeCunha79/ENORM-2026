@@ -19,7 +19,7 @@ class RefBackendNaming {
 	}
 
 	def String basePackage(RefModel model) {
-		'''pt.isep.enorm.ref.«scenarioSlug(model)»'''
+		'''pt.isep.enorm.ref'''
 	}
 
 	def String artifactId(RefModel model) {

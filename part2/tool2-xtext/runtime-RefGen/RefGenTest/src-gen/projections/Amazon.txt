@@ -17,16 +17,22 @@ RESOURCE TYPES:
   ATTRIBUTES:
   * orderId : TEXT required=true multi=false
   * total : NUMBER required=true multi=false
+- OrderItem supportsMedia=false superTypes=
+  ATTRIBUTES:
+  * quantity : NUMBER required=true multi=false
 
 CONTEXT TYPES:
-- AmazonCatalog kind=CATALOG contains=[Product, Order]
+- AmazonCatalog kind=CATALOG contains=[Product, Order, OrderItem]
 
 RESOURCE RELATIONS:
 - OrderContainsProduct source=Order target=Product srcCard="1" tgtCard="0..1" containment=false recursive=false
+- OrderHasItems source=Order target=OrderItem srcCard="1" tgtCard="0..*" containment=true recursive=false
+- OrderItemProduct source=OrderItem target=Product srcCard="*" tgtCard="1" containment=false recursive=false
 
 FEEDBACK TYPES:
-- ProductReviewType kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsText=true allowsMedia=false polarity=STARS
-- ThreadCommentType kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsText=true allowsMedia=false polarity=NONE
+- ProductReviewType kind=REVIEW scope=RESOURCE_ONLY hasRating=true recursive=false allowsText=true allowsMedia=true polarity=STARS
+- ThreadCommentType kind=COMMENT scope=RESOURCE_OR_FEEDBACK hasRating=false recursive=true allowsText=true allowsMedia=true polarity=NONE
+- HelpfulVoteType kind=VOTE scope=FEEDBACK_ONLY hasRating=false recursive=false allowsText=false allowsMedia=false polarity=UP_DOWN
 
 FEEDBACK DEFINITIONS:
 - ProductReview type=ProductReviewType author=Buyer subjectResource=Product subjectFeedback=null
@@ -38,6 +44,9 @@ FEEDBACK DEFINITIONS:
   policy.status=ENABLED
 - ReplyComment type=ThreadCommentType author=Seller subjectResource=null subjectFeedback=TopThreadComment
   requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=false
+  policy.status=ENABLED
+- HelpfulVote type=HelpfulVoteType author=User subjectResource=null subjectFeedback=ProductReview
+  requiresVerifiedContext=false verificationRequirement=NONE uniquePerAuthorTarget=true
   policy.status=ENABLED
 
 AUTHORIZATION RULES:

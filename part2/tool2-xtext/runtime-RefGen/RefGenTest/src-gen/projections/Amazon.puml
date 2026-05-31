@@ -85,6 +85,19 @@ class Attribute_Order_total {
 }
 ResourceType_Order *-- Attribute_Order_total
 
+class ResourceType_OrderItem {
+  name = OrderItem
+  supportsMedia = false
+}
+RefModel --> ResourceType_OrderItem
+class Attribute_OrderItem_quantity {
+  name = quantity
+  type = NUMBER
+  required = true
+  multiValued = false
+}
+ResourceType_OrderItem *-- Attribute_OrderItem_quantity
+
 class ContextType_AmazonCatalog {
   name = AmazonCatalog
   kind = CATALOG
@@ -92,7 +105,10 @@ class ContextType_AmazonCatalog {
 RefModel --> ContextType_AmazonCatalog
 ContextType_AmazonCatalog --> ResourceType_Product : contains
 ContextType_AmazonCatalog --> ResourceType_Order : contains
+ContextType_AmazonCatalog --> ResourceType_OrderItem : contains
 ResourceType_Order --> ResourceType_Product : OrderContainsProduct ["1".."0..1"] recursive=false
+ResourceType_Order --> ResourceType_OrderItem : OrderHasItems ["1".."0..*"] recursive=false
+ResourceType_OrderItem --> ResourceType_Product : OrderItemProduct ["*".."1"] recursive=false
 
 class FeedbackType_ProductReviewType {
   name = ProductReviewType
@@ -101,7 +117,7 @@ class FeedbackType_ProductReviewType {
   hasRating = true
   recursive = false
   allowsText = true
-  allowsMedia = false
+  allowsMedia = true
   polarity = STARS
 }
 RefModel --> FeedbackType_ProductReviewType
@@ -113,10 +129,22 @@ class FeedbackType_ThreadCommentType {
   hasRating = false
   recursive = true
   allowsText = true
-  allowsMedia = false
+  allowsMedia = true
   polarity = NONE
 }
 RefModel --> FeedbackType_ThreadCommentType
+
+class FeedbackType_HelpfulVoteType {
+  name = HelpfulVoteType
+  kind = VOTE
+  subjectScope = FEEDBACK_ONLY
+  hasRating = false
+  recursive = false
+  allowsText = false
+  allowsMedia = false
+  polarity = UP_DOWN
+}
+RefModel --> FeedbackType_HelpfulVoteType
 
 class FeedbackDefinition_ProductReview {
   name = ProductReview
@@ -168,6 +196,21 @@ class FeedbackPolicy_ReplyComment {
   status = ENABLED
 }
 FeedbackDefinition_ReplyComment *-- FeedbackPolicy_ReplyComment
+
+class FeedbackDefinition_HelpfulVote {
+  name = HelpfulVote
+  requiresVerifiedContext = false
+  verificationRequirement = NONE
+  uniquePerAuthorTarget = true
+}
+RefModel --> FeedbackDefinition_HelpfulVote
+FeedbackDefinition_HelpfulVote --> FeedbackType_HelpfulVoteType : type
+FeedbackDefinition_HelpfulVote --> UserType_User : author
+FeedbackDefinition_HelpfulVote --> FeedbackDefinition_ProductReview : subjectFeedback
+class FeedbackPolicy_HelpfulVote {
+  status = ENABLED
+}
+FeedbackDefinition_HelpfulVote *-- FeedbackPolicy_HelpfulVote
 
 class ValidationRule_AmazonReviewValidation {
   name = AmazonReviewValidation

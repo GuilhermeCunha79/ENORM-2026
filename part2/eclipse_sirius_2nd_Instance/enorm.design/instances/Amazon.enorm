@@ -15,15 +15,26 @@
   <userTypes xmi:id="moderator" name="Moderator" kind="MODERATOR" superTypes="user"/>
 
   <!-- Resource types -->
+  <resourceTypes xmi:id="amazonUser" name="UserType" supportsMedia="false">
+    <attributes xmi:id="attr_amazonUser_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_amazonUser_username" name="username" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_amazonUser_password" name="password" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_amazonUser_role" name="role" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_amazonUser_verifiedBuyer" name="verifiedBuyer" type="BOOLEAN" required="true" multiValued="false"/>
+  </resourceTypes>
+
   <resourceTypes xmi:id="product" name="Product" supportsMedia="true">
     <attributes xmi:id="attr_product_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_product_name" name="name" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_product_description" name="description" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_product_price" name="price" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_product_createdAt" name="createdAt" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="order" name="Order" supportsMedia="false">
     <attributes xmi:id="attr_order_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_order_date" name="date" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_order_code" name="orderCode" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_order_date" name="orderDate" type="DATE" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="orderItem" name="OrderItem" supportsMedia="false">
@@ -32,49 +43,123 @@
 
   <resourceTypes xmi:id="productReview" name="ProductReview" supportsMedia="true">
     <attributes xmi:id="attr_productReview_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_productReview_rating" name="rating" type="NUMBER" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_productReview_text" name="text" type="TEXT" required="false" multiValued="false"/>
-    <attributes xmi:id="attr_productReview_creationDate" name="creationDate" type="DATE" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_productReview_verifiedPurchase" name="verifiedPurchase" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_comment" name="comment" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_grade" name="grade" type="NUMBER" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_verificationType" name="verificationType" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_verifiedBuyerAtSubmission" name="verifiedBuyerAtSubmission" type="BOOLEAN" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_productReview_submittedAt" name="submittedAt" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
-  <resourceTypes xmi:id="mediaAttachment" name="MediaAttachment" supportsMedia="true">
-    <attributes xmi:id="attr_mediaAttachment_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_mediaAttachment_type" name="type" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_mediaAttachment_url" name="url" type="URL" required="true" multiValued="false"/>
+  <resourceTypes xmi:id="reviewMediaReference" name="ReviewMediaReference" supportsMedia="true">
+    <attributes xmi:id="attr_reviewMediaReference_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewMediaReference_mediaType" name="mediaType" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_reviewMediaReference_url" name="url" type="URL" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="commentReview" name="CommentReview" supportsMedia="false">
+    <attributes xmi:id="attr_commentReview_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_commentReview_text" name="text" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_commentReview_createdAt" name="createdAt" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="commentMediaReference" name="CommentMediaReference" supportsMedia="true">
+    <attributes xmi:id="attr_commentMediaReference_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_commentMediaReference_mediaType" name="mediaType" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_commentMediaReference_url" name="url" type="URL" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="helpfulVote" name="HelpfulVote" supportsMedia="false">
     <attributes xmi:id="attr_helpfulVote_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_helpfulVote_value" name="value" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_helpfulVote_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_helpfulVote_createdAt" name="createdAt" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
-  <resourceTypes xmi:id="verificationProcess" name="VerificationProcess" supportsMedia="false">
-    <attributes xmi:id="attr_verification_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_verification_type" name="type" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_verification_status" name="status" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_verification_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  <resourceTypes xmi:id="authorizationRuleResource" name="AuthorizationRule" supportsMedia="false">
+    <attributes xmi:id="attr_authorizationRuleResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_authorizationRuleResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_authorizationRuleResource_allowedAction" name="allowedAction" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_authorizationRuleResource_actorRole" name="actorRole" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_authorizationRuleResource_resourceTarget" name="resourceTarget" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_authorizationRuleResource_feedbackTarget" name="feedbackTarget" type="TEXT" required="false" multiValued="false"/>
   </resourceTypes>
 
-  <resourceTypes xmi:id="reviewPolicyResource" name="ReviewPolicy" supportsMedia="false">
-    <attributes xmi:id="attr_reviewPolicy_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewPolicy_requiresVerifiedPurchase" name="requiresVerifiedPurchase" type="BOOLEAN" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewPolicy_verificationRequirement" name="verificationRequirement" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewPolicy_oneReviewPerOrderItem" name="oneReviewPerOrderItem" type="BOOLEAN" required="true" multiValued="false"/>
+  <resourceTypes xmi:id="automationRuleResource" name="AutomationRule" supportsMedia="false">
+    <attributes xmi:id="attr_automationRuleResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationRuleResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationRuleResource_trigger" name="trigger" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationRuleResource_contextResource" name="contextResource" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_automationRuleResource_onFeedback" name="onFeedback" type="TEXT" required="false" multiValued="false"/>
   </resourceTypes>
 
-  <resourceTypes xmi:id="reviewModerationCheck" name="ReviewModerationCheck" supportsMedia="false">
-    <attributes xmi:id="attr_reviewModeration_id" name="id" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewModeration_reason" name="reason" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewModeration_result" name="result" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_reviewModeration_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  <resourceTypes xmi:id="automationConditionResource" name="AutomationCondition" supportsMedia="false">
+    <attributes xmi:id="attr_automationConditionResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationConditionResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationConditionResource_attributeName" name="attributeName" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationConditionResource_operator" name="operator" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
-  <resourceTypes xmi:id="ratingPolicy" name="RatingPolicy" supportsMedia="false">
-    <attributes xmi:id="attr_ratingPolicy_minValue" name="minValue" type="NUMBER" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_ratingPolicy_maxValue" name="maxValue" type="NUMBER" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_ratingPolicy_step" name="step" type="NUMBER" required="true" multiValued="false"/>
+  <resourceTypes xmi:id="conditionValueResource" name="ConditionValue" supportsMedia="false">
+    <attributes xmi:id="attr_conditionValueResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_conditionValueResource_value" name="value" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="automationActionResource" name="AutomationAction" supportsMedia="false">
+    <attributes xmi:id="attr_automationActionResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationActionResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationActionResource_kind" name="kind" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_automationActionResource_message" name="message" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="contextTypeResource" name="ContextType" supportsMedia="false">
+    <attributes xmi:id="attr_contextTypeResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_contextTypeResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_contextTypeResource_kind" name="kind" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="contextResource" name="ContextResource" supportsMedia="false">
+    <attributes xmi:id="attr_contextResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_contextResource_resourceName" name="resourceName" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="validationRuleResource" name="ValidationRule" supportsMedia="false">
+    <attributes xmi:id="attr_validationRuleResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_kind" name="kind" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_severity" name="severity" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_expression" name="expression" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_implementationId" name="implementationId" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_appliesToResource" name="appliesToResource" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_appliesToFeedback" name="appliesToFeedback" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_validationRuleResource_appliesToRole" name="appliesToRole" type="TEXT" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="moderationPolicyResource" name="ModerationPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_moderationPolicyResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_mode" name="mode" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_trigger" name="trigger" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_decision" name="decision" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_monitorsResource" name="monitorsResource" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_monitorsFeedback" name="monitorsFeedback" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_moderationPolicyResource_executedByRole" name="executedByRole" type="TEXT" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="sortingPolicyResource" name="SortingPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_sortingPolicyResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sortingPolicyResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sortingPolicyResource_criterion" name="criterion" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sortingPolicyResource_direction" name="direction" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sortingPolicyResource_appliesToResource" name="appliesToResource" type="TEXT" required="false" multiValued="false"/>
+    <attributes xmi:id="attr_sortingPolicyResource_appliesToFeedback" name="appliesToFeedback" type="TEXT" required="false" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="verificationPolicyResource" name="VerificationPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_verificationPolicyResource_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verificationPolicyResource_name" name="name" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verificationPolicyResource_mode" name="mode" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verificationPolicyResource_appliesWhen" name="appliesWhen" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_verificationPolicyResource_verifiesFeedback" name="verifiesFeedback" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
   <!-- Resource relations -->
@@ -116,37 +201,7 @@
       containment="true"
       recursive="false"
       source="productReview"
-      target="mediaAttachment"/>
-
-  <resourceRelations
-      xmi:id="rel_product_review_policy"
-      name="productUsesReviewPolicy"
-      sourceCardinality="1"
-      targetCardinality="1"
-      containment="true"
-      recursive="false"
-      source="product"
-      target="reviewPolicyResource"/>
-
-  <resourceRelations
-      xmi:id="rel_review_verification"
-      name="reviewHasVerification"
-      sourceCardinality="0..1"
-      targetCardinality="1"
-      containment="true"
-      recursive="false"
-      source="productReview"
-      target="verificationProcess"/>
-
-  <resourceRelations
-      xmi:id="rel_review_moderation_checks"
-      name="reviewHasModerationChecks"
-      sourceCardinality="1"
-      targetCardinality="*"
-      containment="true"
-      recursive="false"
-      source="productReview"
-      target="reviewModerationCheck"/>
+      target="reviewMediaReference"/>
 
   <resourceRelations
       xmi:id="rel_review_votes"
@@ -159,26 +214,6 @@
       target="helpfulVote"/>
 
   <resourceRelations
-      xmi:id="rel_review_uses_rating_policy"
-      name="reviewUsesRatingPolicy"
-      sourceCardinality="*"
-      targetCardinality="1"
-      containment="false"
-      recursive="false"
-      source="productReview"
-      target="ratingPolicy"/>
-
-  <resourceRelations
-      xmi:id="rel_review_constrained_by_policy"
-      name="reviewConstrainedByPolicy"
-      sourceCardinality="*"
-      targetCardinality="1"
-      containment="false"
-      recursive="false"
-      source="productReview"
-      target="reviewPolicyResource"/>
-
-  <resourceRelations
       xmi:id="rel_vote_on_review"
       name="helpfulVoteOnReview"
       sourceCardinality="*"
@@ -188,18 +223,58 @@
       source="helpfulVote"
       target="productReview"/>
 
+  <resourceRelations xmi:id="rel_order_buyer" name="orderBuyer"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="order" target="amazonUser"/>
+
+  <resourceRelations xmi:id="rel_review_author" name="productReviewAuthor"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="productReview" target="amazonUser"/>
+
+  <resourceRelations xmi:id="rel_comment_review_product" name="commentReviewProduct"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="commentReview" target="product"/>
+
+  <resourceRelations xmi:id="rel_comment_review_media" name="commentReviewHasMediaReferences"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="commentReview" target="commentMediaReference"/>
+
+  <resourceRelations xmi:id="rel_helpful_vote_voter" name="helpfulVoteVoter"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="helpfulVote" target="amazonUser"/>
+
+  <resourceRelations xmi:id="rel_authorization_context_type" name="authorizationRuleContext"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="authorizationRuleResource" target="contextTypeResource"/>
+
+  <resourceRelations xmi:id="rel_context_type_resources" name="contextTypeContainsResources"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="contextTypeResource" target="contextResource"/>
+
+  <resourceRelations xmi:id="rel_automation_rule_conditions" name="automationRuleHasConditions"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="automationRuleResource" target="automationConditionResource"/>
+
+  <resourceRelations xmi:id="rel_automation_rule_actions" name="automationRuleHasActions"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="automationRuleResource" target="automationActionResource"/>
+
+  <resourceRelations xmi:id="rel_automation_condition_values" name="automationConditionHasValues"
+      sourceCardinality="1" targetCardinality="*" containment="true" recursive="false"
+      source="automationConditionResource" target="conditionValueResource"/>
+
   <!-- Contexts -->
   <contextTypes
       xmi:id="amazonCatalog"
       name="AmazonCatalog"
       kind="CATALOG"
-      contains="product order orderItem productReview mediaAttachment helpfulVote reviewPolicyResource ratingPolicy"/>
+      contains="amazonUser product order orderItem productReview reviewMediaReference commentReview commentMediaReference helpfulVote authorizationRuleResource automationRuleResource automationConditionResource conditionValueResource automationActionResource contextTypeResource contextResource validationRuleResource moderationPolicyResource sortingPolicyResource verificationPolicyResource"/>
 
   <contextTypes
       xmi:id="moderationBackoffice"
       name="ModerationBackoffice"
       kind="GLOBAL"
-      contains="productReview reviewModerationCheck verificationProcess"/>
+      contains="productReview moderationPolicyResource automationRuleResource validationRuleResource verificationPolicyResource"/>
 
   <!-- Feedback types -->
   <feedbackTypes
@@ -293,7 +368,7 @@
       kind="AUTOMATIC"
       severity="WARNING"
       expression="Validate review text by normalizing content, checking risky keywords, and deciding whether to flag or approve the review body."
-      implementationId="impl: let reviewText = lower(trim(attr_productReview_text)); let isRisky = containsAny(reviewText, ['spam','abuse','off-topic','incentivized']); if isRisky then create ReviewModerationCheck(reason='keyword-match', result='FLAGGED', timestamp=now()); set review.status='UNDER_REVIEW'; notify moderator with review id, buyer id, and matched terms; return WARNING; else set review.status='APPROVED'; return OK; end"
+      implementationId="impl: let reviewText = lower(trim(attr_productReview_comment)); let isRisky = containsAny(reviewText, ['spam','abuse','off-topic','incentivized']); if isRisky then set review.status='PENDING'; return WARNING; else set review.status='APPROVED'; return OK; end"
       appliesToFeedback="productReviewDefinition"
       invokedBy="auto_review_content_check"/>
 
@@ -322,7 +397,7 @@
         xmi:id="cond_review_text_keywords"
         name="ReviewTextKeywordScreening"
         operator="CONTAINS_KEYWORDS"
-        attribute="attr_productReview_text">
+        attribute="attr_productReview_comment">
       <children value="spam"/>
       <children value="abuse"/>
       <children value="off-topic"/>
@@ -332,7 +407,7 @@
         xmi:id="act_flag_review"
         name="FlagSuspiciousReview"
         kind="FLAG_CONTENT"
-        message="impl: set review.status='UNDER_REVIEW'; create ReviewModerationCheck(reason='keyword-match', result='FLAGGED'); attach moderation timestamp; persist review for manual moderation queue."/>
+        message="impl: set review.status='PENDING'; persist review for manual moderation queue."/>
     <actions
         xmi:id="act_notify_moderator"
         name="NotifyModerator"

@@ -22,20 +22,28 @@ version "1.0.0"
         required true multiValued false Attribute orderId type TEXT,
         required true multiValued false Attribute total type NUMBER
       }
+    },
+    ResourceType OrderItem supportsMedia false {
+      attributes {
+        required true multiValued false Attribute quantity type NUMBER
+      }
     }
   }
 
   contextTypes {
-    ContextType AmazonCatalog kind CATALOG contains ( Product, Order )
+    ContextType AmazonCatalog kind CATALOG contains ( Product, Order, OrderItem )
   }
 
   resourceRelations {
-    ResourceRelation OrderContainsProduct source Order target Product sourceCardinality "1" targetCardinality "0..1" containment false recursive false
+    ResourceRelation OrderContainsProduct source Order target Product sourceCardinality "1" targetCardinality "0..1" containment false recursive false,
+    ResourceRelation OrderHasItems source Order target OrderItem sourceCardinality "1" targetCardinality "0..*" containment true recursive false,
+    ResourceRelation OrderItemProduct source OrderItem target Product sourceCardinality "*" targetCardinality "1" containment false recursive false
   }
 
   feedbackTypes {
-    FeedbackType ProductReviewType kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsText true allowsMedia false polarity STARS,
-    FeedbackType ThreadCommentType kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsText true allowsMedia false polarity NONE
+    FeedbackType ProductReviewType kind REVIEW subjectScope RESOURCE_ONLY hasRating true recursive false allowsText true allowsMedia true polarity STARS,
+    FeedbackType ThreadCommentType kind COMMENT subjectScope RESOURCE_OR_FEEDBACK hasRating false recursive true allowsText true allowsMedia true polarity NONE,
+    FeedbackType HelpfulVoteType kind VOTE subjectScope FEEDBACK_ONLY hasRating false recursive false allowsText false allowsMedia false polarity UP_DOWN
   }
 
   feedbackDefinitions {
@@ -63,6 +71,14 @@ version "1.0.0"
       uniquePerAuthorTarget false
       author Seller
       subjectFeedback TopThreadComment
+      policy FeedbackPolicy status ENABLED,
+
+    FeedbackDefinition HelpfulVote
+      type HelpfulVoteType
+      requiresVerifiedContext false
+      uniquePerAuthorTarget true
+      author User
+      subjectFeedback ProductReview
       policy FeedbackPolicy status ENABLED
   }
 

@@ -328,3 +328,147 @@ cleanly into the team’s broader code-generation strategy.
 In that sense, the Sirius work is a core part of the DSL engineering effort described in the assignment: it turns the 
 abstract REF metamodel into something that a subject matter expert can inspect and discuss visually, while still preserving 
 the precision needed for validation, generation, extensibility, and future evolution.
+
+---
+
+## 13. Final activity checklist and implementation evidence
+
+This section completes the individual Tool 3 report against the activities explicitly requested in the Part 2 assignment.
+It records the concrete artifacts that were implemented in the Sirius/EMF/Acceleo workspace and explains how they satisfy
+the required individual work.
+
+### 13.1 Activity 1 - Implemented graphical notation in Sirius
+
+The Sirius notation is implemented in:
+
+- `part2/eclipse_sirius_2nd_Instance/enorm.design/description/enorm.odesign`
+- `part2/eclipse_sirius_2nd_Instance/enorm.design/instances/*.aird`
+- `part2/eclipse_sirius_2nd_Instance/enorm.design/instances/*.enorm`
+
+The implemented viewpoint is named `enorm` and contains a `RefModel Full Diagram` representation for the `enorm.RefModel`
+root class. The diagram maps the main REF concepts to graphical elements:
+
+| REF concept group | Sirius implementation evidence |
+|---|---|
+| Model root | `DiagramDescription` over `enorm.RefModel`, with title based on model name and version. |
+| Actors and contexts | `UserType` and `ContextType` node mappings. |
+| Resources and attributes | `ResourceType` container mapping with nested `Attribute` node mapping. |
+| Structural relations | Edge mappings for resource supertypes, relation source, relation target, and context containment. |
+| Feedback | `FeedbackType` node mapping and `FeedbackDefinition` container mapping with `FeedbackPolicy` and `RatingPolicy` children. |
+| Authorization and governance | Node mappings for `AuthorizationRule`, `ValidationRule`, `ModerationPolicy`, `VerificationPolicy`, and `SortingPolicy`. |
+| Automation behavior | `AutomationRule` container mapping with nested `Condition` and `Action` mappings, plus condition-attribute links. |
+
+The `.odesign` also includes semantic validation rules that support the strongly typed and valid-by-construction goals of
+the assignment. Examples include uniqueness checks, required target checks, feedback scope consistency, rating policy
+constraints, authorization target checks, moderation executor checks, automation trigger checks, sorting constraints, and
+basic evolution-rule validation.
+
+### 13.2 Activity 3 - Prototype relationship
+
+The team prototypes used to identify generated backend structure are the Spring Boot applications in `part2/amazon-backend`,
+`part2/reddit-backend`, and `part2/youtube-backend`, together with the generated equivalents under:
+
+- `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/amazon-backend`
+- `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/reddit-backend`
+- `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/scr-gen/youtube-backend`
+
+For Tool 3, the YouTube case is the most important graphical validation case because it exercises channels, videos,
+comments, likes, subscriptions, reports, validation, moderation, sorting, and automation. The Amazon and Reddit models
+were also maintained as Sirius `.enorm` instances to ensure that the graphical notation was not overfitted to one scenario.
+
+### 13.3 Activity 5 - Code generation implemented from Sirius/EMF models
+
+Although Sirius is the graphical notation tool, the submitted Tool 3 workspace also includes an Acceleo model-to-text
+generator that consumes the same EMF model instances edited by Sirius:
+
+- `part2/eclipse_sirius_2nd_Instance/org.eclipse.acceleo.module.sample/src/org/eclipse/acceleo/module/sample/common/generate.mtl`
+
+The generator creates complete Spring Boot REST backends. The most relevant template groups are:
+
+| Template area | Generated artifacts |
+|---|---|
+| Project infrastructure | `pom.xml`, `README.md`, boot application class, `application.properties`, H2 configuration. |
+| Domain | JPA entities, generated mapped superclasses, enums, value objects, scenario-specific domain overrides. |
+| Persistence | Spring Data repositories and generated repository bases. |
+| Services | CRUD services, moderation services, policy services, product evaluation service, generated/manual extension layers. |
+| Web/API | REST controllers, authentication endpoints, generated controllers, `ApiError`, and `ApiExceptionHandler`. |
+| Security | JWT service/filter stubs, security configuration, user details service. |
+| Tests | `AcceptanceTest`, context smoke tests, and test `application.properties`. |
+
+The generator was changed to minimize hard-coded app-specific lists where possible. It now derives most entity generation
+from the `.enorm` `resourceTypes`, uses `UserType` consistently as the shared generated user class, and keeps app-specific
+logic limited to behavior that genuinely differs among Amazon, Reddit, and YouTube.
+
+### 13.4 Activity 6 - Generated applications and test results
+
+The three scenario models are present as Sirius/EMF instances:
+
+| Model | Resource types | Feedback definitions | Authorization rules | Validation rules | Moderation policies | Automation rules | Verification policies | Sorting policies |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Amazon | 20 | 2 | 4 | 1 | 1 | 1 | 1 | 2 |
+| Reddit | 15 | 7 | 9 | 3 | 3 | 3 | 1 | 3 |
+| YouTube | 15 | 5 | 11 | 4 | 3 | 4 | 2 | 3 |
+
+The generated Spring Boot applications use an in-memory H2 database:
+
+```properties
+spring.datasource.url=jdbc:h2:mem:<scenario>;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+spring.jpa.hibernate.ddl-auto=update
+```
+
+This means data is persisted while the backend process is running, but it is lost when the app stops, which is appropriate
+for the MVP/demo setting described in the assignment.
+
+The generated applications were tested with Maven:
+
+| Generated backend | Verification command | Result |
+|---|---|---|
+| Amazon | `mvn test` | Passed |
+| Reddit | `mvn test` | Passed |
+| YouTube | `mvn test` | Passed |
+
+The generated acceptance tests validate that the REST API starts, authentication endpoints accept generated `UserType`
+payloads, generated collection endpoints are reachable, and missing resources are returned through the generated
+`ApiExceptionHandler` as JSON API errors.
+
+### 13.5 Issues found and corrections made
+
+The main issues found during testing were generation consistency issues rather than Sirius diagram failures:
+
+- Some generated Reddit/YouTube code still referred to `UserType` while the models previously named the concrete user
+  resource `RedditUser` or `YoutubeUser`. The models and generator were standardized to use `UserType`.
+- The Amazon `AutomationRuleController` initially emitted calls to child-linking methods that were not generated in the
+  domain classes. The invalid generated calls were removed from the template.
+- The first generated YouTube acceptance test expected `Youtube` while the model name is `YouTube`. The generated test
+  strategy was kept model-driven by using the model name from the `.enorm` input.
+
+These corrections reinforce the assignment requirement that the generated code should be valid and that models should be
+usable as stable inputs to the generator.
+
+### 13.6 Manual extension mechanism
+
+The generated Java code follows a Generation Gap style:
+
+- generated base artifacts are placed in `generated` packages or use `Generated*` class names;
+- handwritten extension classes sit outside those generated packages;
+- scenario-specific behavior is implemented in manual services/controllers where needed;
+- validation and moderation metadata in the model can be connected to Java implementation hooks through identifiers such
+  as `implementationId`.
+
+This satisfies the Part 2 requirement that generated code must allow manual adaptations in the base programming language.
+
+### 13.7 Model evolution demonstration proposal
+
+For Sirius, model evolution must coordinate three assets: the Ecore metamodel, the `.odesign` viewpoint, and existing
+`.enorm`/`.aird` scenario models. The recommended demonstration for evaluation is:
+
+1. Start from one existing scenario, for example `YouTube.enorm`.
+2. Add a small metamodel evolution, such as a new optional governance attribute or an additional validation severity.
+3. Update `enorm.ecore` and regenerate/update EMF code if needed.
+4. Update `enorm.odesign` mappings or labels only where the evolved concept should be visible.
+5. Run a migration script or EMF transformation to add default values to older `.enorm` models.
+6. Reopen the migrated model in Sirius and regenerate the backend with Acceleo.
+7. Run the generated Maven tests again as regression validation.
+
+This proposal gives a concrete migration path and uses the three scenario models as regression data, which directly
+addresses the assignment requirement to explore model evolution and migration.
