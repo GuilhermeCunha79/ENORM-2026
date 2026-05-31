@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import java.time.Instant;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @MappedSuperclass
 public abstract class GeneratedReport {
@@ -31,6 +33,7 @@ public abstract class GeneratedReport {
     private UserType submitter;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")

@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,9 +36,24 @@ class AcceptanceTest {
     }
 
     @Test
-    void generatedCollectionEndpointIsReachable() throws Exception {
+    void generatedResourceCanBeCreatedReadAndListed() throws Exception {
+        MvcResult created = mockMvc.perform(post("/api/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"acceptance-order\",\"source\":\"generated-acceptance-test\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.name").value("acceptance-order"))
+            .andReturn();
+
+        String id = created.getResponse().getContentAsString().replaceAll(".*\\\"id\\\":(\\d+).*", "$1");
+
+        mockMvc.perform(get("/api/orders/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(Integer.parseInt(id)));
+
         mockMvc.perform(get("/api/orders"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray());
     }
 
     @Test
@@ -45,5 +61,19 @@ class AcceptanceTest {
         mockMvc.perform(get("/api/orders/999999999"))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    void generatedPolicyEndpointIsReachable() throws Exception {
+        mockMvc.perform(get("/api/policies/automation-rules"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void generatedModerationEndpointIsReachable() throws Exception {
+        mockMvc.perform(post("/api/moderation/reviews/simulate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+            .andExpect(status().isOk());
     }
 }

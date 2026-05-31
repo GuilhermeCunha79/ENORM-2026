@@ -9,6 +9,9 @@
 [query public applicationClassName(m : RefModel) : String = baseName(m) + 'BackendApplication' /]
 [query public appUserClass(m : RefModel) : String = 'UserType' /]
 [query public acceptanceResourcePath(m : RefModel) : String = if baseName(m) = 'Amazon' then 'orders' else if baseName(m) = 'Reddit' then 'subreddits' else if baseName(m) = 'Youtube' then 'channels' else 'resources' endif endif endif /]
+[query public acceptanceResourceLabel(m : RefModel) : String = if baseName(m) = 'Amazon' then 'order' else if baseName(m) = 'Reddit' then 'subreddit' else if baseName(m) = 'Youtube' then 'channel' else 'resource' endif endif endif /]
+[query public acceptancePolicyPath(m : RefModel) : String = if baseName(m) = 'Amazon' then 'policies/automation-rules' else 'policies/validation-rules' endif /]
+[query public acceptanceModerationPath(m : RefModel) : String = if baseName(m) = 'Amazon' then 'moderation/reviews/simulate' else 'moderation/reports/simulate' endif /]
 [query public webPackage(m : RefModel) : String = basePackage(m) + '.web' /]
 [query public webGeneratedPackage(m : RefModel) : String = webPackage(m) + '.generated' /]
 [query public servicePackage(m : RefModel) : String = basePackage(m) + '.service' /]
@@ -521,6 +524,8 @@ package [webPackage(m)/];
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -546,6 +551,17 @@ public class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(new ApiError(ex.getMessage()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleUnreadableMessage(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest().body(new ApiError("Invalid request body: " + ex.getMostSpecificCause().getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ApiError("Resource cannot be deleted because it is still referenced by other data."));
     }
 
     @ExceptionHandler(Exception.class)
@@ -889,7 +905,7 @@ public class Generated[className/]Service {
     }
 
     public void delete(String id) {
-        repository.deleteById(toLong(id));
+        repository.delete(get(id));
     }
 
     private Long toLong(String id) {
@@ -1997,6 +2013,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -2021,9 +2038,24 @@ class AcceptanceTest {
     }
 
     @Test
-    void generatedCollectionEndpointIsReachable() throws Exception {
+    void generatedResourceCanBeCreatedReadAndListed() throws Exception {
+        MvcResult created = mockMvc.perform(post("/api/[acceptanceResourcePath(m)/]")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"acceptance-[acceptanceResourceLabel(m)/]\",\"source\":\"generated-acceptance-test\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.name").value("acceptance-[acceptanceResourceLabel(m)/]"))
+            .andReturn();
+
+        String id = created.getResponse().getContentAsString().replaceAll(".*\\\"id\\\":(\\d+).*", "$1");
+
+        mockMvc.perform(get("/api/[acceptanceResourcePath(m)/]/{id}", id))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(Integer.parseInt(id)));
+
         mockMvc.perform(get("/api/[acceptanceResourcePath(m)/]"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray());
     }
 
     @Test
@@ -2031,6 +2063,20 @@ class AcceptanceTest {
         mockMvc.perform(get("/api/[acceptanceResourcePath(m)/]/999999999"))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
+    void generatedPolicyEndpointIsReachable() throws Exception {
+        mockMvc.perform(get("/api/[acceptancePolicyPath(m)/]"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void generatedModerationEndpointIsReachable() throws Exception {
+        mockMvc.perform(post("/api/[acceptanceModerationPath(m)/]")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+            .andExpect(status().isOk());
     }
 }
 [/file]
@@ -2111,6 +2157,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import java.time.Instant;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @MappedSuperclass
 public abstract class GeneratedProductReview {
@@ -2364,7 +2412,27 @@ public enum ContextKind { GLOBAL, COMMUNITY, CHANNEL, CATALOG }
 [/file]
 [file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+public enum ModerationDecision {
+    APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED;
+
+    @JsonCreator
+    public static ModerationDecision fromJson(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String normalized = value.trim().toUpperCase();
+        if ("PENDING".equals(normalized) || "UNDER_REVIEW".equals(normalized)) {
+            return FLAGGED;
+        }
+        if ("ACTIVE".equals(normalized) || "REVIEWED".equals(normalized)) {
+            return APPROVED;
+        }
+        return valueOf(normalized);
+    }
+}
 [/file]
 [file (domainEnumsPath(m) + '/ModerationMode.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
@@ -2618,6 +2686,7 @@ public abstract class GeneratedPostModerationCheck {
     private Instant timestamp;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
@@ -2655,6 +2724,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
 import java.time.Instant;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @MappedSuperclass
 public abstract class GeneratedCommentModerationCheck {
@@ -2722,6 +2793,7 @@ public abstract class GeneratedReport {
     private UserType submitter;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id")
@@ -3397,7 +3469,27 @@ public enum PrimitiveType { TEXT, NUMBER, BOOLEAN, DATE, DATETIME, IMAGE, VIDEO,
 [/file]
 [file (domainEnumsPath(m) + '/ModerationDecision.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];
-public enum ModerationDecision { APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED }
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+public enum ModerationDecision {
+    APPROVED, FLAGGED, HIDDEN, REMOVED, BLOCKED, REJECTED;
+
+    @JsonCreator
+    public static ModerationDecision fromJson(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        String normalized = value.trim().toUpperCase();
+        if ("PENDING".equals(normalized) || "UNDER_REVIEW".equals(normalized)) {
+            return FLAGGED;
+        }
+        if ("ACTIVE".equals(normalized) || "REVIEWED".equals(normalized)) {
+            return APPROVED;
+        }
+        return valueOf(normalized);
+    }
+}
 [/file]
 [file (domainEnumsPath(m) + '/ModerationMode.java', false, 'UTF-8')]
 package [domainEnumsPackage(m)/];

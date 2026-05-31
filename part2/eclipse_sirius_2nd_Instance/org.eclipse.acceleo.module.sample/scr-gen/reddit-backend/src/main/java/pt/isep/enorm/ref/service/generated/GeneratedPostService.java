@@ -32,7 +32,7 @@ public class GeneratedPostService {
     }
 
     public void delete(String id) {
-        repository.deleteById(toLong(id));
+        repository.delete(get(id));
     }
 
     private Long toLong(String id) {
