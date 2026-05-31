@@ -1,7 +1,7 @@
 package pt.isep.enorm.ref.youtube.web.generated;
 
-import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
-import pt.isep.enorm.ref.youtube.repository.YoutubeUserRepository;
+import pt.isep.enorm.ref.youtube.domain.UserType;
+import pt.isep.enorm.ref.youtube.repository.UserTypeRepository;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class GeneratedAuthenticationController {
-    private final YoutubeUserRepository userRepository;
+    private final UserTypeRepository userRepository;
 
-    public GeneratedAuthenticationController(YoutubeUserRepository userRepository) { this.userRepository = userRepository; }
+    public GeneratedAuthenticationController(UserTypeRepository userRepository) { this.userRepository = userRepository; }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public YoutubeUser register(@RequestBody YoutubeUser payload) {
+    public UserType register(@RequestBody UserType payload) {
         return userRepository.save(payload);
     }
 

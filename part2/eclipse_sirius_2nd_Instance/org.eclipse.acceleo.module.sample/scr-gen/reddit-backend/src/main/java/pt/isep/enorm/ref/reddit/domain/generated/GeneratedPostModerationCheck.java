@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.reddit.domain.generated;
 import pt.isep.enorm.ref.reddit.domain.enums.PostModerationResult;
 import pt.isep.enorm.ref.reddit.domain.enums.PostModerationType;
 import pt.isep.enorm.ref.reddit.domain.Post;
-import pt.isep.enorm.ref.reddit.domain.RedditUser;
+import pt.isep.enorm.ref.reddit.domain.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,7 +32,7 @@ public abstract class GeneratedPostModerationCheck {
     private Post post;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
-    private RedditUser reviewedBy;
+    private UserType reviewedBy;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -44,6 +44,6 @@ public abstract class GeneratedPostModerationCheck {
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Post getPost() { return post; }
     public void setPost(Post post) { this.post = post; }
-    public RedditUser getReviewedBy() { return reviewedBy; }
-    public void setReviewedBy(RedditUser reviewedBy) { this.reviewedBy = reviewedBy; }
+    public UserType getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(UserType reviewedBy) { this.reviewedBy = reviewedBy; }
 }

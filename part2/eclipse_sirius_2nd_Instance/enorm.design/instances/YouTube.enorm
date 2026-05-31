@@ -14,6 +14,14 @@
   <userTypes xmi:id="ut_moderator" name="Moderator" kind="MODERATOR" superTypes="ut_user"/>
 
   <!-- Resource types -->
+  <resourceTypes xmi:id="rt_youtube_user" name="UserType" supportsMedia="false">
+    <attributes xmi:id="attr_youtube_user_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_youtube_user_username" name="username" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_youtube_user_password" name="password" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_youtube_user_role" name="role" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_youtube_user_registration_date" name="registrationDate" type="DATE" required="true" multiValued="false"/>
+  </resourceTypes>
+
   <resourceTypes xmi:id="rt_channel" name="Channel" supportsMedia="true">
     <attributes xmi:id="attr_channel_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_channel_name" name="name" type="TEXT" required="true" multiValued="false"/>
@@ -33,29 +41,33 @@
     <attributes xmi:id="attr_video_upload_date" name="uploadDate" type="DATE" required="true" multiValued="false"/>
     <attributes xmi:id="attr_video_duration" name="duration" type="NUMBER" required="true" multiValued="false"/>
     <attributes xmi:id="attr_video_comment_status" name="commentStatus" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_status" name="status" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_comment" name="Comment" supportsMedia="false" superTypes="rt_content">
     <attributes xmi:id="attr_comment_text" name="text" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_creation_date" name="creationDate" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_status" name="status" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_like" name="Like" supportsMedia="false">
     <attributes xmi:id="attr_like_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_like_value" name="value" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_like_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_like_history" name="LikeHistory" supportsMedia="false">
     <attributes xmi:id="attr_like_history_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_like_history_action" name="action" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_like_history_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_like_history_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_report" name="Report" supportsMedia="false">
     <attributes xmi:id="attr_report_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_report_reason" name="reason" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_report_status" name="status" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_report_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_report_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_subscription" name="Subscription" supportsMedia="false">
@@ -80,28 +92,34 @@
     <attributes xmi:id="attr_video_mod_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_video_mod_type" name="type" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_video_mod_result" name="result" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_video_mod_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_video_mod_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_comment_moderation_check" name="CommentModerationCheck" supportsMedia="false">
     <attributes xmi:id="attr_comment_mod_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_comment_mod_type" name="type" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_comment_mod_result" name="result" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_comment_mod_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_mod_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
   </resourceTypes>
 
   <resourceTypes xmi:id="rt_comment_settings_change" name="CommentSettingsChange" supportsMedia="false">
     <attributes xmi:id="attr_comment_settings_change_id" name="id" type="TEXT" required="true" multiValued="false"/>
     <attributes xmi:id="attr_comment_settings_new_status" name="newStatus" type="TEXT" required="true" multiValued="false"/>
-    <attributes xmi:id="attr_comment_settings_timestamp" name="timestamp" type="DATE" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_comment_settings_timestamp" name="timestamp" type="DATETIME" required="true" multiValued="false"/>
+  </resourceTypes>
+
+  <resourceTypes xmi:id="rt_sorting_policy" name="SortingPolicy" supportsMedia="false">
+    <attributes xmi:id="attr_sorting_policy_id" name="id" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sorting_policy_criterion" name="criterion" type="TEXT" required="true" multiValued="false"/>
+    <attributes xmi:id="attr_sorting_policy_direction" name="direction" type="TEXT" required="true" multiValued="false"/>
   </resourceTypes>
 
   <!-- Contexts -->
   <contextTypes xmi:id="ctx_channel" name="ChannelSpace" kind="CHANNEL"
-      contains="rt_channel rt_video rt_comment rt_like rt_like_history rt_comment_settings_change rt_subscription rt_channel_permission_policy"/>
+      contains="rt_youtube_user rt_channel rt_video rt_comment rt_like rt_like_history rt_comment_settings_change rt_subscription rt_channel_permission_policy rt_sorting_policy"/>
 
   <contextTypes xmi:id="ctx_global" name="PlatformGlobal" kind="GLOBAL"
-      contains="rt_channel rt_content rt_video rt_comment rt_video_moderation_check rt_comment_moderation_check rt_report rt_content_validation_rule rt_like"/>
+      contains="rt_youtube_user rt_channel rt_content rt_video rt_comment rt_video_moderation_check rt_comment_moderation_check rt_report rt_content_validation_rule rt_like rt_sorting_policy"/>
 
   <contextTypes xmi:id="ctx_community" name="CreatorCommunity" kind="COMMUNITY"
       contains="rt_channel rt_video rt_comment rt_subscription"/>
@@ -158,6 +176,62 @@
   <resourceRelations xmi:id="rr_like_history_on_content" name="likeHistoryOnContent"
       sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
       source="rt_like_history" target="rt_content"/>
+
+  <resourceRelations xmi:id="rr_channel_owner" name="channelOwner"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_channel" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_comment_author" name="commentAuthor"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_like_user" name="likeUser"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_like_history_user" name="likeHistoryUser"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like_history" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_like_history_video" name="likeHistoryVideo"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like_history" target="rt_video"/>
+
+  <resourceRelations xmi:id="rr_like_history_comment" name="likeHistoryComment"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_like_history" target="rt_comment"/>
+
+  <resourceRelations xmi:id="rr_report_submitter" name="reportSubmitter"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_report_reviewed_by" name="reportReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_report" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_subscription_subscriber" name="subscriptionSubscriber"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_subscription" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_channel_policy_configured_by" name="channelPermissionPolicyConfiguredBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_channel_permission_policy" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_comment_settings_moderator" name="commentSettingsModerator"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment_settings_change" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_video_check_reviewer" name="videoCheckReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_video_moderation_check" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_comment_check_reviewer" name="commentCheckReviewedBy"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_comment_moderation_check" target="rt_youtube_user"/>
+
+  <resourceRelations xmi:id="rr_sorting_policy_channel" name="sortingPolicyChannel"
+      sourceCardinality="*" targetCardinality="1" containment="false" recursive="false"
+      source="rt_sorting_policy" target="rt_channel"/>
 
   <!-- Feedback types -->
   <feedbackTypes xmi:id="ft_video_comment" name="VideoCommentType"

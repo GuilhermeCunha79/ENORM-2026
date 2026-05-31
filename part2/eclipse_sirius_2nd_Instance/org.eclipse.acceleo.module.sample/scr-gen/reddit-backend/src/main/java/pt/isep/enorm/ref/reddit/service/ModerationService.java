@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.reddit.service;
 import pt.isep.enorm.ref.reddit.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.reddit.domain.Comment;
 import pt.isep.enorm.ref.reddit.domain.Post;
-import pt.isep.enorm.ref.reddit.domain.RedditUser;
+import pt.isep.enorm.ref.reddit.domain.UserType;
 import pt.isep.enorm.ref.reddit.domain.Report;
 import pt.isep.enorm.ref.reddit.domain.enums.ContentStatus;
 import pt.isep.enorm.ref.reddit.domain.enums.ReportStatus;
@@ -39,21 +39,21 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public void approvePost(RedditUser moderator, Long postId) {
+    public void approvePost(UserType moderator, Long postId) {
         Post post = loadPost(postId);
         post.setStatus(ContentStatus.ACTIVE);
         postRepository.save(post);
     }
 
     @Transactional
-    public void approveComment(RedditUser moderator, Long commentId) {
+    public void approveComment(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
         comment.setStatus(ContentStatus.ACTIVE);
         commentRepository.save(comment);
     }
 
     @Transactional
-    public void approveReport(RedditUser moderator, Long reportId) {
+    public void approveReport(UserType moderator, Long reportId) {
         Report report = loadReport(reportId);
         report.setReviewedBy(moderator);
         report.setStatus(ReportStatus.REVIEWED);
@@ -61,21 +61,21 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public ModerationSimulationResult simulatePostModeration(RedditUser moderator, Long postId) {
+    public ModerationSimulationResult simulatePostModeration(UserType moderator, Long postId) {
         Post post = loadPost(postId);
         Map<String, Object> check = moderatePost(postId.toString(), post);
         return result("POST", post.getId(), check, null, post.getStatus().name(), "Post text inspected and moderation check persisted.");
     }
 
     @Transactional
-    public ModerationSimulationResult simulateCommentModeration(RedditUser moderator, Long commentId) {
+    public ModerationSimulationResult simulateCommentModeration(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
         Map<String, Object> check = moderateComment(commentId.toString(), comment);
         return result("COMMENT", comment.getId(), check, null, comment.getStatus().name(), "Comment text inspected and moderation check persisted.");
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulateReportModeration(RedditUser moderator) {
+    public List<ModerationSimulationResult> simulateReportModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
             if (report.getPost() != null) {
@@ -109,21 +109,21 @@ public class ModerationService extends GeneratedModerationService {
         // Report-threshold moderation is exposed through the simulation endpoint.
     }
 
-    private ModerationSimulationResult moderateReportedPost(Report report, RedditUser moderator) {
+    private ModerationSimulationResult moderateReportedPost(Report report, UserType moderator) {
         Post post = report.getPost();
         Map<String, Object> check = moderatePost(idOf(post), post);
         closeReport(report, moderator);
         return result("POST", post.getId(), check, report.getId(), post.getStatus().name(), "Pending report triggered post moderation.");
     }
 
-    private ModerationSimulationResult moderateReportedComment(Report report, RedditUser moderator) {
+    private ModerationSimulationResult moderateReportedComment(Report report, UserType moderator) {
         Comment comment = report.getComment();
         Map<String, Object> check = moderateComment(idOf(comment), comment);
         closeReport(report, moderator);
         return result("COMMENT", comment.getId(), check, report.getId(), comment.getStatus().name(), "Pending report triggered comment moderation.");
     }
 
-    private void closeReport(Report report, RedditUser moderator) {
+    private void closeReport(Report report, UserType moderator) {
         report.setReviewedBy(moderator);
         report.setStatus(ReportStatus.REVIEWED);
         reportRepository.save(report);

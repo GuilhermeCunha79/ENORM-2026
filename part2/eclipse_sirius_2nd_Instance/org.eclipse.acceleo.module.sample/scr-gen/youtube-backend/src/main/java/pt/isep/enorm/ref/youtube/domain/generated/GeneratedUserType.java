@@ -12,8 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @MappedSuperclass
-@Table(name = "youtubeUser")
-public abstract class GeneratedYoutubeUser {
+@Table(name = "userType")
+public abstract class GeneratedUserType {
     @Id
     @GeneratedValue
     private Long id;

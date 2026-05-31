@@ -4,7 +4,7 @@ import pt.isep.enorm.ref.youtube.service.generated.GeneratedModerationService;
 import pt.isep.enorm.ref.youtube.domain.Comment;
 import pt.isep.enorm.ref.youtube.domain.Report;
 import pt.isep.enorm.ref.youtube.domain.Video;
-import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
+import pt.isep.enorm.ref.youtube.domain.UserType;
 import pt.isep.enorm.ref.youtube.domain.enums.ContentStatus;
 import pt.isep.enorm.ref.youtube.domain.enums.ReportStatus;
 import pt.isep.enorm.ref.youtube.repository.CommentModerationCheckRepository;
@@ -39,21 +39,21 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public void approveVideo(YoutubeUser moderator, Long videoId) {
+    public void approveVideo(UserType moderator, Long videoId) {
         Video video = loadVideo(videoId);
         video.setStatus(ContentStatus.ACTIVE);
         videoRepository.save(video);
     }
 
     @Transactional
-    public void approveComment(YoutubeUser moderator, Long commentId) {
+    public void approveComment(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
         comment.setStatus(ContentStatus.ACTIVE);
         commentRepository.save(comment);
     }
 
     @Transactional
-    public void approveReport(YoutubeUser moderator, Long reportId) {
+    public void approveReport(UserType moderator, Long reportId) {
         Report report = loadReport(reportId);
         report.setReviewedBy(moderator);
         report.setStatus(ReportStatus.REVIEWED);
@@ -61,21 +61,21 @@ public class ModerationService extends GeneratedModerationService {
     }
 
     @Transactional
-    public ModerationSimulationResult simulateVideoModeration(YoutubeUser moderator, Long videoId) {
+    public ModerationSimulationResult simulateVideoModeration(UserType moderator, Long videoId) {
         Video video = loadVideo(videoId);
         Map<String, Object> check = moderateVideo(videoId.toString(), video);
         return result("VIDEO", video.getId(), check, null, video.getStatus().name(), "Video title and description inspected and moderation check persisted.");
     }
 
     @Transactional
-    public ModerationSimulationResult simulateCommentModeration(YoutubeUser moderator, Long commentId) {
+    public ModerationSimulationResult simulateCommentModeration(UserType moderator, Long commentId) {
         Comment comment = loadComment(commentId);
         Map<String, Object> check = moderateComment(commentId.toString(), comment);
         return result("COMMENT", comment.getId(), check, null, comment.getStatus().name(), "Comment text inspected and moderation check persisted.");
     }
 
     @Transactional
-    public List<ModerationSimulationResult> simulateReportModeration(YoutubeUser moderator) {
+    public List<ModerationSimulationResult> simulateReportModeration(UserType moderator) {
         List<ModerationSimulationResult> results = new ArrayList<>();
         for (Report report : reportRepository.findByStatus(ReportStatus.PENDING)) {
             if (report.getVideo() != null) {
@@ -109,21 +109,21 @@ public class ModerationService extends GeneratedModerationService {
         // Report-threshold moderation is exposed through the simulation endpoint.
     }
 
-    private ModerationSimulationResult moderateReportedVideo(Report report, YoutubeUser moderator) {
+    private ModerationSimulationResult moderateReportedVideo(Report report, UserType moderator) {
         Video video = report.getVideo();
         Map<String, Object> check = moderateVideo(idOf(video), video);
         closeReport(report, moderator);
         return result("VIDEO", video.getId(), check, report.getId(), video.getStatus().name(), "Pending report triggered video moderation.");
     }
 
-    private ModerationSimulationResult moderateReportedComment(Report report, YoutubeUser moderator) {
+    private ModerationSimulationResult moderateReportedComment(Report report, UserType moderator) {
         Comment comment = report.getComment();
         Map<String, Object> check = moderateComment(idOf(comment), comment);
         closeReport(report, moderator);
         return result("COMMENT", comment.getId(), check, report.getId(), comment.getStatus().name(), "Pending report triggered comment moderation.");
     }
 
-    private void closeReport(Report report, YoutubeUser moderator) {
+    private void closeReport(Report report, UserType moderator) {
         report.setReviewedBy(moderator);
         report.setStatus(ReportStatus.REVIEWED);
         reportRepository.save(report);

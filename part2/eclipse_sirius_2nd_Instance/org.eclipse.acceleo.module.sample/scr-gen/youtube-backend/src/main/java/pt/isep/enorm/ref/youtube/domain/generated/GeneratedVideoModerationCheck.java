@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.youtube.domain.generated;
 import pt.isep.enorm.ref.youtube.domain.enums.VideoModerationResult;
 import pt.isep.enorm.ref.youtube.domain.enums.VideoModerationType;
 import pt.isep.enorm.ref.youtube.domain.Video;
-import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
+import pt.isep.enorm.ref.youtube.domain.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,7 +32,7 @@ public abstract class GeneratedVideoModerationCheck {
     private Video video;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
-    private YoutubeUser reviewedBy;
+    private UserType reviewedBy;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -44,6 +44,6 @@ public abstract class GeneratedVideoModerationCheck {
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
     public Video getVideo() { return video; }
     public void setVideo(Video video) { this.video = video; }
-    public YoutubeUser getReviewedBy() { return reviewedBy; }
-    public void setReviewedBy(YoutubeUser reviewedBy) { this.reviewedBy = reviewedBy; }
+    public UserType getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(UserType reviewedBy) { this.reviewedBy = reviewedBy; }
 }

@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.youtube.domain.generated;
 import pt.isep.enorm.ref.youtube.domain.enums.ReportStatus;
 import pt.isep.enorm.ref.youtube.domain.Comment;
 import pt.isep.enorm.ref.youtube.domain.Video;
-import pt.isep.enorm.ref.youtube.domain.YoutubeUser;
+import pt.isep.enorm.ref.youtube.domain.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,7 +28,7 @@ public abstract class GeneratedReport {
     private Instant timestamp = Instant.now();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
-    private YoutubeUser submitter;
+    private UserType submitter;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "video_id")
     private Video video;
@@ -37,7 +37,7 @@ public abstract class GeneratedReport {
     private Comment comment;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
-    private YoutubeUser reviewedBy;
+    private UserType reviewedBy;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -47,12 +47,12 @@ public abstract class GeneratedReport {
     public void setStatus(ReportStatus status) { this.status = status; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
-    public YoutubeUser getSubmitter() { return submitter; }
-    public void setSubmitter(YoutubeUser submitter) { this.submitter = submitter; }
+    public UserType getSubmitter() { return submitter; }
+    public void setSubmitter(UserType submitter) { this.submitter = submitter; }
     public Video getVideo() { return video; }
     public void setVideo(Video video) { this.video = video; }
     public Comment getComment() { return comment; }
     public void setComment(Comment comment) { this.comment = comment; }
-    public YoutubeUser getReviewedBy() { return reviewedBy; }
-    public void setReviewedBy(YoutubeUser reviewedBy) { this.reviewedBy = reviewedBy; }
+    public UserType getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(UserType reviewedBy) { this.reviewedBy = reviewedBy; }
 }

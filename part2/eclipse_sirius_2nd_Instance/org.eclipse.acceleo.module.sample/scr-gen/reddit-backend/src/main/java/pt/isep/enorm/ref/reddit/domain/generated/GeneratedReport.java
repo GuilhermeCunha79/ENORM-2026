@@ -3,7 +3,7 @@ package pt.isep.enorm.ref.reddit.domain.generated;
 import pt.isep.enorm.ref.reddit.domain.enums.ReportStatus;
 import pt.isep.enorm.ref.reddit.domain.Comment;
 import pt.isep.enorm.ref.reddit.domain.Post;
-import pt.isep.enorm.ref.reddit.domain.RedditUser;
+import pt.isep.enorm.ref.reddit.domain.UserType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,7 +28,7 @@ public abstract class GeneratedReport {
     private Instant timestamp = Instant.now();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "submitter_id")
-    private RedditUser submitter;
+    private UserType submitter;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
@@ -37,7 +37,7 @@ public abstract class GeneratedReport {
     private Comment comment;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "reviewed_by_id")
-    private RedditUser reviewedBy;
+    private UserType reviewedBy;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -47,12 +47,12 @@ public abstract class GeneratedReport {
     public void setStatus(ReportStatus status) { this.status = status; }
     public Instant getTimestamp() { return timestamp; }
     public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
-    public RedditUser getSubmitter() { return submitter; }
-    public void setSubmitter(RedditUser submitter) { this.submitter = submitter; }
+    public UserType getSubmitter() { return submitter; }
+    public void setSubmitter(UserType submitter) { this.submitter = submitter; }
     public Post getPost() { return post; }
     public void setPost(Post post) { this.post = post; }
     public Comment getComment() { return comment; }
     public void setComment(Comment comment) { this.comment = comment; }
-    public RedditUser getReviewedBy() { return reviewedBy; }
-    public void setReviewedBy(RedditUser reviewedBy) { this.reviewedBy = reviewedBy; }
+    public UserType getReviewedBy() { return reviewedBy; }
+    public void setReviewedBy(UserType reviewedBy) { this.reviewedBy = reviewedBy; }
 }
