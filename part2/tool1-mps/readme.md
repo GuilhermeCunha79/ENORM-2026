@@ -8,7 +8,7 @@ In Part 2, the goal was to turn that metamodel into a more usable DSL capable of
 
 Therefore, the MPS work in this phase continued the DSL developed in Part 1 and added two main capabilities:
 
-- a textual/projectional syntax closer to the notation defined in the team report;
+- a textual syntax closer to the notation defined in the team report;
 - a generator capable of transforming a `RefModel` into a Spring Boot backend with Java code and configuration files.
 
 This approach addresses the central problem of the project: creating a REF DSL that can be used to specify Resource Evaluation and Feedback applications and generate most of the code required for the corresponding REST microservices.
