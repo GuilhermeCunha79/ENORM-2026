@@ -446,11 +446,11 @@
     </node>
     <node concept="3lhOvk" id="33dPD0B5kkc" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
-      <ref role="3lhOvi" node="3bcNv5WOX2" resolve="../../../../../pom" />
+      <ref role="3lhOvi" node="3bcNv5WOX2" resolve="../../../../../../pom" />
     </node>
     <node concept="3lhOvk" id="33dPD0BfzAA" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
-      <ref role="3lhOvi" node="33dPD0BeUr0" resolve="../../../../main/resources/application" />
+      <ref role="3lhOvi" node="33dPD0BeUr0" resolve="../../../../../main/resources/application" />
     </node>
     <node concept="3lhOvk" id="1kk75F4x$35" role="3lj3bC">
       <ref role="30HIoZ" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
@@ -1785,7 +1785,7 @@
     </node>
   </node>
   <node concept="356sEV" id="33dPD0BeUr0">
-    <property role="TrG5h" value="../../../../main/resources/application" />
+    <property role="TrG5h" value="../../../../../main/resources/application" />
     <property role="3Le9LX" value=".properties" />
     <property role="3GE5qa" value="resources" />
     <node concept="356WMU" id="33dPD0BeZhZ" role="356KY_">
@@ -17263,7 +17263,9 @@
     <property role="TrG5h" value="DomainTemplate" />
     <property role="2HnT6v" value="pt.isep.enorm.ref.domain" />
     <node concept="3Tm1VV" id="2VtRX2IwXCG" role="1B3o_S" />
-    <node concept="n94m4" id="2VtRX2IwXCH" role="lGtFl" />
+    <node concept="n94m4" id="2VtRX2IwXCH" role="lGtFl">
+      <ref role="n9lRv" to="2rvu:3nWBi3h36Ul" resolve="RefModel" />
+    </node>
     <node concept="2AHcQZ" id="2VtRX2IwYUw" role="2AJF6D">
       <ref role="2AI5Lk" to="p99f:~Entity" resolve="Entity" />
       <node concept="2B6LJw" id="2VtRX2IwZoE" role="2B76xF">
@@ -23712,8 +23714,6 @@
       </node>
     </node>
     <node concept="2tJIrI" id="4ZMhPExuTdF" role="jymVt" />
-    <node concept="2tJIrI" id="4ZMhPExuISV" role="jymVt" />
-    <node concept="2tJIrI" id="4ZMhPExuIVu" role="jymVt" />
     <node concept="3Tm1VV" id="4ZMhPExht_X" role="1B3o_S" />
     <node concept="n94m4" id="4ZMhPExht_Y" role="lGtFl">
       <ref role="n9lRv" to="tpck:h0TrEE$" resolve="INamedConcept" />
@@ -26538,7 +26538,7 @@
   </node>
   <node concept="312cEu" id="6XbfDSUCP7M">
     <property role="TrG5h" value="ModerationService" />
-    <property role="3GE5qa" value="service" />
+    <property role="3GE5qa" value="service.generated.reference" />
     <property role="2HnT6v" value="pt.isep.enorm.ref.service" />
     <node concept="3Tm1VV" id="6XbfDSUCP7N" role="1B3o_S" />
     <node concept="2AHcQZ" id="6XbfDSUCP7O" role="2AJF6D">
@@ -27657,7 +27657,7 @@
   </node>
   <node concept="312cEu" id="6XbfDSUG2_U">
     <property role="TrG5h" value="PolicyService" />
-    <property role="3GE5qa" value="service" />
+    <property role="3GE5qa" value="service.generated.reference" />
     <property role="2HnT6v" value="pt.isep.enorm.ref.service" />
     <node concept="3Tm1VV" id="6XbfDSUG2_V" role="1B3o_S" />
     <node concept="2AHcQZ" id="6XbfDSUG2_W" role="2AJF6D">
@@ -29958,7 +29958,7 @@
     <node concept="n94m4" id="3bcNv5TWGG" role="lGtFl" />
   </node>
   <node concept="356sEV" id="3bcNv5WOX2">
-    <property role="TrG5h" value="../../../../../pom" />
+    <property role="TrG5h" value="../../../../../../pom" />
     <property role="3Le9LX" value=".xml" />
     <node concept="356WMU" id="3bcNv5WP7d" role="356KY_">
       <node concept="356sEK" id="3bcNv5WP7e" role="383Ya9">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <product version="3" modelHash="-a7w1ibskbqjvmgq6vp2j7whumwyizpx">
-  <files dir="Ref/one/../../../../.." names="pom.xml" />
-  <files dir="Ref/one/../../../../main/resources" names="application.properties" />
+  <files dir="Ref/sandbox/one/../../../../../.." names="pom.xml" />
+  <files dir="Ref/sandbox/one/../../../../../main/resources" names="application.properties" />
   <files dir="pt/isep/enorm/ref" names="RedditRefApplication.java" />
   <files dir="pt/isep/enorm/ref/config" names="H2ServerConfiguration.java:InitialDataConfiguration.java" />
   <files dir="pt/isep/enorm/ref/domain" names="AuthorizationRule.java:AutomationAction.java:AutomationCondition.java:AutomationRule.java:Comment.java:ConditionValue.java:ContextResource.java:ContextType.java:ModerationPolicy.java:Post.java:ReportOnComment.java:ReportOnCommentMediaReference.java:ReportOnPost.java:ReportOnPostMediaReference.java:SortingPolicy.java:Subreddit.java:UserType.java:ValidationRule.java:VerificationPolicy.java:VoteOnComment.java:VoteOnCommentMediaReference.java:VoteOnPost.java:VoteOnPostMediaReference.java" />

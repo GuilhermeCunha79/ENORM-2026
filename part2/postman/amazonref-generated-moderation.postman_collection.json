@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "AmazonRef Generated Moderation Acceptance",
-    "description": "Generated moderation acceptance tests for part2/tool1-mps/languages/Ref.sandbox/source_gen. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox/source_gen/pom.xml spring-boot:run",
+    "name": "MPS Ref.sandbox AmazonRef Moderation Acceptance",
+    "description": "MPS-only collection generated from part2/tool1-mps/languages/Ref.sandbox/source_gen. Uses the generated auth, policy, and moderation simulation endpoints. Start first: mvn -q -f part2/tool1-mps/languages/Ref.sandbox/source_gen/pom.xml spring-boot:run",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -11,8 +11,53 @@
       "type": "string"
     },
     {
+      "key": "mpsGeneratedRoot",
+      "value": "part2/tool1-mps/languages/Ref.sandbox/source_gen",
+      "type": "string"
+    },
+    {
+      "key": "startCommand",
+      "value": "mvn -q -f part2/tool1-mps/languages/Ref.sandbox/source_gen/pom.xml spring-boot:run",
+      "type": "string"
+    },
+    {
       "key": "smokePath",
       "value": "/api/products",
+      "type": "string"
+    },
+    {
+      "key": "resourceListPath",
+      "value": "/api/products",
+      "type": "string"
+    },
+    {
+      "key": "resourceContentField",
+      "value": "descriptionName",
+      "type": "string"
+    },
+    {
+      "key": "resourceAutoTargetType",
+      "value": "Resource",
+      "type": "string"
+    },
+    {
+      "key": "resourceBeforeCount",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "resourceId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "resourceContent",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "manualTargetListPath",
+      "value": "/api/productreviews",
       "type": "string"
     },
     {
@@ -56,6 +101,81 @@
       "type": "string"
     },
     {
+      "key": "baselineDecision",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "baselineStatus",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "policyResourceTargetType",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "policyFeedbackTargetType",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "autoFixturePath",
+      "value": "/api/commentreviews",
+      "type": "string"
+    },
+    {
+      "key": "autoFixtureContentField",
+      "value": "textName",
+      "type": "string"
+    },
+    {
+      "key": "autoFixtureContent",
+      "value": "WAR automatic moderation fixture",
+      "type": "string"
+    },
+    {
+      "key": "autoTargetType",
+      "value": "Resource",
+      "type": "string"
+    },
+    {
+      "key": "autoTrigger",
+      "value": "ON_RESOURCE_CREATE",
+      "type": "string"
+    },
+    {
+      "key": "expectedAutoStatus",
+      "value": "SKIPPED",
+      "type": "string"
+    },
+    {
+      "key": "expectedAutoMatchedKeyword",
+      "value": "false",
+      "type": "string"
+    },
+    {
+      "key": "autoStatus",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "autoFixtureId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "feedbackBeforeCount",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "targetStateBeforeCount",
+      "value": "",
+      "type": "string"
+    },
+    {
       "key": "targetType",
       "value": "ProductReview",
       "type": "string"
@@ -88,7 +208,7 @@
   ],
   "item": [
     {
-      "name": "01 Smoke endpoint",
+      "name": "01 Smoke - list generated resources",
       "request": {
         "method": "GET",
         "header": [],
@@ -109,7 +229,7 @@
       ]
     },
     {
-      "name": "02 Login moderator",
+      "name": "02 Auth - login seeded moderator",
       "request": {
         "method": "POST",
         "header": [
@@ -152,7 +272,7 @@
       ]
     },
     {
-      "name": "03 Login non-moderator",
+      "name": "03 Auth - login seeded non-moderator",
       "request": {
         "method": "POST",
         "header": [
@@ -195,7 +315,7 @@
       ]
     },
     {
-      "name": "04 Policy seed / resolve model inputs",
+      "name": "04 Policy - load moderation policy and resolve inputs",
       "request": {
         "method": "GET",
         "header": [
@@ -231,14 +351,20 @@
               "",
               "const policy = policies[0] || {};",
               "const targetType = policy.monitorsFeedback || policy.monitorsResource || pm.collectionVariables.get(\"targetType\");",
+              "const policyResourceTargetType = policy.monitorsResource || pm.collectionVariables.get(\"policyResourceTargetType\");",
+              "const policyFeedbackTargetType = policy.monitorsFeedback || pm.collectionVariables.get(\"policyFeedbackTargetType\");",
               "const trigger = policy.trigger || pm.collectionVariables.get(\"trigger\");",
               "",
               "pm.test(\"Policy targetType and trigger are resolved\", function () {",
               "  pm.expect(targetType, \"targetType\").to.be.a(\"string\").and.not.empty;",
+              "  pm.expect(policyResourceTargetType, \"policyResourceTargetType\").to.be.a(\"string\").and.not.empty;",
+              "  pm.expect(policyFeedbackTargetType, \"policyFeedbackTargetType\").to.be.a(\"string\").and.not.empty;",
               "  pm.expect(trigger, \"trigger\").to.be.a(\"string\").and.not.empty;",
               "});",
               "",
               "pm.collectionVariables.set(\"targetType\", targetType);",
+              "pm.collectionVariables.set(\"policyResourceTargetType\", policyResourceTargetType);",
+              "pm.collectionVariables.set(\"policyFeedbackTargetType\", policyFeedbackTargetType);",
               "pm.collectionVariables.set(\"trigger\", trigger);",
               "",
               "const wrongTargetCandidates = [",
@@ -269,7 +395,313 @@
       ]
     },
     {
-      "name": "05 Moderation without token",
+      "name": "05 Auto (resource) - list before create",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{resourceListPath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Resource list returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Resource list response is a collection\", function () {",
+              "  pm.expect(body).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"resourceBeforeCount\", String(body.length));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Auto (resource) - create fixture",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{resourceListPath}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"nameName\": \"Postman resource fixture\", \"descriptionName\": \"WAR resource fixture\", \"createdAtName\": \"2026-05-31T00:00:00Z\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Resource fixture is created\", function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Created resource has an id\", function () {",
+              "  pm.expect(body.id, \"id\").to.be.a(\"number\");",
+              "});",
+              "",
+              "const field = pm.collectionVariables.get(\"resourceContentField\");",
+              "const keyword = pm.collectionVariables.get(\"blockedKeyword\");",
+              "pm.test(\"Created resource includes the blocked keyword in the chosen content field\", function () {",
+              "  pm.expect(String(body[field] || \"\"), field).to.include(keyword);",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"resourceId\", String(body.id));",
+              "pm.collectionVariables.set(\"resourceContent\", String(body[field] || \"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Auto (resource) - list after create",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{resourceListPath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Resource list after create returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Resource list after create is a collection\", function () {",
+              "  pm.expect(body).to.be.an(\"array\");",
+              "});",
+              "",
+              "const beforeCount = parseInt(pm.collectionVariables.get(\"resourceBeforeCount\") || \"0\", 10);",
+              "pm.test(\"Resource count increased after create\", function () {",
+              "  pm.expect(body.length).to.equal(beforeCount + 1);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Auto (resource) - read created resource",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{resourceListPath}}/{{resourceId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Created resource can be read back\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const expectedId = parseInt(pm.collectionVariables.get(\"resourceId\"), 10);",
+              "pm.test(\"Read-back resource id matches created id\", function () {",
+              "  pm.expect(body.id).to.equal(expectedId);",
+              "});",
+              "",
+              "const field = pm.collectionVariables.get(\"resourceContentField\");",
+              "pm.collectionVariables.set(\"resourceContent\", String(body[field] || \"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Auto (resource) - simulate auto-trigger moderation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{resourceAutoTargetType}}\",\n  \"targetId\": {{resourceId}},\n  \"trigger\": \"ON_RESOURCE_CREATE\",\n  \"content\": \"{{resourceContent}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Automatic-hook equivalent moderation request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const expectedStatus = pm.collectionVariables.get(\"expectedAutoStatus\") || \"SKIPPED\";",
+              "const expectMatch = String(pm.collectionVariables.get(\"expectedAutoMatchedKeyword\") || \"false\").toLowerCase() === \"true\";",
+              "const keyword = pm.collectionVariables.get(\"blockedKeyword\");",
+              "",
+              "pm.test(\"Automatic-hook equivalent status matches current MPS policy wiring\", function () {",
+              "  pm.expect(body.status).to.equal(expectedStatus);",
+              "});",
+              "",
+              "if (expectMatch) {",
+              "  pm.test(\"Automatic-hook equivalent matched the configured keyword\", function () {",
+              "    const matched = (body.matchedKeywords || []).map(String);",
+              "    pm.expect(matched).to.include(keyword);",
+              "  });",
+              "} else {",
+              "  pm.test(\"Automatic-hook equivalent has no matched keywords in current MPS wiring\", function () {",
+              "    pm.expect(body.matchedKeywords || []).to.be.an(\"array\").that.is.empty;",
+              "  });",
+              "}",
+              "",
+              "pm.collectionVariables.set(\"autoStatus\", body.status);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Auto (resource) - simulate policy-trigger moderation (diff)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{policyResourceTargetType}}\",\n  \"targetId\": {{resourceId}},\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"{{resourceContent}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Policy-trigger moderation request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const autoStatus = pm.collectionVariables.get(\"autoStatus\");",
+              "pm.test(\"Policy-trigger moderation differs from auto-trigger moderation\", function () {",
+              "  pm.expect(body.status).to.not.equal(autoStatus);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 State - read target collection before manual moderation",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{manualTargetListPath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Target collection can be read before moderation\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Target state response is a collection\", function () {",
+              "  pm.expect(body).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"targetStateBeforeCount\", String(body.length));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Security - reject moderation without token",
       "request": {
         "method": "POST",
         "header": [
@@ -305,7 +737,7 @@
       ]
     },
     {
-      "name": "06 Moderation with non-moderator token",
+      "name": "13 Security - reject moderation by non-moderator",
       "request": {
         "method": "POST",
         "header": [
@@ -346,7 +778,7 @@
       ]
     },
     {
-      "name": "07 Moderator clean content",
+      "name": "14 Manual moderation - approve clean content",
       "request": {
         "method": "POST",
         "header": [
@@ -386,14 +818,17 @@
               "pm.test(\"Clean content is approved\", function () {",
               "  pm.expect(body.decision).to.equal(\"APPROVED\");",
               "  pm.expect(body.status).to.equal(\"APPROVED\");",
-              "});"
+              "});",
+              "",
+              "pm.collectionVariables.set(\"baselineDecision\", body.decision);",
+              "pm.collectionVariables.set(\"baselineStatus\", body.status);"
             ]
           }
         }
       ]
     },
     {
-      "name": "08 Moderator blocked content",
+      "name": "15 Manual moderation - flag blocked keyword (diff)",
       "request": {
         "method": "POST",
         "header": [
@@ -430,6 +865,8 @@
               "});",
               "",
               "const body = pm.response.json();",
+              "const baselineDecision = pm.collectionVariables.get(\"baselineDecision\");",
+              "const baselineStatus = pm.collectionVariables.get(\"baselineStatus\");",
               "const keyword = pm.collectionVariables.get(\"blockedKeyword\");",
               "const expectedStatus = pm.collectionVariables.get(\"expectedBlockedStatus\") || \"FLAG_CONTENT\";",
               "const expectMatch = String(pm.collectionVariables.get(\"expectedBlockedMatch\") || \"true\").toLowerCase() === \"true\";",
@@ -445,14 +882,19 @@
               "  pm.test(\"Blocked request is evaluated successfully\", function () {",
               "    pm.expect(body.status).to.be.a(\"string\").and.not.empty;",
               "  });",
-              "}"
+              "}",
+              "",
+              "pm.test(\"Blocked moderation differs from clean baseline\", function () {",
+              "  pm.expect(body.decision).to.not.equal(baselineDecision);",
+              "  pm.expect(body.status).to.not.equal(baselineStatus);",
+              "});"
             ]
           }
         }
       ]
     },
     {
-      "name": "09 Moderator wrong trigger",
+      "name": "16 Manual moderation - skip wrong trigger",
       "request": {
         "method": "POST",
         "header": [
@@ -498,7 +940,7 @@
       ]
     },
     {
-      "name": "10 Moderator wrong target",
+      "name": "17 Manual moderation - skip wrong target",
       "request": {
         "method": "POST",
         "header": [
@@ -537,6 +979,284 @@
               "const body = pm.response.json();",
               "pm.test(\"Wrong target is skipped\", function () {",
               "  pm.expect(body.status).to.equal(\"SKIPPED\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18 Auto (feedback) - list before create",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{autoFixturePath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Feedback list returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Feedback list response is a collection\", function () {",
+              "  pm.expect(body).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"feedbackBeforeCount\", String(body.length));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19 Auto (feedback) - create fixture",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{autoFixturePath}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"textName\": \"WAR automatic moderation fixture\", \"createdAtName\": \"2026-05-31T00:00:00Z\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Automatic moderation fixture is created\", function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Created fixture has an id\", function () {",
+              "  pm.expect(body.id, \"id\").to.be.a(\"number\");",
+              "});",
+              "",
+              "const field = pm.collectionVariables.get(\"autoFixtureContentField\");",
+              "const content = pm.collectionVariables.get(\"autoFixtureContent\");",
+              "pm.test(\"Created fixture keeps the moderated attribute value\", function () {",
+              "  pm.expect(String(body[field] || \"\"), field).to.include(content);",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"autoFixtureId\", String(body.id));",
+              "pm.collectionVariables.set(\"autoFixtureContent\", String(body[field] || \"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "20 Auto (feedback) - list after create",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{autoFixturePath}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Feedback list after create returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "pm.test(\"Feedback list after create is a collection\", function () {",
+              "  pm.expect(body).to.be.an(\"array\");",
+              "});",
+              "",
+              "const beforeCount = parseInt(pm.collectionVariables.get(\"feedbackBeforeCount\") || \"0\", 10);",
+              "pm.test(\"Feedback count increased after create\", function () {",
+              "  pm.expect(body.length).to.equal(beforeCount + 1);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "21 Auto (feedback) - read created fixture",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}{{autoFixturePath}}/{{autoFixtureId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Created fixture can be read after the automatic hook\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const expectedId = parseInt(pm.collectionVariables.get(\"autoFixtureId\"), 10);",
+              "const field = pm.collectionVariables.get(\"autoFixtureContentField\");",
+              "const content = pm.collectionVariables.get(\"autoFixtureContent\");",
+              "",
+              "pm.test(\"Read-back fixture is the created entity\", function () {",
+              "  pm.expect(body.id).to.equal(expectedId);",
+              "});",
+              "",
+              "pm.test(\"Read-back state still exposes the moderated attribute\", function () {",
+              "  pm.expect(String(body[field] || \"\"), field).to.include(content);",
+              "});",
+              "",
+              "pm.collectionVariables.set(\"autoFixtureContent\", String(body[field] || \"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "22 Auto (feedback) - simulate auto-trigger moderation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{autoTargetType}}\",\n  \"targetId\": {{autoFixtureId}},\n  \"trigger\": \"{{autoTrigger}}\",\n  \"content\": \"{{autoFixtureContent}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Automatic-hook equivalent moderation request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const expectedStatus = pm.collectionVariables.get(\"expectedAutoStatus\") || \"SKIPPED\";",
+              "const expectMatch = String(pm.collectionVariables.get(\"expectedAutoMatchedKeyword\") || \"false\").toLowerCase() === \"true\";",
+              "const keyword = pm.collectionVariables.get(\"blockedKeyword\");",
+              "",
+              "pm.test(\"Automatic-hook equivalent status matches current MPS policy wiring\", function () {",
+              "  pm.expect(body.status).to.equal(expectedStatus);",
+              "});",
+              "",
+              "if (expectMatch) {",
+              "  pm.test(\"Automatic-hook equivalent matched the configured keyword\", function () {",
+              "    const matched = (body.matchedKeywords || []).map(String);",
+              "    pm.expect(matched).to.include(keyword);",
+              "  });",
+              "} else {",
+              "  pm.test(\"Automatic-hook equivalent has no matched keywords in current MPS wiring\", function () {",
+              "    pm.expect(body.matchedKeywords || []).to.be.an(\"array\").that.is.empty;",
+              "  });",
+              "}",
+              "",
+              "pm.collectionVariables.set(\"autoStatus\", body.status);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "23 Auto (feedback) - simulate policy-trigger moderation (diff)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{moderatorToken}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/moderation/simulate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"targetType\": \"{{policyFeedbackTargetType}}\",\n  \"targetId\": {{autoFixtureId}},\n  \"trigger\": \"{{trigger}}\",\n  \"content\": \"{{autoFixtureContent}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Policy-trigger moderation request returns 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const body = pm.response.json();",
+              "const autoStatus = pm.collectionVariables.get(\"autoStatus\");",
+              "pm.test(\"Policy-trigger moderation differs from auto-trigger moderation\", function () {",
+              "  pm.expect(body.status).to.not.equal(autoStatus);",
               "});"
             ]
           }
