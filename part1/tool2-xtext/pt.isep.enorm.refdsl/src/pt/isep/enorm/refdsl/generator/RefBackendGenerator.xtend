@@ -247,7 +247,7 @@ spring.datasource.password=
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.open-in-view=false
+spring.jpa.open-in-view=true
 '''
 
 	def String applicationClass(RefModel model) '''
@@ -718,6 +718,17 @@ public class Generated«entity»Service {
         return repository.save(entity);
     }
 
+    /** Full replace (PUT): keeps the id from the path and overwrites the rest. */
+    public «entity» update(Long id, «entity» entity) {
+        «entity» existing = findById(id);
+        entity.setId(existing.getId());
+        return repository.save(entity);
+    }
+
+    public void delete(Long id) {
+        repository.delete(findById(id));
+    }
+
     /** Override in manual «entity»Service for scenario-specific rules. */
     protected void beforeCreate(«entity» entity) {
     }
@@ -744,10 +755,25 @@ public class Generated«entity»Service {
         return repository.findAll();
     }
 
+    public «entity» findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("«entity» not found: " + id));
+    }
+
     public «entity» submit(«entity» feedback) {
         checkUniquePerAuthorTarget(feedback);
         beforeSubmit(feedback);
         return repository.save(feedback);
+    }
+
+    /** Full replace (PUT): keeps the id from the path and overwrites the rest. */
+    public «entity» update(Long id, «entity» feedback) {
+        «entity» existing = findById(id);
+        feedback.setId(existing.getId());
+        return repository.save(feedback);
+    }
+
+    public void delete(Long id) {
+        repository.delete(findById(id));
     }
 
     private void checkUniquePerAuthorTarget(«entity» feedback) {
@@ -792,9 +818,11 @@ package «naming.basePackage(model)».web.generated;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import «naming.basePackage(model)».domain.«entity»;
@@ -823,6 +851,17 @@ public abstract class Generated«entity»Controller {
     public ResponseEntity<«entity»> create(@RequestBody «entity» body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(body));
     }
+
+    @PutMapping("/{id}")
+    public «entity» update(@PathVariable Long id, @RequestBody «entity» body) {
+        return service.update(id, body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
 '''
 
@@ -832,8 +871,11 @@ package «naming.basePackage(model)».web.generated;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import «naming.basePackage(model)».domain.«entity»;
 import «naming.basePackage(model)».service.«entity»Service;
@@ -850,9 +892,25 @@ public abstract class Generated«entity»Controller {
         return service.findAll();
     }
 
+    @GetMapping("/{id}")
+    public «entity» get(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
     @PostMapping
     public ResponseEntity<«entity»> submit(@RequestBody «entity» body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.submit(body));
+    }
+
+    @PutMapping("/{id}")
+    public «entity» update(@PathVariable Long id, @RequestBody «entity» body) {
+        return service.update(id, body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
 '''
@@ -1413,9 +1471,11 @@ package «naming.basePackage(model)».web;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -1444,6 +1504,19 @@ public class «entityName»Controller {
     @PostMapping
     public ResponseEntity<«entityName»> create(@RequestBody «entityName» body) {
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(body));
+    }
+
+    @PutMapping("/{id}")
+    public «entityName» update(@PathVariable Long id, @RequestBody «entityName» body) {
+        «entityName» existing = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("«entityName» not found: " + id));
+        body.setId(existing.getId());
+        return repository.save(body);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
 '''
