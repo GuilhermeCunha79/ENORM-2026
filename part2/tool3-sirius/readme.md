@@ -56,6 +56,14 @@ generated code structures. For Tool 3, the main reference scenario was the YouTu
 This ensured that the selected scenario could be represented as a graphical EMF model and subsequently used as input for generation. 
 The Amazon and Reddit scenarios were also maintained as `.enorm` model instances to verify that the graphical notation was not specialized for a single scenario.
 
+The AI-generated reference backend prototypes used for comparison and generation alignment are stored in:
+
+| Scenario | Reference backend path |
+|---|---|
+| Amazon | `part2/ai-generated-backends-prototypes/amazon-backend` |
+| Reddit | `part2/ai-generated-backends-prototypes/reddit-backend` |
+| YouTube | `part2/ai-generated-backends-prototypes/youtube-backend` |
+
 ## Activity 5 - Implementation of Code Generation Rules
 ### Generator Location
 For this section was used Acceleo model-to-text generator, that consumes the same EMF models edited through Sirius:
